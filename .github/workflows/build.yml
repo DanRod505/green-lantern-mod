@@ -30,5 +30,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: greenlantern-mod
-          path: build/libs/*.jar
+          path: |
+            build/libs/*.jar
+            build/distributions/*-curseforge-profile.zip
           if-no-files-found: error

@@ -39,7 +39,7 @@ public class EnergyBlastConstruct extends Construct {
         if (!player.isCreative() && !RingEnergy.tryConsume(ring, activationCost())) return false;
         ServerLevel level = player.level();
         Vec3 look = player.getLookAngle();
-        Vec3 start = player.getEyePosition().add(look.scale(0.8)).subtract(0, 0.25, 0);
+        Vec3 start = player.getEyePosition().add(look.scale(1.4)).subtract(0, 0.25, 0);
         EnergyBoltEntity bolt = EnergyBoltEntity.create(level, player, start, look.scale(1.6), GLConfig.BLAST_DAMAGE.get().floatValue(), true);
         level.addFreshEntity(bolt);
         level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.BLAST_FIRE.get(), SoundSource.PLAYERS, 1.0F, 0.9F + level.random.nextFloat() * 0.2F);

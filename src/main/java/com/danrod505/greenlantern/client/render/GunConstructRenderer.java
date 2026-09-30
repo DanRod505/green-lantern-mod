@@ -41,7 +41,7 @@ public class GunConstructRenderer extends EntityRenderer<GunConstructEntity, Gun
     @Override
     public void submit(State state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
         float age = state.ageInTicks;
-        float appear = Math.min(1.0F, age / 4.0F);
+        float appear = Math.min(1.0F, age / 4.0F) * GunConstructEntity.SCALE;
         poseStack.pushPose();
         poseStack.translate(0.0F, state.boundingBoxHeight / 2.0F, 0.0F);
         poseStack.mulPose(Axis.YP.rotationDegrees(-state.yaw));
@@ -49,25 +49,25 @@ public class GunConstructRenderer extends EntityRenderer<GunConstructEntity, Gun
         poseStack.scale(appear, appear, appear);
 
         // Body, grip and ammo drum.
-        collector.submitCustomGeometry(poseStack, HardLight.type(HardLight.PANEL), (pose, vc) -> {
-            HardLight.glowingBox(vc, pose, -0.2F, -0.2F, -0.6F, 0.2F, 0.2F, 0.05F, 1.0F);
-            HardLight.glowingBox(vc, pose, -0.07F, -0.5F, -0.45F, 0.07F, -0.2F, -0.3F, 1.0F);
-            HardLight.glowingBox(vc, pose, 0.2F, -0.18F, -0.5F, 0.42F, 0.12F, -0.1F, 0.9F);
-            HardLight.glowingBox(vc, pose, -0.06F, 0.2F, -0.4F, 0.06F, 0.3F, -0.05F, 0.8F);
+        collector.submitCustomGeometry(poseStack, HardLight.type(HardLight.PANEL_SOLID), (pose, vc) -> {
+            HardLight.solidBox(vc, pose, -0.2F, -0.2F, -0.6F, 0.2F, 0.2F, 0.05F, 1.0F);
+            HardLight.solidBox(vc, pose, -0.07F, -0.5F, -0.45F, 0.07F, -0.2F, -0.3F, 1.0F);
+            HardLight.solidBox(vc, pose, 0.2F, -0.18F, -0.5F, 0.42F, 0.12F, -0.1F, 0.9F);
+            HardLight.solidBox(vc, pose, -0.06F, 0.2F, -0.4F, 0.06F, 0.3F, -0.05F, 0.8F);
         });
 
         // Rotating barrel assembly.
         poseStack.pushPose();
         poseStack.mulPose(Axis.ZP.rotationDegrees(state.barrelAngle));
-        collector.submitCustomGeometry(poseStack, HardLight.type(HardLight.PANEL), (pose, vc) -> {
+        collector.submitCustomGeometry(poseStack, HardLight.type(HardLight.PANEL_SOLID), (pose, vc) -> {
             for (int i = 0; i < BARRELS; i++) {
                 float a = Mth.TWO_PI * i / BARRELS;
                 float cx = Mth.cos(a) * 0.12F;
                 float cy = Mth.sin(a) * 0.12F;
                 HardLight.box(vc, pose, cx - 0.035F, cy - 0.035F, 0.05F, cx + 0.035F, cy + 0.035F, 1.05F, HardLight.color(0.8F, 0.45F));
             }
-            HardLight.glowingBox(vc, pose, -0.19F, -0.19F, 0.45F, 0.19F, 0.19F, 0.5F, 0.8F);
-            HardLight.glowingBox(vc, pose, -0.19F, -0.19F, 0.95F, 0.19F, 0.19F, 1.0F, 0.8F);
+            HardLight.solidBox(vc, pose, -0.19F, -0.19F, 0.45F, 0.19F, 0.19F, 0.5F, 0.8F);
+            HardLight.solidBox(vc, pose, -0.19F, -0.19F, 0.95F, 0.19F, 0.19F, 1.0F, 0.8F);
             HardLight.box(vc, pose, -0.03F, -0.03F, 0.05F, 0.03F, 0.03F, 1.0F, HardLight.color(0.9F, 1.0F));
         });
         poseStack.popPose();

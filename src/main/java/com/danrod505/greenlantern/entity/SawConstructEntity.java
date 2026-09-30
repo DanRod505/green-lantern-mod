@@ -35,8 +35,10 @@ import org.jspecify.annotations.Nullable;
  * Like boats, movement is simulated by the controlling client and synced to the server.
  */
 public class SawConstructEntity extends ConstructEntity {
-    public static final float BLADE_RADIUS = 1.25F;
-    public static final double BLADE_OFFSET = 1.55;
+    public static final float BLADE_RADIUS = 1.35F;
+    public static final double BLADE_OFFSET = 1.75;
+    /** Height of the (horizontal) blade above the bottom of the saw. */
+    public static final float BLADE_HEIGHT = 0.8F;
     private static final double MAX_SPEED = 0.85;
     private static final double ACCELERATION = 0.06;
     private static final double HOVER_HEIGHT = 0.35;
@@ -174,6 +176,10 @@ public class SawConstructEntity extends ConstructEntity {
         } else {
             vy -= 0.06;
         }
+        // The saw hovers, so vanilla step-up never triggers: hop over low obstacles instead.
+        if (horizontalCollision && driver != null && ground < 1.0 && motion.horizontalDistanceSqr() > 1.0E-4) {
+            vy = Math.max(vy, 0.42);
+        }
         vy *= 0.98;
         if (isInWater()) vy = Math.max(vy, 0.04);
         setDeltaMovement(motion.x, vy, motion.z);
@@ -199,9 +205,13 @@ public class SawConstructEntity extends ConstructEntity {
         bladeAngleO = bladeAngle;
         bladeAngle += 38.0F + (float) speed * 40.0F;
         if (tickCount % 2 == 0) {
-            Vec3 bottom = bladeCenter().add(Vec3.directionFromRotation(0, getYRot()).scale(0.2)).subtract(0, BLADE_RADIUS * 0.8, 0);
-            level().addParticle(ModParticles.SPARK.get(), bottom.x, bottom.y, bottom.z,
-                    (random.nextDouble() - 0.5) * 0.2, 0.15 + random.nextDouble() * 0.1, (random.nextDouble() - 0.5) * 0.2);
+            // Sparks flying off the rim of the blade.
+            double a = random.nextDouble() * Math.PI * 2;
+            Vec3 center = bladeCenter();
+            double rx = Math.cos(a) * BLADE_RADIUS;
+            double rz = Math.sin(a) * BLADE_RADIUS;
+            level().addParticle(ModParticles.SPARK.get(), center.x + rx, center.y, center.z + rz,
+                    -rz * 0.15, 0.05 + random.nextDouble() * 0.1, rx * 0.15);
         }
         if (tickCount % 4 == 0) {
             level().addParticle(ModParticles.GLOW.get(), getX() + (random.nextDouble() - 0.5) * 1.4, getY(), getZ() + (random.nextDouble() - 0.5) * 1.4, 0, -0.02, 0);
@@ -211,7 +221,7 @@ public class SawConstructEntity extends ConstructEntity {
     /** Center of the spinning blade, in front of the platform. */
     public Vec3 bladeCenter() {
         Vec3 forward = Vec3.directionFromRotation(0, getYRot());
-        return position().add(forward.scale(BLADE_OFFSET)).add(0, BLADE_RADIUS - 0.25, 0);
+        return position().add(forward.scale(BLADE_OFFSET)).add(0, BLADE_HEIGHT, 0);
     }
 
     private void serverTick(ServerLevel level) {
@@ -231,7 +241,9 @@ public class SawConstructEntity extends ConstructEntity {
 
         Vec3 center = bladeCenter();
         Vec3 forward = Vec3.directionFromRotation(0, getYRot());
-        AABB bladeBox = new AABB(center, center).inflate(BLADE_RADIUS * 0.9, BLADE_RADIUS, BLADE_RADIUS * 0.9).move(forward.scale(0.3));
+        // The blade sweeps a flat disc; creatures and plants from the ground up to just above it are hit.
+        AABB bladeBox = new AABB(center.x - BLADE_RADIUS, getY() - 0.3, center.z - BLADE_RADIUS,
+                center.x + BLADE_RADIUS, center.y + 0.9, center.z + BLADE_RADIUS);
 
         boolean cut = false;
         for (LivingEntity target : level.getEntitiesOfClass(LivingEntity.class, bladeBox, e -> e.isAlive() && e != owner && !hasPassenger(e))) {
@@ -244,7 +256,7 @@ public class SawConstructEntity extends ConstructEntity {
         }
 
         if (GLConfig.SAW_CUTS_PLANTS.get() && owner != null && tickCount % 2 == 0) {
-            BlockPos min = BlockPos.containing(bladeBox.minX, bladeBox.minY + 0.3, bladeBox.minZ);
+            BlockPos min = BlockPos.containing(bladeBox.minX, bladeBox.minY + 0.35, bladeBox.minZ);
             BlockPos max = BlockPos.containing(bladeBox.maxX, bladeBox.maxY, bladeBox.maxZ);
             for (BlockPos pos : BlockPos.betweenClosed(min, max)) {
                 BlockState state = level.getBlockState(pos);

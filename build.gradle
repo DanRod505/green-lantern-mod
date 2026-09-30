@@ -113,3 +113,22 @@ if (project.hasProperty('gametests')) {
     sourceSets.main.java.srcDir 'src/gametest/java'
     sourceSets.main.resources.srcDir 'src/gametest/resources'
 }
+
+// CurseForge profile: a zip that can be imported in the CurseForge app (Create Custom Profile > Import).
+// It sets up Minecraft 1.21.11 + Forge and already contains this mod.
+tasks.register('curseforgeProfile', Zip) {
+    group = 'distribution'
+    description = 'Builds an importable CurseForge profile containing this mod.'
+    archiveFileName = "${mod_id}-${minecraft_version}-${mod_version}-curseforge-profile.zip"
+    destinationDirectory = layout.buildDirectory.dir('distributions')
+    def props = resourceProps
+    inputs.properties(props)
+    from('curseforge') {
+        include 'manifest.json'
+        expand(props)
+    }
+    from(tasks.named('jar')) {
+        into 'overrides/mods'
+    }
+}
+tasks.named('build') { dependsOn 'curseforgeProfile' }

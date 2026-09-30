@@ -476,6 +476,23 @@ def make_construct_textures():
             img.putpixel((x, y), c)
     save(img, "entity", "construct", "hard_light.png")
 
+    # Denser variant for small constructs (minigun) so they stay readable against a bright sky.
+    img = blank(n, n)
+    for y in range(n):
+        for x in range(n):
+            edge = min(x, y, n - 1 - x, n - 1 - y)
+            if edge <= 1:
+                c = (225, 255, 232, 255)
+            elif edge <= 3:
+                c = (90, 240, 125, 250)
+            else:
+                t = min(1.0, (edge - 4) / 10)
+                c = lerp((30, 170, 60, 240), (14, 110, 36, 230), t)
+                if y % 4 == 0:
+                    c = lerp(c, (70, 220, 105, 240), 0.5)
+            img.putpixel((x, y), c)
+    save(img, "entity", "construct", "hard_light_solid.png")
+
     # Solid core (for projectiles / hammer core), radial glow
     img = blank(16, 16)
     for y in range(16):

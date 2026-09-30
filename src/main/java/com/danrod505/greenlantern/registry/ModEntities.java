@@ -32,7 +32,7 @@ public final class ModEntities {
 
     public static final RegistryObject<EntityType<SawConstructEntity>> SAW_CONSTRUCT = ENTITIES.register("saw_construct",
             () -> EntityType.Builder.<SawConstructEntity>of(SawConstructEntity::new, MobCategory.MISC)
-                    .noLootTable().sized(1.6F, 1.0F).clientTrackingRange(10).updateInterval(1).fireImmune().noSummon()
+                    .noLootTable().sized(1.6F, 0.6F).clientTrackingRange(10).updateInterval(1).fireImmune().noSummon()
                     .build(ENTITIES.key("saw_construct")));
 
     public static final RegistryObject<EntityType<HammerConstructEntity>> HAMMER_CONSTRUCT = ENTITIES.register("hammer_construct",

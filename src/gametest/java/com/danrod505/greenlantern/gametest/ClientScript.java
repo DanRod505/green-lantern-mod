@@ -13,6 +13,7 @@ import java.util.List;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Screenshot;
+import net.minecraft.client.gui.screens.AccessibilityOnboardingScreen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -42,6 +43,7 @@ public final class ClientScript {
     private static int stepIndex;
     private static int wait;
     private static boolean worldRequested;
+    private static BlockPos lanternPos = BlockPos.ZERO;
 
     private ClientScript() {}
 
@@ -113,7 +115,8 @@ public final class ClientScript {
                 sp.setItemInHand(InteractionHand.MAIN_HAND, PowerRingItem.charged(new ItemStack(ModItems.POWER_RING.get())));
                 ServerLevel level = sp.level();
                 BlockPos base = sp.blockPosition();
-                level.setBlockAndUpdate(base.offset(2, 0, 3), ModBlocks.POWER_BATTERY.get().defaultBlockState());
+                lanternPos = base.offset(2, 0, 3);
+                level.setBlockAndUpdate(lanternPos, ModBlocks.POWER_BATTERY.get().defaultBlockState());
                 for (int i = -1; i <= 1; i++) {
                     Zombie zombie = EntityType.ZOMBIE.create(level, EntitySpawnReason.COMMAND);
                     zombie.snapTo(base.getX() + 0.5 + i * 2.5, base.getY(), base.getZ() + 9.5, 180, 0);
@@ -141,10 +144,17 @@ public final class ClientScript {
         step(3, () -> shot("04_energy_blast"));
         // Minigun.
         step(20, () -> select(ConstructRegistry.MINIGUN));
-        step(5, ClientScript::use);
-        step(14, () -> shot("05_minigun"));
-        step(4, () -> shot("05b_minigun"));
-        step(2, () -> server(ServerPlayer::releaseUsingItem));
+        // Hold the real "use" key so the whole client -> server input path is exercised.
+        step(5, () -> mc().options.keyUse.setDown(true));
+        step(20, () -> shot("05_minigun"));
+        step(2, () -> camera(CameraType.THIRD_PERSON_FRONT));
+        step(4, () -> shot("05b_minigun_front"));
+        step(1, () -> camera(CameraType.FIRST_PERSON));
+        step(4, () -> shot("05c_minigun_first_person"));
+        step(1, () -> {
+            camera(CameraType.THIRD_PERSON_BACK);
+            mc().options.keyUse.setDown(false);
+        });
         // Bubble.
         step(15, () -> select(ConstructRegistry.BUBBLE));
         step(5, ClientScript::use);
@@ -190,16 +200,14 @@ public final class ClientScript {
             sp.getAbilities().flying = false;
             sp.onUpdateAbilities();
             Uniform.dismiss(sp, true);
-            BlockPos lantern = sp.blockPosition().below(3).offset(2, 0, 3);
-            sp.teleportTo(lantern.getX() - 1.5, lantern.getY(), lantern.getZ() - 1.5);
+            sp.teleportTo(lanternPos.getX() - 1.0, lanternPos.getY(), lanternPos.getZ() - 1.0);
             RingEnergy.set(sp.getMainHandItem(), 250);
         }));
         step(10, () -> {
             camera(CameraType.FIRST_PERSON);
-            look(-45, 35);
+            look(-45, 40);
             server(sp -> {
-                BlockPos lantern = BlockPos.containing(sp.getX() + 1.5, sp.getY(), sp.getZ() + 1.5);
-                if (sp.level().getBlockEntity(lantern) instanceof PowerBatteryBlockEntity battery) {
+                if (sp.level().getBlockEntity(lanternPos) instanceof PowerBatteryBlockEntity battery) {
                     battery.toggleCharging(sp);
                 }
             });
@@ -212,7 +220,8 @@ public final class ClientScript {
     private static void tick(TickEvent.ClientTickEvent.Post event) {
         Minecraft mc = mc();
         if (mc.level == null || mc.player == null) {
-            if (!worldRequested && mc.screen instanceof TitleScreen) {
+            if (!worldRequested && (mc.screen instanceof TitleScreen || mc.screen instanceof AccessibilityOnboardingScreen)) {
+                mc.options.onboardAccessibility = false;
                 worldRequested = true;
                 LevelSettings settings = new LevelSettings("gltest", GameType.CREATIVE, false, Difficulty.EASY, true,
                         new GameRules(WorldDataConfiguration.DEFAULT.enabledFeatures()), WorldDataConfiguration.DEFAULT);

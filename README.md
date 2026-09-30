@@ -4,11 +4,19 @@
 
 Mod do Lanterna Verde para **Minecraft Java 1.21.11** com **Forge 61.2.0** (compilado com **Java 25**).
 
+## Capturas (tiradas automaticamente no jogo)
+
+| | |
+| --- | --- |
+| ![Uniforme](docs/screenshots/02_uniform_front.jpg) | ![Metralhadora](docs/screenshots/05c_minigun_first_person.jpg) |
+| ![Bolha](docs/screenshots/06_bubble.jpg) | ![Serra gigante](docs/screenshots/07b_saw_front.jpg) |
+| ![Martelo gigante](docs/screenshots/08c_hammer_impact.jpg) | ![Recarga na Bateria de Poder](docs/screenshots/10b_charging.jpg) |
+
 ## Conteúdo
 
 | Item / recurso | Descrição |
 | --- | --- |
-| **Anel de Poder** | Veste o uniforme dos Lanternas Verdes, dá voo e cria construtos de luz sólida. Tem **energia finita** (barra no slot, tooltip e HUD). |
+| **Anel de Poder** | Um anel recém-fabricado vem **descarregado**: carregue-o na Bateria de Poder antes de usar. Veste o uniforme dos Lanternas Verdes, dá voo e cria construtos de luz sólida. Tem **energia finita** (barra no slot, tooltip e HUD). |
 | **Bateria de Poder (lanterna)** | Bloco 3D animado que recarrega o anel. Clique com o anel na mão e fique perto: a energia flui da lanterna para o anel enquanto o juramento aparece na tela. |
 | **Uniforme** | Máscara, uniforme, calças e botas de luz sólida (proteção equivalente a diamante). Guardam a armadura que você usava e a devolvem ao remover o uniforme. Não podem ser tirados nem dropados. |
 | **Voo** | Com o uniforme: dois toques no pulo para voar (como no criativo), mais rápido que o voo criativo. Gasta um pouco de energia por segundo. Sem dano de queda enquanto estiver com o uniforme. |
@@ -54,7 +62,15 @@ Todos os números de balanceamento (energia máxima, custo de cada construto, da
 
 ## Instalação (para jogar)
 
-### Opção A — CurseForge App (recomendado)
+### Opção A — CurseForge App, importando o perfil pronto (mais fácil)
+
+O build gera `greenlantern-1.21.11-1.0.0-curseforge-profile.zip`, um perfil do CurseForge que já configura o **Minecraft 1.21.11 + Forge 61.2.0** e já traz o mod dentro.
+
+1. Abra o **CurseForge App** → **Minecraft** → **Create Custom Profile**.
+2. Clique em **Import** (canto superior da janela) e escolha o arquivo `...-curseforge-profile.zip`.
+3. Aguarde o CurseForge baixar o Minecraft e o Forge e clique em **Play**.
+
+### Opção B — CurseForge App, perfil manual
 
 1. Abra o **CurseForge App** → **Minecraft** → **Create Custom Profile**.
 2. Em *Game Version* escolha **1.21.11**, em *Modloader* escolha **Forge** e selecione a versão **61.2.0** (ou mais recente da série 61.x). Clique em **Create**.
@@ -64,7 +80,7 @@ Todos os números de balanceamento (energia máxima, custo de cada construto, da
 
 > Não é preciso instalar Java separadamente: o CurseForge e o launcher oficial usam o Java que vem com o Minecraft 1.21.11. O jar foi compilado com o JDK 25, mas gera bytecode Java 21, então roda tanto no Java 21 do launcher quanto no Java 25.
 
-### Opção B — Launcher oficial
+### Opção C — Launcher oficial
 
 1. Baixe o instalador do Forge **1.21.11 – 61.2.0** em <https://files.minecraftforge.net/net/minecraftforge/forge/index_1.21.11.html> e execute-o (*Install client*).
 2. Abra a pasta do jogo (`%appdata%\.minecraft` no Windows, `~/Library/Application Support/minecraft` no macOS, `~/.minecraft` no Linux) e coloque o jar em `mods/`.
@@ -100,6 +116,7 @@ Instale o servidor Forge 1.21.11-61.2.0 (*Install server* no mesmo instalador) e
 ```bash
 # Windows: use gradlew.bat no lugar de ./gradlew
 ./gradlew build                          # gera build/libs/greenlantern-1.21.11-1.0.0.jar
+                                         # e build/distributions/...-curseforge-profile.zip
 ./gradlew runClient                      # abre o Minecraft com o mod (ambiente de desenvolvimento)
 ./gradlew runServer                      # servidor de desenvolvimento
 ./gradlew runGameTestServer -Pgametests  # roda os testes automáticos dentro do jogo

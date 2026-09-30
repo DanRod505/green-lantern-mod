@@ -17,6 +17,8 @@ import net.minecraft.world.phys.Vec3;
  * looks and spins its barrels while firing. Bullets are fired by {@link com.danrod505.greenlantern.construct.impl.MinigunConstruct}.
  */
 public class GunConstructEntity extends ConstructEntity {
+    /** Render scale of the gun model (also used to place the muzzle). */
+    public static final float SCALE = 1.25F;
     private static final EntityDataAccessor<Integer> DATA_SPIN = SynchedEntityData.defineId(GunConstructEntity.class, EntityDataSerializers.INT);
 
     /** Client-side barrel rotation (degrees) and speed. */
@@ -45,7 +47,7 @@ public class GunConstructEntity extends ConstructEntity {
 
     /** Where bullets leave the barrels. */
     public Vec3 muzzlePosition() {
-        return position().add(0, getBbHeight() / 2, 0).add(Vec3.directionFromRotation(getXRot(), getYRot()).scale(1.1));
+        return position().add(0, getBbHeight() / 2, 0).add(Vec3.directionFromRotation(getXRot(), getYRot()).scale(1.1 * SCALE));
     }
 
     @Override
@@ -75,11 +77,14 @@ public class GunConstructEntity extends ConstructEntity {
         HumanoidArm arm = mainHandRing ? owner.getMainArm() : owner.getMainArm().getOpposite();
         float side = arm == HumanoidArm.RIGHT ? 1.0F : -1.0F;
         Vec3 look = owner.getLookAngle();
-        Vec3 right = new Vec3(-look.z, 0, look.x).normalize();
+        // Derived from the yaw so it stays valid when looking straight up or down.
+        Vec3 flat = Vec3.directionFromRotation(0, owner.getYRot());
+        Vec3 right = new Vec3(-flat.z, 0, flat.x);
+        Vec3 up = right.cross(look); // "up" of the owner's view, so the gun stays in the same spot on screen
         Vec3 pos = owner.getEyePosition()
-                .add(right.scale(0.55 * side))
-                .add(look.scale(0.9))
-                .add(0, -0.45, 0);
+                .add(right.scale(0.85 * side))
+                .add(look.scale(1.6))
+                .add(up.scale(-0.45));
         setPos(pos.x, pos.y - getBbHeight() / 2, pos.z);
         setYRot(owner.getYRot());
         setXRot(owner.getXRot());

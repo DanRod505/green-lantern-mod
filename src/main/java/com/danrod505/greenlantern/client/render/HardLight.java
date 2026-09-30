@@ -16,6 +16,7 @@ import net.minecraft.util.Mth;
  */
 public final class HardLight {
     public static final Identifier PANEL = GreenLantern.id("textures/entity/construct/hard_light.png");
+    public static final Identifier PANEL_SOLID = GreenLantern.id("textures/entity/construct/hard_light_solid.png");
     public static final Identifier CORE = GreenLantern.id("textures/entity/construct/energy_core.png");
     public static final Identifier BUBBLE = GreenLantern.id("textures/entity/construct/bubble.png");
     public static final Identifier SAW_BLADE = GreenLantern.id("textures/entity/construct/saw_blade.png");
@@ -31,9 +32,9 @@ public final class HardLight {
     /** ARGB colour of hard light with the given opacity (0-1) and brightness boost (0-1). */
     public static int color(float alpha, float boost) {
         int a = Mth.clamp((int) (alpha * 255.0F), 0, 255);
-        int r = Mth.clamp((int) (60 + 150 * boost), 0, 255);
+        int r = Mth.clamp((int) (35 + 170 * boost), 0, 255);
         int g = 255;
-        int b = Mth.clamp((int) (90 + 140 * boost), 0, 255);
+        int b = Mth.clamp((int) (70 + 150 * boost), 0, 255);
         return a << 24 | r << 16 | g << 8 | b;
     }
 
@@ -80,9 +81,16 @@ public final class HardLight {
 
     /** Box plus a slightly larger, fainter shell that gives constructs their glow. */
     public static void glowingBox(VertexConsumer vc, PoseStack.Pose pose, float x0, float y0, float z0, float x1, float y1, float z1, float alpha) {
-        box(vc, pose, x0, y0, z0, x1, y1, z1, color(0.75F * alpha, 0.35F));
+        box(vc, pose, x0, y0, z0, x1, y1, z1, color(0.85F * alpha, 0.3F));
         float g = 0.06F;
         box(vc, pose, x0 - g, y0 - g, z0 - g, x1 + g, y1 + g, z1 + g, color(0.22F * alpha, 0.0F));
+    }
+
+    /** Nearly opaque box with a faint glow shell, for small constructs. */
+    public static void solidBox(VertexConsumer vc, PoseStack.Pose pose, float x0, float y0, float z0, float x1, float y1, float z1, float alpha) {
+        box(vc, pose, x0, y0, z0, x1, y1, z1, color(alpha, 0.1F));
+        float g = 0.04F;
+        box(vc, pose, x0 - g, y0 - g, z0 - g, x1 + g, y1 + g, z1 + g, color(0.18F * alpha, 0.0F));
     }
 
     /** UV sphere centered on the origin. */

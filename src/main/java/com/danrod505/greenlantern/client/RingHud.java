@@ -35,7 +35,7 @@ public final class RingHud {
     public static void render(GuiGraphics graphics, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
         Player player = mc.player;
-        if (player == null || mc.options.hideGui || player.isSpectator()) return;
+        if (player == null || mc.options.hideGui || player.isSpectator() || mc.getDebugOverlay().showDebugScreen()) return;
         ItemStack ring = RingHelper.findRing(player);
         if (ring.isEmpty()) {
             displayedFraction = -1.0F;
