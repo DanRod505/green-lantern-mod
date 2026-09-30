@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "charging=false,facing=north": {
+      "model": "greenlantern:block/power_battery"
+    },
+    "charging=false,facing=east": {
+      "model": "greenlantern:block/power_battery",
+      "y": 90
+    },
+    "charging=false,facing=south": {
+      "model": "greenlantern:block/power_battery",
+      "y": 180
+    },
+    "charging=false,facing=west": {
+      "model": "greenlantern:block/power_battery",
+      "y": 270
+    },
+    "charging=true,facing=north": {
+      "model": "greenlantern:block/power_battery_charging"
+    },
+    "charging=true,facing=east": {
+      "model": "greenlantern:block/power_battery_charging",
+      "y": 90
+    },
+    "charging=true,facing=south": {
+      "model": "greenlantern:block/power_battery_charging",
+      "y": 180
+    },
+    "charging=true,facing=west": {
+      "model": "greenlantern:block/power_battery_charging",
+      "y": 270
+    }
+  }
+}

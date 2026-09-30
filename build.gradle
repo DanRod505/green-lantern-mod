@@ -105,3 +105,11 @@ tasks.register('printCompileClasspath') {
         cp.files.each { println "CP: ${it}" }
     }
 }
+
+// Automated in-game tests live in src/gametest and are only compiled when requested:
+//   ./gradlew runGameTestServer -Pgametests
+// so they never end up in the released jar.
+if (project.hasProperty('gametests')) {
+    sourceSets.main.java.srcDir 'src/gametest/java'
+    sourceSets.main.resources.srcDir 'src/gametest/resources'
+}

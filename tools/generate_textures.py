@@ -73,21 +73,41 @@ def lerp(a, b, t):
 
 RING = [
     "................",
-    "....KKKKKKKK....",
-    "...KDggggggDK...",
-    "..KgWWWWWWWWgK..",
-    "..KgGLWWWWLGgK..",
-    "..KgLWGggGWLgK..",
-    "..KgLWgDDgWLgK..",
-    "..KgGLWWWWLGgK..",
-    "..KgWWWWWWWWgK..",
-    "...KDggggggDK...",
-    "...mKKKKKKKKm...",
-    "..mNs......sNm..",
-    "..mN........Nm..",
-    "..mNs......sNm..",
-    "...mMNNNNNNMm...",
-    "....mmmmmmmm....",
+    ".....KKKKKK.....",
+    "....KgGLLGgK....",
+    "...KgLWHHWLgK...",
+    "...KGWLggLWGK...",
+    "...KGWgDDgWGK...",
+    "...KGWgDDgWGK...",
+    "...KGWLggLWGK...",
+    "...KgLWWWWLgK...",
+    "...mKgGGGGgKm...",
+    "..mNsKKKKKKsNm..",
+    ".mNs........sNm.",
+    ".mM..........Mm.",
+    ".mNs........sNm.",
+    "..mNNsssssNNNm..",
+    "...mmmmmmmmmm...",
+]
+
+# Ring while a construct is being used: the gem burns white-hot.
+RING_ACTIVE = [
+    "....W......W....",
+    ".W...KKKKKK...W.",
+    "....KLWHHWLK....",
+    "...KLWHHHHWLK...",
+    "W..KWHWLLWHWK..W",
+    "...KWHLWWLHWK...",
+    "...KWHLWWLHWK...",
+    "W..KWHWLLWHWK..W",
+    "...KLWHHHHWLK...",
+    "...mKLWWWWLKm...",
+    "..mNsKKKKKKsNm..",
+    ".mNs........sNm.",
+    ".mM..........Mm.",
+    ".mNs........sNm.",
+    "..mNNsssssNNNm..",
+    "...mmmmmmmmmm...",
 ]
 
 LANTERN_ITEM = [
@@ -188,6 +208,7 @@ BOOTS_ITEM = [
 
 def make_items():
     save(from_map(RING), "item", "power_ring.png")
+    save(from_map(RING_ACTIVE), "item", "power_ring_active.png")
     save(from_map(MASK_ITEM), "item", "lantern_mask.png")
     save(from_map(SUIT_ITEM), "item", "lantern_suit.png")
     save(from_map(LEGS_ITEM), "item", "lantern_leggings.png")
@@ -197,71 +218,59 @@ def make_items():
 # --------------------------------------------------------------- lantern block
 
 def make_lantern_block():
-    """16x16 texture sheet for the power battery block model.
-    Layout (pixels):
-      (0,0)-(8,10)   : glass/glow body side (8 wide, 10 tall)
-      (8,0)-(16,2)   : metal band (8x2)
-      (8,2)-(16,4)   : dark band (8x2)
-      (0,10)-(10,16) : base/top cap face (10x6 side) and caps
-      (10,10)-(16,16): top/bottom faces (6x6)
-      (8,4)-(16,10)  : handle / ring metal
-    """
-    img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
-    px = img.load()
-    # glowing glass body 8x10 with emblem
-    body = [
-        "gGLWWLGg",
-        "GLWHHWLG",
-        "LWWLLWWL",
-        "LWG..GWL",
-        "LW.WW.WL",
-        "LW.WW.WL",
-        "LWG..GWL",
-        "LWWLLWWL",
-        "GLWWWWLG",
-        "gGLWWLGg",
-    ]
-    glow = dict(P)
-    glow["."] = (24, 140, 52, 255)
-    for y, row in enumerate(body):
-        for x, c in enumerate(row):
-            px[x, y] = glow[c]
-    # metal band
-    for x in range(8, 16):
-        px[x, 0] = P["s"] if x % 3 else P["N"]
-        px[x, 1] = P["M"]
-        px[x, 2] = P["m"]
-        px[x, 3] = P["K"]
-    # handle metal 8x6
-    for y in range(4, 10):
-        for x in range(8, 16):
-            t = (y - 4) / 5
-            px[x, y] = jitter(lerp(P["N"], P["m"], t), 6)
-    # base side 10x6
-    base = [
-        "sNNNNNNNNs",
-        "NMMMMMMMMN",
-        "MDGGGGGGDM",
-        "MmmmmmmmmM",
-        "mmMmmmmMmm",
-        "KKKKKKKKKK",
-    ]
-    for y, row in enumerate(base):
-        for x, c in enumerate(row):
-            px[x, 10 + y] = P[c]
-    # top / bottom 6x6
-    top = [
-        "mMMMMm",
-        "MNssNM",
-        "MsGGsM",
-        "MsGGsM",
-        "MNssNM",
-        "mMMMMm",
-    ]
-    for y, row in enumerate(top):
-        for x, c in enumerate(row):
-            px[10 + x, 10 + y] = P[c]
-    save(img, "block", "power_battery.png")
+    """Textures for the 3D Power Battery block model (see models/block/power_battery.json)."""
+    # Metal frame: dark gunmetal with a green tint, bevelled edges and rivets.
+    img = blank(16, 16)
+    for y in range(16):
+        for x in range(16):
+            edge = min(x, y, 15 - x, 15 - y)
+            base = (52, 64, 58, 255) if edge > 1 else ((150, 164, 156, 255) if edge == 0 else (96, 110, 102, 255))
+            if edge > 1 and (x + y) % 7 == 0:
+                base = lerp(base, (70, 84, 76, 255), 0.6)
+            img.putpixel((x, y), jitter(base, 4))
+    for (x, y) in [(2, 2), (13, 2), (2, 13), (13, 13)]:
+        img.putpixel((x, y), (190, 204, 196, 255))
+        img.putpixel((x + 1, y + 1) if x < 8 else (x - 1, y + 1), (30, 36, 32, 255))
+    save(img, "block", "power_battery_metal.png")
+
+    # Glass: translucent green with a bright rim and the Corps emblem.
+    img = blank(16, 16)
+    for y in range(16):
+        for x in range(16):
+            edge = min(x, y, 15 - x, 15 - y)
+            if edge == 0:
+                c = (170, 255, 190, 230)
+            else:
+                t = abs(y - 7.5) / 7.5
+                c = lerp((60, 230, 100, 120), (30, 170, 70, 150), t)
+                if (x + y) % 5 == 0:
+                    c = lerp(c, (140, 255, 170, 150), 0.35)
+            img.putpixel((x, y), c)
+    d = ImageDraw.Draw(img)
+    d.ellipse([4, 4, 11, 11], outline=(225, 255, 232, 255), width=1)
+    d.line([3, 2, 12, 2], fill=(225, 255, 232, 255))
+    d.line([3, 13, 12, 13], fill=(225, 255, 232, 255))
+    save(img, "block", "power_battery_glass.png")
+
+    # Core: animated pulsing flame (4 frames stacked vertically, see .mcmeta).
+    for name, bright in (("power_battery_core", 0.0), ("power_battery_core_charging", 1.0)):
+        frames = 8
+        sheet = blank(16, 16 * frames)
+        for f in range(frames):
+            phase = math.sin(f / frames * math.tau)
+            for y in range(16):
+                for x in range(16):
+                    dx = (x - 7.5) / 7.5
+                    dy = (y - 8.5 - phase) / 8.0
+                    dist = math.sqrt(dx * dx * (1.6 - 0.4 * bright) + dy * dy)
+                    k = max(0.0, 1.0 - dist)
+                    glow = min(1.0, k * (1.4 + 0.3 * phase + 0.8 * bright))
+                    c = lerp((20, 150, 55, 255), (245, 255, 245, 255), glow ** 1.3)
+                    sheet.putpixel((x, f * 16 + y), c)
+        save(sheet, "block", name + ".png")
+        meta = os.path.join(TEX, "block", name + ".png.mcmeta")
+        with open(meta, "w") as fh:
+            fh.write('{\n  "animation": {\n    "frametime": %d,\n    "interpolate": true\n  }\n}\n' % (2 if bright else 4))
 
 
 # --------------------------------------------------------------- armor (equipment)
@@ -501,6 +510,61 @@ def make_construct_textures():
     save(img, "entity", "construct", "bubble.png")
 
 
+def make_saw_blade():
+    """64x64 hard-light circular saw blade with teeth, spokes and a hub (alpha cut-out)."""
+    n = 64
+    img = blank(n, n)
+    c0 = (n - 1) / 2
+    teeth = 16
+    for y in range(n):
+        for x in range(n):
+            dx, dy = x - c0, y - c0
+            r = math.hypot(dx, dy)
+            a = math.atan2(dy, dx) % math.tau
+            seg = (a / math.tau * teeth) % 1.0
+            # Saw-tooth profile: a steep face and a sloped back.
+            tooth_r = 26 + 5.5 * (1.0 - seg)
+            if r > tooth_r:
+                continue
+            if r > 25:
+                c = (220, 255, 228, 255) if r > tooth_r - 1.3 else (120, 255, 150, 245)
+            elif r > 23:
+                c = (230, 255, 236, 255)
+            elif r > 9:
+                spoke = min((a / math.tau * 6) % 1.0, 1 - (a / math.tau * 6) % 1.0)
+                if spoke < 0.06:
+                    c = (200, 255, 214, 235)
+                elif abs(r - 16) < 0.8:
+                    c = (150, 255, 175, 200)
+                else:
+                    t = (r - 9) / 14
+                    c = lerp((60, 225, 100, 150), (40, 190, 80, 110), t)
+            elif r > 7:
+                c = (235, 255, 240, 255)
+            else:
+                c = lerp((255, 255, 255, 255), (90, 240, 130, 230), r / 7)
+            img.putpixel((x, y), c)
+    save(img, "entity", "construct", "saw_blade.png")
+
+
+def make_shockwave():
+    n = 32
+    img = blank(n, n)
+    for y in range(n):
+        for x in range(n):
+            r = math.hypot(x - 15.5, y - 15.5) / 15.5
+            if r > 1:
+                continue
+            k = math.exp(-((r - 0.86) / 0.07) ** 2)
+            inner = 0.25 * math.exp(-((r - 0.6) / 0.25) ** 2)
+            a = min(1.0, k + inner)
+            if a < 0.02:
+                continue
+            c = lerp((60, 230, 100, 0), (235, 255, 240, 255), a)
+            img.putpixel((x, y), c)
+    save(img, "particle", "lantern_shockwave.png")
+
+
 # --------------------------------------------------------------- particles
 
 def make_particles():
@@ -713,6 +777,8 @@ if __name__ == "__main__":
     make_lantern_block()
     make_armor()
     make_construct_textures()
+    make_saw_blade()
     make_particles()
+    make_shockwave()
     make_gui()
     make_logo()

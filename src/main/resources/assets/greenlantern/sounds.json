@@ -1,0 +1,146 @@
+{
+  "ring_activate": {
+    "subtitle": "subtitles.greenlantern.ring_activate",
+    "sounds": [
+      {
+        "name": "greenlantern:ring_activate"
+      }
+    ]
+  },
+  "ring_deactivate": {
+    "subtitle": "subtitles.greenlantern.ring_deactivate",
+    "sounds": [
+      {
+        "name": "greenlantern:ring_deactivate"
+      }
+    ]
+  },
+  "blast_fire": {
+    "subtitle": "subtitles.greenlantern.blast_fire",
+    "sounds": [
+      {
+        "name": "greenlantern:blast_fire"
+      }
+    ]
+  },
+  "blast_impact": {
+    "subtitle": "subtitles.greenlantern.blast_impact",
+    "sounds": [
+      {
+        "name": "greenlantern:blast_impact"
+      }
+    ]
+  },
+  "gun_fire": {
+    "subtitle": "subtitles.greenlantern.gun_fire",
+    "sounds": [
+      {
+        "name": "greenlantern:gun_fire1"
+      },
+      {
+        "name": "greenlantern:gun_fire2"
+      },
+      {
+        "name": "greenlantern:gun_fire3"
+      }
+    ]
+  },
+  "bubble_up": {
+    "subtitle": "subtitles.greenlantern.bubble_up",
+    "sounds": [
+      {
+        "name": "greenlantern:bubble_up"
+      }
+    ]
+  },
+  "bubble_hit": {
+    "subtitle": "subtitles.greenlantern.bubble_hit",
+    "sounds": [
+      {
+        "name": "greenlantern:bubble_hit"
+      }
+    ]
+  },
+  "saw_summon": {
+    "subtitle": "subtitles.greenlantern.saw_summon",
+    "sounds": [
+      {
+        "name": "greenlantern:saw_summon"
+      }
+    ]
+  },
+  "saw_loop": {
+    "subtitle": "subtitles.greenlantern.saw_loop",
+    "sounds": [
+      {
+        "name": "greenlantern:saw_loop",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "saw_cut": {
+    "subtitle": "subtitles.greenlantern.saw_cut",
+    "sounds": [
+      {
+        "name": "greenlantern:saw_cut"
+      }
+    ]
+  },
+  "hammer_summon": {
+    "subtitle": "subtitles.greenlantern.hammer_summon",
+    "sounds": [
+      {
+        "name": "greenlantern:hammer_summon"
+      }
+    ]
+  },
+  "hammer_impact": {
+    "subtitle": "subtitles.greenlantern.hammer_impact",
+    "sounds": [
+      {
+        "name": "greenlantern:hammer_impact"
+      }
+    ]
+  },
+  "charge_loop": {
+    "subtitle": "subtitles.greenlantern.charge_loop",
+    "sounds": [
+      {
+        "name": "greenlantern:charge_loop",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "charge_complete": {
+    "subtitle": "subtitles.greenlantern.charge_complete",
+    "sounds": [
+      {
+        "name": "greenlantern:charge_complete"
+      }
+    ]
+  },
+  "construct_select": {
+    "subtitle": "subtitles.greenlantern.construct_select",
+    "sounds": [
+      {
+        "name": "greenlantern:construct_select"
+      }
+    ]
+  },
+  "low_energy": {
+    "subtitle": "subtitles.greenlantern.low_energy",
+    "sounds": [
+      {
+        "name": "greenlantern:low_energy"
+      }
+    ]
+  },
+  "flight_whoosh": {
+    "subtitle": "subtitles.greenlantern.flight_whoosh",
+    "sounds": [
+      {
+        "name": "greenlantern:flight_whoosh"
+      }
+    ]
+  }
+}

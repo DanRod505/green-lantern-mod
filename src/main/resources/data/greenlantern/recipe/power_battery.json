@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "IGI",
+    "GLG",
+    "IEI"
+  ],
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "G": "minecraft:lime_stained_glass",
+    "L": "minecraft:lantern",
+    "E": "minecraft:emerald_block"
+  },
+  "result": {
+    "id": "greenlantern:power_battery",
+    "count": 1
+  }
+}

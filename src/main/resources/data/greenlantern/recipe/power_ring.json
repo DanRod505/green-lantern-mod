@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " D ",
+    "E E",
+    " E "
+  ],
+  "key": {
+    "D": "minecraft:diamond",
+    "E": "minecraft:emerald"
+  },
+  "result": {
+    "id": "greenlantern:power_ring",
+    "count": 1
+  }
+}
