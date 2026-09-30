@@ -17,7 +17,9 @@ jobs:
           java-version: '25'
       - uses: gradle/actions/setup-gradle@v4
       - name: Resolve classpath
-        run: ./gradlew printCompileClasspath --no-configuration-cache -q | grep '^CP: ' | sed 's/^CP: //' > cp.txt; cat cp.txt | grep -i -E "minecraft|forge|client" || true
+        run: |
+          ./gradlew printCompileClasspath --no-configuration-cache -q | grep '^CP: ' | sed 's/^CP: //' > cp.txt
+          grep -i -E "minecraft|forge|client" cp.txt || true
       - name: javap
         run: |
           CP=$(paste -sd: cp.txt)
