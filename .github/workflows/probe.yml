@@ -1,0 +1,27 @@
+name: API Probe (temporary)
+
+on:
+  push:
+    paths:
+      - '.github/probe-classes.txt'
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Resolve classpath
+        run: ./gradlew printCompileClasspath --no-configuration-cache -q | grep '^CP: ' | sed 's/^CP: //' > cp.txt; cat cp.txt | grep -i -E "minecraft|forge|client" || true
+      - name: javap
+        run: |
+          CP=$(paste -sd: cp.txt)
+          grep -v '^#' .github/probe-classes.txt | grep -v '^\s*$' | while read c; do
+            echo "=================== $c"
+            javap -cp "$CP" -public $c 2>&1 | grep -v '^Compiled from' || true
+          done
