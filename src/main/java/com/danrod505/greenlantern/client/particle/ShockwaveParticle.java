@@ -1,6 +1,9 @@
 package com.danrod505.greenlantern.client.particle;
 
+import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.state.QuadParticleRenderState;
+import org.joml.Quaternionf;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SingleQuadParticle;
@@ -11,7 +14,8 @@ import net.minecraft.util.RandomSource;
 
 /** Flat ring lying on the ground that quickly expands and fades (hammer / blast impacts). */
 public class ShockwaveParticle extends SingleQuadParticle {
-    private static final FacingCameraMode FLAT = (rotation, camera, partialTick) -> rotation.rotationX(-Mth.HALF_PI);
+    private static final Quaternionf UP = new Quaternionf().rotationX(-Mth.HALF_PI);
+    private static final Quaternionf DOWN = new Quaternionf().rotationX(Mth.HALF_PI);
 
     protected ShockwaveParticle(ClientLevel level, double x, double y, double z, SpriteSet sprites) {
         super(level, x, y, z, 0, 0, 0, sprites.first());
@@ -22,7 +26,7 @@ public class ShockwaveParticle extends SingleQuadParticle {
         this.hasPhysics = false;
         this.lifetime = 12;
         this.quadSize = 0.5F;
-        setColor(0.5F, 1.0F, 0.6F);
+        setColor(0.85F, 1.0F, 0.88F);
     }
 
     @Override
@@ -33,9 +37,11 @@ public class ShockwaveParticle extends SingleQuadParticle {
         alpha = 1.0F - life;
     }
 
+    /** Particle quads are one-sided: draw the flat ring facing up and down. */
     @Override
-    public FacingCameraMode getFacingCameraMode() {
-        return FLAT;
+    public void extract(QuadParticleRenderState state, Camera camera, float partialTick) {
+        extractRotatedQuad(state, camera, UP, partialTick);
+        extractRotatedQuad(state, camera, DOWN, partialTick);
     }
 
     @Override

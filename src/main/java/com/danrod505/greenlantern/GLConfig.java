@@ -16,6 +16,15 @@ public final class GLConfig {
     public static final ForgeConfigSpec.DoubleValue FLIGHT_SPEED;
     public static final ForgeConfigSpec.BooleanValue SHOW_OATH;
 
+    // ---- Power flight ---------------------------------------------------------------------------
+    public static final ForgeConfigSpec.DoubleValue CRUISE_SPEED;
+    public static final ForgeConfigSpec.DoubleValue SOUND_BARRIER_SPEED;
+    public static final ForgeConfigSpec.DoubleValue MAX_FLIGHT_SPEED;
+    public static final ForgeConfigSpec.DoubleValue SECONDS_TO_SOUND_BARRIER;
+    public static final ForgeConfigSpec.DoubleValue SUPERSONIC_COST_MULTIPLIER;
+    public static final ForgeConfigSpec.DoubleValue HERO_LANDING_DAMAGE;
+    public static final ForgeConfigSpec.DoubleValue HERO_LANDING_RADIUS;
+
     // ---- Constructs ---------------------------------------------------------------------------
     public static final ForgeConfigSpec.IntValue BLAST_COST;
     public static final ForgeConfigSpec.DoubleValue BLAST_DAMAGE;
@@ -46,6 +55,16 @@ public final class GLConfig {
                 .defineInRange("flightSpeed", 0.1, 0.01, 1.0);
         SHOW_OATH = BUILDER.comment("Show the Green Lantern oath while recharging the ring.")
                 .define("showOath", true);
+        BUILDER.pop();
+
+        BUILDER.comment("Power flight: hold forward while flying to keep accelerating until you break the sound barrier.").push("flight");
+        CRUISE_SPEED = BUILDER.comment("Speed (blocks/tick) when power flight starts.").defineInRange("cruiseSpeed", 0.7, 0.2, 5.0);
+        SOUND_BARRIER_SPEED = BUILDER.comment("Speed (blocks/tick) considered Mach 1: crossing it triggers the sonic boom.").defineInRange("soundBarrierSpeed", 2.6, 0.5, 9.0);
+        MAX_FLIGHT_SPEED = BUILDER.comment("Top speed (blocks/tick). Keep it below 9 so servers don't reject the movement.").defineInRange("maxSpeed", 4.0, 0.5, 9.0);
+        SECONDS_TO_SOUND_BARRIER = BUILDER.comment("Seconds of continuous acceleration (holding forward) needed to reach Mach 1.").defineInRange("secondsToSoundBarrier", 5.0, 0.5, 60.0);
+        SUPERSONIC_COST_MULTIPLIER = BUILDER.comment("Flight energy cost multiplier at top speed (scales linearly with speed).").defineInRange("supersonicCostMultiplier", 3.0, 1.0, 50.0);
+        HERO_LANDING_DAMAGE = BUILDER.comment("Damage of the shockwave when diving into the ground at high speed.").defineInRange("heroLandingDamage", 10.0, 0.0, 1000.0);
+        HERO_LANDING_RADIUS = BUILDER.comment("Radius of the hero landing shockwave.").defineInRange("heroLandingRadius", 4.5, 1.0, 16.0);
         BUILDER.pop();
 
         BUILDER.push("constructs");

@@ -17,5 +17,10 @@ public final class ModParticles {
     /** Expanding ring used for shockwaves and impacts (always rendered, even at "decreased" particles). */
     public static final RegistryObject<SimpleParticleType> SHOCKWAVE = PARTICLES.register("lantern_shockwave", () -> new SimpleParticleType(true));
 
+    /** Expanding ring perpendicular to a direction (velocity parameters): sonic boom vapor cone. */
+    public static final RegistryObject<SimpleParticleType> SONIC_RING = PARTICLES.register("sonic_ring", () -> new SimpleParticleType(true));
+    /** Long, fast streak of light shed by a flying Lantern. */
+    public static final RegistryObject<SimpleParticleType> STREAK = PARTICLES.register("lantern_streak", () -> new SimpleParticleType(true));
+
     private ModParticles() {}
 }

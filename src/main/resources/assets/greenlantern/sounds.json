@@ -142,5 +142,65 @@
         "name": "greenlantern:flight_whoosh"
       }
     ]
+  },
+  "flight_wind": {
+    "subtitle": "subtitles.greenlantern.flight_wind",
+    "sounds": [
+      {
+        "name": "greenlantern:flight_wind",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "sonic_boom": {
+    "subtitle": "subtitles.greenlantern.sonic_boom",
+    "sounds": [
+      {
+        "name": "greenlantern:sonic_boom",
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "flight_takeoff": {
+    "subtitle": "subtitles.greenlantern.flight_takeoff",
+    "sounds": [
+      {
+        "name": "greenlantern:flight_takeoff",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "flight_roll": {
+    "subtitle": "subtitles.greenlantern.flight_roll",
+    "sounds": [
+      {
+        "name": "greenlantern:flight_roll"
+      }
+    ]
+  },
+  "hero_landing": {
+    "subtitle": "subtitles.greenlantern.hero_landing",
+    "sounds": [
+      {
+        "name": "greenlantern:hero_landing",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "flight_theme_base": {
+    "sounds": [
+      {
+        "name": "greenlantern:music/flight_theme_base",
+        "stream": true
+      }
+    ]
+  },
+  "flight_theme_peak": {
+    "sounds": [
+      {
+        "name": "greenlantern:music/flight_theme_peak",
+        "stream": true
+      }
+    ]
   }
 }

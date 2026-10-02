@@ -1,0 +1,20 @@
+{
+  "flight_theme_base": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "greenlantern:music/custom_flight_theme",
+        "stream": true
+      }
+    ]
+  },
+  "flight_theme_peak": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "greenlantern:music/silence",
+        "stream": true
+      }
+    ]
+  }
+}

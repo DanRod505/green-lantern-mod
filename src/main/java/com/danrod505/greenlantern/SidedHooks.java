@@ -13,6 +13,9 @@ public final class SidedHooks {
     /** Starts a camera shake on the local client (intensity 0-1, duration in ticks). */
     public static ShakeHandler cameraShake = (intensity, duration) -> {};
 
+    /** Client handler for flight state / moves of other players. */
+    public static java.util.function.Consumer<com.danrod505.greenlantern.network.FlightSyncPacket> flightSync = packet -> {};
+
     @FunctionalInterface
     public interface ShakeHandler {
         void shake(float intensity, int duration);

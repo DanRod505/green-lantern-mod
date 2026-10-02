@@ -59,5 +59,11 @@
   "subtitles.greenlantern.charge_complete": "Power Ring fully charged",
   "subtitles.greenlantern.construct_select": "Construct selected",
   "subtitles.greenlantern.low_energy": "Power Ring low on energy",
-  "subtitles.greenlantern.flight_whoosh": "Lantern flies by"
+  "subtitles.greenlantern.flight_whoosh": "Lantern flies by",
+  "subtitles.greenlantern.flight_wind": "Wind rushes",
+  "subtitles.greenlantern.sonic_boom": "Sonic boom",
+  "subtitles.greenlantern.flight_takeoff": "Lantern takes off",
+  "subtitles.greenlantern.flight_roll": "Barrel roll",
+  "subtitles.greenlantern.hero_landing": "Hero landing shockwave",
+  "hud.greenlantern.supersonic": "SUPERSONIC"
 }

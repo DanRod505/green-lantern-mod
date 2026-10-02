@@ -1,6 +1,7 @@
 package com.danrod505.greenlantern.ring;
 
 import com.danrod505.greenlantern.GLConfig;
+import com.danrod505.greenlantern.flight.ServerFlightTracker;
 import com.danrod505.greenlantern.registry.ModSounds;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -32,16 +33,15 @@ public final class FlightHandler {
                 player.onUpdateAbilities();
             }
             if (abilities.flying && !player.isCreative() && !player.isSpectator()) {
-                int cost = GLConfig.FLIGHT_COST_PER_SECOND.get();
+                // Faster power flight costs more: base cost at cruise, up to x supersonicCostMultiplier at top speed.
+                float multiplier = 1.0F + (GLConfig.SUPERSONIC_COST_MULTIPLIER.get().floatValue() - 1.0F) * ServerFlightTracker.speedFraction(player);
+                int cost = Math.round(GLConfig.FLIGHT_COST_PER_SECOND.get() * multiplier);
                 if (player.tickCount % 20 == 0 && cost > 0) {
                     RingEnergy.tryConsume(ring, cost);
                     if (RingEnergy.get(ring).stored() <= 0) {
                         player.displayClientMessage(Component.translatable("message.greenlantern.no_energy"), true);
                         player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.LOW_ENERGY.get(), SoundSource.PLAYERS, 0.8F, 1.0F);
                     }
-                }
-                if (player.tickCount % 60 == 0 && player.getDeltaMovement().lengthSqr() > 0.1) {
-                    player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.FLIGHT_WHOOSH.get(), SoundSource.PLAYERS, 0.35F, 0.9F + player.getRandom().nextFloat() * 0.2F);
                 }
             }
         } else if (abilities.getFlyingSpeed() != VANILLA_FLY_SPEED || (abilities.mayfly && !player.isCreative() && !player.isSpectator())) {

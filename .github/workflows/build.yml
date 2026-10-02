@@ -32,5 +32,5 @@ jobs:
           name: greenlantern-mod
           path: |
             build/libs/*.jar
-            build/distributions/*-curseforge-profile.zip
+            build/distributions/*.zip
           if-no-files-found: error

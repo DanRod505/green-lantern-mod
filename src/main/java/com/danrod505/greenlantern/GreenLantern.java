@@ -45,6 +45,7 @@ public final class GreenLantern {
         ModCreativeTabs.TABS.register(modBus);
 
         context.registerConfig(ModConfig.Type.COMMON, GLConfig.SPEC);
+        context.registerConfig(ModConfig.Type.CLIENT, GLClientConfig.SPEC);
 
         ModNetwork.register();
         ConstructRegistry.bootstrap();

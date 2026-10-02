@@ -132,3 +132,13 @@ tasks.register('curseforgeProfile', Zip) {
     }
 }
 tasks.named('build') { dependsOn 'curseforgeProfile' }
+
+// Template resource pack that lets players use their own music for the flight theme.
+tasks.register('customMusicPack', Zip) {
+    group = 'distribution'
+    description = 'Builds the "custom flight music" resource pack template.'
+    archiveFileName = "${mod_id}-custom-flight-music-resourcepack.zip"
+    destinationDirectory = layout.buildDirectory.dir('distributions')
+    from('extras/custom-flight-music-pack')
+}
+tasks.named('build') { dependsOn 'customMusicPack' }

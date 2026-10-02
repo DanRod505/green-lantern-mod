@@ -3,6 +3,7 @@ package com.danrod505.greenlantern.registry;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.entity.BubbleConstructEntity;
 import com.danrod505.greenlantern.entity.EnergyBoltEntity;
+import com.danrod505.greenlantern.entity.FlightTrailEntity;
 import com.danrod505.greenlantern.entity.GunConstructEntity;
 import com.danrod505.greenlantern.entity.HammerConstructEntity;
 import com.danrod505.greenlantern.entity.SawConstructEntity;
@@ -39,6 +40,12 @@ public final class ModEntities {
             () -> EntityType.Builder.<HammerConstructEntity>of(HammerConstructEntity::new, MobCategory.MISC)
                     .noLootTable().sized(2.0F, 2.0F).clientTrackingRange(10).updateInterval(1).fireImmune().noSummon()
                     .build(ENTITIES.key("hammer_construct")));
+
+    /** Client-only trail renderer holder (never spawned on the server). */
+    public static final RegistryObject<EntityType<FlightTrailEntity>> FLIGHT_TRAIL = ENTITIES.register("flight_trail",
+            () -> EntityType.Builder.<FlightTrailEntity>of(FlightTrailEntity::new, MobCategory.MISC)
+                    .noLootTable().sized(0.1F, 0.1F).clientTrackingRange(0).fireImmune().noSummon().noSave()
+                    .build(ENTITIES.key("flight_trail")));
 
     private ModEntities() {}
 }

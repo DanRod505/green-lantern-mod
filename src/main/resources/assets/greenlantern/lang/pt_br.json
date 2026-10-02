@@ -59,5 +59,11 @@
   "subtitles.greenlantern.charge_complete": "Anel de Poder totalmente carregado",
   "subtitles.greenlantern.construct_select": "Construto selecionado",
   "subtitles.greenlantern.low_energy": "Anel de Poder com pouca energia",
-  "subtitles.greenlantern.flight_whoosh": "Lanterna voando"
+  "subtitles.greenlantern.flight_whoosh": "Lanterna voando",
+  "subtitles.greenlantern.flight_wind": "Vento rugindo",
+  "subtitles.greenlantern.sonic_boom": "Estrondo sônico",
+  "subtitles.greenlantern.flight_takeoff": "Lanterna decola",
+  "subtitles.greenlantern.flight_roll": "Giro no ar",
+  "subtitles.greenlantern.hero_landing": "Onda de choque do pouso",
+  "hud.greenlantern.supersonic": "SUPERSÔNICO"
 }

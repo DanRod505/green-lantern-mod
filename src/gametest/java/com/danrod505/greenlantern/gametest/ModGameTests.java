@@ -1,6 +1,10 @@
 package com.danrod505.greenlantern.gametest;
 
+import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
+import com.danrod505.greenlantern.flight.FlightAction;
+import com.danrod505.greenlantern.flight.FlightFlags;
+import com.danrod505.greenlantern.flight.ServerFlightTracker;
 import com.danrod505.greenlantern.block.PowerBatteryBlockEntity;
 import com.danrod505.greenlantern.construct.Construct;
 import com.danrod505.greenlantern.construct.ConstructRegistry;
@@ -63,6 +67,9 @@ public final class ModGameTests {
         TESTS.register("hammer", () -> ModGameTests::hammer);
         TESTS.register("lantern_charges_ring", () -> ModGameTests::lanternChargesRing);
         TESTS.register("data_loaded", () -> ModGameTests::dataLoaded);
+        TESTS.register("sonic_boom_requires_speed", () -> ModGameTests::sonicBoomRequiresSpeed);
+        TESTS.register("hero_landing_shockwave", () -> ModGameTests::heroLandingShockwave);
+        TESTS.register("flight_cost_scales_with_speed", () -> ModGameTests::flightCostScalesWithSpeed);
     }
 
     private ModGameTests() {}
@@ -319,6 +326,74 @@ public final class ModGameTests {
                 .thenExecute(() -> helper.assertTrue(RingEnergy.get(ring).stored() > 0, "ring should be charging"))
                 .thenWaitUntil(() -> helper.assertTrue(RingEnergy.get(ring).isFull(), "ring should become full"))
                 .thenExecute(() -> remove(player))
+                .thenSucceed();
+    }
+
+    public static void sonicBoomRequiresSpeed(GameTestHelper helper) {
+        ServerPlayer player = player(helper, 7.5, 3, 7.5, 0, 0);
+        giveRing(player, 1000);
+        Uniform.summon(player);
+        player.getAbilities().flying = true;
+        var state = ServerFlightTracker.get(player);
+        long before = state.lastBoom();
+        ServerFlightTracker.onState(player, 0.8F, FlightFlags.POWER);
+        ServerFlightTracker.onAction(player, FlightAction.SONIC_BOOM);
+        helper.assertTrue(state.lastBoom() == before, "a slow Lantern must not trigger a sonic boom");
+        ServerFlightTracker.onState(player, GLConfig.SOUND_BARRIER_SPEED.get().floatValue() + 0.1F, FlightFlags.POWER | FlightFlags.SUPERSONIC);
+        ServerFlightTracker.onAction(player, FlightAction.SONIC_BOOM);
+        helper.assertTrue(state.lastBoom() != before, "breaking the sound barrier should be accepted");
+        helper.assertTrue(ServerFlightTracker.speedFraction(player) > 0.5F, "speed fraction should follow the reported speed");
+        ServerFlightTracker.onState(player, 50.0F, FlightFlags.POWER);
+        helper.assertTrue(state.speed <= GLConfig.MAX_FLIGHT_SPEED.get().floatValue(), "reported speed must be clamped");
+        remove(player);
+        helper.succeed();
+    }
+
+    public static void heroLandingShockwave(GameTestHelper helper) {
+        ServerPlayer player = player(helper, 7.5, 1, 7.5, 0, 0);
+        giveRing(player, 1000);
+        Uniform.summon(player);
+        player.getAbilities().flying = true;
+        Zombie near = dummy(helper, 9.5, 1, 7.5);
+        Zombie far = dummy(helper, 14.5, 1, 14.5);
+        float nearHealth = near.getHealth();
+        float farHealth = far.getHealth();
+        // Without speed the landing is rejected.
+        ServerFlightTracker.onAction(player, FlightAction.HERO_LANDING);
+        helper.assertTrue(near.getHealth() == nearHealth, "a slow landing must not cause a shockwave");
+        ServerFlightTracker.onState(player, 3.0F, FlightFlags.POWER | FlightFlags.SUPERSONIC);
+        ServerFlightTracker.onAction(player, FlightAction.HERO_LANDING);
+        helper.assertTrue(near.getHealth() < nearHealth, "nearby creatures should be hit by the hero landing");
+        helper.assertTrue(far.getHealth() == farHealth, "creatures far away should not be hit");
+        helper.assertTrue(player.getHealth() == player.getMaxHealth(), "the Lantern must not hurt themselves");
+        remove(player);
+        helper.succeed();
+    }
+
+    public static void flightCostScalesWithSpeed(GameTestHelper helper) {
+        ServerPlayer slow = player(helper, 4.5, 3, 7.5, 0, 0);
+        ServerPlayer fast = player(helper, 10.5, 3, 7.5, 0, 0);
+        ItemStack slowRing = giveRing(slow, 1000);
+        ItemStack fastRing = giveRing(fast, 1000);
+        Uniform.summon(slow);
+        Uniform.summon(fast);
+        slow.getAbilities().flying = true;
+        fast.getAbilities().flying = true;
+        helper.startSequence()
+                .thenExecuteFor(61, () -> {
+                    ServerFlightTracker.onState(slow, 0.0F, 0);
+                    ServerFlightTracker.onState(fast, GLConfig.MAX_FLIGHT_SPEED.get().floatValue(), FlightFlags.POWER | FlightFlags.SUPERSONIC);
+                    slow.doTick();
+                    fast.doTick();
+                })
+                .thenExecute(() -> {
+                    int slowUsed = 1000 - RingEnergy.get(slowRing).stored();
+                    int fastUsed = 1000 - RingEnergy.get(fastRing).stored();
+                    helper.assertTrue(slowUsed > 0, "hovering flight should cost energy");
+                    helper.assertTrue(fastUsed >= slowUsed * 2, "supersonic flight should cost much more: " + slowUsed + " vs " + fastUsed);
+                    remove(slow);
+                    remove(fast);
+                })
                 .thenSucceed();
     }
 

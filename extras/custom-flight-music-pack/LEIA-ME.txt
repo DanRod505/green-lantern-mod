@@ -1,0 +1,27 @@
+MUSICA DE VOO PERSONALIZADA - Green Lantern Corps
+=================================================
+
+Este pacote de recursos troca a trilha original do mod pela musica que VOCE escolher
+(para uso pessoal). O mod nao inclui musicas de terceiros.
+
+1. Converta sua musica para OGG (Ogg Vorbis). Exemplo com o Audacity (gratuito):
+   Arquivo > Exportar > Exportar como OGG. Estereo funciona normalmente.
+2. Renomeie o arquivo para:  custom_flight_theme.ogg
+3. Coloque o arquivo em:     assets/greenlantern/sounds/music/custom_flight_theme.ogg
+   (dentro desta pasta / deste zip)
+4. Compacte o CONTEUDO desta pasta em um .zip (pack.mcmeta precisa ficar na raiz do zip)
+   ou use a pasta diretamente.
+5. Coloque o .zip (ou a pasta) em .minecraft/resourcepacks
+   (no CurseForge: perfil > tres pontinhos > Open Folder > resourcepacks).
+6. No jogo: Opcoes > Pacotes de Recursos > ative "Green Lantern: custom flight music".
+
+A musica toca quando voce voa rapido e para alguns segundos depois de desacelerar.
+O volume segue o controle "Musica" das opcoes de som.
+
+Opcional - "auge" sincronizado:
+A trilha do mod tem duas camadas: a base (flight_theme_base) e a camada epica
+(flight_theme_peak), que entra quando voce quebra a barreira do som. Se voce tiver duas
+versoes alinhadas e com a MESMA duracao (por exemplo, a mesma musica so com a parte calma
+e a versao completa), troque "greenlantern:music/silence" em sounds.json por
+"greenlantern:music/custom_flight_theme_peak" e adicione o arquivo
+custom_flight_theme_peak.ogg na mesma pasta.

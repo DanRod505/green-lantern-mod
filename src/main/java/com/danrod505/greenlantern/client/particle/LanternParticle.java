@@ -16,17 +16,28 @@ import net.minecraft.util.RandomSource;
 public class LanternParticle extends SingleQuadParticle {
     private final SpriteSet sprites;
     private final boolean spark;
+    private final boolean streak;
     private final float baseSize;
 
     protected LanternParticle(ClientLevel level, double x, double y, double z, double xd, double yd, double zd, SpriteSet sprites, boolean spark) {
+        this(level, x, y, z, xd, yd, zd, sprites, spark, false);
+    }
+
+    protected LanternParticle(ClientLevel level, double x, double y, double z, double xd, double yd, double zd, SpriteSet sprites, boolean spark, boolean streak) {
         super(level, x, y, z, xd, yd, zd, sprites.first());
         this.sprites = sprites;
         this.spark = spark;
+        this.streak = streak;
         this.xd = xd;
         this.yd = yd;
         this.zd = zd;
         this.hasPhysics = false;
-        if (spark) {
+        if (streak) {
+            this.friction = 0.8F;
+            this.gravity = 0.0F;
+            this.lifetime = 6 + random.nextInt(6);
+            this.baseSize = 0.22F + random.nextFloat() * 0.18F;
+        } else if (spark) {
             this.friction = 0.86F;
             this.gravity = 0.02F;
             this.lifetime = 8 + random.nextInt(8);
@@ -78,6 +89,19 @@ public class LanternParticle extends SingleQuadParticle {
         @Override
         public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xd, double yd, double zd, RandomSource random) {
             return new LanternParticle(level, x, y, z, xd, yd, zd, sprites, true);
+        }
+    }
+
+    public static class StreakProvider implements ParticleProvider<SimpleParticleType> {
+        private final SpriteSet sprites;
+
+        public StreakProvider(SpriteSet sprites) {
+            this.sprites = sprites;
+        }
+
+        @Override
+        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xd, double yd, double zd, RandomSource random) {
+            return new LanternParticle(level, x, y, z, xd, yd, zd, sprites, false, true);
         }
     }
 

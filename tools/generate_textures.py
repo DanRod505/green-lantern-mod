@@ -582,6 +582,34 @@ def make_shockwave():
     save(img, "particle", "lantern_shockwave.png")
 
 
+def make_flight_textures():
+    """Aura (energy swirl, scrolled by the game) and the trail ribbon gradient."""
+    # Aura: diagonal swirling streaks on black (the swirl render type is additive).
+    w, h = 64, 32
+    img = Image.new("RGBA", (w, h), (0, 0, 0, 255))
+    for y in range(h):
+        for x in range(w):
+            u, v = x / w, y / h
+            a = math.sin((u * 3 + v * 2) * math.tau + 1.7 * math.sin(v * math.tau * 2))
+            b = math.sin((u * 5 - v * 3) * math.tau + 0.8)
+            k = max(0.0, a) ** 3 * 0.85 + max(0.0, b) ** 6 * 0.6
+            k = min(1.0, k)
+            img.putpixel((x, y), (int(60 * k), int(255 * k), int(100 * k), 255))
+    save(img, "entity", "aura.png")
+
+    # Trail: bright core across V fading to transparent edges, constant along U.
+    img = blank(16, 32)
+    for y in range(32):
+        v = (y + 0.5) / 32
+        d = abs(v - 0.5) / 0.5
+        alpha = math.exp(-(d / 0.55) ** 2)
+        core = math.exp(-(d / 0.18) ** 2)
+        c = lerp((50, 230, 95), (235, 255, 240), core)
+        for x in range(16):
+            img.putpixel((x, y), (c[0], c[1], c[2], int(255 * alpha)))
+    save(img, "entity", "trail.png")
+
+
 # --------------------------------------------------------------- particles
 
 def make_particles():
@@ -797,5 +825,6 @@ if __name__ == "__main__":
     make_saw_blade()
     make_particles()
     make_shockwave()
+    make_flight_textures()
     make_gui()
     make_logo()

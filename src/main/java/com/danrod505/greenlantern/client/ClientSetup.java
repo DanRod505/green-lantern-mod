@@ -11,7 +11,22 @@ import com.danrod505.greenlantern.client.render.HammerConstructRenderer;
 import com.danrod505.greenlantern.client.render.SawConstructRenderer;
 import com.danrod505.greenlantern.registry.ModEntities;
 import com.danrod505.greenlantern.registry.ModParticles;
+import com.danrod505.greenlantern.client.flight.AuraLayer;
+import com.danrod505.greenlantern.client.flight.FlightAudio;
+import com.danrod505.greenlantern.client.flight.FlightCamera;
+import com.danrod505.greenlantern.client.flight.FlightController;
+import com.danrod505.greenlantern.client.flight.FlightHud;
+import com.danrod505.greenlantern.client.flight.FlightRenderHandler;
+import com.danrod505.greenlantern.client.flight.FlightVisuals;
+import com.danrod505.greenlantern.client.flight.TrailRenderer;
+import com.danrod505.greenlantern.client.particle.SonicRingParticle;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.entity.player.AvatarRenderer;
+import net.minecraft.world.entity.player.PlayerModelType;
+import net.minecraftforge.client.event.ComputeFovModifierEvent;
 import net.minecraftforge.client.event.AddGuiOverlayLayersEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.InputEvent;
@@ -34,7 +49,16 @@ public final class ClientSetup {
         RegisterParticleProvidersEvent.BUS.addListener(ClientSetup::onRegisterParticles);
         AddGuiOverlayLayersEvent.BUS.addListener(ClientSetup::onAddGuiLayers);
 
+        EntityRenderersEvent.RegisterLayerDefinitions.BUS.addListener(ClientSetup::onRegisterLayerDefinitions);
+        EntityRenderersEvent.AddLayers.BUS.addListener(ClientSetup::onAddLayers);
+
         TickEvent.ClientTickEvent.Post.BUS.addListener(ClientEvents::onClientTick);
+        TickEvent.ClientTickEvent.Post.BUS.addListener(ClientSetup::onFlightClientTick);
+        TickEvent.PlayerTickEvent.Pre.BUS.addListener(ClientSetup::onPlayerTickPre);
+        TickEvent.PlayerTickEvent.Post.BUS.addListener(ClientSetup::onPlayerTickPost);
+        ComputeFovModifierEvent.BUS.addListener(FlightCamera::onFov);
+        ViewportEvent.ComputeCameraAngles.BUS.addListener(FlightCamera::onAngles);
+        FlightRenderHandler.register();
         InputEvent.MouseScrollingEvent.BUS.addListener(ClientEvents::onMouseScroll);
         ViewportEvent.ComputeCameraAngles.BUS.addListener(CameraShake::onCameraAngles);
     }
@@ -45,6 +69,7 @@ public final class ClientSetup {
             return mc.player != null && mc.player.input.keyPresses.jump();
         };
         SidedHooks.cameraShake = CameraShake::start;
+        SidedHooks.flightSync = FlightVisuals::onSync;
     }
 
     private static void onRegisterKeys(RegisterKeyMappingsEvent event) {
@@ -59,15 +84,50 @@ public final class ClientSetup {
         event.registerEntityRenderer(ModEntities.BUBBLE_CONSTRUCT.get(), BubbleConstructRenderer::new);
         event.registerEntityRenderer(ModEntities.SAW_CONSTRUCT.get(), SawConstructRenderer::new);
         event.registerEntityRenderer(ModEntities.HAMMER_CONSTRUCT.get(), HammerConstructRenderer::new);
+        event.registerEntityRenderer(ModEntities.FLIGHT_TRAIL.get(), TrailRenderer::new);
     }
 
     private static void onRegisterParticles(RegisterParticleProvidersEvent event) {
         event.registerSpriteSet(ModParticles.SPARK.get(), LanternParticle.SparkProvider::new);
         event.registerSpriteSet(ModParticles.GLOW.get(), LanternParticle.GlowProvider::new);
         event.registerSpriteSet(ModParticles.SHOCKWAVE.get(), ShockwaveParticle.Provider::new);
+        event.registerSpriteSet(ModParticles.SONIC_RING.get(), SonicRingParticle.Provider::new);
+        event.registerSpriteSet(ModParticles.STREAK.get(), LanternParticle.StreakProvider::new);
+    }
+
+    private static void onRegisterLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(AuraLayer.LAYER, AuraLayer::createLayer);
+    }
+
+    private static void onAddLayers(EntityRenderersEvent.AddLayers event) {
+        for (PlayerModelType type : event.getModelTypes()) {
+            AvatarRenderer<AbstractClientPlayer> renderer = event.getPlayerRenderer(type);
+            if (renderer != null) {
+                renderer.addLayer(new AuraLayer(renderer, new HumanoidModel<>(event.getEntityModels().bakeLayer(AuraLayer.LAYER))));
+            }
+        }
+    }
+
+    private static void onFlightClientTick(TickEvent.ClientTickEvent.Post event) {
+        FlightVisuals.tick();
+        TrailRenderer.tickHolder();
+        FlightAudio.tick();
+    }
+
+    private static void onPlayerTickPre(TickEvent.PlayerTickEvent.Pre event) {
+        if (event.player() instanceof LocalPlayer player && player == Minecraft.getInstance().player) {
+            FlightController.preTick(player);
+        }
+    }
+
+    private static void onPlayerTickPost(TickEvent.PlayerTickEvent.Post event) {
+        if (event.player() instanceof LocalPlayer player && player == Minecraft.getInstance().player) {
+            FlightController.postTick(player);
+        }
     }
 
     private static void onAddGuiLayers(AddGuiOverlayLayersEvent event) {
+        event.getLayeredDraw().add(ForgeLayeredDraw.POST_SLEEP_STACK, GreenLantern.id("flight_hud"), FlightHud::render);
         event.getLayeredDraw().add(ForgeLayeredDraw.POST_SLEEP_STACK, GreenLantern.id("ring_hud"), RingHud::render);
     }
 }

@@ -26,6 +26,9 @@ public final class CommonEvents {
         LivingFallEvent.BUS.addListener(CommonEvents::onLivingFall);
         LivingDeathEvent.BUS.addListener(CommonEvents::onLivingDeath);
         EntityJoinLevelEvent.BUS.addListener(CommonEvents::onEntityJoin);
+        net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent.BUS.addListener(event -> {
+            if (event.getEntity() instanceof ServerPlayer player) com.danrod505.greenlantern.flight.ServerFlightTracker.remove(player);
+        });
     }
 
     private static void onPlayerTick(TickEvent.PlayerTickEvent.Post event) {

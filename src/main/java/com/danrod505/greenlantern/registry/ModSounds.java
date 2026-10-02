@@ -26,6 +26,14 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> CONSTRUCT_SELECT = register("construct_select");
     public static final RegistryObject<SoundEvent> LOW_ENERGY = register("low_energy");
     public static final RegistryObject<SoundEvent> FLIGHT_WHOOSH = register("flight_whoosh");
+    public static final RegistryObject<SoundEvent> FLIGHT_WIND = register("flight_wind");
+    public static final RegistryObject<SoundEvent> SONIC_BOOM = register("sonic_boom");
+    public static final RegistryObject<SoundEvent> FLIGHT_TAKEOFF = register("flight_takeoff");
+    public static final RegistryObject<SoundEvent> FLIGHT_ROLL = register("flight_roll");
+    public static final RegistryObject<SoundEvent> HERO_LANDING = register("hero_landing");
+    /** Original flight theme, two aligned stems (see tools/generate_flight_audio.py). */
+    public static final RegistryObject<SoundEvent> FLIGHT_THEME_BASE = register("flight_theme_base");
+    public static final RegistryObject<SoundEvent> FLIGHT_THEME_PEAK = register("flight_theme_peak");
 
     private static RegistryObject<SoundEvent> register(String name) {
         return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(GreenLantern.id(name)));
