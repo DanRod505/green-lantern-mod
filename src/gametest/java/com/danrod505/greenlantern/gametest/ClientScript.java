@@ -221,7 +221,7 @@ public final class ClientScript {
             key(mc().options.keyUp, false);
             key(mc().options.keySprint, false);
         });
-        step(20, () -> mc().stop());
+        step(140, () -> mc().stop());
     }
 
     private static boolean landingShot;
@@ -353,6 +353,11 @@ public final class ClientScript {
                         new WorldOptions(2814L, false, false), WorldPresets::createFlatWorldDimensions, mc.screen);
             }
             return;
+        }
+        if (mc.player.tickCount % 10 == 0 && "flight".equals(System.getenv("GL_CLIENT_SCRIPT"))) {
+            com.danrod505.greenlantern.GreenLantern.LOGGER.info("CLIENTSCRIPT t={} mach={} music: {}", mc.player.tickCount,
+                    String.format("%.2f", com.danrod505.greenlantern.client.flight.FlightController.mach()),
+                    com.danrod505.greenlantern.client.flight.FlightAudio.describeMusic());
         }
         if (stepIndex >= STEPS.size()) return;
         if (++wait >= STEPS.get(stepIndex).delay()) {

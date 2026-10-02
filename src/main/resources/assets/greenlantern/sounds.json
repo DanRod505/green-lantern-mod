@@ -202,5 +202,21 @@
         "stream": true
       }
     ]
+  },
+  "lanterns_theme_full": {
+    "sounds": [
+      {
+        "name": "greenlantern:music/lanterns_theme_full",
+        "stream": true
+      }
+    ]
+  },
+  "lanterns_theme_climax": {
+    "sounds": [
+      {
+        "name": "greenlantern:music/lanterns_theme_climax",
+        "stream": true
+      }
+    ]
   }
 }

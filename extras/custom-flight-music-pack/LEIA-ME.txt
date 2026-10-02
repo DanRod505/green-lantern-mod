@@ -15,6 +15,9 @@ Este pacote de recursos troca a trilha original do mod pela musica que VOCE esco
    (no CurseForge: perfil > tres pontinhos > Open Folder > resourcepacks).
 6. No jogo: Opcoes > Pacotes de Recursos > ative "Green Lantern: custom flight music".
 
+7. IMPORTANTE: em config/greenlantern-client.toml troque  flightTheme = "LANTERNS"  por
+   flightTheme = "ORIGINAL"  (este pacote substitui a trilha ORIGINAL).
+
 A musica toca quando voce voa rapido e para alguns segundos depois de desacelerar.
 O volume segue o controle "Musica" das opcoes de som.
 
@@ -25,3 +28,10 @@ versoes alinhadas e com a MESMA duracao (por exemplo, a mesma musica so com a pa
 e a versao completa), troque "greenlantern:music/silence" em sounds.json por
 "greenlantern:music/custom_flight_theme_peak" e adicione o arquivo
 custom_flight_theme_peak.ogg na mesma pasta.
+
+Avancado - pulo para o auge na barreira do som (igual a trilha "Lanterns"):
+Use o script tools/import_flight_music.py do projeto com a sua musica. Ele gera
+lanterns_theme_full.ogg e lanterns_theme_climax.ogg (a musica a partir do auge). Coloque os
+dois em assets/greenlantern/sounds/music/ dentro de um pacote de recursos e deixe
+flightTheme = "LANTERNS". Se o auge da sua musica nao estiver em 1:37, o tempo do corte
+precisa ser ajustado no codigo (CLIMAX_SECONDS em FlightAudio.java).

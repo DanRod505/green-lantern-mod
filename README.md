@@ -52,7 +52,8 @@ Mod do Lanterna Verde para **Minecraft Java 1.21.11** com **Forge 61.2.0** (comp
   * **Freio aéreo** – segure **S** em alta velocidade: o Lanterna se endireita e freia.
   * **Decolagem explosiva** – comece a voar perto do chão.
   * **Pouso de herói** – mergulhe em alta velocidade contra o chão: onda de choque que causa dano e arremessa criaturas em volta (você não toma dano).
-* **Trilha sonora épica dinâmica:** ao voar rápido entra uma trilha heroica original; quando você quebra a barreira do som entra a camada épica completa (metais, coral e percussão). Ela some suavemente quando você desacelera. Usa o volume de *Música*.
+* **Trilha sonora do voo — "Lanterns Flight Theme":** ao voar rápido a música começa do início; quando você **quebra a barreira do som**, ela salta (com crossfade) direto para o **auge**, sincronizado com o estrondo sônico. Se você já passou do auge, ela segue normalmente; no fim, recomeça. Some suavemente quando você desacelera e usa o volume de *Música*.
+* **Trilha alternativa (original):** a trilha orquestral procedural continua no mod. Para voltar a ela, use `flightTheme = "ORIGINAL"` em `config/greenlantern-client.toml` (ali também dá para desligar a música).
 * Bater de frente numa parede em alta velocidade faz você perder o embalo (o anel te protege do dano).
 * Voar mais rápido consome mais energia (até 3× em velocidade máxima).
 
@@ -91,7 +92,7 @@ Também estão na aba criativa **Tropa dos Lanternas Verdes** (inclui um anel j�
 
 Todos os números de balanceamento (energia máxima, custo de cada construto, dano, velocidades do voo, Mach 1, tempo até a barreira do som, pouso de herói, se a serra corta plantas etc.) ficam em `config/greenlantern-common.toml`, gerado na primeira execução.
 
-Preferências visuais e de som ficam em `config/greenlantern-client.toml`: ligar/desligar a trilha do voo e seu volume, efeitos de câmera (tremor, inclinação, giro), linhas de velocidade/medidor de Mach e rastros.
+Preferências visuais e de som ficam em `config/greenlantern-client.toml`: escolher a trilha do voo (`LANTERNS` ou `ORIGINAL`), ligar/desligar a música e seu volume, efeitos de câmera (tremor, inclinação, giro), linhas de velocidade/medidor de Mach e rastros.
 
 ---
 
@@ -99,7 +100,7 @@ Preferências visuais e de som ficam em `config/greenlantern-client.toml`: ligar
 
 ### Opção A — CurseForge App, importando o perfil pronto (mais fácil)
 
-O build gera `greenlantern-1.21.11-1.1.0-curseforge-profile.zip`, um perfil do CurseForge que já configura o **Minecraft 1.21.11 + Forge 61.2.0** e já traz o mod dentro.
+O build gera `greenlantern-1.21.11-1.2.0-curseforge-profile.zip`, um perfil do CurseForge que já configura o **Minecraft 1.21.11 + Forge 61.2.0** e já traz o mod dentro.
 
 1. Abra o **CurseForge App** → **Minecraft** → **Create Custom Profile**.
 2. Clique em **Import** (canto superior da janela) e escolha o arquivo `...-curseforge-profile.zip`.
@@ -110,7 +111,7 @@ O build gera `greenlantern-1.21.11-1.1.0-curseforge-profile.zip`, um perfil do C
 1. Abra o **CurseForge App** → **Minecraft** → **Create Custom Profile**.
 2. Em *Game Version* escolha **1.21.11**, em *Modloader* escolha **Forge** e selecione a versão **61.2.0** (ou mais recente da série 61.x). Clique em **Create**.
 3. No perfil criado, clique nos **três pontinhos (⋮)** → **Open Folder**. Entre na pasta `mods` (crie se não existir).
-4. Copie o arquivo `greenlantern-1.21.11-1.1.0.jar` para dentro de `mods`.
+4. Copie o arquivo `greenlantern-1.21.11-1.2.0.jar` para dentro de `mods`.
 5. Volte ao CurseForge e clique em **Play**. O mod aparece na lista *Mods* do menu principal do jogo.
 
 > Não é preciso instalar Java separadamente: o CurseForge e o launcher oficial usam o Java que vem com o Minecraft 1.21.11. O jar foi compilado com o JDK 25, mas gera bytecode Java 21, então roda tanto no Java 21 do launcher quanto no Java 25.
@@ -150,7 +151,7 @@ Instale o servidor Forge 1.21.11-61.2.0 (*Install server* no mesmo instalador) e
 
 ```bash
 # Windows: use gradlew.bat no lugar de ./gradlew
-./gradlew build                          # gera build/libs/greenlantern-1.21.11-1.1.0.jar
+./gradlew build                          # gera build/libs/greenlantern-1.21.11-1.2.0.jar
                                          # e build/distributions/...-curseforge-profile.zip
 ./gradlew runClient                      # abre o Minecraft com o mod (ambiente de desenvolvimento)
 ./gradlew runServer                      # servidor de desenvolvimento
@@ -207,6 +208,7 @@ pip install pillow numpy scipy soundfile
 python tools/generate_textures.py
 python tools/generate_sounds.py
 python tools/generate_flight_audio.py   # sons do voo e a trilha original (duas camadas)
+python tools/import_flight_music.py musica.mp3 [segundos_do_auge]   # troca a trilha "Lanterns"
 ```
 
 ## Licença
