@@ -12,10 +12,9 @@ public final class KeyBindings {
 
     public static final KeyMapping TOGGLE_UNIFORM = new KeyMapping("key.greenlantern.toggle_uniform",
             KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G, CATEGORY, 0);
-    public static final KeyMapping NEXT_CONSTRUCT = new KeyMapping("key.greenlantern.next_construct",
+    /** Hold to open the construct wheel, tap to switch to the next construct. */
+    public static final KeyMapping CONSTRUCT_WHEEL = new KeyMapping("key.greenlantern.construct_wheel",
             KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R, CATEGORY, 1);
-    public static final KeyMapping PREVIOUS_CONSTRUCT = new KeyMapping("key.greenlantern.previous_construct",
-            KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, CATEGORY, 2);
 
     private KeyBindings() {}
 }

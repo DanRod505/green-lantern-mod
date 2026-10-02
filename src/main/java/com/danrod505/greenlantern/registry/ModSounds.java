@@ -34,9 +34,6 @@ public final class ModSounds {
     /** Original flight theme, two aligned stems (see tools/generate_flight_audio.py). */
     public static final RegistryObject<SoundEvent> FLIGHT_THEME_BASE = register("flight_theme_base");
     public static final RegistryObject<SoundEvent> FLIGHT_THEME_PEAK = register("flight_theme_peak");
-    /** "Lanterns" flight theme: the whole song, and the song from its climax onwards. */
-    public static final RegistryObject<SoundEvent> LANTERNS_THEME_FULL = register("lanterns_theme_full");
-    public static final RegistryObject<SoundEvent> LANTERNS_THEME_CLIMAX = register("lanterns_theme_climax");
 
     private static RegistryObject<SoundEvent> register(String name) {
         return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(GreenLantern.id(name)));

@@ -23,8 +23,6 @@
   "construct.greenlantern.hammer.desc": "Golpeia o chão onde você olha, atingindo tudo ao redor.",
   "key.category.greenlantern.main": "Lanterna Verde",
   "key.greenlantern.toggle_uniform": "Vestir / remover uniforme",
-  "key.greenlantern.next_construct": "Próximo construto",
-  "key.greenlantern.previous_construct": "Construto anterior",
   "message.greenlantern.no_ring": "Você precisa de um Anel de Poder.",
   "message.greenlantern.no_energy": "Seu Anel de Poder está sem energia! Recarregue-o em uma Bateria de Poder.",
   "message.greenlantern.low_energy": "Atenção: energia do Anel de Poder baixa!",
@@ -65,5 +63,9 @@
   "subtitles.greenlantern.flight_takeoff": "Lanterna decola",
   "subtitles.greenlantern.flight_roll": "Giro no ar",
   "subtitles.greenlantern.hero_landing": "Onda de choque do pouso",
-  "hud.greenlantern.supersonic": "SUPERSÔNICO"
+  "hud.greenlantern.supersonic": "SUPERSÔNICO",
+  "key.greenlantern.construct_wheel": "Roda de construtos (segurar) / próximo (tocar)",
+  "wheel.greenlantern.title": "CONSTRUTOS",
+  "wheel.greenlantern.hint": "Aponte com o mouse e solte %s (ou clique) · 1-5 · rodinha",
+  "wheel.greenlantern.cost": "Custo de energia: %s"
 }

@@ -46,9 +46,9 @@ public final class GLConfig {
     static {
         BUILDER.push("ring");
         MAX_ENERGY = BUILDER.comment("Maximum energy stored in a Power Ring.")
-                .defineInRange("maxEnergy", 1000, 100, 1_000_000);
+                .defineInRange("ringCapacity", 5000, 100, 1_000_000);
         CHARGE_PER_TICK = BUILDER.comment("Energy restored per tick while charging at a Power Battery.")
-                .defineInRange("chargePerTick", 10, 1, 100_000);
+                .defineInRange("chargeRate", 30, 1, 100_000);
         FLIGHT_COST_PER_SECOND = BUILDER.comment("Energy drained per second while flying.")
                 .defineInRange("flightCostPerSecond", 2, 0, 10_000);
         FLIGHT_SPEED = BUILDER.comment("Flying speed while wearing the uniform (vanilla creative flight is 0.05).")
@@ -70,7 +70,7 @@ public final class GLConfig {
         BUILDER.push("constructs");
         BLAST_COST = BUILDER.comment("Energy cost of an energy blast.").defineInRange("blastCost", 20, 0, 100_000);
         BLAST_DAMAGE = BUILDER.comment("Damage of an energy blast.").defineInRange("blastDamage", 9.0, 0.0, 1000.0);
-        MINIGUN_COST_PER_SHOT = BUILDER.comment("Energy cost of each minigun bullet.").defineInRange("minigunCostPerShot", 2, 0, 100_000);
+        MINIGUN_COST_PER_SHOT = BUILDER.comment("Energy cost of each minigun bullet.").defineInRange("minigunShotCost", 1, 0, 100_000);
         MINIGUN_DAMAGE = BUILDER.comment("Damage of each minigun bullet.").defineInRange("minigunDamage", 2.5, 0.0, 1000.0);
         BUBBLE_COST = BUILDER.comment("Energy cost to raise the protection bubble.").defineInRange("bubbleCost", 50, 0, 100_000);
         BUBBLE_COST_PER_SECOND = BUILDER.comment("Energy drained per second while the bubble is up.").defineInRange("bubbleCostPerSecond", 6, 0, 100_000);

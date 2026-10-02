@@ -24,12 +24,7 @@ public final class ClientEvents {
         while (KeyBindings.TOGGLE_UNIFORM.consumeClick()) {
             if (!RingHelper.findRing(player).isEmpty()) ModNetwork.sendToServer(new ToggleUniformPacket());
         }
-        while (KeyBindings.NEXT_CONSTRUCT.consumeClick()) {
-            if (!RingHelper.findRing(player).isEmpty()) ModNetwork.sendToServer(new CycleConstructPacket(1));
-        }
-        while (KeyBindings.PREVIOUS_CONSTRUCT.consumeClick()) {
-            if (!RingHelper.findRing(player).isEmpty()) ModNetwork.sendToServer(new CycleConstructPacket(-1));
-        }
+        tickWheelKey(mc, player);
 
         if (mc.isPaused()) return;
         // Green aura trail behind every flying Lantern in view.
@@ -44,6 +39,32 @@ public final class ClientEvents {
                 double z = other.getZ() + (other.getRandom().nextDouble() - 0.5) * 0.5;
                 mc.level.addParticle(ModParticles.GLOW.get(), x, y, z, 0, flying ? -0.02 : 0.01, 0);
             }
+        }
+    }
+
+    /** Ticks the wheel key has been held (0 when released). */
+    private static int wheelKeyTicks;
+    /** Hold this long (ticks) to open the wheel; a shorter tap switches to the next construct. */
+    private static final int WHEEL_HOLD_TICKS = 4;
+
+    private static void tickWheelKey(Minecraft mc, LocalPlayer player) {
+        // Clicks are handled through isDown(); drop queued clicks so they don't pile up.
+        while (KeyBindings.CONSTRUCT_WHEEL.consumeClick()) {
+        }
+        boolean hasRing = !RingHelper.findRing(player).isEmpty();
+        if (mc.screen != null || !hasRing) {
+            wheelKeyTicks = 0;
+            return;
+        }
+        if (KeyBindings.CONSTRUCT_WHEEL.isDown()) {
+            if (++wheelKeyTicks == WHEEL_HOLD_TICKS) {
+                mc.setScreen(new ConstructWheelScreen());
+            }
+        } else {
+            if (wheelKeyTicks > 0 && wheelKeyTicks < WHEEL_HOLD_TICKS) {
+                ModNetwork.sendToServer(new CycleConstructPacket(1));
+            }
+            wheelKeyTicks = 0;
         }
     }
 

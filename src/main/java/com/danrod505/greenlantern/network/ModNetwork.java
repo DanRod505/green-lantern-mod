@@ -8,7 +8,7 @@ import net.minecraftforge.network.SimpleChannel;
 
 /** Network channel of the mod. Bump {@link #PROTOCOL} whenever a packet format changes. */
 public final class ModNetwork {
-    public static final int PROTOCOL = 2;
+    public static final int PROTOCOL = 3;
 
     public static final SimpleChannel CHANNEL = ChannelBuilder.named(GreenLantern.id("main"))
             .networkProtocolVersion(PROTOCOL)
@@ -24,6 +24,10 @@ public final class ModNetwork {
         CHANNEL.messageBuilder(CycleConstructPacket.class, NetworkDirection.PLAY_TO_SERVER)
                 .codec(CycleConstructPacket.STREAM_CODEC)
                 .consumerMainThread(CycleConstructPacket::handle)
+                .add();
+        CHANNEL.messageBuilder(SelectConstructPacket.class, NetworkDirection.PLAY_TO_SERVER)
+                .codec(SelectConstructPacket.STREAM_CODEC)
+                .consumerMainThread(SelectConstructPacket::handle)
                 .add();
         CHANNEL.messageBuilder(FlightStatePacket.class, NetworkDirection.PLAY_TO_SERVER)
                 .codec(FlightStatePacket.STREAM_CODEC)

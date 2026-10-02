@@ -15,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
  * render the energy bar correctly even if the server uses a different configuration.
  */
 public record RingEnergy(int stored, int capacity) {
-    public static final int DEFAULT_CAPACITY = 1000;
+    public static final int DEFAULT_CAPACITY = 5000;
     public static final RingEnergy EMPTY = new RingEnergy(0, DEFAULT_CAPACITY);
 
     public static final Codec<RingEnergy> CODEC = RecordCodecBuilder.create(i -> i.group(

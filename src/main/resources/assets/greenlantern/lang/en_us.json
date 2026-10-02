@@ -23,8 +23,6 @@
   "construct.greenlantern.hammer.desc": "Slams the ground where you look, hitting everything around.",
   "key.category.greenlantern.main": "Green Lantern",
   "key.greenlantern.toggle_uniform": "Summon / dismiss uniform",
-  "key.greenlantern.next_construct": "Next construct",
-  "key.greenlantern.previous_construct": "Previous construct",
   "message.greenlantern.no_ring": "You need a Power Ring.",
   "message.greenlantern.no_energy": "Your Power Ring is out of energy! Recharge it at a Power Battery.",
   "message.greenlantern.low_energy": "Warning: Power Ring energy low!",
@@ -65,5 +63,9 @@
   "subtitles.greenlantern.flight_takeoff": "Lantern takes off",
   "subtitles.greenlantern.flight_roll": "Barrel roll",
   "subtitles.greenlantern.hero_landing": "Hero landing shockwave",
-  "hud.greenlantern.supersonic": "SUPERSONIC"
+  "hud.greenlantern.supersonic": "SUPERSONIC",
+  "key.greenlantern.construct_wheel": "Construct wheel (hold) / next (tap)",
+  "wheel.greenlantern.title": "CONSTRUCTS",
+  "wheel.greenlantern.hint": "Point with the mouse and release %s (or click) · 1-5 · scroll",
+  "wheel.greenlantern.cost": "Energy cost: %s"
 }

@@ -74,8 +74,7 @@ public final class ClientSetup {
 
     private static void onRegisterKeys(RegisterKeyMappingsEvent event) {
         event.register(KeyBindings.TOGGLE_UNIFORM);
-        event.register(KeyBindings.NEXT_CONSTRUCT);
-        event.register(KeyBindings.PREVIOUS_CONSTRUCT);
+        event.register(KeyBindings.CONSTRUCT_WHEEL);
     }
 
     private static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
