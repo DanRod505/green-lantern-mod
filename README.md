@@ -20,6 +20,12 @@ Mod do Lanterna Verde para **Minecraft Java 1.21.11** com **Forge 61.2.0** (comp
 
 Uma dimensão própria com noite eterna sob um céu estrelado verde e uma música ambiente original.
 
+| | |
+| --- | --- |
+| ![Portal para Oa](docs/screenshots/oa_01_portal.jpg) | ![Chegada em Oa](docs/screenshots/oa_02_arrival.jpg) |
+| ![A cidade de Oa vista do alto](docs/screenshots/oa_03_city.jpg) | ![Bateria Central de Energia](docs/screenshots/oa_04_battery.jpg) |
+| ![Guardião no seu pilar](docs/screenshots/oa_05_guardian.jpg) | ![Lanternas na praça](docs/screenshots/oa_06_lanterns.jpg) |
+
 * **Bateria Central de Energia:** uma lanterna gigante de 36 blocos no centro da grande praça, com um feixe verde que sobe ao céu. Perto dela o anel recarrega sozinho.
 * **Guardiões do Universo:** oito Guardiões flutuam sobre pilares em volta da Bateria. Clique neles para ouvir sua sabedoria; eles também enchem o seu anel.
 * **Outros Lanternas:** Lanternas de oito espécies diferentes andam pela praça e patrulham o céu voando em volta da Bateria. Clique para conversar.
