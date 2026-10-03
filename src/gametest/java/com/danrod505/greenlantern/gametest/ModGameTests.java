@@ -350,15 +350,20 @@ public final class ModGameTests {
         helper.assertTrue(portals.size() == 1, "the construct should open one portal, found " + portals.size());
         helper.assertTrue(RingEnergy.get(player.getMainHandItem()).stored() <= 3000 - ConstructRegistry.PORTAL.activationCost(), "the portal should cost energy");
         var portal = portals.getFirst();
+        helper.assertTrue(com.danrod505.greenlantern.oa.Oa.level(player.level().getServer()) != null, "the Oa dimension should exist");
         helper.assertTrue(portal.distanceTo(player) > 2.0, "the portal should open in front of the player");
         ServerLevel home = player.level();
         Vec3 start = portal.position();
         helper.startSequence()
                 .thenIdle(com.danrod505.greenlantern.entity.OaPortalEntity.OPEN_TICKS + 2)
-                .thenExecute(() -> player.teleportTo(portal.getX(), portal.getY(), portal.getZ()))
+                .thenExecute(() -> {
+                    player.teleportTo(portal.getX(), portal.getY(), portal.getZ());
+                    helper.assertTrue(portal.insideOpening(player), "the player should stand in the portal; portal=" + portal.position() + " player=" + player.position());
+                })
                 .thenIdle(3)
                 .thenExecute(() -> {
-                    helper.assertTrue(com.danrod505.greenlantern.oa.Oa.is(player.level()), "walking through the portal should take the player to Oa, level=" + player.level().dimension());
+                    helper.assertTrue(com.danrod505.greenlantern.oa.Oa.is(player.level()), "walking through the portal should take the player to Oa, level=" + player.level().dimension()
+                            + " portalAge=" + portal.tickCount + " removed=" + portal.isRemoved());
                     ServerLevel oa = player.level();
                     helper.assertTrue(com.danrod505.greenlantern.oa.OaCity.isBuilt(oa), "the city of Oa should be built");
                     helper.assertTrue(oa.getBlockState(new BlockPos(0, com.danrod505.greenlantern.oa.OaCity.BATTERY_TOP + 6, 0)).is(Blocks.BEACON), "the Central Power Battery should shine a beacon");

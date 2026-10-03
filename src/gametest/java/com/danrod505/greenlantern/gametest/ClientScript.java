@@ -494,7 +494,7 @@ public final class ClientScript {
         step(30, () -> clean("o09_flying_lanterns"));
         step(2, () -> oaTp(70.5, g + 50, -40.5, 120, 20));
         step(100, () -> clean("o10_skyline"));
-        step(2, () -> oaTp(0.5, g + 1, 34.5, 0, 5));
+        step(2, () -> oaTp(0.5, g, 30.5, 180, 5));
         step(40, () -> {
             camera(CameraType.THIRD_PERSON_BACK);
             server(sp -> {

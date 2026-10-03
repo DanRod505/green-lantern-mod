@@ -282,7 +282,7 @@ public final class OaCity {
                 if (dist(cx - other[0], cz - other[1]) < radius + other[2] + 9) free = false;
             }
             // Keep the view from the arrival dais to the south open.
-            if (cz > 40 && Math.abs(cx) < 14) free = false;
+            if (cz > 40 && Math.abs(cx) < 0.6 * cz) free = false;
             if (!free) continue;
             int height = 26 + random.nextInt(40);
             spire(level, random, cx, cz, radius, height, random.nextInt(10) < 7);
@@ -327,7 +327,7 @@ public final class OaCity {
                 int hri = Mth.ceil(hr + 0.5);
                 for (int x = -hri; x <= hri; x++) {
                     for (int z = -hri; z <= hri; z++) {
-                        if (Math.abs(dist(x, z) - hr) < 0.5) set(level, cx + x, y, cz + z, GLOW);
+                        if (Math.abs(dist(x, z) - hr) < 0.5) set(level, cx + x, y, cz + z, GLASS);
                     }
                 }
             }
