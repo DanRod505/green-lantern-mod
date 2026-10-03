@@ -278,18 +278,22 @@ public final class ClientScript {
     private static final java.util.Set<String> TAKEN = new java.util.HashSet<>();
     private static BlockPos flashBase = BlockPos.ZERO;
 
-    /** For up to {@code ticks} ticks, takes the screenshot the first tick the condition holds. */
-    private static void watch(int ticks, java.util.function.BooleanSupplier condition, String name) {
-        for (int i = 0; i < ticks; i++) {
-            step(1, () -> {
-                if (!TAKEN.contains(name) && condition.getAsBoolean()) {
-                    TAKEN.add(name);
-                    shot(name);
-                }
-            });
-        }
-        step(0, () -> {
-            if (TAKEN.add(name)) shot(name + "_late");
+    private record Watcher(java.util.function.BooleanSupplier condition, String name) {}
+
+    private static final List<Watcher> WATCHERS = new ArrayList<>();
+
+    /** From now on, takes the screenshot the first tick the condition holds (checked every tick, in parallel with the steps). */
+    private static void watch(java.util.function.BooleanSupplier condition, String name) {
+        step(0, () -> WATCHERS.add(new Watcher(condition, name)));
+    }
+
+    private static void tickWatchers() {
+        WATCHERS.removeIf(w -> {
+            if (TAKEN.contains(w.name())) return true;
+            if (!w.condition().getAsBoolean()) return false;
+            TAKEN.add(w.name());
+            shot(w.name());
+            return true;
         });
     }
 
@@ -305,7 +309,8 @@ public final class ClientScript {
         server(sp -> {
             ServerLevel level = sp.level();
             for (int i = 0; i < count; i++) {
-                Zombie zombie = EntityType.ZOMBIE.create(level, EntitySpawnReason.COMMAND);
+                // Husks: they don't burn in the sun.
+                var zombie = EntityType.HUSK.create(level, EntitySpawnReason.COMMAND);
                 double a = i * Math.PI * 2 / count;
                 zombie.snapTo(sp.getX() + dx + Math.cos(a) * 1.5, sp.getY(), sp.getZ() + dz + Math.sin(a) * 1.5, 180, 0);
                 zombie.setNoAi(true);
@@ -379,24 +384,23 @@ public final class ClientScript {
             key(mc().options.keySprint, true);
         });
         step(8, () -> shot("fl01_run_start"));
+        watch(() -> com.danrod505.greenlantern.flash.SpeedFlags.has(com.danrod505.greenlantern.client.speed.SpeedController.flags(),
+                com.danrod505.greenlantern.flash.SpeedFlags.WATER) && mc().player.getZ() > flashBase.getZ() + 70, "fl03_on_water");
+        watch(() -> com.danrod505.greenlantern.client.speed.SpeedController.boomFlash() > 2, "fl04_sound_barrier");
+        watch(() -> com.danrod505.greenlantern.client.speed.SpeedController.isWallRunning() && mc().player.getY() > flashBase.getY() + 6, "fl06_wall_run");
+        watch(() -> com.danrod505.greenlantern.client.speed.SpeedController.isWallRunning() && mc().player.getY() > flashBase.getY() + 16, "fl06b_wall_run_high");
         step(15, () -> shot("fl02_accelerating"));
-        watch(60, () -> com.danrod505.greenlantern.client.speed.SpeedController.flags() != 0
-                && com.danrod505.greenlantern.flash.SpeedFlags.has(com.danrod505.greenlantern.client.speed.SpeedController.flags(),
-                com.danrod505.greenlantern.flash.SpeedFlags.WATER) && mc().player.getZ() > flashBase.getZ() + 60, "fl03_on_water");
-        step(2, () -> camera(CameraType.FIRST_PERSON));
-        step(3, () -> shot("fl03b_on_water_first_person"));
-        step(1, () -> camera(CameraType.THIRD_PERSON_BACK));
-        watch(80, () -> com.danrod505.greenlantern.client.speed.SpeedController.boomFlash() > 0, "fl04_sound_barrier");
-        step(8, () -> shot("fl05_supersonic"));
-        step(2, () -> camera(CameraType.FIRST_PERSON));
-        step(4, () -> shot("fl05b_supersonic_first_person"));
-        step(1, () -> camera(CameraType.THIRD_PERSON_BACK));
-        watch(120, com.danrod505.greenlantern.client.speed.SpeedController::isWallRunning, "fl06_wall_run");
-        step(4, () -> shot("fl06b_wall_run"));
-        step(2, () -> camera(CameraType.THIRD_PERSON_FRONT));
-        step(2, () -> shot("fl06c_wall_run_front"));
-        step(1, () -> camera(CameraType.THIRD_PERSON_BACK));
-        step(60, () -> {
+        // Run until the wall (about 300 blocks), then over it.
+        for (int i = 0; i < 160; i++) {
+            step(1, () -> {
+                if (TAKEN.contains("fl04_sound_barrier") && !TAKEN.contains("fl05_supersonic")
+                        && com.danrod505.greenlantern.client.speed.SpeedController.boomFlash() == 0) {
+                    TAKEN.add("fl05_supersonic");
+                    shot("fl05_supersonic");
+                }
+            });
+        }
+        step(40, () -> {
             key(mc().options.keyUp, false);
             key(mc().options.keySprint, false);
         });
@@ -868,6 +872,7 @@ public final class ClientScript {
                     String.format("%.2f", com.danrod505.greenlantern.client.flight.FlightController.mach()),
                     com.danrod505.greenlantern.client.flight.FlightAudio.describeMusic());
         }
+        tickWatchers();
         if (stepIndex >= STEPS.size()) return;
         if (++wait >= STEPS.get(stepIndex).delay()) {
             wait = 0;

@@ -31,7 +31,7 @@ public final class SpeedHud {
         boolean running = SpeedController.isRunning();
         float mach = SpeedController.mach();
         shownKmh += ((float) SpeedController.speed() * KMH_PER_SPEED - shownKmh) * 0.3F;
-        if (!running && shownKmh < 5) {
+        if (!running && shownKmh < 40) {
             shownKmh = 0;
             return;
         }

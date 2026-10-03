@@ -129,7 +129,7 @@ public class PowerWheelScreen extends Screen {
     }
 
     private float outerRadius() {
-        return Math.min(height * 0.3F, 100.0F);
+        return Math.min(height * 0.34F, 120.0F);
     }
 
     private float centerY() {
@@ -189,7 +189,7 @@ public class PowerWheelScreen extends Screen {
         SpeedsterPower shown = hovered >= 0 ? SpeedsterPower.byIndex(hovered) : current;
         ItemStack ring = FlashHelper.findRing(minecraft.player);
         RingEnergy energy = SpeedForce.get(ring);
-        List<FormattedCharSequence> nameLines = font.split(shown.displayName().copy().withStyle(s -> s.withBold(true)), (int) (inner * 1.75F));
+        List<FormattedCharSequence> nameLines = font.split(shown.displayName().copy().withStyle(s -> s.withBold(true)), (int) (inner * 1.9F));
         int lineY = (int) cy - (nameLines.size() * 10 + 12) / 2;
         for (FormattedCharSequence line : nameLines) {
             graphics.drawCenteredString(font, line, (int) cx, lineY, argb(alpha, 0xFFD24A));
