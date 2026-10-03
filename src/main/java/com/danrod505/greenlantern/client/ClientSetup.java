@@ -10,6 +10,8 @@ import com.danrod505.greenlantern.client.render.GunConstructRenderer;
 import com.danrod505.greenlantern.client.render.HammerConstructRenderer;
 import com.danrod505.greenlantern.client.render.SawConstructRenderer;
 import com.danrod505.greenlantern.client.render.DrillConstructRenderer;
+import com.danrod505.greenlantern.client.render.MechaMissileRenderer;
+import com.danrod505.greenlantern.client.render.MechaRenderer;
 import com.danrod505.greenlantern.registry.ModEntities;
 import com.danrod505.greenlantern.registry.ModParticles;
 import com.danrod505.greenlantern.client.flight.AuraLayer;
@@ -61,6 +63,7 @@ public final class ClientSetup {
         ViewportEvent.ComputeCameraAngles.BUS.addListener(FlightCamera::onAngles);
         FlightRenderHandler.register();
         InputEvent.MouseScrollingEvent.BUS.addListener(ClientEvents::onMouseScroll);
+        InputEvent.InteractionKeyMappingTriggered.BUS.addListener(MechaControls::onInteraction);
         ViewportEvent.ComputeCameraAngles.BUS.addListener(CameraShake::onCameraAngles);
     }
 
@@ -68,6 +71,10 @@ public final class ClientSetup {
         SidedHooks.jumpKeyDown = () -> {
             Minecraft mc = Minecraft.getInstance();
             return mc.player != null && mc.player.input.keyPresses.jump();
+        };
+        SidedHooks.sprintKeyDown = () -> {
+            Minecraft mc = Minecraft.getInstance();
+            return mc.player != null && mc.player.input.keyPresses.sprint();
         };
         SidedHooks.cameraShake = CameraShake::start;
         SidedHooks.openGuide = () -> Minecraft.getInstance().setScreen(new GuideScreen());
@@ -86,6 +93,8 @@ public final class ClientSetup {
         event.registerEntityRenderer(ModEntities.SAW_CONSTRUCT.get(), SawConstructRenderer::new);
         event.registerEntityRenderer(ModEntities.HAMMER_CONSTRUCT.get(), HammerConstructRenderer::new);
         event.registerEntityRenderer(ModEntities.DRILL_CONSTRUCT.get(), DrillConstructRenderer::new);
+        event.registerEntityRenderer(ModEntities.MECHA.get(), MechaRenderer::new);
+        event.registerEntityRenderer(ModEntities.MECHA_MISSILE.get(), MechaMissileRenderer::new);
         event.registerEntityRenderer(ModEntities.FLIGHT_TRAIL.get(), TrailRenderer::new);
     }
 

@@ -1,0 +1,48 @@
+name: Screenshots
+
+# Development aid: runs the client under a virtual display, plays the scripted visual test
+# (src/gametest/.../ClientScript.java, selected with GL_CLIENT_SCRIPT) and uploads the screenshots.
+on:
+  workflow_dispatch:
+    inputs:
+      script:
+        description: 'Client script to run (default, wheel, flight, mecha)'
+        default: 'mecha'
+  push:
+    branches: ['claude/mecha-*']
+
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Install virtual display
+        run: sudo apt-get update && sudo apt-get install -y xvfb libgl1-mesa-dri mesa-utils
+
+      - name: Run the scripted client
+        timeout-minutes: 25
+        env:
+          GL_CLIENT_SCRIPT: ${{ github.event.inputs.script || 'mecha' }}
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew runClient -Pgametests --no-configuration-cache --stacktrace
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: |
+            run/screenshots/*.png
+            run/logs/latest.log
+          if-no-files-found: warn

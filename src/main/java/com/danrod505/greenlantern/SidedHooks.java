@@ -10,6 +10,9 @@ public final class SidedHooks {
     /** Whether the local player is holding the jump key. */
     public static BooleanSupplier jumpKeyDown = () -> false;
 
+    /** Whether the local player is holding the sprint key. */
+    public static BooleanSupplier sprintKeyDown = () -> false;
+
     /** Starts a camera shake on the local client (intensity 0-1, duration in ticks). */
     public static ShakeHandler cameraShake = (intensity, duration) -> {};
 

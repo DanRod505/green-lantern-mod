@@ -13,6 +13,7 @@ import com.danrod505.greenlantern.entity.DrillConstructEntity;
 import com.danrod505.greenlantern.entity.EnergyBoltEntity;
 import com.danrod505.greenlantern.entity.GunConstructEntity;
 import com.danrod505.greenlantern.entity.HammerConstructEntity;
+import com.danrod505.greenlantern.entity.MechaEntity;
 import com.danrod505.greenlantern.entity.SawConstructEntity;
 import com.danrod505.greenlantern.item.PowerRingItem;
 import com.danrod505.greenlantern.registry.ModBlocks;
@@ -68,6 +69,7 @@ public final class ModGameTests {
         TESTS.register("saw", () -> ModGameTests::saw);
         TESTS.register("hammer", () -> ModGameTests::hammer);
         TESTS.register("drill", () -> ModGameTests::drill);
+        TESTS.register("mecha", () -> ModGameTests::mecha);
         TESTS.register("guide_given_on_first_join", () -> ModGameTests::guideGivenOnFirstJoin);
         TESTS.register("lantern_charges_ring", () -> ModGameTests::lanternChargesRing);
         TESTS.register("data_loaded", () -> ModGameTests::dataLoaded);
@@ -322,6 +324,65 @@ public final class ModGameTests {
                 .thenExecuteFor(2, player::doTick)
                 .thenExecute(() -> {
                     helper.assertTrue(drill.isRemoved(), "drill should vanish when the rider leaves");
+                    remove(player);
+                })
+                .thenSucceed();
+    }
+
+    /** Turns the player to look at the middle of the given entity. */
+    private static void lookAt(ServerPlayer player, net.minecraft.world.entity.Entity target) {
+        Vec3 to = target.getBoundingBox().getCenter().subtract(player.getEyePosition());
+        float yaw = (float) (Math.atan2(-to.x, to.z) * 180.0 / Math.PI);
+        float pitch = (float) (-Math.atan2(to.y, to.horizontalDistance()) * 180.0 / Math.PI);
+        player.setYRot(yaw);
+        player.setXRot(pitch);
+        player.setYHeadRot(yaw);
+    }
+
+    public static void mecha(GameTestHelper helper) {
+        ServerPlayer player = player(helper, 7.5, 1, 2.5, 0, 0);
+        ItemStack ring = giveRing(player, 3000);
+        Uniform.summon(player);
+        select(player, ConstructRegistry.MECHA);
+        use(player);
+        helper.assertTrue(player.getVehicle() instanceof MechaEntity, "player should pilot the mecha");
+        MechaEntity mecha = (MechaEntity) player.getVehicle();
+        helper.assertTrue(RingEnergy.get(ring).stored() <= 3000 - ConstructRegistry.MECHA.activationCost(), "summoning the mecha should cost energy");
+        Zombie target = dummy(helper, 7.5, 1, 11.5);
+        Zombie second = dummy(helper, 2.5, 1, 13.5);
+        float health = target.getHealth();
+
+        helper.startSequence()
+                .thenExecuteFor(2, player::doTick)
+                .thenExecute(() -> {
+                    helper.assertTrue(player.getEyePosition().y - mecha.getY() > 6.0, "the cockpit should be high up in the chest");
+                    lookAt(player, target);
+                    mecha.setLaserFiring(true);
+                })
+                .thenExecuteFor(20, player::doTick)
+                .thenExecute(() -> {
+                    helper.assertTrue(mecha.isFiringLaser(), "laser should be firing");
+                    helper.assertTrue(target.getHealth() < health || target.isDeadOrDying(), "laser should hurt the zombie");
+                    mecha.setLaserFiring(false);
+                    lookAt(player, second);
+                    helper.assertTrue(mecha.fireMissiles(), "a missile salvo should launch");
+                    helper.assertFalse(mecha.fireMissiles(), "the pods need to reload between salvos");
+                })
+                .thenExecuteFor(70, player::doTick)
+                .thenExecute(() -> {
+                    helper.assertTrue(second.isDeadOrDying() || second.getHealth() < second.getMaxHealth(), "homing missiles should hit the second zombie");
+                    helper.assertFalse(helper.getLevel().getBlockState(helper.absolutePos(new BlockPos(2, 0, 13))).isAir(), "missiles don't break blocks by default");
+                    // The cockpit shields the pilot, paid for with ring energy.
+                    int before = RingEnergy.get(ring).stored();
+                    float pilotHealth = player.getHealth();
+                    player.hurtServer(player.level(), player.damageSources().generic(), 10.0F);
+                    helper.assertTrue(player.getHealth() == pilotHealth, "the mecha should shield its pilot");
+                    helper.assertTrue(RingEnergy.get(ring).stored() < before, "absorbing a hit should cost energy");
+                    player.stopRiding();
+                })
+                .thenExecuteFor(2, player::doTick)
+                .thenExecute(() -> {
+                    helper.assertTrue(mecha.isRemoved(), "mecha should fade when the pilot climbs out");
                     remove(player);
                 })
                 .thenSucceed();

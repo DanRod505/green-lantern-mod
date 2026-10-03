@@ -22,6 +22,12 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> DRILL_SUMMON = register("drill_summon");
     public static final RegistryObject<SoundEvent> DRILL_LOOP = register("drill_loop");
     public static final RegistryObject<SoundEvent> DRILL_GRIND = register("drill_grind");
+    public static final RegistryObject<SoundEvent> MECHA_SUMMON = register("mecha_summon");
+    public static final RegistryObject<SoundEvent> MECHA_STEP = register("mecha_step");
+    public static final RegistryObject<SoundEvent> MECHA_THRUSTER = register("mecha_thruster");
+    public static final RegistryObject<SoundEvent> MECHA_LASER = register("mecha_laser");
+    public static final RegistryObject<SoundEvent> MECHA_MISSILE = register("mecha_missile");
+    public static final RegistryObject<SoundEvent> MECHA_LAND = register("mecha_land");
     public static final RegistryObject<SoundEvent> HAMMER_SUMMON = register("hammer_summon");
     public static final RegistryObject<SoundEvent> HAMMER_IMPACT = register("hammer_impact");
     public static final RegistryObject<SoundEvent> CHARGE_LOOP = register("charge_loop");

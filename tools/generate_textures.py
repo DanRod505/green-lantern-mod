@@ -713,7 +713,7 @@ def make_gui():
     img.paste(e, (104, 0), e)
     save(img, "gui", "energy_bar.png")
 
-    # Construct icons: 16x16 icons in a strip (112x16) + selection frame (16x16 at 80)
+    # Construct icons: 16x16 icons in a strip (128x16) + selection frame (16x16 at 80)
     icons = {
         "blast": [
             "................",
@@ -823,10 +823,28 @@ def make_gui():
             "................",
             "................",
         ],
+        "mecha": [
+            ".....K....K.....",
+            "......KKKK......",
+            ".....KLWWLK.....",
+            ".....KHHHHK.....",
+            "..KKKKKGGKKKKK..",
+            ".KLLLKWLLWKLLLK.",
+            ".KGGLKLHHLKLGGK.",
+            ".KgGKKGLLGKKGgK.",
+            ".KLgK.KGGK.KgLK.",
+            ".KWWK.KggK.KWWK.",
+            ".KKK.KLK.KLK.KK.",
+            ".....KGK.KGK....",
+            ".....KGK.KGK....",
+            ".....KLK.KLK....",
+            "....KLLK.KLLK...",
+            "....KKKK.KKKK...",
+        ],
     }
     # Icons are at 16 * iconIndex; slot 5 (x=80) holds the selection frame, so the drill uses slot 6.
-    strip = blank(112, 16)
-    for i, key in enumerate(["blast", "gun", "bubble", "saw", "hammer", None, "drill"]):
+    strip = blank(128, 16)
+    for i, key in enumerate(["blast", "gun", "bubble", "saw", "hammer", None, "drill", "mecha"]):
         if key is None:
             continue
         ic = from_map(icons[key])

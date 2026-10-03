@@ -4,6 +4,7 @@ import com.danrod505.greenlantern.construct.impl.BubbleConstruct;
 import com.danrod505.greenlantern.construct.impl.DrillConstruct;
 import com.danrod505.greenlantern.construct.impl.EnergyBlastConstruct;
 import com.danrod505.greenlantern.construct.impl.HammerConstruct;
+import com.danrod505.greenlantern.construct.impl.MechaConstruct;
 import com.danrod505.greenlantern.construct.impl.MinigunConstruct;
 import com.danrod505.greenlantern.construct.impl.SawConstruct;
 import com.danrod505.greenlantern.registry.ModDataComponents;
@@ -27,6 +28,7 @@ public final class ConstructRegistry {
     public static final Construct SAW = register(new SawConstruct());
     public static final Construct HAMMER = register(new HammerConstruct());
     public static final Construct DRILL = register(new DrillConstruct());
+    public static final Construct MECHA = register(new MechaConstruct());
 
     private ConstructRegistry() {}
 

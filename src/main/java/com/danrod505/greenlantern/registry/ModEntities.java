@@ -7,6 +7,8 @@ import com.danrod505.greenlantern.entity.EnergyBoltEntity;
 import com.danrod505.greenlantern.entity.FlightTrailEntity;
 import com.danrod505.greenlantern.entity.GunConstructEntity;
 import com.danrod505.greenlantern.entity.HammerConstructEntity;
+import com.danrod505.greenlantern.entity.MechaEntity;
+import com.danrod505.greenlantern.entity.MechaMissileEntity;
 import com.danrod505.greenlantern.entity.SawConstructEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
@@ -46,6 +48,16 @@ public final class ModEntities {
             () -> EntityType.Builder.<DrillConstructEntity>of(DrillConstructEntity::new, MobCategory.MISC)
                     .noLootTable().sized(1.5F, 1.0F).clientTrackingRange(10).updateInterval(1).fireImmune().noSummon()
                     .build(ENTITIES.key("drill_construct")));
+
+    public static final RegistryObject<EntityType<MechaEntity>> MECHA = ENTITIES.register("mecha",
+            () -> EntityType.Builder.<MechaEntity>of(MechaEntity::new, MobCategory.MISC)
+                    .noLootTable().sized(MechaEntity.WIDTH, MechaEntity.HEIGHT).clientTrackingRange(16).updateInterval(1).fireImmune().noSummon()
+                    .build(ENTITIES.key("mecha")));
+
+    public static final RegistryObject<EntityType<MechaMissileEntity>> MECHA_MISSILE = ENTITIES.register("mecha_missile",
+            () -> EntityType.Builder.<MechaMissileEntity>of(MechaMissileEntity::new, MobCategory.MISC)
+                    .noLootTable().sized(0.4F, 0.4F).clientTrackingRange(10).updateInterval(1).fireImmune().noSummon()
+                    .build(ENTITIES.key("mecha_missile")));
 
     /** Client-only trail renderer holder (never spawned on the server). */
     public static final RegistryObject<EntityType<FlightTrailEntity>> FLIGHT_TRAIL = ENTITIES.register("flight_trail",

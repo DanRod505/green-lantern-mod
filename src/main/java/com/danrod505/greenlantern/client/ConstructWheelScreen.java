@@ -184,7 +184,7 @@ public class ConstructWheelScreen extends Screen {
             graphics.pose().translate(ix, iy);
             graphics.pose().scale(scale, scale);
             int iconTint = isHovered || construct == current ? 0xFFFFFF : 0xB8D8C0;
-            graphics.blit(RenderPipelines.GUI_TEXTURED, ICONS, -8, -8, construct.iconIndex() * 16, 0, 16, 16, 112, 16, argb(alpha, iconTint));
+            graphics.blit(RenderPipelines.GUI_TEXTURED, ICONS, -8, -8, construct.iconIndex() * 16, 0, 16, 16, 128, 16, argb(alpha, iconTint));
             graphics.pose().popMatrix();
 
             // Number shortcut near the outer edge.

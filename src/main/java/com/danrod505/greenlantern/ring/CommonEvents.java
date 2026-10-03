@@ -2,6 +2,7 @@ package com.danrod505.greenlantern.ring;
 
 import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.entity.BubbleConstructEntity;
+import com.danrod505.greenlantern.entity.MechaEntity;
 import com.danrod505.greenlantern.item.SuitArmorItem;
 import com.danrod505.greenlantern.registry.ModItems;
 import com.danrod505.greenlantern.registry.ModSounds;
@@ -14,6 +15,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -26,6 +28,7 @@ public final class CommonEvents {
 
     public static void register() {
         TickEvent.PlayerTickEvent.Post.BUS.addListener(CommonEvents::onPlayerTick);
+        LivingAttackEvent.BUS.addListener(CommonEvents::onLivingAttack);
         LivingHurtEvent.BUS.addListener(CommonEvents::onLivingHurt);
         LivingFallEvent.BUS.addListener(CommonEvents::onLivingFall);
         LivingDeathEvent.BUS.addListener(CommonEvents::onLivingDeath);
@@ -62,6 +65,14 @@ public final class CommonEvents {
             Uniform.removeStrayPieces(player);
         }
         FlightHandler.tick(player);
+    }
+
+    /** The mecha shields its pilot from every hit (paid for with ring energy). Returns true to cancel the attack. */
+    private static boolean onLivingAttack(LivingAttackEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player) || !(player.getVehicle() instanceof MechaEntity mecha)) return false;
+        if (event.getSource().is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY)) return false;
+        mecha.absorbHit(player, event.getSource(), event.getAmount());
+        return true;
     }
 
     private static void onLivingHurt(LivingHurtEvent event) {
