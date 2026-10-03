@@ -350,7 +350,22 @@ public final class ModGameTests {
         helper.assertTrue(portals.size() == 1, "the construct should open one portal, found " + portals.size());
         helper.assertTrue(RingEnergy.get(player.getMainHandItem()).stored() <= 3000 - ConstructRegistry.PORTAL.activationCost(), "the portal should cost energy");
         var portal = portals.getFirst();
-        helper.assertTrue(com.danrod505.greenlantern.oa.Oa.level(player.level().getServer()) != null, "the Oa dimension should exist");
+        if (com.danrod505.greenlantern.oa.Oa.level(player.level().getServer()) == null) {
+            // The game test server doesn't load datapack dimensions: check the city builder here instead
+            // (travelling through the portal is covered by the scripted client run, GL_CLIENT_SCRIPT=oa).
+            ServerLevel level = player.level();
+            com.danrod505.greenlantern.oa.OaCity.ensureBuilt(level);
+            helper.assertTrue(com.danrod505.greenlantern.oa.OaCity.isBuilt(level), "the city of Oa should be built");
+            helper.assertTrue(level.getBlockState(new BlockPos(0, com.danrod505.greenlantern.oa.OaCity.BATTERY_TOP + 6, 0)).is(Blocks.BEACON), "the Central Power Battery should shine a beacon");
+            AABB city = new AABB(-60, 0, -60, 60, 200, 60);
+            int guardians = level.getEntitiesOfClass(com.danrod505.greenlantern.entity.OaGuardianEntity.class, city).size();
+            int lanterns = level.getEntitiesOfClass(com.danrod505.greenlantern.entity.LanternCorpsmanEntity.class, city).size();
+            helper.assertTrue(guardians == com.danrod505.greenlantern.oa.OaCity.PILLARS, "a Guardian should stand on every pillar, found " + guardians);
+            helper.assertTrue(lanterns >= 10, "Lanterns should live on Oa, found " + lanterns);
+            remove(player);
+            helper.succeed();
+            return;
+        }
         helper.assertTrue(portal.distanceTo(player) > 2.0, "the portal should open in front of the player");
         ServerLevel home = player.level();
         Vec3 start = portal.position();
