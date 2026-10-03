@@ -15,6 +15,7 @@ public final class GLConfig {
     public static final ForgeConfigSpec.IntValue FLIGHT_COST_PER_SECOND;
     public static final ForgeConfigSpec.DoubleValue FLIGHT_SPEED;
     public static final ForgeConfigSpec.BooleanValue SHOW_OATH;
+    public static final ForgeConfigSpec.BooleanValue GIVE_GUIDE_ON_FIRST_JOIN;
 
     // ---- Power flight ---------------------------------------------------------------------------
     public static final ForgeConfigSpec.DoubleValue CRUISE_SPEED;
@@ -62,6 +63,8 @@ public final class GLConfig {
                 .defineInRange("flightSpeed", 0.1, 0.01, 1.0);
         SHOW_OATH = BUILDER.comment("Show the Green Lantern oath while recharging the ring.")
                 .define("showOath", true);
+        GIVE_GUIDE_ON_FIRST_JOIN = BUILDER.comment("Give every player the Corps Manual (guide book) the first time they join a world.")
+                .define("giveGuideOnFirstJoin", true);
         BUILDER.pop();
 
         BUILDER.comment("Power flight: hold forward while flying to keep accelerating until you break the sound barrier.").push("flight");

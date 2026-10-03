@@ -70,6 +70,7 @@ public final class ClientSetup {
             return mc.player != null && mc.player.input.keyPresses.jump();
         };
         SidedHooks.cameraShake = CameraShake::start;
+        SidedHooks.openGuide = () -> Minecraft.getInstance().setScreen(new GuideScreen());
         SidedHooks.flightSync = FlightVisuals::onSync;
     }
 

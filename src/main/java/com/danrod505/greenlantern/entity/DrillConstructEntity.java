@@ -101,7 +101,8 @@ public class DrillConstructEntity extends ConstructEntity {
 
     @Override
     protected Vec3 getPassengerAttachmentPoint(Entity passenger, EntityDimensions dimensions, float scale) {
-        return new Vec3(0.0, 0.35, -0.25).yRot(-getYRot() * Mth.DEG_TO_RAD);
+        // The rider sits on the seat (a seated player's feet hang 0.6 below this point).
+        return new Vec3(0.0, 0.55, -0.25).yRot(-getYRot() * Mth.DEG_TO_RAD);
     }
 
     @Override
@@ -313,7 +314,11 @@ public class DrillConstructEntity extends ConstructEntity {
         LongSet targets = new LongOpenHashSet();
 
         // Room for the drill and its rider one step ahead along the bore direction.
-        AABB body = getBoundingBox().minmax(driver.getBoundingBox()).move(bore.scale(0.8)).deflate(0.02);
+        // The seated rider's legs hang below the cockpit: never dig below the bottom of the drill for them.
+        AABB own = getBoundingBox();
+        AABB withRider = own.minmax(driver.getBoundingBox());
+        AABB body = new AABB(withRider.minX, own.minY, withRider.minZ, withRider.maxX, withRider.maxY, withRider.maxZ)
+                .move(bore.scale(0.8)).deflate(0.02);
         for (BlockPos pos : BlockPos.betweenClosed(BlockPos.containing(body.minX, body.minY, body.minZ), BlockPos.containing(body.maxX, body.maxY, body.maxZ))) {
             targets.add(pos.asLong());
         }

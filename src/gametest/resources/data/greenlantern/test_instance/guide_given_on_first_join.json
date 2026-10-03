@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:function",
+  "function": "greenlantern:guide_given_on_first_join",
+  "environment": "minecraft:default",
+  "structure": "greenlantern:arena",
+  "max_ticks": 100,
+  "required": true
+}

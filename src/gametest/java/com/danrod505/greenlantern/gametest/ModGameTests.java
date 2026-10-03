@@ -68,6 +68,7 @@ public final class ModGameTests {
         TESTS.register("saw", () -> ModGameTests::saw);
         TESTS.register("hammer", () -> ModGameTests::hammer);
         TESTS.register("drill", () -> ModGameTests::drill);
+        TESTS.register("guide_given_on_first_join", () -> ModGameTests::guideGivenOnFirstJoin);
         TESTS.register("lantern_charges_ring", () -> ModGameTests::lanternChargesRing);
         TESTS.register("data_loaded", () -> ModGameTests::dataLoaded);
         TESTS.register("sonic_boom_requires_speed", () -> ModGameTests::sonicBoomRequiresSpeed);
@@ -326,6 +327,13 @@ public final class ModGameTests {
                 .thenSucceed();
     }
 
+    public static void guideGivenOnFirstJoin(GameTestHelper helper) {
+        ServerPlayer player = player(helper, 7.5, 1, 7.5, 0, 0);
+        helper.assertTrue(player.getInventory().contains(new ItemStack(ModItems.GUIDE_BOOK.get())), "new players should get the Corps Manual");
+        remove(player);
+        helper.succeed();
+    }
+
     public static void hammer(GameTestHelper helper) {
         // Look down at the floor 4 blocks ahead where two zombies stand.
         ServerPlayer player = player(helper, 7.5, 1, 2.5, 0, 35);
@@ -441,7 +449,7 @@ public final class ModGameTests {
     public static void dataLoaded(GameTestHelper helper) {
         var server = helper.getLevel().getServer();
         helper.assertTrue(server.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).get(ModDamageTypes.HARD_LIGHT).isPresent(), "damage type should load");
-        for (String recipe : new String[] {"power_ring", "power_battery"}) {
+        for (String recipe : new String[] {"power_ring", "power_battery", "guide_book"}) {
             var key = ResourceKey.create(Registries.RECIPE, GreenLantern.id(recipe));
             helper.assertTrue(server.getRecipeManager().byKey(key).isPresent(), "recipe " + recipe + " should load");
         }

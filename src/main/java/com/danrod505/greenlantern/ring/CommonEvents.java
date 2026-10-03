@@ -3,12 +3,15 @@ package com.danrod505.greenlantern.ring;
 import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.entity.BubbleConstructEntity;
 import com.danrod505.greenlantern.item.SuitArmorItem;
+import com.danrod505.greenlantern.registry.ModItems;
 import com.danrod505.greenlantern.registry.ModSounds;
 import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
@@ -18,6 +21,8 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
 /** Game (Forge bus) event handlers shared by both logical sides. */
 public final class CommonEvents {
+    private static final String GUIDE_GIVEN_TAG = "greenlantern.guide_given";
+
     private CommonEvents() {}
 
     public static void register() {
@@ -26,6 +31,9 @@ public final class CommonEvents {
         LivingFallEvent.BUS.addListener(CommonEvents::onLivingFall);
         LivingDeathEvent.BUS.addListener(CommonEvents::onLivingDeath);
         EntityJoinLevelEvent.BUS.addListener(CommonEvents::onEntityJoin);
+        net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent.BUS.addListener(event -> {
+            if (event.getEntity() instanceof ServerPlayer player) giveGuideOnFirstJoin(player);
+        });
         net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent.BUS.addListener(event -> {
             if (event.getEntity() instanceof ServerPlayer player) com.danrod505.greenlantern.flight.ServerFlightTracker.remove(player);
         });
@@ -80,6 +88,18 @@ public final class CommonEvents {
             // Give back the stashed armor before the inventory is dropped.
             Uniform.dismiss(player, false);
         }
+    }
+
+    /** New players get the Corps Manual once (remembered in their persistent data, which survives death). */
+    private static void giveGuideOnFirstJoin(ServerPlayer player) {
+        if (!GLConfig.GIVE_GUIDE_ON_FIRST_JOIN.get()) return;
+        CompoundTag persisted = player.getPersistentData().getCompoundOrEmpty(Player.PERSISTED_NBT_TAG);
+        if (persisted.getBooleanOr(GUIDE_GIVEN_TAG, false)) return;
+        persisted.putBoolean(GUIDE_GIVEN_TAG, true);
+        player.getPersistentData().put(Player.PERSISTED_NBT_TAG, persisted);
+        ItemStack guide = new ItemStack(ModItems.GUIDE_BOOK.get());
+        if (!player.getInventory().add(guide)) player.drop(guide, false);
+        player.displayClientMessage(Component.translatable("message.greenlantern.guide_given").withStyle(ChatFormatting.GREEN), false);
     }
 
     private static boolean onEntityJoin(EntityJoinLevelEvent event) {

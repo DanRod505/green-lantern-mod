@@ -90,6 +90,26 @@ RING = [
     "...mmmmmmmmmm...",
 ]
 
+# Corps Manual: green leather book with the lantern emblem and silver page edges.
+GUIDE_BOOK = [
+    "................",
+    "...KKKKKKKKKK...",
+    "..KDgggggggggK..",
+    "..KDgGGGGGGGgKs.",
+    "..KDgGKKKKKGgKs.",
+    "..KDgGGWWWGGgKs.",
+    "..KDgGWKKKWGgKs.",
+    "..KDgGWKGKWGgKs.",
+    "..KDgGWKKKWGgKs.",
+    "..KDgGGWWWGGgKs.",
+    "..KDgGKKKKKGgKs.",
+    "..KDgGGGGGGGgKs.",
+    "..KDgggggggggKs.",
+    "..KKKKKKKKKKKKN.",
+    "...NNNNNNNNNNNm.",
+    "................",
+]
+
 # Ring while a construct is being used: the gem burns white-hot.
 RING_ACTIVE = [
     "....W......W....",
@@ -213,6 +233,7 @@ def make_items():
     save(from_map(SUIT_ITEM), "item", "lantern_suit.png")
     save(from_map(LEGS_ITEM), "item", "lantern_leggings.png")
     save(from_map(BOOTS_ITEM), "item", "lantern_boots.png")
+    save(from_map(GUIDE_BOOK), "item", "guide_book.png")
 
 
 # --------------------------------------------------------------- lantern block
