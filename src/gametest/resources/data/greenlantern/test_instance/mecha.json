@@ -2,7 +2,7 @@
   "type": "minecraft:function",
   "function": "greenlantern:mecha",
   "environment": "minecraft:default",
-  "structure": "greenlantern:arena",
+  "structure": "greenlantern:arena_tall",
   "max_ticks": 300,
   "required": true
 }
