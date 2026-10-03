@@ -25,7 +25,7 @@ public final class RingHud {
     private static final Identifier CONSTRUCTS = GreenLantern.id("textures/gui/constructs.png");
     private static final int BAR_TEX_W = 128;
     private static final int BAR_TEX_H = 32;
-    private static final int ICON_TEX_W = 128;
+    private static final int ICON_TEX_W = 256;
     private static final int ICON_TEX_H = 16;
 
     private static float displayedFraction = -1.0F;

@@ -6,6 +6,7 @@ import com.danrod505.greenlantern.construct.impl.EnergyBlastConstruct;
 import com.danrod505.greenlantern.construct.impl.HammerConstruct;
 import com.danrod505.greenlantern.construct.impl.MechaConstruct;
 import com.danrod505.greenlantern.construct.impl.MinigunConstruct;
+import com.danrod505.greenlantern.construct.impl.PortalConstruct;
 import com.danrod505.greenlantern.construct.impl.SawConstruct;
 import com.danrod505.greenlantern.registry.ModDataComponents;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public final class ConstructRegistry {
     public static final Construct HAMMER = register(new HammerConstruct());
     public static final Construct DRILL = register(new DrillConstruct());
     public static final Construct MECHA = register(new MechaConstruct());
+    public static final Construct PORTAL = register(new PortalConstruct());
 
     private ConstructRegistry() {}
 

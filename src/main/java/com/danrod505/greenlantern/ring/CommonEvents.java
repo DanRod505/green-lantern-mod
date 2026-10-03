@@ -64,7 +64,33 @@ public final class CommonEvents {
         if (player.tickCount % 10 == 0) {
             Uniform.removeStrayPieces(player);
         }
+        if (player.tickCount % 5 == 0) {
+            chargeFromCentralBattery(player);
+        }
         FlightHandler.tick(player);
+    }
+
+    /** On Oa, the Central Power Battery tops up every ring close to it. */
+    private static void chargeFromCentralBattery(ServerPlayer player) {
+        if (!GLConfig.OA_BATTERY_RECHARGES.get() || !com.danrod505.greenlantern.oa.Oa.is(player.level())
+                || !com.danrod505.greenlantern.oa.Oa.nearBattery(player.position())) return;
+        ItemStack ring = RingHelper.findRing(player);
+        if (ring.isEmpty() || RingEnergy.get(ring).isFull()) return;
+        RingEnergy.add(ring, GLConfig.CHARGE_PER_TICK.get() * 5);
+        // A thread of light from the battery to the ring bearer.
+        var level = player.level();
+        net.minecraft.world.phys.Vec3 from = new net.minecraft.world.phys.Vec3(0.5, com.danrod505.greenlantern.oa.Oa.GROUND_Y + 13, 0.5);
+        net.minecraft.world.phys.Vec3 to = player.position().add(0, 1.0, 0);
+        for (int i = 1; i <= 6; i++) {
+            net.minecraft.world.phys.Vec3 p = from.lerp(to, (i + level.getRandom().nextDouble()) / 7.0);
+            level.sendParticles(com.danrod505.greenlantern.registry.ModParticles.GLOW.get(), p.x, p.y, p.z, 1, 0.05, 0.05, 0.05, 0.0);
+        }
+        if (player.tickCount % 60 == 0) {
+            player.displayClientMessage(Component.translatable("message.greenlantern.oa_battery_charging").withStyle(ChatFormatting.GREEN), true);
+        }
+        if (RingEnergy.get(ring).isFull()) {
+            level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.CHARGE_COMPLETE.get(), SoundSource.PLAYERS, 0.8F, 1.0F);
+        }
     }
 
     /** The mecha shields its pilot from every hit (paid for with ring energy). Returns true to cancel the attack. */

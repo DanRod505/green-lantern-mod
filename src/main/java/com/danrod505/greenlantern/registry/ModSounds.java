@@ -40,6 +40,11 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> FLIGHT_TAKEOFF = register("flight_takeoff");
     public static final RegistryObject<SoundEvent> FLIGHT_ROLL = register("flight_roll");
     public static final RegistryObject<SoundEvent> HERO_LANDING = register("hero_landing");
+    public static final RegistryObject<SoundEvent> PORTAL_OPEN = register("portal_open");
+    public static final RegistryObject<SoundEvent> PORTAL_HUM = register("portal_hum");
+    public static final RegistryObject<SoundEvent> PORTAL_TRAVEL = register("portal_travel");
+    /** Original ambient music of Oa (see tools/generate_oa_music.py), played by the dimension type. */
+    public static final RegistryObject<SoundEvent> MUSIC_OA = register("music.oa");
     /** Original flight theme, two aligned stems (see tools/generate_flight_audio.py). */
     public static final RegistryObject<SoundEvent> FLIGHT_THEME_BASE = register("flight_theme_base");
     public static final RegistryObject<SoundEvent> FLIGHT_THEME_PEAK = register("flight_theme_peak");

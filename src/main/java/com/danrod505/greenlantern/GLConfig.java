@@ -48,6 +48,8 @@ public final class GLConfig {
     public static final ForgeConfigSpec.IntValue HAMMER_COST;
     public static final ForgeConfigSpec.DoubleValue HAMMER_DAMAGE;
     public static final ForgeConfigSpec.DoubleValue HAMMER_RADIUS;
+    public static final ForgeConfigSpec.IntValue PORTAL_COST;
+    public static final ForgeConfigSpec.BooleanValue OA_BATTERY_RECHARGES;
     public static final ForgeConfigSpec.IntValue MECHA_COST;
     public static final ForgeConfigSpec.IntValue MECHA_COST_PER_SECOND;
     public static final ForgeConfigSpec.IntValue MECHA_FLIGHT_COST_PER_SECOND;
@@ -114,6 +116,11 @@ public final class GLConfig {
         HAMMER_COST = BUILDER.comment("Energy cost of the hammer slam.").defineInRange("hammerCost", 120, 0, 100_000);
         HAMMER_DAMAGE = BUILDER.comment("Damage at the center of the hammer slam.").defineInRange("hammerDamage", 16.0, 0.0, 1000.0);
         HAMMER_RADIUS = BUILDER.comment("Radius of the hammer shockwave in blocks.").defineInRange("hammerRadius", 5.5, 1.0, 32.0);
+        BUILDER.pop();
+
+        BUILDER.comment("Oa: the home planet of the Corps, reached through the Portal construct.").push("oa");
+        PORTAL_COST = BUILDER.comment("Energy cost to open a portal to Oa (or back home).").defineInRange("portalCost", 250, 0, 100_000);
+        OA_BATTERY_RECHARGES = BUILDER.comment("Whether rings recharge on their own near the Central Power Battery on Oa.").define("centralBatteryRecharges", true);
         BUILDER.pop();
 
         BUILDER.comment("Giant mecha: a 10 block tall armored suit the ring bearer pilots from the cockpit in its chest.").push("mecha");
