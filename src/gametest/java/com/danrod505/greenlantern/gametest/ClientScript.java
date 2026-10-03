@@ -287,6 +287,21 @@ public final class ClientScript {
         step(0, () -> WATCHERS.add(new Watcher(condition, name)));
     }
 
+    /** Watches the condition for the next {@code ticks} ticks, blocking the steps; shoots anyway at the end. */
+    private static void watch(int ticks, java.util.function.BooleanSupplier condition, String name) {
+        for (int i = 0; i < ticks; i++) {
+            step(1, () -> {
+                if (!TAKEN.contains(name) && condition.getAsBoolean()) {
+                    TAKEN.add(name);
+                    shot(name);
+                }
+            });
+        }
+        step(0, () -> {
+            if (TAKEN.add(name)) shot(name + "_late");
+        });
+    }
+
     private static void tickWatchers() {
         WATCHERS.removeIf(w -> {
             if (TAKEN.contains(w.name())) return true;
