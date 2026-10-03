@@ -271,6 +271,13 @@ public final class ClientScript {
         step(140, () -> mc().stop());
     }
 
+    /** Screenshot without the HUD and chat, so the model is easy to see. */
+    private static void clean(String name) {
+        mc().gui.getChat().clearMessages(false);
+        mc().options.hideGui = true;
+        shot(name);
+    }
+
     private static void mecha(java.util.function.Consumer<com.danrod505.greenlantern.entity.MechaEntity> action) {
         server(sp -> {
             if (sp.getVehicle() instanceof com.danrod505.greenlantern.entity.MechaEntity mecha) action.accept(mecha);
@@ -296,6 +303,7 @@ public final class ClientScript {
                     zombie.snapTo(base.getX() + 0.5 + i * 3.0, base.getY(), base.getZ() + 16.5, 180, 0);
                     zombie.setNoAi(true);
                     zombie.setPersistenceRequired();
+                    zombie.setItemSlot(net.minecraft.world.entity.EquipmentSlot.HEAD, new ItemStack(net.minecraft.world.item.Items.IRON_HELMET));
                     level.addFreshEntity(zombie);
                 }
                 // A little stone wall and a lantern post for scale.
@@ -310,14 +318,15 @@ public final class ClientScript {
             camera(CameraType.THIRD_PERSON_BACK);
         });
         step(10, ClientScript::use);
-        step(8, () -> shot("m00_assembling"));
-        step(40, () -> shot("m01_back"));
+        step(8, () -> clean("m00_assembling"));
+        step(40, () -> clean("m01_back"));
         step(5, () -> camera(CameraType.THIRD_PERSON_FRONT));
-        step(5, () -> shot("m02_front"));
+        step(5, () -> clean("m02_front"));
         step(2, () -> look(35, 25));
-        step(5, () -> shot("m02b_front_low"));
+        step(5, () -> clean("m02b_front_low"));
         step(2, () -> {
             camera(CameraType.FIRST_PERSON);
+            mc().options.hideGui = false;
             look(0, 15);
         });
         step(5, () -> shot("m03_cockpit"));
@@ -326,9 +335,9 @@ public final class ClientScript {
             look(0, 16);
             mecha(m -> m.setLaserFiring(true));
         });
-        step(12, () -> shot("m04_laser"));
+        step(12, () -> clean("m04_laser"));
         step(2, () -> camera(CameraType.THIRD_PERSON_FRONT));
-        step(4, () -> shot("m04b_laser_front"));
+        step(4, () -> clean("m04b_laser_front"));
         step(2, () -> {
             camera(CameraType.THIRD_PERSON_BACK);
             mecha(m -> m.setLaserFiring(false));
@@ -337,39 +346,39 @@ public final class ClientScript {
             look(-20, 10);
             mecha(m -> m.fireMissiles());
         });
-        step(7, () -> shot("m05_missiles_launch"));
-        step(8, () -> shot("m05b_missiles_fly"));
-        step(10, () -> shot("m05c_missiles_hit"));
+        step(7, () -> clean("m05_missiles_launch"));
+        step(8, () -> clean("m05b_missiles_fly"));
+        step(10, () -> clean("m05c_missiles_hit"));
         // Walking.
         step(20, () -> {
             look(90, 12);
             key(mc().options.keyUp, true);
         });
-        step(30, () -> shot("m06_walk"));
-        step(7, () -> shot("m06b_walk"));
+        step(30, () -> clean("m06_walk"));
+        step(7, () -> clean("m06b_walk"));
         step(2, () -> camera(CameraType.THIRD_PERSON_FRONT));
-        step(5, () -> shot("m06c_walk_front"));
-        step(6, () -> shot("m06d_walk_front"));
+        step(5, () -> clean("m06c_walk_front"));
+        step(6, () -> clean("m06d_walk_front"));
         step(2, () -> {
             camera(CameraType.THIRD_PERSON_BACK);
             key(mc().options.keyUp, false);
         });
         // Take off and fly.
         step(20, () -> key(mc().options.keyJump, true));
-        step(16, () -> shot("m07_takeoff"));
+        step(16, () -> clean("m07_takeoff"));
         step(30, () -> {
-            shot("m07b_climb");
+            clean("m07b_climb");
             key(mc().options.keyUp, true);
         });
         step(10, () -> key(mc().options.keyJump, false));
-        step(25, () -> shot("m08_flying"));
+        step(25, () -> clean("m08_flying"));
         step(2, () -> camera(CameraType.THIRD_PERSON_FRONT));
-        step(5, () -> shot("m08b_flying_front"));
+        step(5, () -> clean("m08b_flying_front"));
         step(2, () -> {
             camera(CameraType.THIRD_PERSON_BACK);
             key(mc().options.keySprint, true);
         });
-        step(25, () -> shot("m08c_afterburner"));
+        step(25, () -> clean("m08c_afterburner"));
         // Dive into the ground for the landing shockwave.
         step(2, () -> {
             key(mc().options.keySprint, false);
@@ -380,7 +389,7 @@ public final class ClientScript {
             step(8, () -> shot(name));
         }
         step(2, () -> key(mc().options.keyUp, false));
-        step(6, () -> shot("m09z_after_landing"));
+        step(6, () -> clean("m09z_after_landing"));
         step(20, () -> mc().stop());
     }
 

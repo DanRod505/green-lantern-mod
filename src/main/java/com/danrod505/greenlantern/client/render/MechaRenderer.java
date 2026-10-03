@@ -118,17 +118,20 @@ public class MechaRenderer extends EntityRenderer<MechaEntity, MechaRenderer.Sta
 
     /** Main armour: glowing panel with a soft shell. */
     private static void armor(VertexConsumer vc, PoseStack.Pose p, float x0, float y0, float z0, float x1, float y1, float z1, float a) {
-        HardLight.glowingBox(vc, p, x0, y0, z0, x1, y1, z1, a);
+        // Lighter fill than the small constructs so the panel edges outline every part of the giant.
+        HardLight.box(vc, p, x0, y0, z0, x1, y1, z1, HardLight.color(0.55F * a, 0.2F));
+        float g = 0.07F;
+        HardLight.box(vc, p, x0 - g, y0 - g, z0 - g, x1 + g, y1 + g, z1 + g, HardLight.color(0.14F * a, 0.0F));
     }
 
     /** Raised plates and trims: brighter. */
     private static void plate(VertexConsumer vc, PoseStack.Pose p, float x0, float y0, float z0, float x1, float y1, float z1, float a) {
-        HardLight.box(vc, p, x0, y0, z0, x1, y1, z1, HardLight.color(0.9F * a, 0.6F));
+        HardLight.box(vc, p, x0, y0, z0, x1, y1, z1, HardLight.color(0.85F * a, 0.75F));
     }
 
     /** Joints and inner frame: deep green, nearly solid. */
     private static void joint(VertexConsumer vc, PoseStack.Pose p, float x0, float y0, float z0, float x1, float y1, float z1, float a) {
-        HardLight.box(vc, p, x0, y0, z0, x1, y1, z1, argb(0.92F * a, 12, 120, 40));
+        HardLight.box(vc, p, x0, y0, z0, x1, y1, z1, argb(0.95F * a, 6, 70, 26));
     }
 
     /** Lights: visor, emblems, cannon muzzles. */
