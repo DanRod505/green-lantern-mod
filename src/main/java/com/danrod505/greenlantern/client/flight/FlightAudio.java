@@ -156,15 +156,15 @@ public final class FlightAudio {
     }
 
     /** A piece of the flight theme, faded in and out smoothly; stops itself once faded out. */
-    static final class ThemeSound extends AbstractTickableSoundInstance {
-        float target;
+    public static final class ThemeSound extends AbstractTickableSoundInstance {
+        public float target;
         float fadeIn;
         float fadeOut;
         /** Silent layers that must stay in sync (the peak layer) keep playing at volume 0. */
-        boolean stopWhenSilent = true;
+        public boolean stopWhenSilent = true;
         private int age;
 
-        ThemeSound(SoundEvent event, float fadeIn, float fadeOut) {
+        public ThemeSound(SoundEvent event, float fadeIn, float fadeOut) {
             super(event, SoundSource.MUSIC, RandomSource.create());
             this.fadeIn = fadeIn;
             this.fadeOut = fadeOut;

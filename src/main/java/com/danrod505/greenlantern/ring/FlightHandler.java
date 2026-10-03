@@ -44,6 +44,12 @@ public final class FlightHandler {
                     }
                 }
             }
+        } else if (com.danrod505.greenlantern.flash.SpeedsterServer.isPhasing(player)) {
+            // A phasing speedster hovers inside walls: keep the server's flight check happy.
+            if (!abilities.mayfly) {
+                abilities.mayfly = true;
+                player.onUpdateAbilities();
+            }
         } else if (abilities.getFlyingSpeed() != VANILLA_FLY_SPEED || (abilities.mayfly && !player.isCreative() && !player.isSpectator())) {
             refreshAbilities(player);
         }

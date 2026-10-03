@@ -21,6 +21,8 @@ public final class ModCreativeTabs {
                 output.accept(ModItems.POWER_RING.get());
                 output.accept(ModItems.POWER_BATTERY.get());
                 output.accept(ModItems.GUIDE_BOOK.get());
+                output.accept(com.danrod505.greenlantern.item.FlashRingItem.charged(ModItems.FLASH_RING.get().getDefaultInstance()));
+                output.accept(ModItems.FLASH_RING.get());
             })
             .build());
 

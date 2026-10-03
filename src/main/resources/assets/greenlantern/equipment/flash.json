@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "greenlantern:flash"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "greenlantern:flash"
+      }
+    ]
+  }
+}

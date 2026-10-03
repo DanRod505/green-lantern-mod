@@ -19,5 +19,13 @@ public final class ModDataComponents {
     public static final RegistryObject<DataComponentType<Identifier>> SELECTED_CONSTRUCT = COMPONENTS.register("selected_construct",
             () -> DataComponentType.<Identifier>builder().persistent(Identifier.CODEC).networkSynchronized(Identifier.STREAM_CODEC).build());
 
+    /** Speed Force stored in the Flash ring (same shape as the ring energy, its own capacity). */
+    public static final RegistryObject<DataComponentType<RingEnergy>> SPEED_FORCE = COMPONENTS.register("speed_force",
+            () -> DataComponentType.<RingEnergy>builder().persistent(RingEnergy.CODEC).networkSynchronized(RingEnergy.STREAM_CODEC).build());
+
+    /** Index of the speedster power currently selected on the Flash ring. */
+    public static final RegistryObject<DataComponentType<Integer>> SELECTED_POWER = COMPONENTS.register("selected_power",
+            () -> DataComponentType.<Integer>builder().persistent(com.mojang.serialization.Codec.INT).networkSynchronized(net.minecraft.network.codec.ByteBufCodecs.VAR_INT).build());
+
     private ModDataComponents() {}
 }

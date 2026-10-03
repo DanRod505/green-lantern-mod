@@ -19,6 +19,9 @@ public final class SidedHooks {
     /** Client handler for flight state / moves of other players. */
     public static java.util.function.Consumer<com.danrod505.greenlantern.network.FlightSyncPacket> flightSync = packet -> {};
 
+    /** Client handler for the speedster state / moves of players (the local one included). */
+    public static java.util.function.Consumer<com.danrod505.greenlantern.network.SpeedSyncPacket> speedSync = packet -> {};
+
     /** Opens the Corps Manual (guide book) screen on the local client. */
     public static Runnable openGuide = () -> {};
 

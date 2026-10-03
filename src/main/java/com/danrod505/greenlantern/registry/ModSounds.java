@@ -49,6 +49,27 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> FLIGHT_THEME_BASE = register("flight_theme_base");
     public static final RegistryObject<SoundEvent> FLIGHT_THEME_PEAK = register("flight_theme_peak");
 
+    // ---- The Flash (all original, see tools/generate_flash_audio.py) ----------------------------
+    public static final RegistryObject<SoundEvent> FLASH_SUIT_UP = register("flash_suit_up");
+    public static final RegistryObject<SoundEvent> FLASH_SUIT_DOWN = register("flash_suit_down");
+    public static final RegistryObject<SoundEvent> SPEED_START = register("speed_start");
+    public static final RegistryObject<SoundEvent> SPEED_CRACKLE = register("speed_crackle");
+    public static final RegistryObject<SoundEvent> SPEED_BOOM = register("speed_boom");
+    public static final RegistryObject<SoundEvent> SPEED_SKID = register("speed_skid");
+    public static final RegistryObject<SoundEvent> SUPER_JUMP = register("super_jump");
+    public static final RegistryObject<SoundEvent> SPEED_LANDING = register("speed_landing");
+    public static final RegistryObject<SoundEvent> TORNADO_LOOP = register("tornado_loop");
+    public static final RegistryObject<SoundEvent> TORNADO_START = register("tornado_start");
+    public static final RegistryObject<SoundEvent> PHASE_START = register("phase_start");
+    public static final RegistryObject<SoundEvent> PHASE_LOOP = register("phase_loop");
+    public static final RegistryObject<SoundEvent> PHASE_END = register("phase_end");
+    public static final RegistryObject<SoundEvent> LIGHTNING_THROW = register("lightning_throw");
+    public static final RegistryObject<SoundEvent> LIGHTNING_HIT = register("lightning_hit");
+    public static final RegistryObject<SoundEvent> POWER_SELECT = register("power_select");
+    /** Original running theme, two aligned stems like the flight theme. */
+    public static final RegistryObject<SoundEvent> SPEED_THEME_BASE = register("speed_theme_base");
+    public static final RegistryObject<SoundEvent> SPEED_THEME_PEAK = register("speed_theme_peak");
+
     private static RegistryObject<SoundEvent> register(String name) {
         return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(GreenLantern.id(name)));
     }

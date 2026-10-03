@@ -21,11 +21,13 @@ import net.minecraft.world.item.equipment.EquipmentAssets;
 import org.jspecify.annotations.Nullable;
 
 /**
- * A piece of the hard-light Green Lantern uniform. Pieces are created by the ring, can't be taken
- * off (Curse of Binding) and disappear as soon as they leave an armor slot.
+ * A piece of a hero suit (the hard-light Green Lantern uniform or the Flash suit). Pieces are
+ * created by a ring, can't be taken off (Curse of Binding) and disappear as soon as they leave an
+ * armor slot.
  */
 public class SuitArmorItem extends Item {
     public static final ResourceKey<EquipmentAsset> ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, GreenLantern.id("green_lantern"));
+    public static final ResourceKey<EquipmentAsset> FLASH_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, GreenLantern.id("flash"));
 
     public static final ArmorMaterial MATERIAL = new ArmorMaterial(
             1000,
@@ -37,6 +39,17 @@ public class SuitArmorItem extends Item {
             ItemTags.REPAIRS_NETHERITE_ARMOR,
             ASSET);
 
+    /** The Flash suit: friction-proof fabric, lighter than hard light. */
+    public static final ArmorMaterial FLASH_MATERIAL = new ArmorMaterial(
+            1000,
+            Map.of(ArmorType.HELMET, 2, ArmorType.CHESTPLATE, 7, ArmorType.LEGGINGS, 5, ArmorType.BOOTS, 3, ArmorType.BODY, 7),
+            1,
+            SoundEvents.ARMOR_EQUIP_LEATHER,
+            1.0F,
+            0.0F,
+            ItemTags.REPAIRS_LEATHER_ARMOR,
+            FLASH_ASSET);
+
     private final ArmorType type;
 
     public SuitArmorItem(ArmorType type, Properties properties) {
@@ -45,8 +58,12 @@ public class SuitArmorItem extends Item {
     }
 
     public static Properties properties(ArmorType type) {
+        return properties(MATERIAL, type);
+    }
+
+    public static Properties properties(ArmorMaterial material, ArmorType type) {
         return new Properties()
-                .humanoidArmor(MATERIAL, type)
+                .humanoidArmor(material, type)
                 .component(DataComponents.UNBREAKABLE, Unit.INSTANCE)
                 .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, false)
                 .stacksTo(1)

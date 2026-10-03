@@ -1,8 +1,11 @@
 package com.danrod505.greenlantern.client;
 
+import com.danrod505.greenlantern.flash.FlashHelper;
 import com.danrod505.greenlantern.network.CycleConstructPacket;
 import com.danrod505.greenlantern.network.ModNetwork;
+import com.danrod505.greenlantern.network.SelectPowerPacket;
 import com.danrod505.greenlantern.network.ToggleUniformPacket;
+import com.danrod505.greenlantern.network.UsePowerPacket;
 import com.danrod505.greenlantern.registry.ModParticles;
 import com.danrod505.greenlantern.ring.RingHelper;
 import net.minecraft.client.Minecraft;
@@ -22,7 +25,10 @@ public final class ClientEvents {
         if (player == null || mc.level == null) return;
 
         while (KeyBindings.TOGGLE_UNIFORM.consumeClick()) {
-            if (!RingHelper.findRing(player).isEmpty()) ModNetwork.sendToServer(new ToggleUniformPacket());
+            if (!RingHelper.findRing(player).isEmpty() || !FlashHelper.findRing(player).isEmpty()) ModNetwork.sendToServer(new ToggleUniformPacket());
+        }
+        while (KeyBindings.HERO_POWER.consumeClick()) {
+            if (mc.screen == null && !FlashHelper.findRing(player).isEmpty()) ModNetwork.sendToServer(new UsePowerPacket(-1));
         }
         tickWheelKey(mc, player);
         MechaControls.tick(mc);
@@ -52,33 +58,45 @@ public final class ClientEvents {
         // Clicks are handled through isDown(); drop queued clicks so they don't pile up.
         while (KeyBindings.CONSTRUCT_WHEEL.consumeClick()) {
         }
-        boolean hasRing = !RingHelper.findRing(player).isEmpty();
+        boolean flash = flashContext(player);
+        boolean hasRing = flash || !RingHelper.findRing(player).isEmpty();
         if (mc.screen != null || !hasRing) {
             wheelKeyTicks = 0;
             return;
         }
         if (KeyBindings.CONSTRUCT_WHEEL.isDown()) {
             if (++wheelKeyTicks == WHEEL_HOLD_TICKS) {
-                mc.setScreen(new ConstructWheelScreen());
+                mc.setScreen(flash ? new PowerWheelScreen() : new ConstructWheelScreen());
             }
         } else {
             if (wheelKeyTicks > 0 && wheelKeyTicks < WHEEL_HOLD_TICKS) {
-                ModNetwork.sendToServer(new CycleConstructPacket(1));
+                ModNetwork.sendToServer(flash ? new SelectPowerPacket(1, true) : new CycleConstructPacket(1));
             }
             wheelKeyTicks = 0;
         }
     }
 
-    /** Sneak + mouse wheel cycles constructs while holding the ring. */
+    /**
+     * Whether the wheel key and scrolling control the Flash's powers instead of the Lantern's
+     * constructs: wearing the Flash suit, holding the Flash ring, or carrying only the Flash ring.
+     */
+    public static boolean flashContext(LocalPlayer player) {
+        if (RingHelper.isSuited(player)) return false;
+        if (FlashHelper.isSuited(player) || !FlashHelper.heldRing(player).isEmpty()) return true;
+        if (!RingHelper.heldRing(player).isEmpty()) return false;
+        return RingHelper.findRing(player).isEmpty() && !FlashHelper.findRing(player).isEmpty();
+    }
+
+    /** Sneak + mouse wheel cycles constructs (or powers) while holding the ring. */
     public static boolean onMouseScroll(InputEvent.MouseScrollingEvent event) {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
-        if (player == null || mc.screen != null || !player.isShiftKeyDown() || RingHelper.heldRing(player).isEmpty()) {
-            return false;
-        }
+        if (player == null || mc.screen != null || !player.isShiftKeyDown()) return false;
+        boolean flash = !FlashHelper.heldRing(player).isEmpty();
+        if (!flash && RingHelper.heldRing(player).isEmpty()) return false;
         double delta = event.getDeltaY();
         if (delta == 0) return false;
-        ModNetwork.sendToServer(new CycleConstructPacket(delta > 0 ? -1 : 1));
+        ModNetwork.sendToServer(flash ? new SelectPowerPacket(delta > 0 ? -1 : 1, true) : new CycleConstructPacket(delta > 0 ? -1 : 1));
         return true;
     }
 }

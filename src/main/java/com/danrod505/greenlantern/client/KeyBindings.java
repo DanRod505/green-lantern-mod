@@ -6,7 +6,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import org.lwjgl.glfw.GLFW;
 
-/** Key bindings of the mod (configurable in Options > Controls > Key Binds > Green Lantern). */
+/** Key bindings of the mod (configurable in Options > Controls > Key Binds > DC Universe). */
 public final class KeyBindings {
     public static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(GreenLantern.id("main"));
 
@@ -15,6 +15,10 @@ public final class KeyBindings {
     /** Hold to open the construct wheel, tap to switch to the next construct. */
     public static final KeyMapping CONSTRUCT_WHEEL = new KeyMapping("key.greenlantern.construct_wheel",
             KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R, CATEGORY, 1);
+
+    /** Uses the selected hero power (the Flash's tornado, phasing or lightning). */
+    public static final KeyMapping HERO_POWER = new KeyMapping("key.greenlantern.hero_power",
+            KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, CATEGORY, 2);
 
     private KeyBindings() {}
 }

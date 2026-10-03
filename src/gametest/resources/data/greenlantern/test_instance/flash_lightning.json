@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:function",
+  "function": "greenlantern:flash_lightning",
+  "environment": "minecraft:default",
+  "structure": "greenlantern:arena",
+  "max_ticks": 300,
+  "required": true
+}

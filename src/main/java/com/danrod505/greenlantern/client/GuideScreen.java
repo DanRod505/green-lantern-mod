@@ -61,6 +61,8 @@ public class GuideScreen extends Screen {
             new Chapter("drill", () -> new ItemStack(Items.DIAMOND_PICKAXE)),
             new Chapter("mecha", () -> new ItemStack(Items.NETHERITE_CHESTPLATE)),
             new Chapter("oa", () -> new ItemStack(Items.ENDER_EYE)),
+            new Chapter("flash", () -> new ItemStack(ModItems.FLASH_RING.get())),
+            new Chapter("flash_powers", () -> new ItemStack(Items.LIGHTNING_ROD)),
             new Chapter("controls", () -> new ItemStack(Items.LEVER)),
             new Chapter(RECIPES, () -> new ItemStack(Items.CRAFTING_TABLE)),
             new Chapter("tips", () -> new ItemStack(Items.TORCH)));
@@ -74,6 +76,10 @@ public class GuideScreen extends Screen {
                     Items.IRON_INGOT, Items.LIME_STAINED_GLASS, Items.IRON_INGOT,
                     Items.LIME_STAINED_GLASS, Items.LANTERN, Items.LIME_STAINED_GLASS,
                     Items.IRON_INGOT, Items.EMERALD_BLOCK, Items.IRON_INGOT)),
+            new Recipe("flash_ring", () -> new ItemStack(ModItems.FLASH_RING.get()), () -> grid(
+                    Items.REDSTONE, Items.GOLD_INGOT, Items.REDSTONE,
+                    Items.GOLD_INGOT, Items.LIGHTNING_ROD, Items.GOLD_INGOT,
+                    Items.REDSTONE, Items.GOLD_INGOT, Items.REDSTONE)),
             new Recipe("guide_book", () -> new ItemStack(ModItems.GUIDE_BOOK.get()), () -> grid(
                     Items.BOOK, Items.EMERALD, null,
                     null, null, null,
