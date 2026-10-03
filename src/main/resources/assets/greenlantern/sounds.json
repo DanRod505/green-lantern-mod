@@ -202,5 +202,30 @@
         "stream": true
       }
     ]
+  },
+  "drill_summon": {
+    "subtitle": "subtitles.greenlantern.drill_summon",
+    "sounds": [
+      {
+        "name": "greenlantern:drill_summon"
+      }
+    ]
+  },
+  "drill_loop": {
+    "subtitle": "subtitles.greenlantern.drill_loop",
+    "sounds": [
+      {
+        "name": "greenlantern:drill_loop",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "drill_grind": {
+    "subtitle": "subtitles.greenlantern.drill_grind",
+    "sounds": [
+      {
+        "name": "greenlantern:drill_grind"
+      }
+    ]
   }
 }

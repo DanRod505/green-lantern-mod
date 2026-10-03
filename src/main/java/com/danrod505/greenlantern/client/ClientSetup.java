@@ -9,6 +9,7 @@ import com.danrod505.greenlantern.client.render.EnergyBoltRenderer;
 import com.danrod505.greenlantern.client.render.GunConstructRenderer;
 import com.danrod505.greenlantern.client.render.HammerConstructRenderer;
 import com.danrod505.greenlantern.client.render.SawConstructRenderer;
+import com.danrod505.greenlantern.client.render.DrillConstructRenderer;
 import com.danrod505.greenlantern.registry.ModEntities;
 import com.danrod505.greenlantern.registry.ModParticles;
 import com.danrod505.greenlantern.client.flight.AuraLayer;
@@ -83,6 +84,7 @@ public final class ClientSetup {
         event.registerEntityRenderer(ModEntities.BUBBLE_CONSTRUCT.get(), BubbleConstructRenderer::new);
         event.registerEntityRenderer(ModEntities.SAW_CONSTRUCT.get(), SawConstructRenderer::new);
         event.registerEntityRenderer(ModEntities.HAMMER_CONSTRUCT.get(), HammerConstructRenderer::new);
+        event.registerEntityRenderer(ModEntities.DRILL_CONSTRUCT.get(), DrillConstructRenderer::new);
         event.registerEntityRenderer(ModEntities.FLIGHT_TRAIL.get(), TrailRenderer::new);
     }
 

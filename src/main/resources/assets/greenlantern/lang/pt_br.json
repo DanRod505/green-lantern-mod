@@ -66,6 +66,12 @@
   "hud.greenlantern.supersonic": "SUPERSÔNICO",
   "key.greenlantern.construct_wheel": "Roda de construtos (segurar) / próximo (tocar)",
   "wheel.greenlantern.title": "CONSTRUTOS",
-  "wheel.greenlantern.hint": "Aponte com o mouse e solte %s (ou clique) · 1-5 · rodinha",
-  "wheel.greenlantern.cost": "Custo de energia: %s"
+  "wheel.greenlantern.hint": "Aponte com o mouse e solte %s (ou clique) · 1-6 · rodinha",
+  "wheel.greenlantern.cost": "Custo de energia: %s",
+  "entity.greenlantern.drill_construct": "Construto de Broca Gigante",
+  "construct.greenlantern.drill": "Broca Gigante",
+  "construct.greenlantern.drill.desc": "Pilote uma broca gigante: W perfura para onde você olha (minera pedra e minérios), pulo salta, agachar sai.",
+  "subtitles.greenlantern.drill_summon": "Broca gigante se materializa",
+  "subtitles.greenlantern.drill_loop": "Broca gigante gira",
+  "subtitles.greenlantern.drill_grind": "Broca gigante perfura"
 }

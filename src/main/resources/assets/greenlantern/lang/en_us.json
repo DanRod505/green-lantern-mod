@@ -66,6 +66,12 @@
   "hud.greenlantern.supersonic": "SUPERSONIC",
   "key.greenlantern.construct_wheel": "Construct wheel (hold) / next (tap)",
   "wheel.greenlantern.title": "CONSTRUCTS",
-  "wheel.greenlantern.hint": "Point with the mouse and release %s (or click) · 1-5 · scroll",
-  "wheel.greenlantern.cost": "Energy cost: %s"
+  "wheel.greenlantern.hint": "Point with the mouse and release %s (or click) · 1-6 · scroll",
+  "wheel.greenlantern.cost": "Energy cost: %s",
+  "entity.greenlantern.drill_construct": "Giant Drill Construct",
+  "construct.greenlantern.drill": "Giant Drill",
+  "construct.greenlantern.drill.desc": "Ride a giant drill: W bores where you look (mines stone and ores), jump hops, sneak to get off.",
+  "subtitles.greenlantern.drill_summon": "Giant drill materializes",
+  "subtitles.greenlantern.drill_loop": "Giant drill spins",
+  "subtitles.greenlantern.drill_grind": "Giant drill grinds"
 }

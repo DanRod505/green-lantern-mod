@@ -212,6 +212,41 @@ def saw_cut():
     return (screech * 0.7 + grind) * env_adsr(n, 0.01, 0.1, 0.8, 0.25)
 
 
+def drill_summon():
+    dur = 1.1
+    t = t_axis(dur)
+    n = len(t)
+    motor = np.sign(np.sin(sweep(30, 140, dur))) * 0.4 + np.sin(sweep(60, 280, dur))
+    motor = lowpass(motor, 1800)
+    clank = lowpass(noise(n), 900) * env_exp(n, 14) * 1.2
+    shine = shimmer(t, 196, 5) * env_adsr(n, 0.4, 0.1, 0.7, 0.3) * 0.5
+    return (motor + clank + shine) * env_adsr(n, 0.04, 0.1, 0.9, 0.2)
+
+
+def drill_loop():
+    # seamless 1 second loop: deep motor whine with a rhythmic churn
+    dur = 1.0
+    t = t_axis(dur)
+    n = len(t)
+    f = 70
+    motor = (2 * ((t * f) % 1) - 1)
+    motor = lowpass(motor, 1400)
+    whine = np.sin(2 * np.pi * 420 * t) * 0.25 + np.sin(2 * np.pi * 630 * t) * 0.12
+    churn = 1 + 0.3 * np.sin(2 * np.pi * 8 * t)
+    rumble = lowpass(noise(n), 600) * 0.4
+    return (motor + whine + rumble) * churn
+
+
+def drill_grind():
+    dur = 0.45
+    t = t_axis(dur)
+    n = len(t)
+    crunch = lowpass(noise(n), 2500) * (1 + 0.8 * np.sin(2 * np.pi * 30 * t))
+    rocks = highpass(noise(n), 3000) * (rng.random(n) > 0.995) * 3.0
+    grind = np.sin(sweep(260, 180, dur)) * 0.5
+    return (crunch + rocks + grind) * env_adsr(n, 0.01, 0.1, 0.8, 0.25)
+
+
 def hammer_summon():
     dur = 0.9
     t = t_axis(dur)
@@ -302,6 +337,9 @@ def main():
     save("construct_select", construct_select(), 0.6)
     save("low_energy", low_energy(), 0.6)
     save("flight_whoosh", flight_whoosh(), 0.6)
+    save("drill_summon", drill_summon())
+    save("drill_loop", drill_loop(), 0.7)
+    save("drill_grind", drill_grind(), 0.8)
 
 
 if __name__ == "__main__":
