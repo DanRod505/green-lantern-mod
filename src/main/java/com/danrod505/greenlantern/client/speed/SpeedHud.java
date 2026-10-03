@@ -82,7 +82,7 @@ public final class SpeedHud {
     }
 
     private static void speedometer(GuiGraphics graphics, Minecraft mc, int w, int h, float mach) {
-        int y = h - 64;
+        int y = h - 78;
         int kmh = Math.round(shownKmh);
         boolean supersonic = SpeedController.isSupersonic();
         graphics.pose().pushMatrix();

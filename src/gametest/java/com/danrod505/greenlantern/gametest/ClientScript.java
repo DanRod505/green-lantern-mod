@@ -365,8 +365,10 @@ public final class ClientScript {
         step(30, () -> {
             camera(CameraType.THIRD_PERSON_FRONT);
             look(0, 10);
+            mc().gui.getChat().clearMessages(false);
+            mc().options.hideGui = true;
         });
-        step(6, () -> clean("fl00_suit_front"));
+        step(6, () -> shot("fl00_suit_front"));
         step(2, () -> {
             mc().options.hideGui = false;
             camera(CameraType.THIRD_PERSON_BACK);

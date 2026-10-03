@@ -49,7 +49,7 @@ public final class SpeedAudio {
     /** Short description of the music state (for logs and debugging). */
     public static String describeMusic() {
         if (base == null) return "silent";
-        return String.format("base=%.2f peak=%.2f", base.getVolume(), peak == null ? 0F : peak.getVolume());
+        return String.format("base=%.2f peak=%.2f", base.level(), peak == null ? 0F : peak.level());
     }
 
     private static void tickWind(Minecraft mc) {
