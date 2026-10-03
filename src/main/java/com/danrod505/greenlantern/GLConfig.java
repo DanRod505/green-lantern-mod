@@ -15,6 +15,7 @@ public final class GLConfig {
     public static final ForgeConfigSpec.IntValue FLIGHT_COST_PER_SECOND;
     public static final ForgeConfigSpec.DoubleValue FLIGHT_SPEED;
     public static final ForgeConfigSpec.BooleanValue SHOW_OATH;
+    public static final ForgeConfigSpec.BooleanValue GIVE_GUIDE_ON_FIRST_JOIN;
 
     // ---- Power flight ---------------------------------------------------------------------------
     public static final ForgeConfigSpec.DoubleValue CRUISE_SPEED;
@@ -37,6 +38,13 @@ public final class GLConfig {
     public static final ForgeConfigSpec.IntValue SAW_COST_PER_SECOND;
     public static final ForgeConfigSpec.DoubleValue SAW_DAMAGE;
     public static final ForgeConfigSpec.BooleanValue SAW_CUTS_PLANTS;
+    public static final ForgeConfigSpec.IntValue DRILL_COST;
+    public static final ForgeConfigSpec.IntValue DRILL_COST_PER_SECOND;
+    public static final ForgeConfigSpec.DoubleValue DRILL_DAMAGE;
+    public static final ForgeConfigSpec.BooleanValue DRILL_DIGS_BLOCKS;
+    public static final ForgeConfigSpec.DoubleValue DRILL_SPEED;
+    public static final ForgeConfigSpec.DoubleValue DRILL_MAX_HARDNESS;
+    public static final ForgeConfigSpec.BooleanValue DRILL_COLLECTS_DROPS;
     public static final ForgeConfigSpec.IntValue HAMMER_COST;
     public static final ForgeConfigSpec.DoubleValue HAMMER_DAMAGE;
     public static final ForgeConfigSpec.DoubleValue HAMMER_RADIUS;
@@ -55,6 +63,8 @@ public final class GLConfig {
                 .defineInRange("flightSpeed", 0.1, 0.01, 1.0);
         SHOW_OATH = BUILDER.comment("Show the Green Lantern oath while recharging the ring.")
                 .define("showOath", true);
+        GIVE_GUIDE_ON_FIRST_JOIN = BUILDER.comment("Give every player the Corps Manual (guide book) the first time they join a world.")
+                .define("giveGuideOnFirstJoin", true);
         BUILDER.pop();
 
         BUILDER.comment("Power flight: hold forward while flying to keep accelerating until you break the sound barrier.").push("flight");
@@ -79,6 +89,13 @@ public final class GLConfig {
         SAW_COST_PER_SECOND = BUILDER.comment("Energy drained per second while riding the saw.").defineInRange("sawCostPerSecond", 8, 0, 100_000);
         SAW_DAMAGE = BUILDER.comment("Damage dealt by the saw blade per hit.").defineInRange("sawDamage", 7.0, 0.0, 1000.0);
         SAW_CUTS_PLANTS = BUILDER.comment("Whether the saw cuts through leaves, logs and plants.").define("sawCutsPlants", true);
+        DRILL_COST = BUILDER.comment("Energy cost to summon the giant drill.").defineInRange("drillCost", 70, 0, 100_000);
+        DRILL_COST_PER_SECOND = BUILDER.comment("Energy drained per second while riding the drill.").defineInRange("drillCostPerSecond", 9, 0, 100_000);
+        DRILL_DAMAGE = BUILDER.comment("Damage dealt by the drill bit per hit.").defineInRange("drillDamage", 8.0, 0.0, 1000.0);
+        DRILL_DIGS_BLOCKS = BUILDER.comment("Whether the drill bores through stone, dirt and ores.").define("drillDigsBlocks", true);
+        DRILL_SPEED = BUILDER.comment("Mining speed of the drill, in block hardness per tick (stone has hardness 1.5, deepslate 3, obsidian 50).").defineInRange("drillSpeed", 0.6, 0.01, 1000.0);
+        DRILL_MAX_HARDNESS = BUILDER.comment("Hardest block the drill can mine (bedrock and other unbreakable blocks are never mined).").defineInRange("drillMaxHardness", 50.0, 0.0, 1000.0);
+        DRILL_COLLECTS_DROPS = BUILDER.comment("Whether mined blocks go straight to the rider's inventory (what doesn't fit drops at their feet).").define("drillCollectsDrops", true);
         HAMMER_COST = BUILDER.comment("Energy cost of the hammer slam.").defineInRange("hammerCost", 120, 0, 100_000);
         HAMMER_DAMAGE = BUILDER.comment("Damage at the center of the hammer slam.").defineInRange("hammerDamage", 16.0, 0.0, 1000.0);
         HAMMER_RADIUS = BUILDER.comment("Radius of the hammer shockwave in blocks.").defineInRange("hammerRadius", 5.5, 1.0, 32.0);

@@ -9,6 +9,7 @@ import com.danrod505.greenlantern.block.PowerBatteryBlockEntity;
 import com.danrod505.greenlantern.construct.Construct;
 import com.danrod505.greenlantern.construct.ConstructRegistry;
 import com.danrod505.greenlantern.entity.BubbleConstructEntity;
+import com.danrod505.greenlantern.entity.DrillConstructEntity;
 import com.danrod505.greenlantern.entity.EnergyBoltEntity;
 import com.danrod505.greenlantern.entity.GunConstructEntity;
 import com.danrod505.greenlantern.entity.HammerConstructEntity;
@@ -40,6 +41,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.monster.zombie.Zombie;
+import net.minecraft.world.entity.player.Input;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameType;
@@ -65,6 +67,8 @@ public final class ModGameTests {
         TESTS.register("bubble", () -> ModGameTests::bubble);
         TESTS.register("saw", () -> ModGameTests::saw);
         TESTS.register("hammer", () -> ModGameTests::hammer);
+        TESTS.register("drill", () -> ModGameTests::drill);
+        TESTS.register("guide_given_on_first_join", () -> ModGameTests::guideGivenOnFirstJoin);
         TESTS.register("lantern_charges_ring", () -> ModGameTests::lanternChargesRing);
         TESTS.register("data_loaded", () -> ModGameTests::dataLoaded);
         TESTS.register("sonic_boom_requires_speed", () -> ModGameTests::sonicBoomRequiresSpeed);
@@ -285,6 +289,51 @@ public final class ModGameTests {
                 .thenSucceed();
     }
 
+    public static void drill(GameTestHelper helper) {
+        ServerPlayer player = player(helper, 7.5, 1, 3.5, 0, 0);
+        ItemStack ring = giveRing(player, 1000);
+        Uniform.summon(player);
+        select(player, ConstructRegistry.DRILL);
+        use(player);
+        helper.assertTrue(player.getVehicle() instanceof DrillConstructEntity, "player should ride the drill");
+        DrillConstructEntity drill = (DrillConstructEntity) player.getVehicle();
+        Zombie zombie = dummy(helper, 7.5, 1, 6.0);
+        // Ore and stone right in front of the bit.
+        BlockPos ore = helper.absolutePos(new BlockPos(7, 1, 5));
+        BlockPos stone = helper.absolutePos(new BlockPos(7, 2, 5));
+        helper.getLevel().setBlockAndUpdate(ore, Blocks.IRON_ORE.defaultBlockState());
+        helper.getLevel().setBlockAndUpdate(stone, Blocks.STONE.defaultBlockState());
+        BlockPos floor = helper.absolutePos(new BlockPos(7, 0, 5));
+        float health = zombie.getHealth();
+        player.setLastClientInput(new Input(true, false, false, false, false, false, false));
+
+        helper.startSequence()
+                .thenExecuteFor(30, player::doTick)
+                .thenExecute(() -> {
+                    helper.assertTrue(zombie.getHealth() < health || zombie.isDeadOrDying(), "drill bit should hurt the zombie");
+                    helper.assertTrue(helper.getLevel().getBlockState(ore).isAir(), "drill should mine the ore");
+                    helper.assertTrue(helper.getLevel().getBlockState(stone).isAir(), "drill should mine the stone");
+                    helper.assertFalse(helper.getLevel().getBlockState(floor).isAir(), "driving level keeps the floor");
+                    helper.assertTrue(player.getInventory().contains(new ItemStack(Items.RAW_IRON)), "mined ore should go to the rider's inventory");
+                    helper.assertTrue(RingEnergy.get(ring).stored() < 1000 - ConstructRegistry.DRILL.activationCost(), "drill should drain energy");
+                    player.setLastClientInput(Input.EMPTY);
+                    player.stopRiding();
+                })
+                .thenExecuteFor(2, player::doTick)
+                .thenExecute(() -> {
+                    helper.assertTrue(drill.isRemoved(), "drill should vanish when the rider leaves");
+                    remove(player);
+                })
+                .thenSucceed();
+    }
+
+    public static void guideGivenOnFirstJoin(GameTestHelper helper) {
+        ServerPlayer player = player(helper, 7.5, 1, 7.5, 0, 0);
+        helper.assertTrue(player.getInventory().contains(new ItemStack(ModItems.GUIDE_BOOK.get())), "new players should get the Corps Manual");
+        remove(player);
+        helper.succeed();
+    }
+
     public static void hammer(GameTestHelper helper) {
         // Look down at the floor 4 blocks ahead where two zombies stand.
         ServerPlayer player = player(helper, 7.5, 1, 2.5, 0, 35);
@@ -400,7 +449,7 @@ public final class ModGameTests {
     public static void dataLoaded(GameTestHelper helper) {
         var server = helper.getLevel().getServer();
         helper.assertTrue(server.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).get(ModDamageTypes.HARD_LIGHT).isPresent(), "damage type should load");
-        for (String recipe : new String[] {"power_ring", "power_battery"}) {
+        for (String recipe : new String[] {"power_ring", "power_battery", "guide_book"}) {
             var key = ResourceKey.create(Registries.RECIPE, GreenLantern.id(recipe));
             helper.assertTrue(server.getRecipeManager().byKey(key).isPresent(), "recipe " + recipe + " should load");
         }

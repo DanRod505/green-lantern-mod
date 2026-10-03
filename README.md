@@ -31,6 +31,7 @@ Mod do Lanterna Verde para **Minecraft Java 1.21.11** com **Forge 61.2.0** (comp
 | **Anel de Poder** | Um anel recém-fabricado vem **descarregado**: carregue-o na Bateria de Poder antes de usar. Veste o uniforme dos Lanternas Verdes, dá voo e cria construtos de luz sólida. Tem **energia finita** (barra no slot, tooltip e HUD). |
 | **Bateria de Poder (lanterna)** | Bloco 3D animado que recarrega o anel. Clique com o anel na mão e fique perto: a energia flui da lanterna para o anel enquanto o juramento aparece na tela. |
 | **Uniforme** | Máscara, uniforme, calças e botas de luz sólida (proteção equivalente a diamante). Guardam a armadura que você usava e a devolvem ao remover o uniforme. Não podem ser tirados nem dropados. |
+| **Manual da Tropa** | Livro guia para quem usa o mod pela primeira vez: todo jogador ganha um ao entrar num mundo pela primeira vez (também sai da receita livro + esmeralda e está na aba criativa). Clique direito para abrir: capítulos sobre o anel, a bateria, o uniforme, o voo, cada construto, os controles, as receitas (com a grade de fabricação) e dicas. |
 | **Voo de poder** | Com o uniforme: dois toques no pulo para decolar (com explosão de energia no chão). Segure **para frente** e a velocidade vai **aumentando sem parar** até **quebrar a barreira do som** (estrondo sônico, anéis de vapor, flash na tela) e passar de Mach 1. Ver detalhes em *Voo de poder* abaixo. |
 
 ### Construtos
@@ -42,6 +43,7 @@ Mod do Lanterna Verde para **Minecraft Java 1.21.11** com **Forge 61.2.0** (comp
 | 3 | **Bolha de Proteção** | Clique para ligar/desligar | Esfera ao redor do jogador: absorve 85% do dano, empurra criaturas e reflete projéteis. Consome energia por segundo. |
 | 4 | **Serra Gigante** | Clique para invocar/dispensar | Veículo: você fica em pé numa prancha de luz com uma serra circular gigante na frente. **W/S** acelera/ré, **A/D** desliza para os lados, o **mouse** dá a direção, **pulo** salta e **agachar** sai. Retalha criaturas e corta folhas, troncos e plantas. |
 | 5 | **Martelo Gigante** | Clique direito | Um martelo gigante surge no ponto para onde você olha, golpeia o chão e solta uma onda de choque que causa dano e arremessa tudo em volta (com tremor de câmera). |
+| 6 | **Broca Gigante** | Clique para invocar/dispensar | Veículo de escavação: você senta numa cabine sobre esteiras com uma broca gigante na frente que aponta para onde você olha. **W** perfura nessa direção (olhando para a frente cava túneis retos com o chão plano, para baixo cava poços, para cima perfura o teto), **S** ré, **A/D** desliza, **pulo** salta e **agachar** sai. Minera pedra, terra, areia, cascalho e todos os minérios (obsidiana demora mais, rocha-matriz nunca), manda os itens direto para o inventário e solta a experiência dos minérios. Encostada na rocha, se segura nas paredes. A ponta giratória fere criaturas. |
 
 ### Voo de poder
 
@@ -70,7 +72,7 @@ Por direitos autorais, o mod não pode incluir músicas de terceiros, como a tri
 | --- | --- |
 | **Clique direito** com o anel | Sem uniforme: veste o uniforme. Com uniforme: usa o construto selecionado. |
 | **G** | Vestir / remover o uniforme |
-| **R** (segurar) | Abre a **roda de construtos** (estilo *weapon wheel* do GTA V): aponte com o mouse e solte R (ou clique). Também aceita as teclas **1–5** e a rodinha do mouse |
+| **R** (segurar) | Abre a **roda de construtos** (estilo *weapon wheel* do GTA V): aponte com o mouse e solte R (ou clique). Também aceita as teclas **1–6** e a rodinha do mouse |
 | **R** (toque rápido) | Próximo construto |
 | **Shift + roda do mouse** (anel na mão) | Troca de construto |
 | **Dois toques no pulo** (com uniforme) | Decolar / parar de voar |
@@ -90,11 +92,13 @@ D = diamante, E = esmeralda      I = barra de ferro, G = vidro tingido de lima,
                                  L = lanterna, B = bloco de esmeralda
 ```
 
+**Manual da Tropa:** livro + esmeralda (sem forma).
+
 Também estão na aba criativa **Tropa dos Lanternas Verdes** (inclui um anel já carregado).
 
 ### Configuração
 
-Todos os números de balanceamento (energia máxima, custo de cada construto, dano, velocidades do voo, Mach 1, tempo até a barreira do som, pouso de herói, se a serra corta plantas etc.) ficam em `config/greenlantern-common.toml`, gerado na primeira execução.
+Todos os números de balanceamento (energia máxima, custo de cada construto, dano, velocidades do voo, Mach 1, tempo até a barreira do som, pouso de herói, se a serra corta plantas, velocidade de mineração e dureza máxima da broca, se ela manda os itens para o inventário, se o manual é dado na primeira entrada etc.) ficam em `config/greenlantern-common.toml`, gerado na primeira execução.
 
 Preferências visuais e de som ficam em `config/greenlantern-client.toml`: ligar/desligar a trilha do voo e seu volume, efeitos de câmera (tremor, inclinação, giro), linhas de velocidade/medidor de Mach e rastros.
 
@@ -104,7 +108,7 @@ Preferências visuais e de som ficam em `config/greenlantern-client.toml`: ligar
 
 ### Opção A — CurseForge App, importando o perfil pronto (mais fácil)
 
-O build gera `greenlantern-1.21.11-1.3.0-curseforge-profile.zip`, um perfil do CurseForge que já configura o **Minecraft 1.21.11 + Forge 61.2.0** e já traz o mod dentro.
+O build gera `greenlantern-1.21.11-1.4.0-curseforge-profile.zip`, um perfil do CurseForge que já configura o **Minecraft 1.21.11 + Forge 61.2.0** e já traz o mod dentro.
 
 1. Abra o **CurseForge App** → **Minecraft** → **Create Custom Profile**.
 2. Clique em **Import** (canto superior da janela) e escolha o arquivo `...-curseforge-profile.zip`.
@@ -115,7 +119,7 @@ O build gera `greenlantern-1.21.11-1.3.0-curseforge-profile.zip`, um perfil do C
 1. Abra o **CurseForge App** → **Minecraft** → **Create Custom Profile**.
 2. Em *Game Version* escolha **1.21.11**, em *Modloader* escolha **Forge** e selecione a versão **61.2.0** (ou mais recente da série 61.x). Clique em **Create**.
 3. No perfil criado, clique nos **três pontinhos (⋮)** → **Open Folder**. Entre na pasta `mods` (crie se não existir).
-4. Copie o arquivo `greenlantern-1.21.11-1.3.0.jar` para dentro de `mods`.
+4. Copie o arquivo `greenlantern-1.21.11-1.4.0.jar` para dentro de `mods`.
 5. Volte ao CurseForge e clique em **Play**. O mod aparece na lista *Mods* do menu principal do jogo.
 
 > Não é preciso instalar Java separadamente: o CurseForge e o launcher oficial usam o Java que vem com o Minecraft 1.21.11. O jar foi compilado com o JDK 25, mas gera bytecode Java 21, então roda tanto no Java 21 do launcher quanto no Java 25.
@@ -155,7 +159,7 @@ Instale o servidor Forge 1.21.11-61.2.0 (*Install server* no mesmo instalador) e
 
 ```bash
 # Windows: use gradlew.bat no lugar de ./gradlew
-./gradlew build                          # gera build/libs/greenlantern-1.21.11-1.3.0.jar
+./gradlew build                          # gera build/libs/greenlantern-1.21.11-1.4.0.jar
                                          # e build/distributions/...-curseforge-profile.zip
 ./gradlew runClient                      # abre o Minecraft com o mod (ambiente de desenvolvimento)
 ./gradlew runServer                      # servidor de desenvolvimento
@@ -171,9 +175,10 @@ O **CI do GitHub** (`.github/workflows/build.yml`) compila o mod, roda os testes
 * uniforme: vestir, guardar e devolver a armadura;
 * voo consome energia; o uniforme some quando a energia acaba;
 * voo de poder: o estrondo sônico só é aceito acima da barreira do som, o pouso de herói só com velocidade e sem ferir o dono, e o custo de energia cresce com a velocidade;
-* disparo de energia, metralhadora, bolha (empurrão, absorção de dano, consumo, desligar), serra (montar, cortar folhas, ferir, sumir ao desmontar), martelo (onda de choque, sem ferir o dono);
+* disparo de energia, metralhadora, bolha (empurrão, absorção de dano, consumo, desligar), serra (montar, cortar folhas, ferir, sumir ao desmontar), broca (minerar minério e pedra, manter o chão plano, itens no inventário, ferir, sumir ao desmontar), martelo (onda de choque, sem ferir o dono);
 * a lanterna recarrega o anel até encher;
-* receitas e tipo de dano carregados.
+* receitas e tipo de dano carregados;
+* o Manual da Tropa é dado ao jogador novo.
 
 Esses testes só entram no build com `-Pgametests`, então nunca vão para o jar distribuído.
 
@@ -188,12 +193,12 @@ src/main/java/com/danrod505/greenlantern/
 ├── registry/                # itens, blocos, entidades, sons, partículas, componentes, tipos de dano
 ├── ring/                    # energia do anel, uniforme, voo, eventos comuns
 ├── flight/                  # voo de poder no servidor (validação das manobras, pouso de herói)
-├── construct/               # API de construtos + os 5 construtos (impl/)
+├── construct/               # API de construtos + os 6 construtos (impl/)
 ├── entity/                  # entidades dos construtos e projéteis
 ├── block/                   # Bateria de Poder (bloco + block entity de recarga)
-├── item/                    # Anel de Poder e peças do uniforme
+├── item/                    # Anel de Poder, peças do uniforme e Manual da Tropa
 ├── network/                 # pacotes cliente → servidor (teclas)
-└── client/                  # renderizadores, partículas, HUD, teclas, tremor de câmera
+└── client/                  # renderizadores, partículas, HUD, roda de construtos, manual, teclas, tremor de câmera
     └── flight/              # física do voo, pose de herói, aura, rastro, câmera, HUD de Mach, vento e trilha
 tools/                       # scripts Python que geram TODAS as texturas e sons
 ```

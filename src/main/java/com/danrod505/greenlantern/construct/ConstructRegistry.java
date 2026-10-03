@@ -1,6 +1,7 @@
 package com.danrod505.greenlantern.construct;
 
 import com.danrod505.greenlantern.construct.impl.BubbleConstruct;
+import com.danrod505.greenlantern.construct.impl.DrillConstruct;
 import com.danrod505.greenlantern.construct.impl.EnergyBlastConstruct;
 import com.danrod505.greenlantern.construct.impl.HammerConstruct;
 import com.danrod505.greenlantern.construct.impl.MinigunConstruct;
@@ -25,6 +26,7 @@ public final class ConstructRegistry {
     public static final Construct BUBBLE = register(new BubbleConstruct());
     public static final Construct SAW = register(new SawConstruct());
     public static final Construct HAMMER = register(new HammerConstruct());
+    public static final Construct DRILL = register(new DrillConstruct());
 
     private ConstructRegistry() {}
 

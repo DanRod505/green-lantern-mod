@@ -19,6 +19,9 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> SAW_SUMMON = register("saw_summon");
     public static final RegistryObject<SoundEvent> SAW_LOOP = register("saw_loop");
     public static final RegistryObject<SoundEvent> SAW_CUT = register("saw_cut");
+    public static final RegistryObject<SoundEvent> DRILL_SUMMON = register("drill_summon");
+    public static final RegistryObject<SoundEvent> DRILL_LOOP = register("drill_loop");
+    public static final RegistryObject<SoundEvent> DRILL_GRIND = register("drill_grind");
     public static final RegistryObject<SoundEvent> HAMMER_SUMMON = register("hammer_summon");
     public static final RegistryObject<SoundEvent> HAMMER_IMPACT = register("hammer_impact");
     public static final RegistryObject<SoundEvent> CHARGE_LOOP = register("charge_loop");
