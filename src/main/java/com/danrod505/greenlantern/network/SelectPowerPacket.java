@@ -33,7 +33,7 @@ public record SelectPowerPacket(int value, boolean relative) {
             power = SpeedsterPower.byIndex(packet.value);
             SpeedsterPower.select(ring, power);
         }
-        player.displayClientMessage(Component.translatable("message.greenlantern.power_selected", power.name().copy().withStyle(ChatFormatting.YELLOW)), true);
+        player.displayClientMessage(Component.translatable("message.greenlantern.power_selected", power.displayName().copy().withStyle(ChatFormatting.YELLOW)), true);
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.POWER_SELECT.get(), SoundSource.PLAYERS,
                 0.7F, 1.0F + 0.08F * power.ordinal());
     }

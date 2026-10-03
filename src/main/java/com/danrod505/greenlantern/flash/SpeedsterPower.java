@@ -38,7 +38,7 @@ public enum SpeedsterPower {
         return ordinal();
     }
 
-    public Component name() {
+    public Component displayName() {
         return Component.translatable("power.greenlantern." + id);
     }
 

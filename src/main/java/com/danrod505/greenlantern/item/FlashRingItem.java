@@ -76,7 +76,7 @@ public class FlashRingItem extends Item {
         RingEnergy force = SpeedForce.get(ring);
         tooltip.accept(Component.translatable("tooltip.greenlantern.speed_force", force.stored(), force.capacity())
                 .withStyle(force.fraction() < 0.2F ? ChatFormatting.RED : ChatFormatting.YELLOW));
-        tooltip.accept(Component.translatable("tooltip.greenlantern.power", SpeedsterPower.selected(ring).name()).withStyle(ChatFormatting.GOLD));
+        tooltip.accept(Component.translatable("tooltip.greenlantern.power", SpeedsterPower.selected(ring).displayName()).withStyle(ChatFormatting.GOLD));
         tooltip.accept(Component.translatable("tooltip.greenlantern.flash_ring_hint").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
     }
 }

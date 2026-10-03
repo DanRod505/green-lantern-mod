@@ -189,7 +189,7 @@ public class PowerWheelScreen extends Screen {
         SpeedsterPower shown = hovered >= 0 ? SpeedsterPower.byIndex(hovered) : current;
         ItemStack ring = FlashHelper.findRing(minecraft.player);
         RingEnergy energy = SpeedForce.get(ring);
-        List<FormattedCharSequence> nameLines = font.split(shown.name().copy().withStyle(s -> s.withBold(true)), (int) (inner * 1.75F));
+        List<FormattedCharSequence> nameLines = font.split(shown.displayName().copy().withStyle(s -> s.withBold(true)), (int) (inner * 1.75F));
         int lineY = (int) cy - (nameLines.size() * 10 + 12) / 2;
         for (FormattedCharSequence line : nameLines) {
             graphics.drawCenteredString(font, line, (int) cx, lineY, argb(alpha, 0xFFD24A));

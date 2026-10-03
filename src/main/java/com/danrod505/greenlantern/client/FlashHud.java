@@ -75,7 +75,7 @@ public final class FlashHud {
             graphics.blit(RenderPipelines.GUI_TEXTURED, PowerWheelScreen.ICONS, ix, iconsY, power.iconIndex() * 16, 0, 16, 16,
                     PowerWheelScreen.ICONS_W, PowerWheelScreen.ICONS_H, isSelected ? 0xFFFFFFFF : 0x90FFFFFF);
         }
-        graphics.drawString(mc.font, Component.translatable("hud.greenlantern.power_key", selected.name(), KeyBindings.HERO_POWER.getTranslatedKeyMessage()),
+        graphics.drawString(mc.font, Component.translatable("hud.greenlantern.power_key", selected.displayName(), KeyBindings.HERO_POWER.getTranslatedKeyMessage()),
                 x + 19, iconsY + 19, 0xFFFFD27A, true);
         if (!suited) {
             graphics.drawString(mc.font, Component.translatable("hud.greenlantern.flash_suit_hint", KeyBindings.TOGGLE_UNIFORM.getTranslatedKeyMessage()),
