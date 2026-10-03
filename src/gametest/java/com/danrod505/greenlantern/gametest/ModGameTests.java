@@ -345,7 +345,17 @@ public final class ModGameTests {
         Uniform.summon(player);
         select(player, ConstructRegistry.MECHA);
         use(player);
-        helper.assertTrue(player.getVehicle() instanceof MechaEntity, "player should pilot the mecha");
+        if (!(player.getVehicle() instanceof MechaEntity)) {
+            // Report what is in the way of the 10 block giant.
+            StringBuilder blocking = new StringBuilder();
+            AABB room = new AABB(player.getX() - 1.8, player.getY(), player.getZ() - 1.8, player.getX() + 1.8, player.getY() + 10.0, player.getZ() + 1.8);
+            for (BlockPos pos : BlockPos.betweenClosed(BlockPos.containing(room.minX, room.minY, room.minZ), BlockPos.containing(room.maxX, room.maxY, room.maxZ))) {
+                var state = helper.getLevel().getBlockState(pos);
+                if (!state.isAir() && blocking.length() < 300) blocking.append(state.getBlock()).append('@').append(pos.getY()).append(' ');
+            }
+            helper.fail(net.minecraft.network.chat.Component.literal("player should pilot the mecha; vehicle=" + player.getVehicle()
+                    + " energy=" + RingEnergy.get(ring).stored() + " blocking=" + blocking));
+        }
         MechaEntity mecha = (MechaEntity) player.getVehicle();
         helper.assertTrue(RingEnergy.get(ring).stored() <= 3000 - ConstructRegistry.MECHA.activationCost(), "summoning the mecha should cost energy");
         Zombie target = dummy(helper, 7.5, 1, 11.5);
