@@ -102,6 +102,13 @@ public final class ModEntities {
                     .clientTrackingRange(10).updateInterval(1).noSummon()
                     .build(ENTITIES.key("great_white_shark")));
 
+    /** Aquaman's Kraken: a 15 block tall mount, on land and in the sea, with its own life. */
+    public static final RegistryObject<EntityType<com.danrod505.greenlantern.entity.KrakenEntity>> KRAKEN = ENTITIES.register("kraken",
+            () -> EntityType.Builder.<com.danrod505.greenlantern.entity.KrakenEntity>of(com.danrod505.greenlantern.entity.KrakenEntity::new, MobCategory.MISC)
+                    .noLootTable().sized(com.danrod505.greenlantern.entity.KrakenEntity.LAND_WIDTH, com.danrod505.greenlantern.entity.KrakenEntity.LAND_HEIGHT)
+                    .clientTrackingRange(12).updateInterval(1).noSummon()
+                    .build(ENTITIES.key("kraken")));
+
     /** Whirlpool portal to Atlantis (and back), opened by Aquaman or the Atlantean Gate. */
     public static final RegistryObject<EntityType<com.danrod505.greenlantern.entity.AtlantisPortalEntity>> ATLANTIS_PORTAL = ENTITIES.register("atlantis_portal",
             () -> EntityType.Builder.<com.danrod505.greenlantern.entity.AtlantisPortalEntity>of(com.danrod505.greenlantern.entity.AtlantisPortalEntity::new, MobCategory.MISC)

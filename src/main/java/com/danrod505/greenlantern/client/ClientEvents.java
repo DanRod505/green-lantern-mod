@@ -36,6 +36,7 @@ public final class ClientEvents {
         tickWheelKey(mc, player);
         MechaControls.tick(mc);
         SharkControls.tick(mc);
+        KrakenControls.tick(mc);
 
         if (mc.isPaused()) return;
         // Green aura trail behind every flying Lantern in view.

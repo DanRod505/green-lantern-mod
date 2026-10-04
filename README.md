@@ -3,7 +3,15 @@
 > *"No dia mais claro, na noite mais densa, o mal sucumbirá ante a minha presença!"*
 
 Mod de heróis do **Universo DC** para **Minecraft Java 1.21.11** com **Forge 61.2.0** (compilado com **Java 25**).
-Começou como o mod do Lanterna Verde e agora traz também **o Flash** (v1.7.0) **o Aquaman** (v1.8.0) e **Atlântida** (v1.9.0). O id do mod continua `greenlantern`, então mundos e configurações antigas continuam funcionando.
+Começou como o mod do Lanterna Verde e agora traz também **o Flash** (v1.7.0) **o Aquaman** (v1.8.0), **Atlântida** (v1.9.0) e **o Kraken do Aquaman** (v1.10.0). O id do mod continua `greenlantern`, então mundos e configurações antigas continuam funcionando.
+
+## O Kraken (novo na 1.10.0)
+
+* **Novo poder do Aquaman** no menu radial (**R**, depois **V**): um Kraken de **15 blocos de altura** sobe das profundezas (ou de dentro da terra) bem embaixo de você, e você vai montado em cima da cabeça dele.
+* **Na terra e na água:** na terra ele anda sobre os oito braços, lento e pesado; cada passo faz o chão tremer e levanta poeira. Pulo é um salto que cai com onda de choque. Na água funda ele se estica como uma lula e dispara para onde você olha, com o manto bombeando a cada braçada.
+* **Dois ataques:** **botão esquerdo** = um dos tentáculos de caça sobe por cima da cabeça e desce com tudo uns nove blocos à frente, esmagando e jogando longe tudo em volta. **Segure o botão direito** = um jato de água poderoso sai do sifão para onde você mira, castigando e empurrando tudo no caminho (gasta Poder dos Mares).
+* **Vida própria:** 400 de vida, com barra no HUD. Monstros, flechas e explosões que iam acertar você acertam o Kraken. Na água ele se cura devagar. Se a vida acabar ele morre (afunda soltando tinta) e precisa de 60 segundos para voltar.
+* **Fora da cabeça dele:** agache para descer; ele fica lutando sozinho contra os monstros perto de você. Clique direito nele para montar de novo.
 
 ## Atlântida (novo na 1.9.0)
 

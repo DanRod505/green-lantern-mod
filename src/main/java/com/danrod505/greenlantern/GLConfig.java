@@ -101,6 +101,17 @@ public final class GLConfig {
     public static final ForgeConfigSpec.IntValue SHARK_COST;
     public static final ForgeConfigSpec.DoubleValue SHARK_SPEED;
     public static final ForgeConfigSpec.DoubleValue SHARK_BITE_DAMAGE;
+    public static final ForgeConfigSpec.IntValue KRAKEN_COST;
+    public static final ForgeConfigSpec.DoubleValue KRAKEN_HEALTH;
+    public static final ForgeConfigSpec.DoubleValue KRAKEN_REGEN_IN_WATER;
+    public static final ForgeConfigSpec.DoubleValue KRAKEN_RECOVERY_SECONDS;
+    public static final ForgeConfigSpec.DoubleValue KRAKEN_WALK_SPEED;
+    public static final ForgeConfigSpec.DoubleValue KRAKEN_SWIM_SPEED;
+    public static final ForgeConfigSpec.DoubleValue KRAKEN_TENTACLE_DAMAGE;
+    public static final ForgeConfigSpec.DoubleValue KRAKEN_JET_DAMAGE;
+    public static final ForgeConfigSpec.DoubleValue KRAKEN_JET_RANGE;
+    public static final ForgeConfigSpec.IntValue KRAKEN_JET_COST_PER_SECOND;
+    public static final ForgeConfigSpec.BooleanValue KRAKEN_TRAMPLES_LEAVES;
     public static final ForgeConfigSpec.IntValue SEA_CALL_COST;
     public static final ForgeConfigSpec.DoubleValue SEA_CALL_SECONDS;
     public static final ForgeConfigSpec.DoubleValue SEA_CALL_RADIUS;
@@ -233,6 +244,17 @@ public final class GLConfig {
         SEA_CALL_HELPERS = BUILDER.comment("If fewer creatures than this answer (and Aquaman is in the water), dolphins come from the deep to make up the number (0 = never).").defineInRange("seaCallHelpers", 3, 0, 16);
         SEA_CALL_DAMAGE_MULTIPLIER = BUILDER.comment("Multiplier of the damage dealt by the called creatures (dolphins bite for 5, small fish for 2).").defineInRange("seaCallDamageMultiplier", 1.0, 0.0, 100.0);
         ATLANTIS_PORTAL_COST = BUILDER.comment("Power of the Seas cost of the portal to Atlantis (and back).").defineInRange("atlantisPortalCost", 250, 0, 100_000);
+        KRAKEN_COST = BUILDER.comment("Power of the Seas cost to call the Kraken.").defineInRange("krakenCost", 400, 0, 100_000);
+        KRAKEN_HEALTH = BUILDER.comment("Life of the Kraken (an iron golem has 100, the Wither 300).").defineInRange("krakenHealth", 400.0, 1.0, 100_000.0);
+        KRAKEN_REGEN_IN_WATER = BUILDER.comment("Life the Kraken heals per second while in the water.").defineInRange("krakenRegenInWater", 1.0, 0.0, 1000.0);
+        KRAKEN_RECOVERY_SECONDS = BUILDER.comment("Seconds a defeated Kraken needs before it can be called again.").defineInRange("krakenRecoverySeconds", 60.0, 0.0, 3600.0);
+        KRAKEN_WALK_SPEED = BUILDER.comment("Walking speed (blocks/tick) of the Kraken on land (sprint is 35% faster).").defineInRange("krakenWalkSpeed", 0.16, 0.02, 2.0);
+        KRAKEN_SWIM_SPEED = BUILDER.comment("Top swimming speed (blocks/tick) of the Kraken in the water (sprint is 35% faster).").defineInRange("krakenSwimSpeed", 1.4, 0.1, 6.0);
+        KRAKEN_TENTACLE_DAMAGE = BUILDER.comment("Damage of the tentacle slam (less at the edge of the blow).").defineInRange("krakenTentacleDamage", 20.0, 0.0, 1000.0);
+        KRAKEN_JET_DAMAGE = BUILDER.comment("Damage of the water jet, five times per second.").defineInRange("krakenJetDamage", 4.0, 0.0, 1000.0);
+        KRAKEN_JET_RANGE = BUILDER.comment("Reach (blocks) of the water jet.").defineInRange("krakenJetRange", 32.0, 4.0, 96.0);
+        KRAKEN_JET_COST_PER_SECOND = BUILDER.comment("Power of the Seas drained per second while the Kraken fires the water jet.").defineInRange("krakenJetCostPerSecond", 10, 0, 100_000);
+        KRAKEN_TRAMPLES_LEAVES = BUILDER.comment("Whether the walking Kraken bursts through leaves (respects protected areas).").define("krakenTramplesLeaves", true);
         BUILDER.pop();
 
         BUILDER.comment("Atlantis: the sunken city at the bottom of a deep ocean, the Atlantean Gate and the Atlantean Respirator.").push("atlantis");

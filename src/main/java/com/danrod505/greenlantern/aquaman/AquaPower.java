@@ -22,7 +22,9 @@ public enum AquaPower {
     /** The creatures of the sea nearby follow and defend you for a while. */
     SEA_CALL("sea_call"),
     /** A whirlpool portal to Atlantis; opened in Atlantis, it leads back to where you came from. */
-    ATLANTIS_PORTAL("atlantis_portal");
+    ATLANTIS_PORTAL("atlantis_portal"),
+    /** A 15 block tall Kraken rises from the deep and carries you on its head, on land and in the sea. */
+    KRAKEN("kraken");
 
     private static final AquaPower[] VALUES = values();
 
@@ -55,6 +57,7 @@ public enum AquaPower {
             case SHARK -> GLConfig.SHARK_COST.get();
             case SEA_CALL -> GLConfig.SEA_CALL_COST.get();
             case ATLANTIS_PORTAL -> GLConfig.ATLANTIS_PORTAL_COST.get();
+            case KRAKEN -> GLConfig.KRAKEN_COST.get();
         };
     }
 

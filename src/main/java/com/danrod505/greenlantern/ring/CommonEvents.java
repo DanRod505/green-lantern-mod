@@ -133,6 +133,14 @@ public final class CommonEvents {
                 && !event.getSource().is(net.minecraft.tags.DamageTypeTags.IS_FIRE)) {
             return true;
         }
+        // The Kraken takes the blows aimed at the Aquaman on its head (monsters, arrows, explosions).
+        if (event.getEntity() instanceof ServerPlayer rider && rider.getVehicle() instanceof com.danrod505.greenlantern.entity.KrakenEntity kraken
+                && !kraken.isDying() && !event.getSource().is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY)
+                && (event.getSource().getEntity() != null || event.getSource().getDirectEntity() != null
+                        || event.getSource().is(net.minecraft.tags.DamageTypeTags.IS_EXPLOSION))) {
+            kraken.shieldRider(rider, event.getSource(), event.getAmount());
+            return true;
+        }
         if (!(event.getEntity() instanceof ServerPlayer player) || !(player.getVehicle() instanceof MechaEntity mecha)) return false;
         if (event.getSource().is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY)) return false;
         mecha.absorbHit(player, event.getSource(), event.getAmount());

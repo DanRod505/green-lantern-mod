@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:function",
+  "function": "greenlantern:aquaman_kraken_fights_and_falls",
+  "environment": "minecraft:default",
+  "structure": "greenlantern:arena_tall",
+  "max_ticks": 400,
+  "required": true
+}
