@@ -1269,8 +1269,10 @@ public final class ModGameTests {
         helper.assertTrue(BatarangEntity.findAll(player).size() == 1, "a batarang should be in flight");
         helper.assertTrue(BatCharge.get(belt).stored() == 1000 - BatPower.BATARANG.cost(), "the batarang should cost charge");
         helper.startSequence()
-                .thenWaitUntil(() -> helper.assertTrue(zombie.getHealth() < health || zombie.isDeadOrDying(), "zombie should be hit"))
-                .thenExecute(() -> helper.assertTrue(zombie.hasEffect(net.minecraft.world.effect.MobEffects.SLOWNESS), "the batarang slows the target"))
+                // Waits for the batarang's own hit (it slows the target): the zombie may also burn in the sun.
+                .thenWaitUntil(() -> helper.assertTrue(zombie.hasEffect(net.minecraft.world.effect.MobEffects.SLOWNESS) || zombie.isDeadOrDying(),
+                        "the batarang should hit and slow the zombie"))
+                .thenExecute(() -> helper.assertTrue(zombie.getHealth() < health || zombie.isDeadOrDying(), "the batarang should hurt the zombie"))
                 .thenWaitUntil(() -> helper.assertTrue(BatarangEntity.findAll(player).isEmpty(), "the batarang should come back"))
                 .thenExecute(() -> remove(player))
                 .thenSucceed();
