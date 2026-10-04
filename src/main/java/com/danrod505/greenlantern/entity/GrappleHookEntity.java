@@ -116,7 +116,7 @@ public class GrappleHookEntity extends Projectile {
             }
             if (isAttached()) {
                 attachedTicks++;
-                boolean arrived = player.position().add(0, 1.0, 0).distanceTo(position()) < ARRIVED + 0.6;
+                boolean arrived = player.position().add(0, 1.0, 0).distanceTo(position()) < ARRIVED * 0.75;
                 if (arrived || attachedTicks > MAX_ATTACHED_TICKS || (attachedTicks > 4 && player.isShiftKeyDown())) {
                     release();
                     return;

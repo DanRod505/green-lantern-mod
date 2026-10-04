@@ -40,7 +40,7 @@ public class BatarangRenderer extends EntityRenderer<BatarangEntity, BatarangRen
         poseStack.mulPose(Axis.YP.rotationDegrees(state.yaw));
         poseStack.mulPose(Axis.XP.rotationDegrees(-state.pitch * 0.5F));
         poseStack.mulPose(Axis.YP.rotationDegrees(state.ageInTicks * 55.0F));
-        poseStack.scale(1.3F, 1.3F, 1.3F);
+        poseStack.scale(1.8F, 1.8F, 1.8F);
         int light = state.lightCoords;
         collector.submitCustomGeometry(poseStack, RenderTypes.entityCutoutNoCull(Geo.PLAIN), (pose, vc) -> {
             Geo.box(vc, pose, -0.04F, -0.018F, -0.07F, 0.04F, 0.018F, 0.09F, BODY, light);

@@ -45,7 +45,7 @@ public class BatDefenderRenderer extends EntityRenderer<BatDefenderEntity, BatRe
     public void submit(BatRenderState state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
         poseStack.pushPose();
         poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - state.bodyRot));
-        poseStack.scale(-1.1F, -1.1F, 1.1F);
+        poseStack.scale(-0.85F, -0.85F, 0.85F);
         poseStack.translate(0.0F, -1.501F, 0.0F);
         model.setupAnim(state);
         collector.submitModel(model, state, poseStack, RenderTypes.entityCutoutNoCull(TEXTURE), state.lightCoords, OverlayTexture.NO_OVERLAY,

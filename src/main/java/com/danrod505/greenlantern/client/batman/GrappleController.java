@@ -22,6 +22,8 @@ public final class GrappleController {
     private static int pullTicks;
     private static boolean jumpWasDown;
     private static boolean bumped;
+    private static double lastDist = Double.MAX_VALUE;
+    private static Vec3 lastTo = Vec3.ZERO;
 
     private GrappleController() {}
 
@@ -35,6 +37,10 @@ public final class GrappleController {
         jumpWasDown = jump;
         GrappleHookEntity hook = BatmanHelper.isSuited(player) && !player.isPassenger() ? GrappleHookEntity.find(player) : null;
         if (hook == null || !hook.isAttached() || hook.getId() == ignoredHookId) {
+            if (pulling && hook == null && lastDist < 3.5) {
+                // The server let go of the cable just before the top: still fling Batman over the ledge.
+                hop(player, lastTo);
+            }
             pulling = false;
             hookId = -1;
             return;
@@ -50,11 +56,11 @@ public final class GrappleController {
         Vec3 target = hook.position().add(0, -1.0, 0);
         Vec3 to = target.subtract(player.position());
         double dist = to.length();
+        lastDist = dist;
+        lastTo = to;
         if (dist < GrappleHookEntity.ARRIVED) {
-            // Over the top: a little hop up and forward, onto the ledge.
-            Vec3 flat = new Vec3(to.x, 0, to.z);
-            Vec3 forward = flat.lengthSqr() > 1.0E-4 ? flat.normalize() : Vec3.directionFromRotation(0, player.getYRot());
-            player.setDeltaMovement(forward.scale(0.3).add(0, 0.75, 0));
+            hop(player, to);
+            ModNetwork.sendToServer(new UsePowerPacket(BatPower.GRAPPLE.ordinal()));
             letGo();
             return;
         }
@@ -74,12 +80,21 @@ public final class GrappleController {
         player.resetFallDistance();
     }
 
+    /** Over the top: a hop up and forward, onto the ledge. */
+    private static void hop(LocalPlayer player, Vec3 to) {
+        Vec3 flat = new Vec3(to.x, 0, to.z);
+        Vec3 forward = flat.lengthSqr() > 1.0E-4 ? flat.normalize() : Vec3.directionFromRotation(0, player.getYRot());
+        player.setDeltaMovement(forward.scale(0.35).add(0, 0.8, 0));
+        player.resetFallDistance();
+    }
+
     public static void postTick(LocalPlayer player) {
         bumped = pulling && player.horizontalCollision;
     }
 
     private static void letGo() {
         ignoredHookId = hookId;
+        lastDist = Double.MAX_VALUE;
         pulling = false;
         hookId = -1;
         bumped = false;

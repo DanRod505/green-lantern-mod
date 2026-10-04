@@ -49,6 +49,9 @@ public class BatmobileRenderer extends EntityRenderer<BatmobileEntity, Batmobile
         state.flame = Mth.lerp(partialTick, car.flameO, car.flame);
         state.recoil = Mth.lerp(partialTick, car.recoilO, car.recoil);
         state.driven = car.getControllingPassenger() != null;
+        // From the driver's seat in first person the canopy would only tint the view.
+        var mc = net.minecraft.client.Minecraft.getInstance();
+        state.canopy = !(mc.options.getCameraType().isFirstPerson() && mc.player != null && mc.player.getVehicle() == car);
     }
 
     @Override
@@ -59,7 +62,7 @@ public class BatmobileRenderer extends EntityRenderer<BatmobileEntity, Batmobile
         collector.submitCustomGeometry(poseStack, RenderTypes.entityCutoutNoCull(Geo.PLAIN), (pose, vc) -> body(vc, pose, state, light));
         submitWheels(poseStack, collector, state, light);
         collector.submitCustomGeometry(poseStack, RenderTypes.entityTranslucentEmissive(Geo.PLAIN), (pose, vc) -> glow(vc, pose, state));
-        collector.submitCustomGeometry(poseStack, RenderTypes.entityTranslucent(Geo.PLAIN), (pose, vc) ->
+        if (state.canopy) collector.submitCustomGeometry(poseStack, RenderTypes.entityTranslucent(Geo.PLAIN), (pose, vc) ->
                 Geo.taper(vc, pose, -0.72F, 0.95F, -0.95F, 0.72F, 1.62F, 0.65F, -0.42F, -0.7F, 0.42F, 0.1F, GLASS, GLASS, light));
         poseStack.popPose();
         super.submit(state, poseStack, collector, camera);
@@ -173,5 +176,6 @@ public class BatmobileRenderer extends EntityRenderer<BatmobileEntity, Batmobile
         float flame;
         float recoil;
         boolean driven;
+        boolean canopy = true;
     }
 }

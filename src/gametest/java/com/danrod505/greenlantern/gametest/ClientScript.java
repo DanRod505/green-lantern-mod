@@ -1804,6 +1804,13 @@ public final class ClientScript {
                     mc.player.tickCount, k.blockPosition(), k.isSwimmingMode(), String.format("%.2f", k.walkAmount),
                     String.format("%.2f", k.swimPower), k.getHealth(), k.isJetting(), String.format("%.2f", mc.player.getY() - k.getY()));
         }
+        if (mc.player.tickCount % 10 == 0 && "batman".equals(System.getenv("GL_CLIENT_SCRIPT"))) {
+            com.danrod505.greenlantern.GreenLantern.LOGGER.info("CLIENTSCRIPT t={} pos={} glide={} pull={} car={}", mc.player.tickCount, mc.player.blockPosition(),
+                    com.danrod505.greenlantern.client.batman.GlideController.isGliding(),
+                    com.danrod505.greenlantern.client.batman.GrappleController.isPulling(),
+                    mc.player.getVehicle() instanceof com.danrod505.greenlantern.entity.BatmobileEntity car
+                            ? car.blockPosition() + " speed=" + String.format("%.2f", car.drivingSpeed()) + " boost=" + car.isBoosting() : "-");
+        }
         if (mc.player.tickCount % 10 == 0 && "flight".equals(System.getenv("GL_CLIENT_SCRIPT"))) {
             com.danrod505.greenlantern.GreenLantern.LOGGER.info("CLIENTSCRIPT t={} mach={} music: {}", mc.player.tickCount,
                     String.format("%.2f", com.danrod505.greenlantern.client.flight.FlightController.mach()),
