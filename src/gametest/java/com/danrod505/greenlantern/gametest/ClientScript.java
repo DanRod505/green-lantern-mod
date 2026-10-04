@@ -845,15 +845,15 @@ public final class ClientScript {
         step(80, () -> clean("a07_statue"));
         step(2, () -> atTp(23, 4, 42, 180, 6));
         step(80, () -> clean("a08_garden"));
-        step(2, () -> atTp(-38, 6, 56, 215, 4));
+        step(2, () -> atTp(-18, 14, 50, 200, 14));
         step(200, () -> clean("a09_towers_houses"));
         step(2, () -> atTp(0, 10, 54, 180, -6));
         step(120, () -> clean("a10_palace"));
-        step(2, () -> atTp(48, 38, 48, 135, 32));
+        step(2, () -> atTp(36, 34, 36, 135, 30));
         step(120, () -> clean("a11_city_aerial"));
         step(2, () -> atTp(-64, 30, -20, 290, 18));
         step(120, () -> clean("a12_kelp_slopes"));
-        step(2, () -> atTp(30, 64, 90, 160, 12));
+        step(2, () -> atTp(24, 60, 44, 150, 30));
         step(120, () -> clean("a13_beacon_from_surface"));
         // Aquaman opens the way home with his own power.
         step(2, () -> {

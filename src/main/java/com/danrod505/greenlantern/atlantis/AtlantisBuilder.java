@@ -9,6 +9,7 @@ import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.TicketType;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
@@ -88,7 +89,7 @@ public final class AtlantisBuilder {
             AtlantisLife.tick(server.overworld(), site);
             return;
         }
-        if (server.getTickCount() % 2 == 0) buildNext(server, site, 1);
+        if (server.getTickCount() % 2 == 0) buildNext(server, site, 1, true);
     }
 
     /** Finishes the city right now (someone is about to arrive). Returns false if the world has no Atlantis. */
@@ -97,7 +98,7 @@ public final class AtlantisBuilder {
         if (site == null) return false;
         if (Atlantis.isComplete(server)) return true;
         long start = System.nanoTime();
-        buildNext(server, site, Integer.MAX_VALUE);
+        buildNext(server, site, Integer.MAX_VALUE, false);
         GreenLantern.LOGGER.info("Finished building Atlantis in {} ms", (System.nanoTime() - start) / 1_000_000);
         return true;
     }
@@ -111,14 +112,28 @@ public final class AtlantisBuilder {
         }
     }
 
-    private static void buildNext(MinecraftServer server, Atlantis.Site site, int maxChunks) {
+    /** How many chunks ahead the background builder asks the server to load (off the main thread). */
+    private static final int PRELOAD = 4;
+
+    /**
+     * Builds up to {@code maxChunks} chunks. In the background, only chunks that are already loaded
+     * are built; the next ones are asked to load (generating them happens on the world-generation
+     * threads), so the server tick never waits for terrain to be generated.
+     */
+    private static void buildNext(MinecraftServer server, Atlantis.Site site, int maxChunks, boolean background) {
         Atlantis.State state = Atlantis.state(server);
         AtlantisCity city = plan(server, site);
         ServerLevel level = server.overworld();
         int built = 0;
+        int requested = 0;
         for (int i = 0; i < order.size() && built < maxChunks; i++) {
             long key = order.getLong(i);
             if (state.builtChunks.contains(key)) continue;
+            if (background && level.getChunkSource().getChunkNow(ChunkPos.getX(key), ChunkPos.getZ(key)) == null) {
+                if (requested++ >= PRELOAD) break;
+                level.getChunkSource().addTicketWithRadius(TicketType.PORTAL, new ChunkPos(key), 1);
+                continue;
+            }
             buildChunk(level, site, city, ChunkPos.getX(key), ChunkPos.getZ(key));
             state.builtChunks.add(key);
             built++;
