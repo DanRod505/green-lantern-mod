@@ -1,6 +1,8 @@
 package com.danrod505.greenlantern.client;
 
+import com.danrod505.greenlantern.aquaman.AquamanHelper;
 import com.danrod505.greenlantern.flash.FlashHelper;
+import com.danrod505.greenlantern.hero.Hero;
 import com.danrod505.greenlantern.network.CycleConstructPacket;
 import com.danrod505.greenlantern.network.ModNetwork;
 import com.danrod505.greenlantern.network.SelectPowerPacket;
@@ -25,13 +27,15 @@ public final class ClientEvents {
         if (player == null || mc.level == null) return;
 
         while (KeyBindings.TOGGLE_UNIFORM.consumeClick()) {
-            if (!RingHelper.findRing(player).isEmpty() || !FlashHelper.findRing(player).isEmpty()) ModNetwork.sendToServer(new ToggleUniformPacket());
+            if (Hero.context(player) != Hero.NONE) ModNetwork.sendToServer(new ToggleUniformPacket());
         }
         while (KeyBindings.HERO_POWER.consumeClick()) {
-            if (mc.screen == null && !FlashHelper.findRing(player).isEmpty()) ModNetwork.sendToServer(new UsePowerPacket(-1));
+            Hero hero = Hero.context(player);
+            if (mc.screen == null && (hero == Hero.FLASH || hero == Hero.AQUAMAN)) ModNetwork.sendToServer(new UsePowerPacket(-1));
         }
         tickWheelKey(mc, player);
         MechaControls.tick(mc);
+        SharkControls.tick(mc);
 
         if (mc.isPaused()) return;
         // Green aura trail behind every flying Lantern in view.
@@ -58,45 +62,34 @@ public final class ClientEvents {
         // Clicks are handled through isDown(); drop queued clicks so they don't pile up.
         while (KeyBindings.CONSTRUCT_WHEEL.consumeClick()) {
         }
-        boolean flash = flashContext(player);
-        boolean hasRing = flash || !RingHelper.findRing(player).isEmpty();
-        if (mc.screen != null || !hasRing) {
+        Hero hero = Hero.context(player);
+        boolean powers = hero == Hero.FLASH || hero == Hero.AQUAMAN;
+        if (mc.screen != null || hero == Hero.NONE) {
             wheelKeyTicks = 0;
             return;
         }
         if (KeyBindings.CONSTRUCT_WHEEL.isDown()) {
             if (++wheelKeyTicks == WHEEL_HOLD_TICKS) {
-                mc.setScreen(flash ? new PowerWheelScreen() : new ConstructWheelScreen());
+                mc.setScreen(powers ? new PowerWheelScreen(hero) : new ConstructWheelScreen());
             }
         } else {
             if (wheelKeyTicks > 0 && wheelKeyTicks < WHEEL_HOLD_TICKS) {
-                ModNetwork.sendToServer(flash ? new SelectPowerPacket(1, true) : new CycleConstructPacket(1));
+                ModNetwork.sendToServer(powers ? new SelectPowerPacket(1, true) : new CycleConstructPacket(1));
             }
             wheelKeyTicks = 0;
         }
     }
 
-    /**
-     * Whether the wheel key and scrolling control the Flash's powers instead of the Lantern's
-     * constructs: wearing the Flash suit, holding the Flash ring, or carrying only the Flash ring.
-     */
-    public static boolean flashContext(LocalPlayer player) {
-        if (RingHelper.isSuited(player)) return false;
-        if (FlashHelper.isSuited(player) || !FlashHelper.heldRing(player).isEmpty()) return true;
-        if (!RingHelper.heldRing(player).isEmpty()) return false;
-        return RingHelper.findRing(player).isEmpty() && !FlashHelper.findRing(player).isEmpty();
-    }
-
-    /** Sneak + mouse wheel cycles constructs (or powers) while holding the ring. */
+    /** Sneak + mouse wheel cycles constructs (or powers) while holding the ring or emblem. */
     public static boolean onMouseScroll(InputEvent.MouseScrollingEvent event) {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         if (player == null || mc.screen != null || !player.isShiftKeyDown()) return false;
-        boolean flash = !FlashHelper.heldRing(player).isEmpty();
-        if (!flash && RingHelper.heldRing(player).isEmpty()) return false;
+        boolean powers = !FlashHelper.heldRing(player).isEmpty() || !AquamanHelper.heldEmblem(player).isEmpty();
+        if (!powers && RingHelper.heldRing(player).isEmpty()) return false;
         double delta = event.getDeltaY();
         if (delta == 0) return false;
-        ModNetwork.sendToServer(flash ? new SelectPowerPacket(delta > 0 ? -1 : 1, true) : new CycleConstructPacket(delta > 0 ? -1 : 1));
+        ModNetwork.sendToServer(powers ? new SelectPowerPacket(delta > 0 ? -1 : 1, true) : new CycleConstructPacket(delta > 0 ? -1 : 1));
         return true;
     }
 }

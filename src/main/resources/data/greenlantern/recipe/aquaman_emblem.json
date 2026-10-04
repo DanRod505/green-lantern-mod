@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "PGP",
+    "GNG",
+    "PGP"
+  ],
+  "key": {
+    "P": "minecraft:prismarine_shard",
+    "G": "minecraft:gold_ingot",
+    "N": "minecraft:nautilus_shell"
+  },
+  "result": {
+    "id": "greenlantern:aquaman_emblem",
+    "count": 1
+  }
+}

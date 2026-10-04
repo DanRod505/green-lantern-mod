@@ -1,6 +1,9 @@
 package com.danrod505.greenlantern.ring;
 
 import com.danrod505.greenlantern.GLConfig;
+import com.danrod505.greenlantern.aquaman.AquamanHelper;
+import com.danrod505.greenlantern.aquaman.AquamanServer;
+import com.danrod505.greenlantern.aquaman.AquamanSuit;
 import com.danrod505.greenlantern.entity.BubbleConstructEntity;
 import com.danrod505.greenlantern.entity.MechaEntity;
 import com.danrod505.greenlantern.item.SuitArmorItem;
@@ -42,6 +45,8 @@ public final class CommonEvents {
                 com.danrod505.greenlantern.flight.ServerFlightTracker.remove(player);
                 com.danrod505.greenlantern.flash.SpeedsterServer.endPhase(player, false);
                 com.danrod505.greenlantern.flash.SpeedsterServer.remove(player);
+                if (AquamanHelper.isSuited(player)) AquamanSuit.dismiss(player, false);
+                AquamanServer.remove(player);
             }
         });
     }
@@ -71,10 +76,15 @@ public final class CommonEvents {
             // The suit lives in the ring: no ring, no suit.
             com.danrod505.greenlantern.flash.FlashSuit.dismiss(player, true);
         }
+        if (AquamanHelper.isSuited(player) && AquamanHelper.findEmblem(player).isEmpty()) {
+            // The suit answers the emblem: no emblem, no suit.
+            AquamanSuit.dismiss(player, true);
+        }
         if (player.tickCount % 10 == 0) {
             Uniform.removeStrayPieces(player);
         }
         com.danrod505.greenlantern.flash.SpeedsterServer.tick(player);
+        AquamanServer.tick(player);
         if (player.tickCount % 5 == 0) {
             chargeFromCentralBattery(player);
         }
@@ -139,8 +149,10 @@ public final class CommonEvents {
 
     private static void onLivingFall(LivingFallEvent event) {
         if (event.getEntity() instanceof net.minecraft.world.entity.player.Player player
-                && (RingHelper.isSuited(player) || com.danrod505.greenlantern.flash.FlashHelper.isSuited(player))) {
-            // The ring cushions every landing; a speedster lands running.
+                && (RingHelper.isSuited(player) || com.danrod505.greenlantern.flash.FlashHelper.isSuited(player)
+                        || (AquamanHelper.isSuited(player) && event.getDistance() < 24.0F))) {
+            // The ring cushions every landing; a speedster lands running; an Atlantean, built for the
+            // crushing deep, shrugs off any ordinary fall.
             event.setDamageMultiplier(0.0F);
         }
     }
@@ -152,6 +164,9 @@ public final class CommonEvents {
         }
         if (event.getEntity() instanceof ServerPlayer player && com.danrod505.greenlantern.flash.FlashHelper.isSuited(player)) {
             com.danrod505.greenlantern.flash.FlashSuit.dismiss(player, false);
+        }
+        if (event.getEntity() instanceof ServerPlayer player && AquamanHelper.isSuited(player)) {
+            AquamanSuit.dismiss(player, false);
         }
     }
 
@@ -168,7 +183,8 @@ public final class CommonEvents {
     }
 
     private static boolean onEntityJoin(EntityJoinLevelEvent event) {
-        // Uniform pieces never exist as dropped items.
-        return event.getEntity() instanceof ItemEntity item && item.getItem().getItem() instanceof SuitArmorItem;
+        // Uniform pieces and Aquaman's trident never exist as dropped items.
+        return event.getEntity() instanceof ItemEntity item
+                && (item.getItem().getItem() instanceof SuitArmorItem || AquamanHelper.isTrident(item.getItem()));
     }
 }

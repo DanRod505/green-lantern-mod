@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:function",
+  "function": "greenlantern:aquaman_trident_throw_returns",
+  "environment": "minecraft:default",
+  "structure": "greenlantern:arena",
+  "max_ticks": 300,
+  "required": true
+}

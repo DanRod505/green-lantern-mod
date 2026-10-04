@@ -5,7 +5,6 @@ import com.danrod505.greenlantern.registry.ModItems;
 import com.danrod505.greenlantern.registry.ModParticles;
 import com.danrod505.greenlantern.registry.ModSounds;
 import com.danrod505.greenlantern.ring.FlightHandler;
-import com.danrod505.greenlantern.ring.RingHelper;
 import com.danrod505.greenlantern.ring.Uniform;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -43,9 +42,7 @@ public final class FlashSuit {
             return false;
         }
         // Only one hero suit at a time.
-        if (RingHelper.isSuited(player)) {
-            Uniform.dismiss(player, false);
-        }
+        com.danrod505.greenlantern.hero.Hero.dismissOthers(player, com.danrod505.greenlantern.hero.Hero.FLASH);
         Uniform.equipSuit(player,
                 ModItems.FLASH_MASK.get().getDefaultInstance(),
                 ModItems.FLASH_SUIT.get().getDefaultInstance(),

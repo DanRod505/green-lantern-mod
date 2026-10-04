@@ -88,6 +88,26 @@ public final class GLConfig {
     public static final ForgeConfigSpec.DoubleValue LIGHTNING_DAMAGE;
     public static final ForgeConfigSpec.IntValue LIGHTNING_CHAIN;
 
+    // ---- Aquaman --------------------------------------------------------------------------------
+    public static final ForgeConfigSpec.IntValue SEA_FORCE_CAPACITY;
+    public static final ForgeConfigSpec.IntValue SEA_FORCE_REGEN_WATER;
+    public static final ForgeConfigSpec.IntValue SEA_FORCE_REGEN_LAND;
+    public static final ForgeConfigSpec.DoubleValue SWIM_SPEED;
+    public static final ForgeConfigSpec.DoubleValue SWIM_SPRINT_SPEED;
+    public static final ForgeConfigSpec.DoubleValue SWIM_SECONDS_TO_TOP_SPEED;
+    public static final ForgeConfigSpec.IntValue TRIDENT_COST;
+    public static final ForgeConfigSpec.DoubleValue TRIDENT_DAMAGE;
+    public static final ForgeConfigSpec.DoubleValue TRIDENT_THROW_DAMAGE;
+    public static final ForgeConfigSpec.IntValue SHARK_COST;
+    public static final ForgeConfigSpec.DoubleValue SHARK_SPEED;
+    public static final ForgeConfigSpec.DoubleValue SHARK_BITE_DAMAGE;
+    public static final ForgeConfigSpec.IntValue SEA_CALL_COST;
+    public static final ForgeConfigSpec.DoubleValue SEA_CALL_SECONDS;
+    public static final ForgeConfigSpec.DoubleValue SEA_CALL_RADIUS;
+    public static final ForgeConfigSpec.IntValue SEA_CALL_MAX_CREATURES;
+    public static final ForgeConfigSpec.IntValue SEA_CALL_HELPERS;
+    public static final ForgeConfigSpec.DoubleValue SEA_CALL_DAMAGE_MULTIPLIER;
+
     public static final ForgeConfigSpec SPEC;
 
     static {
@@ -184,6 +204,27 @@ public final class GLConfig {
         LIGHTNING_COST = BUILDER.comment("Speed Force cost of a lightning bolt.").defineInRange("lightningCost", 60, 0, 100_000);
         LIGHTNING_DAMAGE = BUILDER.comment("Damage of a lightning bolt thrown standing still (up to 75% more when thrown at top speed).").defineInRange("lightningDamage", 12.0, 0.0, 1000.0);
         LIGHTNING_CHAIN = BUILDER.comment("How many extra creatures the lightning arcs to after the first hit.").defineInRange("lightningChain", 2, 0, 16);
+        BUILDER.pop();
+
+        BUILDER.comment("Aquaman: breathing underwater, super fast 3D swimming, the trident, the great white shark and the call of the sea.").push("aquaman");
+        SEA_FORCE_CAPACITY = BUILDER.comment("Maximum Power of the Seas stored in the Atlantean Emblem.").defineInRange("seaForceCapacity", 1000, 100, 1_000_000);
+        SEA_FORCE_REGEN_WATER = BUILDER.comment("Power of the Seas regained per second while in water (half of it in the rain).").defineInRange("seaForceRegenInWater", 25, 0, 100_000);
+        SEA_FORCE_REGEN_LAND = BUILDER.comment("Power of the Seas regained per second on dry land.").defineInRange("seaForceRegenOnLand", 3, 0, 100_000);
+        SWIM_SPEED = BUILDER.comment("Swimming speed (blocks/tick) of Aquaman underwater (vanilla swimming is about 0.2).").defineInRange("swimSpeed", 0.9, 0.1, 9.0);
+        SWIM_SPRINT_SPEED = BUILDER.comment("Top swimming speed (blocks/tick) holding sprint. Keep it below 9 so servers don't reject the movement.").defineInRange("swimSprintSpeed", 2.4, 0.1, 9.0);
+        SWIM_SECONDS_TO_TOP_SPEED = BUILDER.comment("Seconds of sprint swimming needed to reach the top speed.").defineInRange("swimSecondsToTopSpeed", 2.0, 0.1, 30.0);
+        TRIDENT_COST = BUILDER.comment("Power of the Seas cost to summon the trident.").defineInRange("tridentCost", 40, 0, 100_000);
+        TRIDENT_DAMAGE = BUILDER.comment("Melee damage of the trident (a diamond sword does 7).").defineInRange("tridentDamage", 14.0, 0.0, 1000.0);
+        TRIDENT_THROW_DAMAGE = BUILDER.comment("Damage of the thrown trident.").defineInRange("tridentThrowDamage", 16.0, 0.0, 1000.0);
+        SHARK_COST = BUILDER.comment("Power of the Seas cost to summon the great white shark.").defineInRange("sharkCost", 150, 0, 100_000);
+        SHARK_SPEED = BUILDER.comment("Top swimming speed (blocks/tick) of the shark with a rider (sprint is 30% faster).").defineInRange("sharkSpeed", 1.8, 0.1, 6.0);
+        SHARK_BITE_DAMAGE = BUILDER.comment("Damage of a shark bite.").defineInRange("sharkBiteDamage", 12.0, 0.0, 1000.0);
+        SEA_CALL_COST = BUILDER.comment("Power of the Seas cost of the call of the sea.").defineInRange("seaCallCost", 200, 0, 100_000);
+        SEA_CALL_SECONDS = BUILDER.comment("How long the sea creatures follow and defend Aquaman (seconds).").defineInRange("seaCallSeconds", 30.0, 1.0, 600.0);
+        SEA_CALL_RADIUS = BUILDER.comment("Radius (blocks) of the call: sea creatures this close answer it.").defineInRange("seaCallRadius", 32.0, 4.0, 96.0);
+        SEA_CALL_MAX_CREATURES = BUILDER.comment("Most creatures that answer one call.").defineInRange("seaCallMaxCreatures", 24, 1, 256);
+        SEA_CALL_HELPERS = BUILDER.comment("If fewer creatures than this answer (and Aquaman is in the water), dolphins come from the deep to make up the number (0 = never).").defineInRange("seaCallHelpers", 3, 0, 16);
+        SEA_CALL_DAMAGE_MULTIPLIER = BUILDER.comment("Multiplier of the damage dealt by the called creatures (dolphins bite for 5, small fish for 2).").defineInRange("seaCallDamageMultiplier", 1.0, 0.0, 100.0);
         BUILDER.pop();
 
         SPEC = BUILDER.build();

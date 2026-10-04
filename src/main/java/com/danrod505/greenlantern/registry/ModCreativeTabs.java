@@ -23,6 +23,8 @@ public final class ModCreativeTabs {
                 output.accept(ModItems.GUIDE_BOOK.get());
                 output.accept(com.danrod505.greenlantern.item.FlashRingItem.charged(ModItems.FLASH_RING.get().getDefaultInstance()));
                 output.accept(ModItems.FLASH_RING.get());
+                output.accept(com.danrod505.greenlantern.item.AquamanEmblemItem.charged(ModItems.AQUAMAN_EMBLEM.get().getDefaultInstance()));
+                output.accept(ModItems.AQUAMAN_EMBLEM.get());
             })
             .build());
 

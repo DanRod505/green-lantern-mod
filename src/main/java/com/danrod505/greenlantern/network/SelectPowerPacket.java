@@ -1,7 +1,9 @@
 package com.danrod505.greenlantern.network;
 
+import com.danrod505.greenlantern.aquaman.AquamanServer;
 import com.danrod505.greenlantern.flash.FlashHelper;
 import com.danrod505.greenlantern.flash.SpeedsterPower;
+import com.danrod505.greenlantern.hero.Hero;
 import com.danrod505.greenlantern.registry.ModSounds;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -13,7 +15,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 
-/** Client -> server: pick a speedster power (from the power wheel) or step to the next / previous one. */
+/** Client -> server: pick a hero power (speedster or Aquaman) (from the power wheel) or step to the next / previous one. */
 public record SelectPowerPacket(int value, boolean relative) {
     public static final StreamCodec<RegistryFriendlyByteBuf, SelectPowerPacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT, (SelectPowerPacket p) -> p.value + 1,
@@ -24,6 +26,10 @@ public record SelectPowerPacket(int value, boolean relative) {
         context.setPacketHandled(true);
         var player = context.getSender();
         if (player == null) return;
+        if (Hero.context(player) == Hero.AQUAMAN) {
+            AquamanServer.selectPower(player, packet.value, packet.relative);
+            return;
+        }
         ItemStack ring = FlashHelper.findRing(player);
         if (ring.isEmpty()) return;
         SpeedsterPower power;

@@ -23,5 +23,11 @@ public final class ModDamageTypes {
         return new DamageSource(level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(SPEED_FORCE), direct, attacker);
     }
 
+    public static final ResourceKey<DamageType> SHARK_BITE = ResourceKey.create(Registries.DAMAGE_TYPE, GreenLantern.id("shark_bite"));
+
+    public static DamageSource sharkBite(Level level, @Nullable Entity direct, @Nullable Entity attacker) {
+        return new DamageSource(level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(SHARK_BITE), direct, attacker);
+    }
+
     private ModDamageTypes() {}
 }

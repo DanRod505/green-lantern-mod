@@ -2,6 +2,15 @@ package com.danrod505.greenlantern.gametest;
 
 import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
+import com.danrod505.greenlantern.aquaman.AquaPower;
+import com.danrod505.greenlantern.aquaman.AquamanHelper;
+import com.danrod505.greenlantern.aquaman.AquamanServer;
+import com.danrod505.greenlantern.aquaman.AquamanSuit;
+import com.danrod505.greenlantern.aquaman.SeaCall;
+import com.danrod505.greenlantern.aquaman.SeaForce;
+import com.danrod505.greenlantern.entity.AquaTridentEntity;
+import com.danrod505.greenlantern.entity.GreatWhiteSharkEntity;
+import com.danrod505.greenlantern.item.AquaTridentItem;
 import com.danrod505.greenlantern.flight.FlightAction;
 import com.danrod505.greenlantern.flight.FlightFlags;
 import com.danrod505.greenlantern.flight.ServerFlightTracker;
@@ -92,6 +101,11 @@ public final class ModGameTests {
         TESTS.register("flash_lightning", () -> ModGameTests::flashLightning);
         TESTS.register("flash_tornado", () -> ModGameTests::flashTornado);
         TESTS.register("flash_phase_safe_exit", () -> ModGameTests::flashPhaseSafeExit);
+        TESTS.register("aquaman_suit_summon_and_swap", () -> ModGameTests::aquamanSuitSummonAndSwap);
+        TESTS.register("aquaman_breathes_and_regens", () -> ModGameTests::aquamanBreathesAndRegens);
+        TESTS.register("aquaman_trident_throw_returns", () -> ModGameTests::aquamanTridentThrowReturns);
+        TESTS.register("aquaman_shark_bite", () -> ModGameTests::aquamanSharkBite);
+        TESTS.register("aquaman_sea_call", () -> ModGameTests::aquamanSeaCall);
     }
 
     private ModGameTests() {}
@@ -739,6 +753,147 @@ public final class ModGameTests {
                 .thenExecuteFor(10, player::doTick)
                 .thenExecute(() -> {
                     helper.assertTrue(player.getHealth() == player.getMaxHealth(), "no suffocation damage after phasing");
+                    remove(player);
+                })
+                .thenSucceed();
+    }
+
+    // ---- Aquaman ----------------------------------------------------------------------------------
+
+    private static ItemStack giveEmblem(ServerPlayer player, int seaForce) {
+        ItemStack emblem = new ItemStack(ModItems.AQUAMAN_EMBLEM.get());
+        SeaForce.set(emblem, seaForce);
+        player.setItemInHand(InteractionHand.MAIN_HAND, emblem);
+        return player.getMainHandItem();
+    }
+
+    /** Fills the inside of the arena with water up to (relative) height {@code top}. */
+    private static void flood(GameTestHelper helper, int top) {
+        for (int x = 1; x <= 13; x++) {
+            for (int y = 1; y <= top; y++) {
+                for (int z = 1; z <= 13; z++) {
+                    helper.setBlock(x, y, z, Blocks.WATER);
+                }
+            }
+        }
+    }
+
+    public static void aquamanSuitSummonAndSwap(GameTestHelper helper) {
+        ServerPlayer player = player(helper, 7.5, 1, 7.5, 0, 0);
+        player.setItemSlot(EquipmentSlot.HEAD, new ItemStack(Items.IRON_HELMET));
+        player.setItemSlot(EquipmentSlot.CHEST, new ItemStack(Items.IRON_CHESTPLATE));
+        // The Flash first, then Aquaman replaces him (one hero at a time).
+        ItemStack ring = new ItemStack(ModItems.FLASH_RING.get());
+        player.getInventory().add(ring);
+        FlashSuit.summon(player);
+        helper.assertTrue(FlashHelper.isSuited(player), "flash suit should be on");
+        giveEmblem(player, 0);
+        use(player); // not suited as Aquaman: right click summons the suit
+        helper.assertTrue(AquamanHelper.isSuited(player), "aquaman suit should be summoned");
+        helper.assertFalse(FlashHelper.isSuited(player), "the flash suit should be gone");
+        helper.assertTrue(player.getItemBySlot(EquipmentSlot.HEAD).is(Items.IRON_HELMET), "Aquaman has no mask: the helmet stays on");
+        helper.assertTrue(player.getItemBySlot(EquipmentSlot.LEGS).is(ModItems.AQUAMAN_LEGGINGS.get()), "leggings should be worn");
+        helper.assertTrue(player.getAttributeValue(Attributes.WATER_MOVEMENT_EFFICIENCY) >= 1.0, "the suit should make swimming easy");
+        AquamanSuit.dismiss(player, false);
+        helper.assertFalse(AquamanHelper.isSuited(player), "aquaman suit should be dismissed");
+        helper.assertTrue(player.getItemBySlot(EquipmentSlot.HEAD).is(Items.IRON_HELMET), "iron helmet still on");
+        helper.assertTrue(player.getItemBySlot(EquipmentSlot.CHEST).is(Items.IRON_CHESTPLATE), "iron chestplate should be restored");
+        helper.assertTrue(player.getAttributeValue(Attributes.WATER_MOVEMENT_EFFICIENCY) < 1.0, "swimming back to normal");
+        remove(player);
+        helper.succeed();
+    }
+
+    public static void aquamanBreathesAndRegens(GameTestHelper helper) {
+        flood(helper, 5);
+        ServerPlayer player = player(helper, 7.5, 2, 7.5, 0, 0);
+        ItemStack emblem = giveEmblem(player, 0);
+        AquamanSuit.summon(player);
+        player.setAirSupply(0);
+        helper.startSequence()
+                .thenExecuteFor(41, player::doTick)
+                .thenExecute(() -> {
+                    helper.assertTrue(player.isInWater(), "the player should be in the water");
+                    helper.assertTrue(player.getAirSupply() == player.getMaxAirSupply(), "Aquaman breathes underwater, air " + player.getAirSupply());
+                    int stored = SeaForce.get(emblem).stored();
+                    helper.assertTrue(stored >= 30, "the Power of the Seas should refill quickly in water, got " + stored);
+                    remove(player);
+                })
+                .thenSucceed();
+    }
+
+    public static void aquamanTridentThrowReturns(GameTestHelper helper) {
+        ServerPlayer player = player(helper, 7.5, 1, 2.5, 0, 0);
+        ItemStack emblem = giveEmblem(player, 1000);
+        AquamanSuit.summon(player);
+        AquaPower.select(emblem, AquaPower.TRIDENT);
+        Zombie zombie = dummy(helper, 7.5, 1, 7.5);
+        float health = zombie.getHealth();
+        use(player);
+        ItemStack trident = player.getMainHandItem();
+        helper.assertTrue(AquamanHelper.isTrident(trident), "the trident should appear in the main hand");
+        helper.assertFalse(AquamanHelper.findEmblem(player).isEmpty(), "the emblem should move to the inventory");
+        helper.assertTrue(SeaForce.get(AquamanHelper.findEmblem(player)).stored() == 1000 - AquaPower.TRIDENT.cost(), "the trident should cost Power of the Seas");
+        player.setXRot(10.0F);
+        AquaTridentItem.throwTrident(player, trident);
+        helper.assertTrue(AquamanHelper.tridentSlot(player) < 0, "the thrown trident leaves the hand");
+        helper.assertTrue(AquaTridentEntity.find(player) != null, "the trident should be in flight");
+        helper.startSequence()
+                .thenWaitUntil(() -> helper.assertTrue(zombie.getHealth() < health || zombie.isDeadOrDying(), "zombie should be hit"))
+                .thenWaitUntil(() -> helper.assertTrue(AquamanHelper.tridentSlot(player) >= 0, "the trident should come back"))
+                .thenExecute(() -> {
+                    helper.assertTrue(AquaTridentEntity.find(player) == null, "no trident left in flight");
+                    remove(player);
+                })
+                .thenSucceed();
+    }
+
+    public static void aquamanSharkBite(GameTestHelper helper) {
+        flood(helper, 6);
+        ServerPlayer player = player(helper, 7.5, 2, 3.5, 0, 0);
+        ItemStack emblem = giveEmblem(player, 1000);
+        AquamanSuit.summon(player);
+        AquaPower.select(emblem, AquaPower.SHARK);
+        use(player);
+        GreatWhiteSharkEntity shark = GreatWhiteSharkEntity.find(player);
+        helper.assertTrue(shark != null, "a shark should be summoned");
+        helper.assertTrue(player.getVehicle() == shark, "Aquaman should ride the shark");
+        Vec3 mouth = shark.mouth();
+        Zombie zombie = EntityType.ZOMBIE.create(helper.getLevel(), net.minecraft.world.entity.EntitySpawnReason.COMMAND);
+        zombie.snapTo(mouth.x, mouth.y - 0.8, mouth.z, 180, 0);
+        zombie.setNoAi(true);
+        helper.getLevel().addFreshEntity(zombie);
+        float health = zombie.getHealth();
+        helper.assertTrue(shark.bite(), "the shark should bite the zombie in front of its jaws");
+        helper.assertTrue(zombie.getHealth() < health || zombie.isDeadOrDying(), "the bite should hurt");
+        AquamanServer.usePower(player, emblem, AquaPower.SHARK);
+        helper.assertTrue(shark.isRemoved(), "using the power again sends the shark away");
+        zombie.discard();
+        remove(player);
+        helper.succeed();
+    }
+
+    public static void aquamanSeaCall(GameTestHelper helper) {
+        flood(helper, 6);
+        ServerPlayer player = player(helper, 7.5, 2, 3.5, 0, 0);
+        ItemStack emblem = giveEmblem(player, 1000);
+        AquamanSuit.summon(player);
+        AquaPower.select(emblem, AquaPower.SEA_CALL);
+        helper.spawn(EntityType.COD, new Vec3(5.5, 3, 4.5));
+        helper.spawn(EntityType.SQUID, new Vec3(9.5, 3, 4.5));
+        Zombie zombie = dummy(helper, 7.5, 2, 9.5);
+        float health = zombie.getHealth();
+        use(player);
+        helper.assertTrue(SeaCall.isActive(player), "the call should be active");
+        int allies = SeaCall.allies(player);
+        helper.assertTrue(allies >= GLConfig.SEA_CALL_HELPERS.get(), "dolphins should make up the numbers, got " + allies);
+        helper.startSequence()
+                .thenExecuteFor(120, player::doTick)
+                .thenExecute(() -> {
+                    helper.assertTrue(zombie.getHealth() < health || zombie.isDeadOrDying(), "the sea creatures should attack the zombie");
+                    AquamanServer.usePower(player, emblem, AquaPower.SEA_CALL);
+                    helper.assertFalse(SeaCall.isActive(player), "using it again releases the creatures");
+                    helper.assertTrue(around(player, net.minecraft.world.entity.animal.dolphin.Dolphin.class, 20).isEmpty(),
+                            "the dolphins from the deep go back");
                     remove(player);
                 })
                 .thenSucceed();

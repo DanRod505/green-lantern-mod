@@ -27,5 +27,9 @@ public final class ModDataComponents {
     public static final RegistryObject<DataComponentType<Integer>> SELECTED_POWER = COMPONENTS.register("selected_power",
             () -> DataComponentType.<Integer>builder().persistent(com.mojang.serialization.Codec.INT).networkSynchronized(net.minecraft.network.codec.ByteBufCodecs.VAR_INT).build());
 
+    /** Power of the Seas stored in the Atlantean Emblem (selected power: {@link #SELECTED_POWER}). */
+    public static final RegistryObject<DataComponentType<RingEnergy>> SEA_FORCE = COMPONENTS.register("sea_force",
+            () -> DataComponentType.<RingEnergy>builder().persistent(RingEnergy.CODEC).networkSynchronized(RingEnergy.STREAM_CODEC).build());
+
     private ModDataComponents() {}
 }

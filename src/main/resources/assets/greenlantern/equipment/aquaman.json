@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "greenlantern:aquaman"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "greenlantern:aquaman"
+      }
+    ]
+  }
+}
