@@ -70,6 +70,8 @@ public final class ClientScript {
             buildBatmanSteps();
         } else if ("mounts".equals(System.getenv("GL_CLIENT_SCRIPT"))) {
             buildMountsSteps();
+        } else if ("trench".equals(System.getenv("GL_CLIENT_SCRIPT"))) {
+            buildTrenchSteps();
         } else {
             buildSteps();
         }
@@ -1414,6 +1416,195 @@ public final class ClientScript {
         step(20, () -> mc().stop());
     }
 
+    // ---- v1.13: the Trench ------------------------------------------------------------------------
+
+    private static volatile com.danrod505.greenlantern.trench.Trench.Nest trenchNest;
+    private static final List<com.danrod505.greenlantern.entity.TrenchCreatureEntity> TRENCH_POSED = new ArrayList<>();
+
+    /** Teleports to a point (absolute), looking at another. */
+    private static void tpLook(Vec3 from, Vec3 at) {
+        double dx = at.x - from.x;
+        double dy = at.y - from.y;
+        double dz = at.z - from.z;
+        float yaw = (float) Math.toDegrees(Math.atan2(-dx, dz));
+        float pitch = (float) -Math.toDegrees(Math.atan2(dy, Math.sqrt(dx * dx + dz * dz)));
+        command(String.format(java.util.Locale.ROOT, "tp @a %.2f %.2f %.2f %.1f %.1f", from.x, from.y, from.z, yaw, pitch));
+    }
+
+    /** Relative to the nest's center (on its floor). */
+    private static Vec3 atNest(double dx, double dy, double dz) {
+        var n = trenchNest;
+        return new Vec3(n.x() + 0.5 + dx, n.floor() + dy, n.z() + 0.5 + dz);
+    }
+
+    /** Poses a creature (or brute) with no AI at a point, facing a direction; returns it for more posing. */
+    private static void poseCreature(Vec3 pos, boolean brute, float yaw, boolean carrying) {
+        server(sp -> {
+            var c = com.danrod505.greenlantern.entity.TrenchCreatureEntity.spawn(sp.level(), pos, brute, -1, 0);
+            if (c == null) return;
+            c.setNoAi(true);
+            c.snapTo(pos.x, pos.y, pos.z, yaw, 0.0F);
+            c.setYHeadRot(yaw);
+            c.setYBodyRot(yaw);
+            TRENCH_POSED.add(c);
+            if (carrying) {
+                var villager = net.minecraft.world.entity.EntityType.VILLAGER.create(sp.level(), net.minecraft.world.entity.EntitySpawnReason.COMMAND);
+                if (villager == null) return;
+                villager.snapTo(pos.x, pos.y, pos.z, yaw, 0.0F);
+                villager.setNoAi(true);
+                sp.level().addFreshEntity(villager);
+                villager.startRiding(c, true, true);
+            }
+        });
+    }
+
+    private static void clearPosed() {
+        server(sp -> {
+            for (var c : TRENCH_POSED) {
+                if (c.getFirstPassenger() != null) c.getFirstPassenger().discard();
+                c.discard();
+            }
+            TRENCH_POSED.clear();
+        });
+    }
+
+    /** The Trench: the dark territory, the pit and its nest, the creatures, a cocoon and its rescue, a raid on Atlantis, the guide. */
+    private static void buildTrenchSteps() {
+        step(80, () -> {
+            command("time set 6000");
+            command("weather clear");
+            command("gamerule advance_time false");
+            command("gamerule advance_weather false");
+            command("gamerule spawn_mobs false");
+            server(sp -> {
+                sp.setGameMode(GameType.CREATIVE);
+                sp.getAbilities().flying = true;
+                sp.onUpdateAbilities();
+                sp.getInventory().setItem(10, new ItemStack(ModItems.ATLANTEAN_RESPIRATOR.get()));
+                sp.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+                var server = sp.level().getServer();
+                // The trip builds Atlantis; the nests are dug around it right away.
+                boolean ok = com.danrod505.greenlantern.atlantis.AtlantisTravel.sendToAtlantis(sp);
+                atlantis = com.danrod505.greenlantern.atlantis.Atlantis.site(server);
+                boolean built = com.danrod505.greenlantern.trench.TrenchBuilder.ensureBuilt(server);
+                var nests = com.danrod505.greenlantern.trench.Trench.nests(server);
+                com.danrod505.greenlantern.GreenLantern.LOGGER.info("CLIENTSCRIPT trench travel={} built={} atlantis={} nests={}", ok, built, atlantis, nests);
+                if (!nests.isEmpty()) trenchNest = nests.getFirst();
+            });
+        });
+        waitFor(2400, () -> trenchNest != null && com.danrod505.greenlantern.trench.Trench.isComplete(mc().getSingleplayerServer()));
+        // From the edge: the dark water of the Trench beyond the last fish of the open sea.
+        step(2, () -> {
+            camera(CameraType.FIRST_PERSON);
+            var n = trenchNest;
+            tpLook(atNest(com.danrod505.greenlantern.trench.Trench.TERRITORY + 14, n.rim() - n.floor() + 10, 0), atNest(0, 6, 0));
+        });
+        step(200, () -> clean("t00_territory_edge"));
+        // Crossing in: the warning and the clicks from the caves.
+        step(2, () -> {
+            mc().options.hideGui = false;
+            var n = trenchNest;
+            tpLook(atNest(com.danrod505.greenlantern.trench.Trench.TERRITORY - 8, n.rim() - n.floor() + 6, 0), atNest(0, 6, 0));
+        });
+        step(25, () -> shot("t01_territory_warning"));
+        step(160, () -> clean("t02_territory_dark"));
+        // With night vision from here on, to see the details.
+        step(2, () -> {
+            command("effect give @a night_vision infinite 0 true");
+            var n = trenchNest;
+            tpLook(atNest(14, n.rim() - n.floor() + 18, 14), atNest(0, 0, 0));
+        });
+        step(120, () -> clean("t03_pit_from_above"));
+        step(2, () -> tpLook(atNest(15, 10, -4), atNest(0, 5, 0)));
+        step(120, () -> clean("t04_brood_mound_ribs"));
+        // The creatures, posed close.
+        step(2, () -> {
+            Vec3 eye = atNest(8, 12, 8);
+            poseCreature(eye.add(-3.2, -1.2, 0.0), false, 90.0F, false);
+            tpLook(eye, eye.add(-3.2, -0.6, 0.0));
+        });
+        step(60, () -> clean("t05_creature"));
+        step(2, () -> {
+            clearPosed();
+            Vec3 eye = atNest(8, 12, 8);
+            poseCreature(eye.add(-4.5, -2.0, 0.0), true, 90.0F, false);
+            poseCreature(eye.add(-5.5, -1.0, 2.5), false, 110.0F, false);
+            poseCreature(eye.add(-5.5, -1.5, -2.5), false, 70.0F, false);
+            tpLook(eye, eye.add(-4.5, -0.8, 0.0));
+        });
+        step(60, () -> clean("t06_brute_and_pack"));
+        step(2, () -> {
+            clearPosed();
+            Vec3 eye = atNest(8, 12, 8);
+            poseCreature(eye.add(-3.5, -1.2, 0.0), false, 90.0F, true);
+            tpLook(eye, eye.add(-3.5, -0.4, 0.0));
+        });
+        step(60, () -> clean("t07_carrying_villager"));
+        // The living nest: its own packs on patrol.
+        step(2, () -> {
+            clearPosed();
+            tpLook(atNest(-10, 14, -10), atNest(0, 6, 0));
+        });
+        step(100, () -> {
+            com.danrod505.greenlantern.GreenLantern.LOGGER.info("CLIENTSCRIPT trench creatures near={}", mc().level.getEntitiesOfClass(
+                    com.danrod505.greenlantern.entity.TrenchCreatureEntity.class, mc().player.getBoundingBox().inflate(64)).size());
+            clean("t08_nest_alive");
+        });
+        // A cocoon in a chamber, with a villager inside.
+        step(2, () -> server(sp -> {
+            var cocoons = com.danrod505.greenlantern.trench.TrenchLife.cocoons(sp.level(), trenchNest);
+            com.danrod505.greenlantern.GreenLantern.LOGGER.info("CLIENTSCRIPT trench cocoons={}", cocoons.size());
+            Vec3 at;
+            if (cocoons.isEmpty()) {
+                at = com.danrod505.greenlantern.trench.TrenchNest.cocoonSpots(trenchNest).getFirst();
+            } else {
+                at = cocoons.getFirst().position();
+            }
+            Vec3 center = atNest(0, at.y - trenchNest.floor(), 0);
+            Vec3 out = center.subtract(at).multiply(1, 0, 1).normalize();
+            Vec3 eye = at.add(out.scale(3.2)).add(0, 1.4, 0);
+            tpLook(eye, at.add(0, 1.1, 0));
+        }));
+        step(80, () -> clean("t09_cocoon"));
+        step(2, () -> {
+            mc().options.hideGui = false;
+            server(sp -> {
+                var cocoons = sp.level().getEntitiesOfClass(com.danrod505.greenlantern.entity.TrenchCocoonEntity.class, sp.getBoundingBox().inflate(6));
+                if (!cocoons.isEmpty()) cocoons.getFirst().hurtServer(sp.level(), sp.level().damageSources().playerAttack(sp), 50.0F);
+            });
+        });
+        step(6, () -> shot("t10_rescue_burst"));
+        step(20, () -> clean("t11_villager_freed"));
+        // A raid on Atlantis: the war party at the wall, under the boss bar.
+        step(2, () -> {
+            mc().options.hideGui = false;
+            var a = atlantis;
+            if (a == null) return;
+            var n = trenchNest;
+            double ang = Math.atan2(n.z() - a.z(), n.x() - a.x());
+            Vec3 inside = new Vec3(a.x() + 0.5 + Math.cos(ang) * (com.danrod505.greenlantern.atlantis.Atlantis.RADIUS - 14), a.floor() + 14,
+                    a.z() + 0.5 + Math.sin(ang) * (com.danrod505.greenlantern.atlantis.Atlantis.RADIUS - 14));
+            Vec3 wall = new Vec3(a.x() + 0.5 + Math.cos(ang) * (com.danrod505.greenlantern.atlantis.Atlantis.RADIUS + 6), a.floor() + 12,
+                    a.z() + 0.5 + Math.sin(ang) * (com.danrod505.greenlantern.atlantis.Atlantis.RADIUS + 6));
+            tpLook(inside, wall);
+        });
+        step(40, () -> server(sp -> {
+            if (atlantis == null) return;
+            var raiders = com.danrod505.greenlantern.trench.TrenchLife.startRaid(sp.level(), atlantis, List.of(trenchNest));
+            com.danrod505.greenlantern.GreenLantern.LOGGER.info("CLIENTSCRIPT trench raid raiders={}", raiders.size());
+        }));
+        step(30, () -> shot("t12_raid_warning"));
+        step(60, () -> shot("t13_raid_at_the_wall"));
+        step(2, () -> {
+            mc().options.hideGui = false;
+            mc().setScreen(com.danrod505.greenlantern.client.GuideScreen.atChapter("trench"));
+        });
+        step(10, () -> shot("t14_guide"));
+        step(2, () -> mc().setScreen(com.danrod505.greenlantern.client.GuideScreen.atChapter("trench_captives")));
+        step(10, () -> shot("t15_guide_captives"));
+        step(20, () -> mc().stop());
+    }
+
     /** Screenshot without the HUD and chat, so the model is easy to see. */
     private static void clean(String name) {
         mc().gui.getChat().clearMessages(false);
@@ -2107,8 +2298,8 @@ public final class ClientScript {
                 worldRequested = true;
                 LevelSettings settings = new LevelSettings("gltest", GameType.CREATIVE, false, Difficulty.EASY, true,
                         new GameRules(WorldDataConfiguration.DEFAULT.enabledFeatures()), WorldDataConfiguration.DEFAULT);
-                // Atlantis needs a real ocean: a normal world for that script, a flat one for the others.
-                boolean normal = "atlantis".equals(System.getenv("GL_CLIENT_SCRIPT"));
+                // Atlantis (and the Trench around it) needs a real ocean: a normal world for those scripts, a flat one for the others.
+                boolean normal = "atlantis".equals(System.getenv("GL_CLIENT_SCRIPT")) || "trench".equals(System.getenv("GL_CLIENT_SCRIPT"));
                 mc.createWorldOpenFlows().createFreshLevel("gltest-" + System.currentTimeMillis(), settings,
                         new WorldOptions(2814L, false, false), normal ? WorldPresets::createNormalWorldDimensions : WorldPresets::createFlatWorldDimensions, mc.screen);
             }

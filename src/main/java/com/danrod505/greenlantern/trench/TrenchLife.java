@@ -312,6 +312,12 @@ public final class TrenchLife {
         return raid != null;
     }
 
+    /** Tests only: calls off the raid in progress (its raiders stay where they are). */
+    public static void stopRaidForTesting() {
+        if (raid != null) raid.bar.removeAllPlayers();
+        raid = null;
+    }
+
     /** Sends a war party from a nest against Atlantis. Returns the raiders (empty if it could not start). */
     public static List<TrenchCreatureEntity> startRaid(ServerLevel level, Atlantis.Site site, List<Trench.Nest> nests) {
         if (raid != null || nests.isEmpty()) return List.of();

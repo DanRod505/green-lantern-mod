@@ -398,9 +398,13 @@ public class TrenchCreatureEntity extends Monster {
     private Vec3 carryHome(ServerLevel level, Villager villager) {
         Trench.Nest home = nest(level);
         if (home == null) {
-            // Nowhere to take it: let it go.
-            villager.stopRiding();
-            return Vec3.ZERO;
+            // No nest to take it to: it prowls around with its prize for a while, then lets it go.
+            if (++routeTicks > 200) {
+                villager.stopRiding();
+                routeTicks = 0;
+                attackCooldown = 100;
+            }
+            return patrol(level);
         }
         List<Vec3> spots = TrenchNest.cocoonSpots(home);
         if (routeSpot < 0 || routeSpot >= spots.size() || TrenchCocoonEntity.occupied(level, spots.get(routeSpot))) {
