@@ -24,6 +24,9 @@ public final class GrappleController {
     private static boolean bumped;
     private static double lastDist = Double.MAX_VALUE;
     private static Vec3 lastTo = Vec3.ZERO;
+    /** Ticks of the final hop left, and its direction (towards the ledge). */
+    private static int hopTicks;
+    private static Vec3 hopDir = Vec3.ZERO;
 
     private GrappleController() {}
 
@@ -35,6 +38,16 @@ public final class GrappleController {
         boolean jump = player.input.keyPresses.jump();
         boolean jumpPressed = jump && !jumpWasDown;
         jumpWasDown = jump;
+        if (hopTicks > 0) {
+            // Keep pushing towards the ledge while rising: scraping up the wall would stop the hop dead.
+            hopTicks--;
+            if (player.onGround()) {
+                hopTicks = 0;
+            } else {
+                Vec3 v = player.getDeltaMovement();
+                player.setDeltaMovement(hopDir.x * 0.3, v.y, hopDir.z * 0.3);
+            }
+        }
         GrappleHookEntity hook = BatmanHelper.isSuited(player) && !player.isPassenger() ? GrappleHookEntity.find(player) : null;
         if (hook == null || !hook.isAttached() || hook.getId() == ignoredHookId) {
             if (pulling && hook == null && lastDist < 3.5) {
@@ -84,7 +97,9 @@ public final class GrappleController {
     private static void hop(LocalPlayer player, Vec3 to) {
         Vec3 flat = new Vec3(to.x, 0, to.z);
         Vec3 forward = flat.lengthSqr() > 1.0E-4 ? flat.normalize() : Vec3.directionFromRotation(0, player.getYRot());
-        player.setDeltaMovement(forward.scale(0.35).add(0, 0.8, 0));
+        player.setDeltaMovement(forward.scale(0.3).add(0, 0.8, 0));
+        hopDir = forward;
+        hopTicks = 14;
         player.resetFallDistance();
     }
 
