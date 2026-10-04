@@ -1520,6 +1520,8 @@ public final class ClientScript {
     /** v1.12: gradual sprint swimming and its music, the shark's lunge and bite, the creatures of Atlantis and the guide. */
     private static void buildMountsSteps() {
         step(60, () -> {
+            mc().options.tutorialStep = net.minecraft.client.tutorial.TutorialSteps.NONE;
+            mc().getTutorial().setStep(net.minecraft.client.tutorial.TutorialSteps.NONE);
             command("time set 6000");
             command("weather clear");
             command("gamerule advance_time false");
@@ -1543,9 +1545,9 @@ public final class ClientScript {
             camera(CameraType.THIRD_PERSON_BACK);
             key(mc().options.keyUp, true);
         });
-        step(30, () -> logSwim("cruise"));
+        step(15, () -> logSwim("cruise"));
         step(1, () -> key(mc().options.keySprint, true));
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < 10; i++) {
             final int n = i;
             step(5, () -> logSwim("ramp t=" + (n + 1) * 5));
             if (i == 5) step(0, () -> shot("mt01_swim_ramp"));
@@ -1563,7 +1565,7 @@ public final class ClientScript {
         step(10, () -> aquaPower(com.danrod505.greenlantern.aquaman.AquaPower.SHARK));
         step(20, () -> {
             camera(CameraType.THIRD_PERSON_FRONT);
-            look(0, 10);
+            look(0, -8);
             mc().options.hideGui = true;
         });
         step(10, () -> clean("mt03_shark_front_idle"));
@@ -1589,7 +1591,11 @@ public final class ClientScript {
                 sp.teleportTo(shark.getX() + 6.5, shark.getY() + 0.3, shark.getZ() + 1.5);
             }
         }));
-        step(3, () -> look(90, 5));
+        step(3, () -> {
+            look(90, 5);
+            camera(CameraType.FIRST_PERSON);
+            mc().options.hideGui = true;
+        });
         step(2, () -> aquaMobs(EntityType.DROWNED, -4, 3, 22, 2, true));
         watch(() -> mc().level.getEntitiesOfClass(com.danrod505.greenlantern.entity.GreatWhiteSharkEntity.class, mc().player.getBoundingBox().inflate(30))
                 .stream().anyMatch(s -> s.lungeProgress(0) > 0.15F && s.lungeProgress(0) < 0.35F), "mt04e_shark_side_lunge");
@@ -1601,17 +1607,17 @@ public final class ClientScript {
         // 3. The creatures of Atlantis, posed: seahorses (8 colors, 3 patterns), dolphins (6 colors), the manta.
         step(10, () -> {
             for (int i = 0; i < 8; i++) {
-                pose(com.danrod505.greenlantern.registry.ModEntities.GIANT_SEAHORSE, -12.5 + i * 3.6, 3, 24.5, 180, i * 3 + i % 3, true);
+                pose(com.danrod505.greenlantern.registry.ModEntities.GIANT_SEAHORSE, -15.75 + i * 4.5, 2, 26.5, 180, i * 3 + i % 3, true);
             }
         });
-        step(20, () -> aquaTeleport(0.5, 4, 13.5, 0, 0));
+        step(20, () -> aquaTeleport(0.5, 5, 5.5, 0, 3));
         step(20, () -> clean("mt05_seahorses"));
-        step(2, () -> aquaTeleport(-8.5, 4.5, 19.5, 0, 5));
+        step(2, () -> aquaTeleport(-9.5, 4.5, 19.5, 0, 5));
         step(10, () -> clean("mt05b_seahorses_close"));
         step(2, () -> {
             clearPosed();
             for (int i = 0; i < 6; i++) {
-                pose(com.danrod505.greenlantern.registry.ModEntities.ATLANTEAN_DOLPHIN, -9.5 + i * 3.8, 3 + (i % 2) * 2, 24.5, 90, i, true);
+                pose(com.danrod505.greenlantern.registry.ModEntities.ATLANTEAN_DOLPHIN, -9.5 + i * 3.8, 4 + (i % 2) * 2, 24.5, 90, i, true);
             }
         });
         step(20, () -> clean("mt06_dolphins"));
@@ -1666,7 +1672,10 @@ public final class ClientScript {
             aquaTeleport(0.5, 4, 40.5, 0, 5);
         });
         step(10, () -> rideNearest(com.danrod505.greenlantern.entity.GiantSeahorseEntity.class));
-        step(10, () -> camera(CameraType.THIRD_PERSON_FRONT));
+        step(10, () -> {
+            camera(CameraType.THIRD_PERSON_FRONT);
+            mc().options.hideGui = true;
+        });
         step(5, () -> clean("mt10_seahorse_ride_front"));
         step(2, () -> {
             mc().options.hideGui = false;
@@ -1702,7 +1711,16 @@ public final class ClientScript {
             logSwim("dolphin");
             shot("mt11_dolphin_race");
         });
-        step(2, () -> look(0, -45));
+        step(2, () -> {
+            camera(CameraType.THIRD_PERSON_FRONT);
+            mc().options.hideGui = true;
+        });
+        step(3, () -> clean("mt11c_dolphin_front"));
+        step(2, () -> {
+            camera(CameraType.THIRD_PERSON_BACK);
+            mc().options.hideGui = false;
+            look(0, -45);
+        });
         watch(60, () -> mc().player.getVehicle() != null && !mc().player.getVehicle().isInWater()
                 && mc().player.getVehicle().getY() > aquaBase.getY() + 13.0, "mt11b_dolphin_leap");
         step(30, () -> {

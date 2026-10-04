@@ -11,7 +11,7 @@ import net.minecraft.util.Mth;
  * body follows only part of the swim pitch, so the rider on its back stays in place.
  */
 public class SeahorseRenderer extends MountRenderer<GiantSeahorseEntity> {
-    public static final float SCALE = 0.8F;
+    public static final float SCALE = 1.35F;
     private static final Identifier[] TEXTURES = new Identifier[GiantSeahorseEntity.COLORS * GiantSeahorseEntity.PATTERNS];
 
     static {
@@ -19,7 +19,7 @@ public class SeahorseRenderer extends MountRenderer<GiantSeahorseEntity> {
     }
 
     public SeahorseRenderer(EntityRendererProvider.Context context) {
-        super(context, new SeahorseModel(context.bakeLayer(SeahorseModel.LAYER)), 1.35F, 0.3F, 0.8F);
+        super(context, new SeahorseModel(context.bakeLayer(SeahorseModel.LAYER)), 2.28F, 0.3F, 1.2F);
     }
 
     @Override

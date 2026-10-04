@@ -27,7 +27,7 @@ import org.lwjgl.glfw.GLFW;
  * subsections show one crafting grid per page.
  */
 public class GuideScreen extends Screen {
-    private static final int SIDEBAR = 116;
+    private static final int SIDEBAR = 128;
     private static final int LINE = 10;
     private static final int SLOT = 18;
     private static final int SECTION_ROW = 17;
@@ -178,7 +178,7 @@ public class GuideScreen extends Screen {
 
     @Override
     protected void init() {
-        w = Math.min(360, width - 16);
+        w = Math.min(380, width - 16);
         h = Math.min(250, height - 16);
         x0 = (width - w) / 2;
         y0 = (height - h) / 2;
@@ -399,6 +399,25 @@ public class GuideScreen extends Screen {
 
     // ---- rendering -------------------------------------------------------------------------------
 
+    /** Draws one line of the sidebar: shrinks a long name a little to fit, and only then cuts it with "…". */
+    private void drawFitted(GuiGraphics graphics, Component text, boolean bold, int x, int y, int maxWidth, int color) {
+        String plain = text.getString();
+        Component line = bold ? Component.literal(plain).withStyle(ChatFormatting.BOLD) : Component.literal(plain);
+        int width = font.width(line);
+        float k = width <= maxWidth ? 1.0F : Math.max(0.75F, maxWidth / (float) width);
+        if (width * k > maxWidth) {
+            int room = (int) (maxWidth / k) - font.width("…");
+            String cut = font.plainSubstrByWidth(plain, bold ? room * 6 / 7 : room).stripTrailing() + "…";
+            line = bold ? Component.literal(cut).withStyle(ChatFormatting.BOLD) : Component.literal(cut);
+        }
+        graphics.pose().pushMatrix();
+        graphics.pose().translate(x, y + (8 - 8 * k) / 2);
+        graphics.pose().scale(k, k);
+        graphics.drawString(font, line, 0, 0, color, false);
+        graphics.pose().popMatrix();
+    }
+
+
     @Override
     public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         renderBlurredBackground(graphics);
@@ -442,9 +461,7 @@ public class GuideScreen extends Screen {
                 graphics.pose().scale(k, k);
                 graphics.renderItem(s.icon().get(), 0, 0);
                 graphics.pose().popMatrix();
-                Component name = s.title().copy().withStyle(ChatFormatting.BOLD);
-                List<FormattedCharSequence> lines = font.split(name, SIDEBAR - 34);
-                graphics.drawString(font, lines.getFirst(), x0 + 28, row.y() + (row.height() - 8) / 2, open ? s.accent() : TEXT, false);
+                drawFitted(graphics, s.title(), true, x0 + 28, row.y() + (row.height() - 8) / 2, SIDEBAR - 32, open ? s.accent() : TEXT);
             } else {
                 // Subsection of the open section, indented.
                 Entry e = s.entries().get(row.entry());
@@ -455,9 +472,8 @@ public class GuideScreen extends Screen {
                 } else if (isHovered) {
                     graphics.fill(x0 + 14, row.y(), x0 + SIDEBAR - 4, row.y() + row.height(), 0x25FFFFFF);
                 }
-                List<FormattedCharSequence> lines = font.split(e.title(), SIDEBAR - 26);
-                graphics.drawString(font, lines.getFirst(), x0 + 19, row.y() + (row.height() - 8) / 2 + 1,
-                        selected ? 0xFFFFFFFF : MUTED, false);
+                drawFitted(graphics, e.title(), false, x0 + 19, row.y() + (row.height() - 8) / 2 + 1, SIDEBAR - 24,
+                        selected ? 0xFFFFFFFF : MUTED);
             }
         }
 

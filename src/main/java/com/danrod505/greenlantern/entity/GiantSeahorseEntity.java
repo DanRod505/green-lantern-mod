@@ -17,8 +17,8 @@ import net.minecraft.world.phys.Vec3;
  * it kicks with its tail in a swirl of bubbles; on land it hops along on its curled tail.
  */
 public class GiantSeahorseEntity extends AtlanteanMountEntity {
-    public static final float WIDTH = 1.2F;
-    public static final float HEIGHT = 2.9F;
+    public static final float WIDTH = 1.8F;
+    public static final float HEIGHT = 4.6F;
     public static final int COLORS = 8;
     public static final int PATTERNS = 3;
     private boolean kicked;
@@ -67,7 +67,7 @@ public class GiantSeahorseEntity extends AtlanteanMountEntity {
 
     @Override
     protected Vec3 seat() {
-        return new Vec3(0.0, 1.85, -0.2);
+        return new Vec3(0.0, 3.3, -0.34);
     }
 
     @Override
