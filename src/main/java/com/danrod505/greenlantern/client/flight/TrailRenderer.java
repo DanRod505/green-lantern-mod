@@ -147,7 +147,7 @@ public class TrailRenderer extends EntityRenderer<FlightTrailEntity, TrailRender
             int n = points.size();
             if (n < 2) continue;
             List<float[]> attrs = new ArrayList<>();
-            for (int i = 0; i < n; i++) attrs.add(new float[] {0.5F, 1.0F - ages.get(i)});
+            for (int i = 0; i < n; i++) attrs.add(new float[] {0.8F, 1.0F - ages.get(i)});
             float[] wake = build(points, attrs, cam, origin);
             if (wake != null) state.ribbons.add(new Ribbon(wake, n, KIND_AQUA_WAKE));
 
@@ -292,8 +292,8 @@ public class TrailRenderer extends EntityRenderer<FlightTrailEntity, TrailRender
                         emit(vc, pose, ribbon, 3.0F, 0.45F, 0xFFFFB800);
                         emit(vc, pose, ribbon, 1.0F, 1.0F, 0xFFFFF8C8);
                     } else if (ribbon.kind == KIND_AQUA_WAKE) {
-                        emit(vc, pose, ribbon, 1.7F, 0.22F, 0xFF0A6E78);
-                        emit(vc, pose, ribbon, 0.8F, 0.45F, 0xFF3CD2C8);
+                        emit(vc, pose, ribbon, 1.7F, 0.38F, 0xFF0F8C96);
+                        emit(vc, pose, ribbon, 0.8F, 0.7F, 0xFF5AE6DC);
                     } else if (ribbon.kind == KIND_AQUA_SPIRAL) {
                         emit(vc, pose, ribbon, 2.6F, 0.35F, 0xFF7FF0E6);
                         emit(vc, pose, ribbon, 1.0F, 0.9F, 0xFFE8FFFC);

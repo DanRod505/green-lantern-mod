@@ -586,7 +586,12 @@ public final class ClientScript {
             camera(CameraType.THIRD_PERSON_FRONT);
             look(0, 10);
         });
-        step(6, () -> clean("aq00_suit_front"));
+        step(20, () -> {
+            camera(CameraType.THIRD_PERSON_FRONT);
+            mc().gui.getChat().clearMessages(false);
+            mc().options.hideGui = true;
+        });
+        step(10, () -> clean("aq00_suit_front"));
         step(2, () -> camera(CameraType.THIRD_PERSON_BACK));
         step(4, () -> clean("aq00b_suit_back"));
         step(2, () -> {
@@ -604,11 +609,12 @@ public final class ClientScript {
         step(2, () -> camera(CameraType.FIRST_PERSON));
         step(4, () -> shot("aq03c_swim_first_person"));
         step(2, () -> camera(CameraType.THIRD_PERSON_BACK));
-        // Turning and diving: the trail curves through the water.
-        step(4, () -> look(-50, 30));
-        step(12, () -> shot("aq03d_swim_dive"));
-        step(4, () -> look(-90, -10));
-        step(16, () -> shot("aq03e_swim_turn"));
+        // Turning and diving: the trail curves through the water (back at the start of the pool first).
+        step(2, () -> aquaTeleport(0.5, 7, 8.5, 0, 0));
+        step(6, () -> look(-40, 25));
+        step(8, () -> shot("aq03d_swim_dive"));
+        step(4, () -> look(-80, -10));
+        step(8, () -> shot("aq03e_swim_turn"));
         // Leap: race up through the surface.
         step(4, () -> {
             aquaTeleport(0.5, 4, 40.5, 0, -55);
@@ -634,9 +640,11 @@ public final class ClientScript {
         step(6, () -> shot("aq05b_trident_first_person"));
         step(2, () -> camera(CameraType.THIRD_PERSON_BACK));
         step(4, () -> aquaMobs(EntityType.HUSK, 30.5, 0, 32.5, 3, true));
-        step(10, () -> server(sp -> com.danrod505.greenlantern.item.AquaTridentItem.throwTrident(sp, sp.getMainHandItem())));
+        step(4, () -> camera(CameraType.FIRST_PERSON));
+        step(6, () -> server(sp -> com.danrod505.greenlantern.item.AquaTridentItem.throwTrident(sp, sp.getMainHandItem())));
         step(2, () -> shot("aq06_trident_thrown"));
         step(2, () -> shot("aq06b_trident_flight"));
+        step(1, () -> camera(CameraType.THIRD_PERSON_FRONT));
         watch(60, () -> {
             var list = mc().level.getEntitiesOfClass(com.danrod505.greenlantern.entity.AquaTridentEntity.class, mc().player.getBoundingBox().inflate(40));
             return !list.isEmpty() && list.getFirst().isReturning() && list.getFirst().distanceTo(mc().player) < 6;
@@ -647,7 +655,7 @@ public final class ClientScript {
         step(4, () -> shot("aq06d_trident_caught"));
         step(2, () -> camera(CameraType.THIRD_PERSON_BACK));
         // The great white shark.
-        step(10, () -> aquaTeleport(0.5, 5, 50.5, 0, 10));
+        step(10, () -> aquaTeleport(0.5, 5, 12.5, 0, 10));
         step(10, () -> aquaPower(com.danrod505.greenlantern.aquaman.AquaPower.SHARK));
         step(20, () -> shot("aq07_shark_ride"));
         step(2, () -> camera(CameraType.THIRD_PERSON_FRONT));
@@ -687,7 +695,10 @@ public final class ClientScript {
         step(2, () -> mc().options.hideGui = false);
         // The call of the sea.
         step(4, () -> {
-            aquaPower(com.danrod505.greenlantern.aquaman.AquaPower.SHARK); // away with the shark
+            server(sp -> {
+                var shark = com.danrod505.greenlantern.entity.GreatWhiteSharkEntity.find(sp);
+                if (shark != null) shark.swimAway();
+            });
             aquaTeleport(0.5, 4, 80.5, 0, 5);
         });
         step(4, () -> {
