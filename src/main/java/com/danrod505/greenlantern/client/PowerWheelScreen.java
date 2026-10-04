@@ -40,7 +40,7 @@ public class PowerWheelScreen extends Screen {
     public static final int ICONS_W = 64;
     public static final int ICONS_H = 16;
     public static final Identifier AQUA_ICONS = GreenLantern.id("textures/gui/aquaman_powers.png");
-    public static final int AQUA_ICONS_W = 64;
+    public static final int AQUA_ICONS_W = 80;
 
     /** Everything that differs between the heroes' wheels. */
     private record Powers(WheelTextures.Theme theme, Identifier icons, int iconsW, Function<Player, ItemStack> item,

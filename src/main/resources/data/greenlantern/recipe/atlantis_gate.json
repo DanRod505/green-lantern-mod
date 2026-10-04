@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "GCG",
+    "CHC",
+    "GEG"
+  ],
+  "key": {
+    "G": "minecraft:gold_ingot",
+    "C": "minecraft:prismarine_crystals",
+    "H": "minecraft:heart_of_the_sea",
+    "E": "minecraft:ender_pearl"
+  },
+  "result": {
+    "id": "greenlantern:atlantis_gate",
+    "count": 1
+  }
+}

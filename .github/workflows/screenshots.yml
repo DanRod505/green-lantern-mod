@@ -6,10 +6,10 @@ on:
   workflow_dispatch:
     inputs:
       script:
-        description: 'Client script to run (default, wheel, flight, mecha, oa, flash, aquaman)'
+        description: 'Client script to run (default, wheel, flight, mecha, oa, flash, aquaman, atlantis)'
         default: 'oa'
   push:
-    branches: ['claude/mecha-*', 'claude/oa-*', 'claude/flash-*', 'claude/aquaman-*']
+    branches: ['claude/mecha-*', 'claude/oa-*', 'claude/flash-*', 'claude/aquaman-*', 'claude/atlantis-*']
 
 jobs:
   screenshots:
@@ -33,7 +33,7 @@ jobs:
       - name: Run the scripted client
         timeout-minutes: 25
         env:
-          GL_CLIENT_SCRIPT: ${{ github.event.inputs.script || (startsWith(github.ref_name, 'claude/aquaman-') && 'aquaman') || (startsWith(github.ref_name, 'claude/flash-') && 'flash') || (startsWith(github.ref_name, 'claude/oa-') && 'oa') || 'mecha' }}
+          GL_CLIENT_SCRIPT: ${{ github.event.inputs.script || (startsWith(github.ref_name, 'claude/atlantis-') && 'atlantis') || (startsWith(github.ref_name, 'claude/aquaman-') && 'aquaman') || (startsWith(github.ref_name, 'claude/flash-') && 'flash') || (startsWith(github.ref_name, 'claude/oa-') && 'oa') || 'mecha' }}
           LIBGL_ALWAYS_SOFTWARE: '1'
         run: xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew runClient -Pgametests --no-configuration-cache --stacktrace
 

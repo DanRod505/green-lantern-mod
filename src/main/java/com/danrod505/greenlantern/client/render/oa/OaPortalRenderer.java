@@ -2,6 +2,7 @@ package com.danrod505.greenlantern.client.render.oa;
 
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.render.HardLight;
+import com.danrod505.greenlantern.entity.AtlantisPortalEntity;
 import com.danrod505.greenlantern.entity.OaPortalEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -17,9 +18,10 @@ import net.minecraft.util.Mth;
 
 /**
  * The portal: an upright oval ring of hard light around a swirling vortex. Portals on Oa (leading
- * home) swirl the other way and shine paler.
+ * home) swirl the other way and shine paler. Atlantean portals are the same shape in the colours
+ * of the deep sea: a blue whirlpool with a ring of foam.
  */
-public class OaPortalRenderer extends EntityRenderer<OaPortalEntity, OaPortalRenderer.State> {
+public class OaPortalRenderer<T extends OaPortalEntity> extends EntityRenderer<T, OaPortalRenderer.State> {
     private static final Identifier SWIRL = GreenLantern.id("textures/entity/oa/portal_swirl.png");
     private static final int SEGMENTS = 48;
 
@@ -33,15 +35,16 @@ public class OaPortalRenderer extends EntityRenderer<OaPortalEntity, OaPortalRen
     }
 
     @Override
-    public void extractRenderState(OaPortalEntity portal, State state, float partialTick) {
+    public void extractRenderState(T portal, State state, float partialTick) {
         super.extractRenderState(portal, state, partialTick);
         state.open = portal.openness(partialTick);
         state.yaw = portal.getYRot();
         state.home = portal.leadsHome();
+        state.atlantis = portal instanceof AtlantisPortalEntity;
     }
 
     @Override
-    protected int getBlockLightLevel(OaPortalEntity entity, BlockPos pos) {
+    protected int getBlockLightLevel(T entity, BlockPos pos) {
         return 15;
     }
 
@@ -62,20 +65,31 @@ public class OaPortalRenderer extends EntityRenderer<OaPortalEntity, OaPortalRen
 
         // Vortex: two counter-rotating layers.
         collector.submitCustomGeometry(poseStack, HardLight.type(SWIRL), (pose, vc) -> {
-            int deep = state.home ? color(0.75F * pulse, 150, 255, 190) : color(0.85F * pulse, 40, 230, 90);
+            int deep;
+            int foam;
+            if (state.atlantis) {
+                deep = state.home ? color(0.8F * pulse, 60, 200, 255) : color(0.9F * pulse, 20, 110, 255);
+                foam = color(0.5F, 170, 245, 255);
+            } else {
+                deep = state.home ? color(0.75F * pulse, 150, 255, 190) : color(0.85F * pulse, 40, 230, 90);
+                foam = color(0.45F, 200, 255, 215);
+            }
             disc(vc, pose, rx * 0.97F, ry * 0.97F, 0.0F, age * 0.05F * spin, deep, 1.0F);
-            disc(vc, pose, rx * 0.97F, ry * 0.97F, 0.01F, -age * 0.08F * spin, color(0.45F, 200, 255, 215), 0.7F);
+            disc(vc, pose, rx * 0.97F, ry * 0.97F, 0.01F, -age * 0.08F * spin, foam, 0.7F);
         });
         // Rim: a thick oval band with bright faces and a faint outer glow.
         collector.submitCustomGeometry(poseStack, HardLight.type(HardLight.PANEL), (pose, vc) -> {
-            ring(vc, pose, rx, ry, 0.22F, 0.12F, HardLight.color(0.9F, 0.35F * pulse));
-            ring(vc, pose, rx + 0.1F, ry + 0.1F, 0.42F, 0.16F, HardLight.color(0.2F, 0.0F));
+            int rim = state.atlantis ? color(0.9F, 120 + (int) (60 * pulse), 230, 255) : HardLight.color(0.9F, 0.35F * pulse);
+            int halo = state.atlantis ? color(0.2F, 40, 160, 255) : HardLight.color(0.2F, 0.0F);
+            ring(vc, pose, rx, ry, 0.22F, 0.12F, rim);
+            ring(vc, pose, rx + 0.1F, ry + 0.1F, 0.42F, 0.16F, halo);
             // Sparks orbiting the rim.
             for (int i = 0; i < 8; i++) {
                 float a = age * 0.12F * spin + i * Mth.TWO_PI / 8;
                 float x = Mth.cos(a) * (rx + 0.05F);
                 float y = Mth.sin(a) * (ry + 0.05F);
-                HardLight.box(vc, pose, x - 0.07F, y - 0.07F, -0.07F, x + 0.07F, y + 0.07F, 0.07F, HardLight.color(1.0F, 1.0F));
+                HardLight.box(vc, pose, x - 0.07F, y - 0.07F, -0.07F, x + 0.07F, y + 0.07F, 0.07F,
+                        state.atlantis ? color(1.0F, 230, 250, 255) : HardLight.color(1.0F, 1.0F));
             }
         });
         poseStack.popPose();
@@ -129,5 +143,6 @@ public class OaPortalRenderer extends EntityRenderer<OaPortalEntity, OaPortalRen
         public float open;
         public float yaw;
         public boolean home;
+        public boolean atlantis;
     }
 }

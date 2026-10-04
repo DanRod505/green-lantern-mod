@@ -20,7 +20,9 @@ public enum AquaPower {
     /** A great white shark answers: ride it through the water, it bites your enemies. */
     SHARK("shark"),
     /** The creatures of the sea nearby follow and defend you for a while. */
-    SEA_CALL("sea_call");
+    SEA_CALL("sea_call"),
+    /** A whirlpool portal to Atlantis; opened in Atlantis, it leads back to where you came from. */
+    ATLANTIS_PORTAL("atlantis_portal");
 
     private static final AquaPower[] VALUES = values();
 
@@ -52,6 +54,7 @@ public enum AquaPower {
             case TRIDENT -> GLConfig.TRIDENT_COST.get();
             case SHARK -> GLConfig.SHARK_COST.get();
             case SEA_CALL -> GLConfig.SEA_CALL_COST.get();
+            case ATLANTIS_PORTAL -> GLConfig.ATLANTIS_PORTAL_COST.get();
         };
     }
 

@@ -3,7 +3,16 @@
 > *"No dia mais claro, na noite mais densa, o mal sucumbirá ante a minha presença!"*
 
 Mod de heróis do **Universo DC** para **Minecraft Java 1.21.11** com **Forge 61.2.0** (compilado com **Java 25**).
-Começou como o mod do Lanterna Verde e agora traz também **o Flash** (v1.7.0) e **o Aquaman** (v1.8.0). O id do mod continua `greenlantern`, então mundos e configurações antigas continuam funcionando.
+Começou como o mod do Lanterna Verde e agora traz também **o Flash** (v1.7.0) **o Aquaman** (v1.8.0) e **Atlântida** (v1.9.0). O id do mod continua `greenlantern`, então mundos e configurações antigas continuam funcionando.
+
+## Atlântida (novo na 1.9.0)
+
+* **A cidade submersa:** não é outra dimensão. Atlântida fica no fundo de um oceano profundo do mundo normal (escolhido pela semente do mundo, longe do spawn e dos monumentos oceânicos), numa cratera 50 blocos abaixo da superfície. É construída aos poucos na primeira vez que o mundo roda com o mod.
+* **O que tem lá:** palácio dourado em quatro andares com sala do trono e um farol no topo, oito torres com cúpulas de cobre, casas com cúpulas de vidro, estátuas do Rei com tridentes, obeliscos, jardins de coral com colunas de bolhas, muralha com portões e baús de tesouro.
+* **Os atlantes:** cidadãos nadam pela cidade e conversam com você (clique direito); a guarda real, de armadura de escamas e tridente, patrulha o palácio e a muralha e ataca monstros. Cardumes de peixes, golfinhos, tartarugas e lulas brilhantes vivem ao redor.
+* **Portal do Aquaman:** novo poder no menu radial (**R**, depois **V**). Abre um redemoinho que leva ao Pavilhão dos Portais, uma cúpula de vidro com ar no meio da cidade. Abrindo o portal dentro de Atlântida, ele leva de volta para onde você estava.
+* **Dispositivo de Atlântida (item):** abre o mesmo portal, ida e volta, para qualquer jogador, com qualquer traje ou sem traje.
+* **Respirador Atlante:** funciona de qualquer lugar do inventário (como um totem), então os heróis de traje (que não pode ser tirado) também usam. Guarda 8 minutos de ar, aparece no rosto e tem uma barra no HUD; recarrega fora d'água.
 
 ## O Aquaman (novo na 1.8.0)
 
@@ -155,6 +164,15 @@ Emblema Atlante
  P  G  P
  G  N  G       P = fragmento de prismarinho, G = barra de ouro, N = concha de náutilo
  P  G  P
+```
+
+```
+Dispositivo de Atlântida     Respirador Atlante
+ G  C  G                      S  G  S
+ C  H  C                      K  B  K
+ G  E  G                      .  S  .
+G = barra de ouro, C = cristais de prismarinho,     S = fragmento de prismarinho, G = barra de ouro,
+H = coração do mar, E = pérola do ender             K = alga, B = frasco de vidro
 ```
 
 Também estão na aba criativa **Heróis do Universo DC** (inclui os anéis já carregados).
