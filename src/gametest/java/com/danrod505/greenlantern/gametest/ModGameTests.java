@@ -853,23 +853,28 @@ public final class ModGameTests {
         ItemStack emblem = giveEmblem(player, 1000);
         AquamanSuit.summon(player);
         AquaPower.select(emblem, AquaPower.SHARK);
-        use(player);
-        GreatWhiteSharkEntity shark = GreatWhiteSharkEntity.find(player);
-        helper.assertTrue(shark != null, "a shark should be summoned");
-        helper.assertTrue(player.getVehicle() == shark, "Aquaman should ride the shark");
-        Vec3 mouth = shark.mouth();
-        Zombie zombie = EntityType.ZOMBIE.create(helper.getLevel(), net.minecraft.world.entity.EntitySpawnReason.COMMAND);
-        zombie.snapTo(mouth.x, mouth.y - 0.8, mouth.z, 180, 0);
-        zombie.setNoAi(true);
-        helper.getLevel().addFreshEntity(zombie);
-        float health = zombie.getHealth();
-        helper.assertTrue(shark.bite(), "the shark should bite the zombie in front of its jaws");
-        helper.assertTrue(zombie.getHealth() < health || zombie.isDeadOrDying(), "the bite should hurt");
-        AquamanServer.usePower(player, emblem, AquaPower.SHARK);
-        helper.assertTrue(shark.isRemoved(), "using the power again sends the shark away");
-        zombie.discard();
-        remove(player);
-        helper.succeed();
+        helper.startSequence()
+                .thenExecuteFor(3, player::doTick) // notice the water
+                .thenExecute(() -> {
+                    helper.assertTrue(player.isInWater(), "the player should be in the water");
+                    use(player);
+                    GreatWhiteSharkEntity shark = GreatWhiteSharkEntity.find(player);
+                    helper.assertTrue(shark != null, "a shark should be summoned");
+                    helper.assertTrue(player.getVehicle() == shark, "Aquaman should ride the shark");
+                    Vec3 mouth = shark.mouth();
+                    Zombie zombie = EntityType.ZOMBIE.create(helper.getLevel(), net.minecraft.world.entity.EntitySpawnReason.COMMAND);
+                    zombie.snapTo(mouth.x, mouth.y - 0.8, mouth.z, 180, 0);
+                    zombie.setNoAi(true);
+                    helper.getLevel().addFreshEntity(zombie);
+                    float health = zombie.getHealth();
+                    helper.assertTrue(shark.bite(), "the shark should bite the zombie in front of its jaws");
+                    helper.assertTrue(zombie.getHealth() < health || zombie.isDeadOrDying(), "the bite should hurt");
+                    AquamanServer.usePower(player, emblem, AquaPower.SHARK);
+                    helper.assertTrue(shark.isRemoved(), "using the power again sends the shark away");
+                    zombie.discard();
+                    remove(player);
+                })
+                .thenSucceed();
     }
 
     public static void aquamanSeaCall(GameTestHelper helper) {
@@ -882,11 +887,14 @@ public final class ModGameTests {
         helper.spawn(EntityType.SQUID, new Vec3(9.5, 3, 4.5));
         Zombie zombie = dummy(helper, 7.5, 2, 9.5);
         float health = zombie.getHealth();
-        use(player);
-        helper.assertTrue(SeaCall.isActive(player), "the call should be active");
-        int allies = SeaCall.allies(player);
-        helper.assertTrue(allies >= GLConfig.SEA_CALL_HELPERS.get(), "dolphins should make up the numbers, got " + allies);
         helper.startSequence()
+                .thenExecuteFor(3, player::doTick) // notice the water
+                .thenExecute(() -> {
+                    use(player);
+                    helper.assertTrue(SeaCall.isActive(player), "the call should be active");
+                    int allies = SeaCall.allies(player);
+                    helper.assertTrue(allies >= GLConfig.SEA_CALL_HELPERS.get(), "dolphins should make up the numbers, got " + allies);
+                })
                 .thenExecuteFor(120, player::doTick)
                 .thenExecute(() -> {
                     helper.assertTrue(zombie.getHealth() < health || zombie.isDeadOrDying(), "the sea creatures should attack the zombie");
