@@ -1252,9 +1252,11 @@ public final class ModGameTests {
         helper.assertTrue(BatDefenderEntity.findAll(player).size() == GLConfig.BAT_SWARM_COUNT.get(), "the whole swarm should come");
         helper.assertTrue(BatmanServer.isSwarmActive(player), "the swarm is active");
         helper.startSequence()
-                .thenWaitUntil(() -> helper.assertTrue(zombie.getHealth() < health || zombie.isDeadOrDying(), "the bats should attack the zombie"))
+                // A bat's bite both hurts and blinds (a zombie in the sun can lose health on its own, so wait for the blindness).
+                .thenWaitUntil(() -> helper.assertTrue(zombie.isDeadOrDying() || zombie.hasEffect(net.minecraft.world.effect.MobEffects.BLINDNESS),
+                        "the bats should attack and blind the zombie"))
                 .thenExecute(() -> {
-                    helper.assertTrue(zombie.isDeadOrDying() || zombie.hasEffect(net.minecraft.world.effect.MobEffects.BLINDNESS), "the bats blind their prey");
+                    helper.assertTrue(zombie.getHealth() < health || zombie.isDeadOrDying(), "the bats' attack should hurt");
                     BatmanServer.usePower(player, belt, BatPower.BAT_SWARM);
                     helper.assertFalse(BatmanServer.isSwarmActive(player), "using the gadget again scatters the bats");
                 })
