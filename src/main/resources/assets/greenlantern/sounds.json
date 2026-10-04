@@ -749,5 +749,120 @@
         "attenuation_distance": 48
       }
     ]
+  },
+  "swim_theme_base": {
+    "sounds": [
+      {
+        "name": "greenlantern:music/swim_theme_base",
+        "stream": true
+      }
+    ]
+  },
+  "swim_theme_peak": {
+    "sounds": [
+      {
+        "name": "greenlantern:music/swim_theme_peak",
+        "stream": true
+      }
+    ]
+  },
+  "shark_lunge": {
+    "subtitle": "subtitles.greenlantern.shark_lunge",
+    "sounds": [
+      {
+        "name": "greenlantern:shark_lunge",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "manta_ambient": {
+    "subtitle": "subtitles.greenlantern.manta_ambient",
+    "sounds": [
+      {
+        "name": "greenlantern:manta_ambient",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "manta_flap": {
+    "subtitle": "subtitles.greenlantern.manta_flap",
+    "sounds": [
+      {
+        "name": "greenlantern:manta_flap",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "manta_hurt": {
+    "subtitle": "subtitles.greenlantern.manta_hurt",
+    "sounds": [
+      {
+        "name": "greenlantern:manta_hurt",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "seahorse_ambient": {
+    "subtitle": "subtitles.greenlantern.seahorse_ambient",
+    "sounds": [
+      {
+        "name": "greenlantern:seahorse_ambient",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "seahorse_hurt": {
+    "subtitle": "subtitles.greenlantern.seahorse_hurt",
+    "sounds": [
+      {
+        "name": "greenlantern:seahorse_hurt",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "seahorse_dash": {
+    "subtitle": "subtitles.greenlantern.seahorse_dash",
+    "sounds": [
+      {
+        "name": "greenlantern:seahorse_dash",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "atlantean_dolphin_ambient": {
+    "subtitle": "subtitles.greenlantern.atlantean_dolphin_ambient",
+    "sounds": [
+      {
+        "name": "greenlantern:atlantean_dolphin_ambient",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "atlantean_dolphin_hurt": {
+    "subtitle": "subtitles.greenlantern.atlantean_dolphin_hurt",
+    "sounds": [
+      {
+        "name": "greenlantern:atlantean_dolphin_hurt",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "atlantean_dolphin_leap": {
+    "subtitle": "subtitles.greenlantern.atlantean_dolphin_leap",
+    "sounds": [
+      {
+        "name": "greenlantern:atlantean_dolphin_leap",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "atlantean_mount_saddle": {
+    "subtitle": "subtitles.greenlantern.atlantean_mount_saddle",
+    "sounds": [
+      {
+        "name": "greenlantern:atlantean_mount_saddle",
+        "attenuation_distance": 16
+      }
+    ]
   }
 }

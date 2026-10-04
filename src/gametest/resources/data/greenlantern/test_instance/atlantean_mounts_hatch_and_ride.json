@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:function",
+  "function": "greenlantern:atlantean_mounts_hatch_and_ride",
+  "environment": "minecraft:default",
+  "structure": "greenlantern:arena",
+  "max_ticks": 400,
+  "required": true
+}

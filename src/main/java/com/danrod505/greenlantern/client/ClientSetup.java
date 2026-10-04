@@ -125,6 +125,9 @@ public final class ClientSetup {
         event.registerEntityRenderer(ModEntities.KRAKEN.get(), com.danrod505.greenlantern.client.render.aqua.KrakenRenderer::new);
         event.registerEntityRenderer(ModEntities.ATLANTIS_PORTAL.get(), com.danrod505.greenlantern.client.render.oa.OaPortalRenderer::new);
         event.registerEntityRenderer(ModEntities.ATLANTEAN.get(), com.danrod505.greenlantern.client.render.aqua.AtlanteanRenderer::new);
+        event.registerEntityRenderer(ModEntities.MANTA_RAY.get(), com.danrod505.greenlantern.client.render.aqua.MantaRayRenderer::new);
+        event.registerEntityRenderer(ModEntities.GIANT_SEAHORSE.get(), com.danrod505.greenlantern.client.render.aqua.SeahorseRenderer::new);
+        event.registerEntityRenderer(ModEntities.ATLANTEAN_DOLPHIN.get(), com.danrod505.greenlantern.client.render.aqua.AtlanteanDolphinRenderer::new);
         event.registerEntityRenderer(ModEntities.BATARANG.get(), com.danrod505.greenlantern.client.render.batman.BatarangRenderer::new);
         event.registerEntityRenderer(ModEntities.GRAPPLE_HOOK.get(), com.danrod505.greenlantern.client.render.batman.GrappleHookRenderer::new);
         event.registerEntityRenderer(ModEntities.BAT_DEFENDER.get(), com.danrod505.greenlantern.client.render.batman.BatDefenderRenderer::new);
@@ -148,6 +151,9 @@ public final class ClientSetup {
         event.registerLayerDefinition(com.danrod505.greenlantern.client.render.oa.OaNpcModel.LAYER, com.danrod505.greenlantern.client.render.oa.OaNpcModel::createLayer);
         event.registerLayerDefinition(com.danrod505.greenlantern.client.render.aqua.SharkModel.LAYER, com.danrod505.greenlantern.client.render.aqua.SharkModel::createLayer);
         event.registerLayerDefinition(com.danrod505.greenlantern.client.render.aqua.KrakenModel.LAYER, com.danrod505.greenlantern.client.render.aqua.KrakenModel::createLayer);
+        event.registerLayerDefinition(com.danrod505.greenlantern.client.render.aqua.MantaRayModel.LAYER, com.danrod505.greenlantern.client.render.aqua.MantaRayModel::createLayer);
+        event.registerLayerDefinition(com.danrod505.greenlantern.client.render.aqua.SeahorseModel.LAYER, com.danrod505.greenlantern.client.render.aqua.SeahorseModel::createLayer);
+        event.registerLayerDefinition(com.danrod505.greenlantern.client.render.aqua.AtlanteanDolphinModel.LAYER, com.danrod505.greenlantern.client.render.aqua.AtlanteanDolphinModel::createLayer);
     }
 
     private static void onAddLayers(EntityRenderersEvent.AddLayers event) {

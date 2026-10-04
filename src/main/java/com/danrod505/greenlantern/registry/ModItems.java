@@ -94,6 +94,18 @@ public final class ModItems {
                     .stacksTo(1)
                     .rarity(Rarity.UNCOMMON)));
 
+    // Eggs of the sea creatures of Atlantis (they hatch in the water, or on the block clicked).
+    public static final RegistryObject<com.danrod505.greenlantern.item.AtlanteanEggItem> MANTA_RAY_EGG = egg("manta_ray_spawn_egg", ModEntities.MANTA_RAY);
+    public static final RegistryObject<com.danrod505.greenlantern.item.AtlanteanEggItem> GIANT_SEAHORSE_EGG = egg("giant_seahorse_spawn_egg", ModEntities.GIANT_SEAHORSE);
+    public static final RegistryObject<com.danrod505.greenlantern.item.AtlanteanEggItem> ATLANTEAN_DOLPHIN_EGG = egg("atlantean_dolphin_spawn_egg", ModEntities.ATLANTEAN_DOLPHIN);
+
+    private static RegistryObject<com.danrod505.greenlantern.item.AtlanteanEggItem> egg(String name,
+            java.util.function.Supplier<? extends net.minecraft.world.entity.EntityType<? extends com.danrod505.greenlantern.entity.AtlanteanMountEntity>> type) {
+        return ITEMS.register(name, () -> new com.danrod505.greenlantern.item.AtlanteanEggItem(type, new Item.Properties()
+                .setId(ITEMS.key(name))
+                .rarity(Rarity.UNCOMMON)));
+    }
+
     // ---- Batman ---------------------------------------------------------------------------------
 
     /** The Utility Belt: the batsuit is folded inside it, and its power cells run the gadgets. */

@@ -105,6 +105,19 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> BATMOBILE_BOOST = register("batmobile_boost");
     public static final RegistryObject<SoundEvent> BATMOBILE_MISSILE = register("batmobile_missile");
     public static final RegistryObject<SoundEvent> SEA_CALL = register("sea_call");
+    public static final RegistryObject<SoundEvent> SWIM_THEME_BASE = register("swim_theme_base");
+    public static final RegistryObject<SoundEvent> SWIM_THEME_PEAK = register("swim_theme_peak");
+    public static final RegistryObject<SoundEvent> SHARK_LUNGE = register("shark_lunge");
+    public static final RegistryObject<SoundEvent> MANTA_AMBIENT = register("manta_ambient");
+    public static final RegistryObject<SoundEvent> MANTA_FLAP = register("manta_flap");
+    public static final RegistryObject<SoundEvent> MANTA_HURT = register("manta_hurt");
+    public static final RegistryObject<SoundEvent> SEAHORSE_AMBIENT = register("seahorse_ambient");
+    public static final RegistryObject<SoundEvent> SEAHORSE_HURT = register("seahorse_hurt");
+    public static final RegistryObject<SoundEvent> SEAHORSE_DASH = register("seahorse_dash");
+    public static final RegistryObject<SoundEvent> ATLANTEAN_DOLPHIN_AMBIENT = register("atlantean_dolphin_ambient");
+    public static final RegistryObject<SoundEvent> ATLANTEAN_DOLPHIN_HURT = register("atlantean_dolphin_hurt");
+    public static final RegistryObject<SoundEvent> ATLANTEAN_DOLPHIN_LEAP = register("atlantean_dolphin_leap");
+    public static final RegistryObject<SoundEvent> ATLANTEAN_MOUNT_SADDLE = register("atlantean_mount_saddle");
 
     private static RegistryObject<SoundEvent> register(String name) {
         return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(GreenLantern.id(name)));

@@ -255,7 +255,7 @@ public final class GLConfig {
         SEA_FORCE_REGEN_LAND = BUILDER.comment("Power of the Seas regained per second on dry land.").defineInRange("seaForceRegenOnLand", 3, 0, 100_000);
         SWIM_SPEED = BUILDER.comment("Swimming speed (blocks/tick) of Aquaman underwater (vanilla swimming is about 0.2).").defineInRange("swimSpeed", 0.9, 0.1, 9.0);
         SWIM_SPRINT_SPEED = BUILDER.comment("Top swimming speed (blocks/tick) holding sprint. Keep it below 9 so servers don't reject the movement.").defineInRange("swimSprintSpeed", 2.4, 0.1, 9.0);
-        SWIM_SECONDS_TO_TOP_SPEED = BUILDER.comment("Seconds of sprint swimming needed to reach the top speed.").defineInRange("swimSecondsToTopSpeed", 2.0, 0.1, 30.0);
+        SWIM_SECONDS_TO_TOP_SPEED = BUILDER.comment("Seconds of sprint swimming needed to build up from the normal swimming speed to the top speed (eased in and out).").defineInRange("swimAccelerationSeconds", 3.5, 0.1, 30.0);
         TRIDENT_COST = BUILDER.comment("Power of the Seas cost to summon the trident.").defineInRange("tridentCost", 40, 0, 100_000);
         TRIDENT_DAMAGE = BUILDER.comment("Melee damage of the trident (a diamond sword does 7).").defineInRange("tridentDamage", 14.0, 0.0, 1000.0);
         TRIDENT_THROW_DAMAGE = BUILDER.comment("Damage of the thrown trident.").defineInRange("tridentThrowDamage", 16.0, 0.0, 1000.0);

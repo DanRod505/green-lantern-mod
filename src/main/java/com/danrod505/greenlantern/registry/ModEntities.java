@@ -121,6 +121,27 @@ public final class ModEntities {
                     .noLootTable().sized(0.6F, 1.95F).clientTrackingRange(10).updateInterval(2)
                     .build(ENTITIES.key("atlantean")));
 
+    /** The giant manta ray of Atlantis: a gliding mount anyone can ride. */
+    public static final RegistryObject<EntityType<com.danrod505.greenlantern.entity.MantaRayEntity>> MANTA_RAY = ENTITIES.register("manta_ray",
+            () -> EntityType.Builder.<com.danrod505.greenlantern.entity.MantaRayEntity>of(com.danrod505.greenlantern.entity.MantaRayEntity::new, MobCategory.WATER_CREATURE)
+                    .noLootTable().sized(com.danrod505.greenlantern.entity.MantaRayEntity.WIDTH, com.danrod505.greenlantern.entity.MantaRayEntity.HEIGHT)
+                    .clientTrackingRange(10).updateInterval(2)
+                    .build(ENTITIES.key("manta_ray")));
+
+    /** The giant seahorse of Atlantis: a nimble mount in many colors and patterns. */
+    public static final RegistryObject<EntityType<com.danrod505.greenlantern.entity.GiantSeahorseEntity>> GIANT_SEAHORSE = ENTITIES.register("giant_seahorse",
+            () -> EntityType.Builder.<com.danrod505.greenlantern.entity.GiantSeahorseEntity>of(com.danrod505.greenlantern.entity.GiantSeahorseEntity::new, MobCategory.WATER_CREATURE)
+                    .noLootTable().sized(com.danrod505.greenlantern.entity.GiantSeahorseEntity.WIDTH, com.danrod505.greenlantern.entity.GiantSeahorseEntity.HEIGHT)
+                    .clientTrackingRange(10).updateInterval(2)
+                    .build(ENTITIES.key("giant_seahorse")));
+
+    /** The glowing, colorful dolphins of Atlantis: the fastest mounts of the sea. */
+    public static final RegistryObject<EntityType<com.danrod505.greenlantern.entity.AtlanteanDolphinEntity>> ATLANTEAN_DOLPHIN = ENTITIES.register("atlantean_dolphin",
+            () -> EntityType.Builder.<com.danrod505.greenlantern.entity.AtlanteanDolphinEntity>of(com.danrod505.greenlantern.entity.AtlanteanDolphinEntity::new, MobCategory.WATER_CREATURE)
+                    .noLootTable().sized(com.danrod505.greenlantern.entity.AtlanteanDolphinEntity.WIDTH, com.danrod505.greenlantern.entity.AtlanteanDolphinEntity.HEIGHT)
+                    .clientTrackingRange(10).updateInterval(2)
+                    .build(ENTITIES.key("atlantean_dolphin")));
+
     /** Batman's batarang in flight (it curves back to the belt). */
     public static final RegistryObject<EntityType<com.danrod505.greenlantern.entity.BatarangEntity>> BATARANG = ENTITIES.register("batarang",
             () -> EntityType.Builder.<com.danrod505.greenlantern.entity.BatarangEntity>of(com.danrod505.greenlantern.entity.BatarangEntity::new, MobCategory.MISC)

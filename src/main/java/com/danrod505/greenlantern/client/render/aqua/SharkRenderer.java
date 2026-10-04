@@ -41,6 +41,7 @@ public class SharkRenderer extends EntityRenderer<GreatWhiteSharkEntity, SharkRe
         state.tailPhase = Mth.lerp(partialTick, shark.tailPhaseO, shark.tailPhase);
         state.swimAmount = Mth.lerp(partialTick, shark.swimAmountO, shark.swimAmount);
         state.jaw = shark.jaw(partialTick);
+        state.lunge = shark.lungeProgress(partialTick);
         state.outOfWater = !shark.isInWater();
     }
 

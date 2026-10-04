@@ -117,6 +117,7 @@ public final class ModGameTests {
         TESTS.register("aquaman_trident_throw_returns", () -> ModGameTests::aquamanTridentThrowReturns);
         TESTS.register("aquaman_shark_bite", () -> ModGameTests::aquamanSharkBite);
         TESTS.register("aquaman_sea_call", () -> ModGameTests::aquamanSeaCall);
+        TESTS.register("atlantean_mounts_hatch_and_ride", () -> ModGameTests::atlanteanMountsHatchAndRide);
         TESTS.register("aquaman_kraken_call", () -> ModGameTests::aquamanKrakenCall);
         TESTS.register("aquaman_kraken_fights_and_falls", () -> ModGameTests::aquamanKrakenFightsAndFalls);
         TESTS.register("respirator_breathes_with_any_suit", () -> ModGameTests::respiratorBreathesWithAnySuit);
@@ -870,6 +871,9 @@ public final class ModGameTests {
                 .thenSucceed();
     }
 
+    private static Zombie sharkPrey;
+    private static float sharkPreyHealth;
+
     public static void aquamanSharkBite(GameTestHelper helper) {
         flood(helper, 6);
         ServerPlayer player = player(helper, 7.5, 2, 3.5, 0, 0);
@@ -889,12 +893,68 @@ public final class ModGameTests {
                     zombie.snapTo(mouth.x, mouth.y - 0.8, mouth.z, 180, 0);
                     zombie.setNoAi(true);
                     helper.getLevel().addFreshEntity(zombie);
-                    float health = zombie.getHealth();
-                    helper.assertTrue(shark.bite(), "the shark should bite the zombie in front of its jaws");
-                    helper.assertTrue(zombie.getHealth() < health || zombie.isDeadOrDying(), "the bite should hurt");
+                    sharkPrey = zombie;
+                    sharkPreyHealth = zombie.getHealth();
+                    helper.assertTrue(shark.bite(), "the shark should lunge at the zombie in front of its jaws");
+                    helper.assertTrue(shark.isLunging(), "the bite starts with a lunge");
+                    helper.assertTrue(sharkPrey.getHealth() >= sharkPreyHealth, "the jaws close only after the wind-up");
+                    helper.assertFalse(shark.bite(), "no second bite in the middle of a lunge");
+                })
+                .thenWaitUntil(() -> helper.assertTrue(sharkPrey.getHealth() < sharkPreyHealth || sharkPrey.isDeadOrDying(), "the bite should hurt"))
+                .thenWaitUntil(() -> helper.assertFalse(GreatWhiteSharkEntity.find(player).isLunging(), "the lunge ends"))
+                .thenExecute(() -> {
+                    GreatWhiteSharkEntity shark = GreatWhiteSharkEntity.find(player);
                     AquamanServer.usePower(player, emblem, AquaPower.SHARK);
                     helper.assertTrue(shark.isRemoved(), "using the power again sends the shark away");
-                    zombie.discard();
+                    sharkPrey.discard();
+                    remove(player);
+                })
+                .thenSucceed();
+    }
+
+    /** The eggs hatch the three creatures of Atlantis; anyone can ride them and breathes while riding. */
+    public static void atlanteanMountsHatchAndRide(GameTestHelper helper) {
+        flood(helper, 6);
+        ServerPlayer player = player(helper, 7.5, 2, 7.5, 0, 0);
+        var eggs = List.of(com.danrod505.greenlantern.registry.ModItems.MANTA_RAY_EGG.get(),
+                com.danrod505.greenlantern.registry.ModItems.GIANT_SEAHORSE_EGG.get(),
+                com.danrod505.greenlantern.registry.ModItems.ATLANTEAN_DOLPHIN_EGG.get());
+        int[][] spots = {{7, 3}, {3, 11}, {11, 11}};
+        for (int i = 0; i < eggs.size(); i++) {
+            BlockPos floor = helper.absolutePos(new BlockPos(spots[i][0], 0, spots[i][1]));
+            ItemStack egg = new ItemStack(eggs.get(i), 2);
+            player.setItemInHand(InteractionHand.MAIN_HAND, egg);
+            var hit = new net.minecraft.world.phys.BlockHitResult(Vec3.atCenterOf(floor).add(0, 0.5, 0), net.minecraft.core.Direction.UP, floor, false);
+            var result = eggs.get(i).useOn(new net.minecraft.world.item.context.UseOnContext(player, InteractionHand.MAIN_HAND, hit));
+            helper.assertTrue(result.consumesAction(), "the egg should hatch: " + eggs.get(i));
+            helper.assertTrue(player.getMainHandItem().getCount() == 1, "hatching uses one egg");
+        }
+        player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+        var mounts = around(player, com.danrod505.greenlantern.entity.AtlanteanMountEntity.class, 12);
+        helper.assertTrue(mounts.size() == 3, "three creatures should hatch, got " + mounts.size());
+        helper.assertTrue(mounts.stream().anyMatch(m -> m instanceof com.danrod505.greenlantern.entity.MantaRayEntity), "a manta ray");
+        helper.assertTrue(mounts.stream().anyMatch(m -> m instanceof com.danrod505.greenlantern.entity.GiantSeahorseEntity), "a seahorse");
+        helper.assertTrue(mounts.stream().anyMatch(m -> m instanceof com.danrod505.greenlantern.entity.AtlanteanDolphinEntity), "a dolphin");
+        for (var mount : mounts) {
+            helper.assertTrue(mount.isPersistenceRequired(), "hatched creatures don't despawn");
+            helper.assertTrue(mount.variant() >= 0 && mount.variant() < mount.variants(), "valid look");
+        }
+        var seahorse = mounts.stream().filter(m -> m instanceof com.danrod505.greenlantern.entity.GiantSeahorseEntity).findFirst().orElseThrow();
+        helper.startSequence()
+                .thenIdle(5)
+                .thenExecute(() -> {
+                    seahorse.interact(player, InteractionHand.MAIN_HAND);
+                    helper.assertTrue(player.getVehicle() == seahorse, "anyone can ride a creature of Atlantis");
+                    helper.assertTrue(seahorse.getControllingPassenger() == player, "the rider steers it");
+                    player.setAirSupply(10);
+                })
+                .thenIdle(3)
+                .thenExecute(() -> {
+                    helper.assertTrue(player.getAirSupply() > 200, "the rider breathes through the creature, air=" + player.getAirSupply());
+                    player.stopRiding();
+                    helper.assertTrue(player.getVehicle() == null, "climbed off");
+                    helper.assertTrue(seahorse.isAlive(), "the seahorse is fine");
+                    for (var mount : mounts) mount.discard();
                     remove(player);
                 })
                 .thenSucceed();
