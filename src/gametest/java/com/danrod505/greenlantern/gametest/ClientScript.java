@@ -802,6 +802,15 @@ public final class ClientScript {
             key(mc().options.keyUp, true);
         });
         step(30, () -> key(mc().options.keyUp, false));
+        // If the walk missed the opening (uneven ground), step right into it.
+        step(20, () -> server(sp -> {
+            if (atlantis == null || sp.position().distanceTo(atlantis.arrival()) < 3) return;
+            var portals = sp.level().getEntitiesOfClass(com.danrod505.greenlantern.entity.AtlantisPortalEntity.class, sp.getBoundingBox().inflate(8));
+            if (portals.isEmpty()) return;
+            var portal = portals.getFirst();
+            com.danrod505.greenlantern.GreenLantern.LOGGER.info("CLIENTSCRIPT walk missed the portal: player={} portal={}", sp.position(), portal.position());
+            sp.teleportTo(portal.getX(), portal.getY(), portal.getZ());
+        }));
         // The first trip builds the whole city at once: wait until the player stands in the pavilion.
         waitFor(1200, () -> atlantis != null && mc().player != null && mc().player.position().distanceTo(atlantis.arrival()) < 3);
         step(60, () -> {

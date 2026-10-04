@@ -86,6 +86,8 @@ public final class AtlantisTravel {
             var respawn = server.getRespawnData();
             target = server.getLevel(respawn.dimension());
             if (target == null) target = server.overworld();
+            // Load the spawn chunk first: the heightmap of an unloaded chunk is the bottom of the world.
+            target.getChunkAt(respawn.pos());
             BlockPos top = target.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, respawn.pos());
             pos = Vec3.atBottomCenterOf(top);
         }

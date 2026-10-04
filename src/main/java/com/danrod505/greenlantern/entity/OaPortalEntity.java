@@ -94,7 +94,8 @@ public class OaPortalEntity extends Entity {
         double depth = dx * -Mth.sin(yaw) + dz * Mth.cos(yaw);
         double lateral = dx * Mth.cos(yaw) + dz * Mth.sin(yaw);
         double dy = entity.getY() - getY();
-        return Math.abs(depth) < 0.8 && Math.abs(lateral) < HALF_WIDTH && dy > -0.6 && dy < CENTER_Y + 0.6;
+        // A step down (or into water) just in front of the portal still counts.
+        return Math.abs(depth) < 0.8 && Math.abs(lateral) < HALF_WIDTH && dy > -1.6 && dy < CENTER_Y + 0.6;
     }
 
     protected void clientParticles() {
