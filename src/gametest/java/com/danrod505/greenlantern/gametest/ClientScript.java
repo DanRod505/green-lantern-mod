@@ -1431,6 +1431,21 @@ public final class ClientScript {
         command(String.format(java.util.Locale.ROOT, "tp @a %.2f %.2f %.2f %.1f %.1f", from.x, from.y, from.z, yaw, pitch));
     }
 
+    /** Like {@link #tpLook}, but rises from the point until the camera is in open water (not inside a wall or a spire). */
+    private static void tpLookWater(Vec3 from, Vec3 at) {
+        server(sp -> {
+            Vec3 p = from;
+            for (int i = 0; i < 30; i++) {
+                BlockPos b = BlockPos.containing(p);
+                if (sp.level().getBlockState(b).is(net.minecraft.world.level.block.Blocks.WATER)
+                        && sp.level().getBlockState(b.above()).is(net.minecraft.world.level.block.Blocks.WATER)
+                        && sp.level().getBlockState(b.below()).is(net.minecraft.world.level.block.Blocks.WATER)) break;
+                p = p.add(0, 1, 0);
+            }
+            tpLook(p, at);
+        });
+    }
+
     /** Relative to the nest's center (on its floor). */
     private static Vec3 atNest(double dx, double dy, double dz) {
         var n = trenchNest;
@@ -1497,14 +1512,14 @@ public final class ClientScript {
         step(2, () -> {
             camera(CameraType.FIRST_PERSON);
             var n = trenchNest;
-            tpLook(atNest(com.danrod505.greenlantern.trench.Trench.TERRITORY + 6, n.rim() - n.floor() + 4, 0), atNest(com.danrod505.greenlantern.trench.Trench.PIT_RADIUS, n.rim() - n.floor() - 4, 0));
+            tpLookWater(atNest(com.danrod505.greenlantern.trench.Trench.TERRITORY + 6, n.rim() - n.floor() + 4, 0), atNest(com.danrod505.greenlantern.trench.Trench.PIT_RADIUS, n.rim() - n.floor() - 4, 0));
         });
         step(200, () -> clean("t00_territory_edge"));
         // Crossing in: the warning and the clicks from the caves.
         step(2, () -> {
             mc().options.hideGui = false;
             var n = trenchNest;
-            tpLook(atNest(com.danrod505.greenlantern.trench.Trench.PIT_RADIUS + 8, n.rim() - n.floor() + 3, 0), atNest(0, 8, 0));
+            tpLookWater(atNest(com.danrod505.greenlantern.trench.Trench.PIT_RADIUS + 10, n.rim() - n.floor() + 2, 4), atNest(0, 8, 0));
         });
         step(25, () -> shot("t01_territory_warning"));
         step(160, () -> clean("t02_territory_dark"));
@@ -1512,10 +1527,10 @@ public final class ClientScript {
         step(2, () -> {
             command("effect give @a night_vision infinite 0 true");
             var n = trenchNest;
-            tpLook(atNest(7, n.rim() - n.floor() + 6, 7), atNest(0, 0, 0));
+            tpLookWater(atNest(9, 24, 9), atNest(0, 2, 0));
         });
         step(120, () -> clean("t03_pit_from_above"));
-        step(2, () -> tpLook(atNest(15, 10, -4), atNest(0, 5, 0)));
+        step(2, () -> tpLookWater(atNest(15, 10, -4), atNest(0, 5, 0)));
         step(120, () -> clean("t04_brood_mound_ribs"));
         // The creatures, posed close, in the dark water of their own sea (their eyes glow).
         step(2, () -> {
@@ -1537,6 +1552,7 @@ public final class ClientScript {
         step(2, () -> {
             clearTrenchPosed();
             Vec3 eye = atNest(8, 12, 8);
+            command("effect give @a night_vision infinite 0 true");
             poseCreature(eye.add(-3.5, -1.2, 0.0), false, -60.0F, true);
             tpLook(eye, eye.add(-3.5, -0.4, 0.0));
         });
@@ -1545,7 +1561,7 @@ public final class ClientScript {
         step(2, () -> {
             clearTrenchPosed();
             command("effect give @a night_vision infinite 0 true");
-            tpLook(atNest(-10, 14, -10), atNest(0, 6, 0));
+            tpLookWater(atNest(-10, 14, -10), atNest(0, 6, 0));
         });
         step(100, () -> {
             com.danrod505.greenlantern.GreenLantern.LOGGER.info("CLIENTSCRIPT trench creatures near={}", mc().level.getEntitiesOfClass(
