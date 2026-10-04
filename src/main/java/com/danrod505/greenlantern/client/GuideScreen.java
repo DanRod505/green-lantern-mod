@@ -21,7 +21,7 @@ import org.lwjgl.glfw.GLFW;
 
 /**
  * The Heroes' Guide: the in-game manual of the mod, organized in sections (one per hero, plus
- * Atlantis and a "getting started" section) and subsections. The sidebar lists the sections; the
+ * Atlantis, the Trench and a "getting started" section) and subsections. The sidebar lists the sections; the
  * open section unfolds its subsections underneath. Each subsection's text (from the lang files,
  * {@code guide.greenlantern.<subsection>}) is split into pages that fit the screen; the recipe
  * subsections show one crafting grid per page.
@@ -122,6 +122,9 @@ public class GuideScreen extends Screen {
                     text("atlantis"), text("atlantis_people"), text("atlantis_travel"), text("atlantis_respirator"),
                     text("atlantis_creatures"), text("atlantis_manta"), text("atlantis_seahorse"), text("atlantis_dolphin"),
                     recipes("atlantis", ATLANTIS_GATE, ATLANTEAN_RESPIRATOR))),
+            new Section("trench", () -> new ItemStack(ModItems.TRENCH_CREATURE_EGG.get()), 0xFFD0453A, List.of(
+                    text("trench"), text("trench_territory"), text("trench_nest"), text("trench_creatures"), text("trench_captives"),
+                    text("trench_raids"))),
             new Section("batman", () -> new ItemStack(ModItems.UTILITY_BELT.get()), 0xFFB8C0CC, List.of(
                     text("batman"), text("batman_powers"), text("controls_batman"), recipes("batman", UTILITY_BELT))));
 

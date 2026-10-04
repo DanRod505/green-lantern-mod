@@ -142,6 +142,20 @@ public final class ModEntities {
                     .clientTrackingRange(10).updateInterval(2)
                     .build(ENTITIES.key("atlantean_dolphin")));
 
+    /** A creature of the Trench: the hostile people of the deep that live in nests around Atlantis. */
+    public static final RegistryObject<EntityType<com.danrod505.greenlantern.entity.TrenchCreatureEntity>> TRENCH_CREATURE = ENTITIES.register("trench_creature",
+            () -> EntityType.Builder.<com.danrod505.greenlantern.entity.TrenchCreatureEntity>of(com.danrod505.greenlantern.entity.TrenchCreatureEntity::new, MobCategory.MONSTER)
+                    .noLootTable().sized(com.danrod505.greenlantern.entity.TrenchCreatureEntity.WIDTH, com.danrod505.greenlantern.entity.TrenchCreatureEntity.HEIGHT)
+                    .clientTrackingRange(10).updateInterval(2)
+                    .build(ENTITIES.key("trench_creature")));
+
+    /** A cocoon of the Trench, holding a captured villager. */
+    public static final RegistryObject<EntityType<com.danrod505.greenlantern.entity.TrenchCocoonEntity>> TRENCH_COCOON = ENTITIES.register("trench_cocoon",
+            () -> EntityType.Builder.<com.danrod505.greenlantern.entity.TrenchCocoonEntity>of(com.danrod505.greenlantern.entity.TrenchCocoonEntity::new, MobCategory.MISC)
+                    .noLootTable().sized(com.danrod505.greenlantern.entity.TrenchCocoonEntity.WIDTH, com.danrod505.greenlantern.entity.TrenchCocoonEntity.HEIGHT)
+                    .clientTrackingRange(8).updateInterval(10).noSummon()
+                    .build(ENTITIES.key("trench_cocoon")));
+
     /** Batman's batarang in flight (it curves back to the belt). */
     public static final RegistryObject<EntityType<com.danrod505.greenlantern.entity.BatarangEntity>> BATARANG = ENTITIES.register("batarang",
             () -> EntityType.Builder.<com.danrod505.greenlantern.entity.BatarangEntity>of(com.danrod505.greenlantern.entity.BatarangEntity::new, MobCategory.MISC)

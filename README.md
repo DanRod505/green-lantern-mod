@@ -3,7 +3,19 @@
 > *"No dia mais claro, na noite mais densa, o mal sucumbirá ante a minha presença!"*
 
 Mod de heróis do **Universo DC** para **Minecraft Java 1.21.11** com **Forge 61.2.0** (compilado com **Java 25**).
-Começou como o mod do Lanterna Verde e agora traz também **o Flash** (v1.7.0) **o Aquaman** (v1.8.0), **Atlântida** (v1.9.0) **o Kraken do Aquaman** (v1.10.0), **o Batman** (v1.11.0) e **as criaturas de Atlântida** (v1.12.0). O id do mod continua `greenlantern`, então mundos e configurações antigas continuam funcionando.
+Começou como o mod do Lanterna Verde e agora traz também **o Flash** (v1.7.0) **o Aquaman** (v1.8.0), **Atlântida** (v1.9.0) **o Kraken do Aquaman** (v1.10.0), **o Batman** (v1.11.0), **as criaturas de Atlântida** (v1.12.0) e **o Fosso**, os inimigos do Aquaman (v1.13.0). O id do mod continua `greenlantern`, então mundos e configurações antigas continuam funcionando.
+
+## O Fosso (novo na 1.13.0)
+
+As **criaturas do Fosso** (The Trench), inimigas do Aquaman, são uma facção hostil completa das profundezas, o oposto de Atlântida em tudo.
+
+* **Ninhos do Fosso:** três colônias cavadas no fundo do mar ao redor de Atlântida (a uns 200 blocos da cidade), construídas aos poucos depois que a cidade fica pronta. Um fosso irregular de paredes negras (ardósia, pedra-negra, basalto e sculk), uma coroa de espinhos negros, uma caixa torácica de ossos gigantes sobre o fosso com raízes penduradas, o monte da ninhada com bolsas de ovos que brilham e cinco cavernas que levam a câmaras de carne e osso.
+* **O território:** em volta de cada ninho o mar fica quase preto (bioma próprio, *O Fosso*), os peixes fogem ou somem, estalos e rangidos ecoam das cavernas e o fundo vira rocha escura e coral morto. Ao entrar, aparece **Território do Fosso** com um som grave.
+* **As criaturas:** não nascem aleatoriamente como zumbis. Cada ninho tem dois bandos (um guarda o fosso, o outro patrulha o território); caçam como tubarões, circulando a presa e disparando para morder. O **Brutamontes** (maior, olhos vermelhos) lidera, e seu guincho escurece o mar. Têm **medo de luz** (lanterna, tocha, lanterna do mar, anel do Lanterna Verde na mão). Mortos são repostos aos poucos, vindos das profundezas.
+* **Aldeões capturados:** o Fosso captura aldeões na água e os leva ao ninho, onde ficam presos em **casulos** de carne translúcida nas câmaras. Golpeie o casulo para libertar o aldeão: ele nada até a superfície e deixa esmeraldas. Às vezes um grupo de caça volta com um novo prisioneiro, e dá para resgatá-lo no caminho.
+* **Ataques a Atlântida:** de tempos em tempos, com alguém na cidade, um bando de guerra liderado por um Brutamontes ataca Atlântida, com grito de guerra e barra de progresso. A guarda real ajuda na defesa.
+* **Sons originais** (estalos, guinchos, mordidas, ambiente das cavernas, grito de guerra, casulo rompendo), sem samples.
+* **Ovos** de Criatura e de Brutamontes do Fosso na aba criativa; nova seção **O Fosso** no Guia dos Heróis; seção `trench` na configuração (ligar/desligar, ataques, frequência, população dos ninhos).
 
 ## Mares de Atlântida (novo na 1.12.0)
 
