@@ -1458,7 +1458,7 @@ public final class ClientScript {
         });
     }
 
-    private static void clearPosed() {
+    private static void clearTrenchPosed() {
         server(sp -> {
             for (var c : TRENCH_POSED) {
                 if (c.getFirstPassenger() != null) c.getFirstPassenger().discard();
@@ -1525,7 +1525,7 @@ public final class ClientScript {
         });
         step(60, () -> clean("t05_creature"));
         step(2, () -> {
-            clearPosed();
+            clearTrenchPosed();
             Vec3 eye = atNest(8, 12, 8);
             poseCreature(eye.add(-4.5, -2.0, 0.0), true, 90.0F, false);
             poseCreature(eye.add(-5.5, -1.0, 2.5), false, 110.0F, false);
@@ -1534,7 +1534,7 @@ public final class ClientScript {
         });
         step(60, () -> clean("t06_brute_and_pack"));
         step(2, () -> {
-            clearPosed();
+            clearTrenchPosed();
             Vec3 eye = atNest(8, 12, 8);
             poseCreature(eye.add(-3.5, -1.2, 0.0), false, 90.0F, true);
             tpLook(eye, eye.add(-3.5, -0.4, 0.0));
@@ -1542,7 +1542,7 @@ public final class ClientScript {
         step(60, () -> clean("t07_carrying_villager"));
         // The living nest: its own packs on patrol.
         step(2, () -> {
-            clearPosed();
+            clearTrenchPosed();
             tpLook(atNest(-10, 14, -10), atNest(0, 6, 0));
         });
         step(100, () -> {
