@@ -26,6 +26,8 @@ public class KrakenRenderState extends EntityRenderState {
     /** Rising out of the deep after being called (0-1). */
     public float emerge = 1.0F;
     public boolean jetting;
+    /** The local player rides it with the camera behind: the mantle is drawn see-through so it does not block the view. */
+    public boolean fadeMantle;
     public final Vector3f siphon = new Vector3f();
     public final Vector3f jetEnd = new Vector3f();
 }

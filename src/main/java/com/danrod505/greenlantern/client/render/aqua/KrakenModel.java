@@ -60,9 +60,16 @@ public class KrakenModel extends EntityModel<KrakenRenderState> {
     private final ModelPart rightFin;
     private final ModelPart[][] arms = new ModelPart[ARMS][ARM_WIDTH.length];
     private final ModelPart[][] clubs = new ModelPart[2][CLUB_SEGMENTS];
+    /** Draws only the mantle (for the see-through pass), not the head, eyes and arms. */
+    private final boolean mantleOnly;
 
     public KrakenModel(ModelPart root) {
+        this(root, false);
+    }
+
+    public KrakenModel(ModelPart root, boolean mantleOnly) {
         super(root, RenderTypes::entityCutoutNoCull);
+        this.mantleOnly = mantleOnly;
         this.head = root.getChild("head");
         this.leftEye = head.getChild("left_eye");
         this.rightEye = head.getChild("right_eye");
@@ -322,5 +329,14 @@ public class KrakenModel extends EntityModel<KrakenRenderState> {
         }
 
         head.zRot = land * alive * 0.02F * Mth.sin(t * 0.04F);
+
+        // Which parts this model draws: everything (minus the mantle while it is see-through), or just the mantle.
+        mantle.visible = mantleOnly || !s.fadeMantle;
+        head.skipDraw = mantleOnly;
+        leftEye.visible = !mantleOnly;
+        rightEye.visible = !mantleOnly;
+        siphon.visible = !mantleOnly;
+        for (ModelPart[] arm : arms) arm[0].visible = !mantleOnly;
+        for (ModelPart[] club : clubs) club[0].visible = !mantleOnly;
     }
 }

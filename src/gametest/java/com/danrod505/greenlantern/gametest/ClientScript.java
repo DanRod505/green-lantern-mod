@@ -765,6 +765,7 @@ public final class ClientScript {
 
     /** Climbs off the Kraken and watches it from a spot given relative to it (forward, up, left of its facing). */
     private static void krakenView(double forward, double up, double left) {
+        camera(CameraType.FIRST_PERSON);
         server(sp -> {
             var kraken = com.danrod505.greenlantern.entity.KrakenEntity.find(sp);
             if (kraken == null) return;
@@ -786,11 +787,26 @@ public final class ClientScript {
             var kraken = com.danrod505.greenlantern.entity.KrakenEntity.find(sp);
             if (kraken != null && sp.getVehicle() != kraken) sp.startRiding(kraken);
         });
+        camera(CameraType.THIRD_PERSON_BACK);
+    }
+
+    /** Moves the Kraken (and Aquaman off its back) to a spot relative to where the script started, facing south. */
+    private static void placeKraken(double dx, double dy, double dz) {
+        server(sp -> {
+            var kraken = com.danrod505.greenlantern.entity.KrakenEntity.find(sp);
+            if (kraken == null || aquaBase == null) return;
+            if (sp.getVehicle() == kraken) sp.stopRiding();
+            kraken.setDeltaMovement(Vec3.ZERO);
+            kraken.teleportTo(sp.level(), aquaBase.getX() + 0.5 + dx, aquaBase.getY() + dy, aquaBase.getZ() + 0.5 + dz,
+                    java.util.Set.of(), 0.0F, 0.0F, true);
+            kraken.setYRot(0.0F);
+        });
     }
 
     /** The Kraken: rising out of the ground, poses, walking, tentacle slam, water jet, swimming, wounds and death. */
     private static void buildKrakenSteps() {
         step(60, () -> {
+            mc().options.tutorialStep = net.minecraft.client.tutorial.TutorialSteps.NONE;
             command("time set 6000");
             command("weather clear");
             command("gamerule advance_time false");
@@ -877,10 +893,8 @@ public final class ClientScript {
             look(0, 15);
         });
         step(4, () -> key(mc().options.keyUp, true));
-        step(30, () -> {
-            mc().options.hideGui = false;
-            shot("kr05_ride_walk_hud");
-        });
+        step(26, () -> mc().options.hideGui = false);
+        step(4, () -> shot("kr05_ride_walk_hud"));
         step(10, () -> clean("kr05b_ride_walk"));
         step(1, () -> key(mc().options.keyUp, false));
         // The tentacle slam, at two husks in front of it (seen from the side).
@@ -940,20 +954,20 @@ public final class ClientScript {
             key(mc().options.keySprint, false);
             look(0, 0);
         });
-        step(25, () -> {
+        step(10, () -> placeKraken(0, 4, 80));
+        step(6, () -> rideKraken());
+        step(10, () -> {
             camera(CameraType.THIRD_PERSON_FRONT);
             look(0, 10);
         });
         step(6, () -> clean("kr10_swim_front"));
         step(2, () -> camera(CameraType.THIRD_PERSON_BACK));
-        step(2, () -> krakenView(4, -1, 18));
+        step(2, () -> krakenView(4, 0, 16));
         step(14, () -> clean("kr11_swim_side"));
         // Wounds and death (seen from the side, the HUD showing its life).
         step(10, () -> kraken(k -> k.hurtServer((ServerLevel) k.level(), k.level().damageSources().generic(), 150.0F)));
-        step(2, () -> {
-            mc().options.hideGui = false;
-            shot("kr12_hurt_hud");
-        });
+        step(1, () -> mc().options.hideGui = false);
+        step(3, () -> shot("kr12_hurt_hud"));
         step(20, () -> kraken(k -> k.hurtServer((ServerLevel) k.level(), k.level().damageSources().generic(), 10000.0F)));
         step(10, () -> clean("kr13_death_a"));
         step(25, () -> clean("kr13b_death_b"));

@@ -5,6 +5,8 @@ import com.danrod505.greenlantern.entity.KrakenEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.minecraft.client.CameraType;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -26,11 +28,15 @@ public class KrakenRenderer extends EntityRenderer<KrakenEntity, KrakenRenderSta
     private static final Identifier TEXTURE = GreenLantern.id("textures/entity/kraken.png");
     private static final Identifier EYES = GreenLantern.id("textures/entity/kraken_eyes.png");
     private static final Identifier JET = GreenLantern.id("textures/entity/kraken_jet.png");
+    /** See-through mantle drawn for the rider when the camera is behind them. */
+    private static final int MANTLE_FADE = 0x55FFFFFF;
     private final KrakenModel model;
+    private final KrakenModel mantleModel;
 
     public KrakenRenderer(EntityRendererProvider.Context context) {
         super(context);
         this.model = new KrakenModel(context.bakeLayer(KrakenModel.LAYER));
+        this.mantleModel = new KrakenModel(context.bakeLayer(KrakenModel.LAYER), true);
         this.shadowRadius = 3.5F;
     }
 
@@ -63,6 +69,8 @@ public class KrakenRenderer extends EntityRenderer<KrakenEntity, KrakenRenderSta
         s.death = kraken.clientDeathTicks < 0 ? 0.0F : Math.min(1.0F, (kraken.clientDeathTicks + partialTick) / KrakenEntity.DEATH_TICKS);
         s.emerge = Math.min(1.0F, (kraken.tickCount + partialTick) / KrakenEntity.EMERGE_TICKS);
         s.jetting = kraken.isJetting() && s.jet > 0.25F;
+        Minecraft mc = Minecraft.getInstance();
+        s.fadeMantle = mc.player != null && mc.player.getVehicle() == kraken && mc.options.getCameraType() == CameraType.THIRD_PERSON_BACK;
         Vec3 pos = kraken.getPosition(partialTick);
         Vec3 siphon = kraken.bodyPoint(KrakenEntity.SIPHON_FORWARD, KrakenEntity.SIPHON_UP, 0.0, partialTick).subtract(pos);
         Vec3 end = kraken.jetEnd(partialTick).subtract(pos);
@@ -111,6 +119,10 @@ public class KrakenRenderer extends EntityRenderer<KrakenEntity, KrakenRenderSta
         collector.submitModel(model, s, poseStack, model.renderType(TEXTURE), s.lightCoords, overlay, s.outlineColor, null);
         if (s.death < 0.8F) {
             collector.submitModel(model, s, poseStack, RenderTypes.eyes(EYES), LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0, null);
+        }
+        if (s.fadeMantle) {
+            mantleModel.setupAnim(s);
+            collector.submitModel(mantleModel, s, poseStack, RenderTypes.entityTranslucent(TEXTURE), s.lightCoords, overlay, MANTLE_FADE, null, 0, null);
         }
         poseStack.popPose();
 
