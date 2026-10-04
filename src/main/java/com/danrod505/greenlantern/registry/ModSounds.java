@@ -90,6 +90,20 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> KRAKEN_SWIM = register("kraken_swim");
     public static final RegistryObject<SoundEvent> KRAKEN_HURT = register("kraken_hurt");
     public static final RegistryObject<SoundEvent> KRAKEN_DEATH = register("kraken_death");
+    public static final RegistryObject<SoundEvent> BATMAN_SUIT_UP = register("batman_suit_up");
+    public static final RegistryObject<SoundEvent> BATMAN_SUIT_DOWN = register("batman_suit_down");
+    public static final RegistryObject<SoundEvent> CAPE_GLIDE = register("cape_glide");
+    public static final RegistryObject<SoundEvent> CAPE_WIND = register("cape_wind");
+    public static final RegistryObject<SoundEvent> BATARANG_THROW = register("batarang_throw");
+    public static final RegistryObject<SoundEvent> BATARANG_HIT = register("batarang_hit");
+    public static final RegistryObject<SoundEvent> GRAPPLE_FIRE = register("grapple_fire");
+    public static final RegistryObject<SoundEvent> GRAPPLE_HIT = register("grapple_hit");
+    public static final RegistryObject<SoundEvent> GRAPPLE_REEL = register("grapple_reel");
+    public static final RegistryObject<SoundEvent> BAT_SWARM = register("bat_swarm");
+    public static final RegistryObject<SoundEvent> BATMOBILE_START = register("batmobile_start");
+    public static final RegistryObject<SoundEvent> BATMOBILE_ENGINE = register("batmobile_engine");
+    public static final RegistryObject<SoundEvent> BATMOBILE_BOOST = register("batmobile_boost");
+    public static final RegistryObject<SoundEvent> BATMOBILE_MISSILE = register("batmobile_missile");
     public static final RegistryObject<SoundEvent> SEA_CALL = register("sea_call");
 
     private static RegistryObject<SoundEvent> register(String name) {

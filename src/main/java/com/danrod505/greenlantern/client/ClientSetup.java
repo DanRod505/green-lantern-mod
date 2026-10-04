@@ -79,6 +79,8 @@ public final class ClientSetup {
         InputEvent.InteractionKeyMappingTriggered.BUS.addListener(MechaControls::onInteraction);
         InputEvent.InteractionKeyMappingTriggered.BUS.addListener(SharkControls::onInteraction);
         InputEvent.InteractionKeyMappingTriggered.BUS.addListener(KrakenControls::onInteraction);
+        InputEvent.InteractionKeyMappingTriggered.BUS.addListener(BatmobileControls::onInteraction);
+        com.danrod505.greenlantern.client.batman.BatmanRenderHandler.register();
         ViewportEvent.ComputeCameraAngles.BUS.addListener(CameraShake::onCameraAngles);
     }
 
@@ -123,6 +125,11 @@ public final class ClientSetup {
         event.registerEntityRenderer(ModEntities.KRAKEN.get(), com.danrod505.greenlantern.client.render.aqua.KrakenRenderer::new);
         event.registerEntityRenderer(ModEntities.ATLANTIS_PORTAL.get(), com.danrod505.greenlantern.client.render.oa.OaPortalRenderer::new);
         event.registerEntityRenderer(ModEntities.ATLANTEAN.get(), com.danrod505.greenlantern.client.render.aqua.AtlanteanRenderer::new);
+        event.registerEntityRenderer(ModEntities.BATARANG.get(), com.danrod505.greenlantern.client.render.batman.BatarangRenderer::new);
+        event.registerEntityRenderer(ModEntities.GRAPPLE_HOOK.get(), com.danrod505.greenlantern.client.render.batman.GrappleHookRenderer::new);
+        event.registerEntityRenderer(ModEntities.BAT_DEFENDER.get(), com.danrod505.greenlantern.client.render.batman.BatDefenderRenderer::new);
+        event.registerEntityRenderer(ModEntities.BATMOBILE.get(), com.danrod505.greenlantern.client.render.batman.BatmobileRenderer::new);
+        event.registerEntityRenderer(ModEntities.BATMOBILE_MISSILE.get(), com.danrod505.greenlantern.client.render.batman.BatmobileMissileRenderer::new);
     }
 
     private static void onRegisterParticles(RegisterParticleProvidersEvent event) {
@@ -149,6 +156,7 @@ public final class ClientSetup {
             if (renderer != null) {
                 renderer.addLayer(new AuraLayer(renderer, new HumanoidModel<>(event.getEntityModels().bakeLayer(AuraLayer.LAYER))));
                 renderer.addLayer(new com.danrod505.greenlantern.client.render.aqua.RespiratorLayer(renderer));
+                renderer.addLayer(new com.danrod505.greenlantern.client.render.batman.BatmanLayer(renderer));
             }
         }
     }
@@ -161,6 +169,8 @@ public final class ClientSetup {
         SpeedAudio.tick();
         com.danrod505.greenlantern.client.aqua.SwimVisuals.tick();
         com.danrod505.greenlantern.client.aqua.SwimAudio.tick();
+        com.danrod505.greenlantern.client.batman.BatmanVisuals.tick();
+        com.danrod505.greenlantern.client.batman.BatmanAudio.tick();
     }
 
     private static void onPlayerTickPre(TickEvent.PlayerTickEvent.Pre event) {
@@ -168,6 +178,8 @@ public final class ClientSetup {
             FlightController.preTick(player);
             SpeedController.preTick(player);
             com.danrod505.greenlantern.client.aqua.SwimController.preTick(player);
+            com.danrod505.greenlantern.client.batman.GrappleController.preTick(player);
+            com.danrod505.greenlantern.client.batman.GlideController.preTick(player);
         }
     }
 
@@ -176,6 +188,8 @@ public final class ClientSetup {
             FlightController.postTick(player);
             SpeedController.postTick(player);
             com.danrod505.greenlantern.client.aqua.SwimController.postTick(player);
+            com.danrod505.greenlantern.client.batman.GrappleController.postTick(player);
+            com.danrod505.greenlantern.client.batman.GlideController.postTick(player);
         }
     }
 
@@ -185,6 +199,7 @@ public final class ClientSetup {
         event.getLayeredDraw().add(ForgeLayeredDraw.POST_SLEEP_STACK, GreenLantern.id("speed_hud"), SpeedHud::render);
         event.getLayeredDraw().add(ForgeLayeredDraw.POST_SLEEP_STACK, GreenLantern.id("flash_hud"), FlashHud::render);
         event.getLayeredDraw().add(ForgeLayeredDraw.POST_SLEEP_STACK, GreenLantern.id("aqua_hud"), AquaHud::render);
+        event.getLayeredDraw().add(ForgeLayeredDraw.POST_SLEEP_STACK, GreenLantern.id("bat_hud"), BatHud::render);
         event.getLayeredDraw().add(ForgeLayeredDraw.POST_SLEEP_STACK, GreenLantern.id("respirator_hud"), RespiratorHud::render);
     }
 }

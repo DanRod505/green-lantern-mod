@@ -126,6 +126,31 @@ public final class GLConfig {
     public static final ForgeConfigSpec.IntValue RESPIRATOR_SECONDS;
     public static final ForgeConfigSpec.IntValue RESPIRATOR_RECHARGE_SECONDS;
 
+    // Batman
+    public static final ForgeConfigSpec.IntValue BAT_CHARGE_CAPACITY;
+    public static final ForgeConfigSpec.IntValue BAT_CHARGE_REGEN;
+    public static final ForgeConfigSpec.DoubleValue GLIDE_SPEED;
+    public static final ForgeConfigSpec.DoubleValue GLIDE_DIVE_SPEED;
+    public static final ForgeConfigSpec.DoubleValue GLIDE_SINK;
+    public static final ForgeConfigSpec.IntValue BATARANG_COST;
+    public static final ForgeConfigSpec.DoubleValue BATARANG_DAMAGE;
+    public static final ForgeConfigSpec.IntValue GRAPPLE_COST;
+    public static final ForgeConfigSpec.DoubleValue GRAPPLE_RANGE;
+    public static final ForgeConfigSpec.DoubleValue GRAPPLE_PULL_SPEED;
+    public static final ForgeConfigSpec.IntValue BAT_SWARM_COST;
+    public static final ForgeConfigSpec.IntValue BAT_SWARM_COUNT;
+    public static final ForgeConfigSpec.DoubleValue BAT_SWARM_SECONDS;
+    public static final ForgeConfigSpec.DoubleValue BAT_SWARM_DAMAGE;
+    public static final ForgeConfigSpec.IntValue BATMOBILE_COST;
+    public static final ForgeConfigSpec.DoubleValue BATMOBILE_SPEED;
+    public static final ForgeConfigSpec.DoubleValue BATMOBILE_BOOST_SPEED;
+    public static final ForgeConfigSpec.IntValue BATMOBILE_BOOST_COST_PER_SECOND;
+    public static final ForgeConfigSpec.IntValue BATMOBILE_MISSILE_COST;
+    public static final ForgeConfigSpec.DoubleValue BATMOBILE_MISSILE_POWER;
+    public static final ForgeConfigSpec.BooleanValue BATMOBILE_MISSILES_BREAK_BLOCKS;
+    public static final ForgeConfigSpec.DoubleValue BATMOBILE_RAM_DAMAGE;
+    public static final ForgeConfigSpec.DoubleValue BATMOBILE_DAMAGE_REDUCTION;
+
     public static final ForgeConfigSpec SPEC;
 
     static {
@@ -262,6 +287,32 @@ public final class GLConfig {
         ATLANTIS_GATE_COOLDOWN = BUILDER.comment("Seconds before the Atlantean Gate can open another portal.").defineInRange("gateCooldownSeconds", 10, 0, 3600);
         RESPIRATOR_SECONDS = BUILDER.comment("Seconds of air stored in the Atlantean Respirator.").defineInRange("respiratorSeconds", 480, 10, 100_000);
         RESPIRATOR_RECHARGE_SECONDS = BUILDER.comment("Seconds out of the water for an empty respirator to fill up again.").defineInRange("respiratorRechargeSeconds", 24, 1, 100_000);
+        BUILDER.pop();
+
+        BUILDER.comment("Batman: the Utility Belt, gliding with the cape, the batarang, the grapnel gun, the swarm of bats and the Batmobile.").push("batman");
+        BAT_CHARGE_CAPACITY = BUILDER.comment("Maximum charge stored in the Utility Belt.").defineInRange("beltChargeCapacity", 1000, 100, 1_000_000);
+        BAT_CHARGE_REGEN = BUILDER.comment("Belt charge regained per second while the batsuit is worn (50% more in the dark).").defineInRange("beltChargeRegen", 8, 0, 100_000);
+        GLIDE_SPEED = BUILDER.comment("Gliding speed (blocks/tick) with the cape spread, looking straight ahead.").defineInRange("glideSpeed", 0.6, 0.1, 4.0);
+        GLIDE_DIVE_SPEED = BUILDER.comment("Top gliding speed (blocks/tick) when diving (looking down).").defineInRange("glideDiveSpeed", 1.5, 0.1, 6.0);
+        GLIDE_SINK = BUILDER.comment("How fast (blocks/tick) Batman sinks while gliding level.").defineInRange("glideSink", 0.075, 0.0, 1.0);
+        BATARANG_COST = BUILDER.comment("Belt charge cost of a batarang.").defineInRange("batarangCost", 10, 0, 100_000);
+        BATARANG_DAMAGE = BUILDER.comment("Damage of a batarang (it also stuns for a moment).").defineInRange("batarangDamage", 7.0, 0.0, 1000.0);
+        GRAPPLE_COST = BUILDER.comment("Belt charge cost of a shot of the grapnel gun.").defineInRange("grappleCost", 15, 0, 100_000);
+        GRAPPLE_RANGE = BUILDER.comment("Reach (blocks) of the grapnel gun's cable.").defineInRange("grappleRange", 48.0, 4.0, 128.0);
+        GRAPPLE_PULL_SPEED = BUILDER.comment("Top speed (blocks/tick) at which the cable reels Batman in.").defineInRange("grapplePullSpeed", 1.6, 0.2, 6.0);
+        BAT_SWARM_COST = BUILDER.comment("Belt charge cost of calling the swarm of bats.").defineInRange("batSwarmCost", 200, 0, 100_000);
+        BAT_SWARM_COUNT = BUILDER.comment("Bats in the swarm.").defineInRange("batSwarmCount", 16, 1, 64);
+        BAT_SWARM_SECONDS = BUILDER.comment("How long the bats stay and defend Batman (seconds).").defineInRange("batSwarmSeconds", 25.0, 1.0, 600.0);
+        BAT_SWARM_DAMAGE = BUILDER.comment("Damage of each bat's attack (they also blind and slow down their prey).").defineInRange("batSwarmDamage", 2.0, 0.0, 1000.0);
+        BATMOBILE_COST = BUILDER.comment("Belt charge cost of calling the Batmobile.").defineInRange("batmobileCost", 250, 0, 100_000);
+        BATMOBILE_SPEED = BUILDER.comment("Top speed (blocks/tick) of the Batmobile.").defineInRange("batmobileSpeed", 0.95, 0.1, 4.0);
+        BATMOBILE_BOOST_SPEED = BUILDER.comment("Top speed (blocks/tick) with the jet booster on (hold sprint). Keep it below 9.").defineInRange("batmobileBoostSpeed", 1.9, 0.1, 8.0);
+        BATMOBILE_BOOST_COST_PER_SECOND = BUILDER.comment("Belt charge drained per second while the booster burns.").defineInRange("batmobileBoostCostPerSecond", 12, 0, 100_000);
+        BATMOBILE_MISSILE_COST = BUILDER.comment("Belt charge cost of a pair of missiles.").defineInRange("batmobileMissileCost", 30, 0, 100_000);
+        BATMOBILE_MISSILE_POWER = BUILDER.comment("Explosion power of a Batmobile missile (TNT is 4).").defineInRange("batmobileMissilePower", 2.0, 0.0, 10.0);
+        BATMOBILE_MISSILES_BREAK_BLOCKS = BUILDER.comment("Whether the Batmobile's missiles break blocks.").define("batmobileMissilesBreakBlocks", false);
+        BATMOBILE_RAM_DAMAGE = BUILDER.comment("Damage when the Batmobile rams a creature at full speed (less when slower).").defineInRange("batmobileRamDamage", 14.0, 0.0, 1000.0);
+        BATMOBILE_DAMAGE_REDUCTION = BUILDER.comment("Fraction of the damage the armored Batmobile takes for its driver (0-1).").defineInRange("batmobileDamageReduction", 0.8, 0.0, 1.0);
         BUILDER.pop();
 
         SPEC = BUILDER.build();

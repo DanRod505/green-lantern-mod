@@ -21,7 +21,7 @@ import net.minecraft.world.item.equipment.EquipmentAssets;
 import org.jspecify.annotations.Nullable;
 
 /**
- * A piece of a hero suit (the hard-light Green Lantern uniform, the Flash suit or the armor of Atlantis). Pieces are
+ * A piece of a hero suit (the hard-light Green Lantern uniform, the Flash suit, the armor of Atlantis or the batsuit). Pieces are
  * created by a ring, can't be taken off (Curse of Binding) and disappear as soon as they leave an
  * armor slot.
  */
@@ -29,6 +29,7 @@ public class SuitArmorItem extends Item {
     public static final ResourceKey<EquipmentAsset> ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, GreenLantern.id("green_lantern"));
     public static final ResourceKey<EquipmentAsset> FLASH_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, GreenLantern.id("flash"));
     public static final ResourceKey<EquipmentAsset> AQUAMAN_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, GreenLantern.id("aquaman"));
+    public static final ResourceKey<EquipmentAsset> BATMAN_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, GreenLantern.id("batman"));
 
     public static final ArmorMaterial MATERIAL = new ArmorMaterial(
             1000,
@@ -61,6 +62,17 @@ public class SuitArmorItem extends Item {
             0.0F,
             ItemTags.REPAIRS_TURTLE_HELMET,
             AQUAMAN_ASSET);
+
+    /** The batsuit: Kevlar weave over armor plates, as tough as diamond and a little tougher. */
+    public static final ArmorMaterial BATMAN_MATERIAL = new ArmorMaterial(
+            1000,
+            Map.of(ArmorType.HELMET, 3, ArmorType.CHESTPLATE, 8, ArmorType.LEGGINGS, 6, ArmorType.BOOTS, 3, ArmorType.BODY, 8),
+            1,
+            SoundEvents.ARMOR_EQUIP_LEATHER,
+            2.5F,
+            0.1F,
+            ItemTags.REPAIRS_LEATHER_ARMOR,
+            BATMAN_ASSET);
 
     private final ArmorType type;
 

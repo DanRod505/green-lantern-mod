@@ -8,6 +8,16 @@ import com.danrod505.greenlantern.aquaman.AquamanServer;
 import com.danrod505.greenlantern.aquaman.AquamanSuit;
 import com.danrod505.greenlantern.aquaman.SeaCall;
 import com.danrod505.greenlantern.aquaman.SeaForce;
+import com.danrod505.greenlantern.batman.BatCharge;
+import com.danrod505.greenlantern.batman.BatPower;
+import com.danrod505.greenlantern.batman.BatmanHelper;
+import com.danrod505.greenlantern.batman.BatmanServer;
+import com.danrod505.greenlantern.batman.BatmanSuit;
+import com.danrod505.greenlantern.entity.BatDefenderEntity;
+import com.danrod505.greenlantern.entity.BatarangEntity;
+import com.danrod505.greenlantern.entity.BatmobileEntity;
+import com.danrod505.greenlantern.entity.BatmobileMissileEntity;
+import com.danrod505.greenlantern.entity.GrappleHookEntity;
 import com.danrod505.greenlantern.entity.AquaTridentEntity;
 import com.danrod505.greenlantern.entity.GreatWhiteSharkEntity;
 import com.danrod505.greenlantern.entity.KrakenEntity;
@@ -113,6 +123,12 @@ public final class ModGameTests {
         TESTS.register("respirator_refills_out_of_water", () -> ModGameTests::respiratorRefillsOutOfWater);
         TESTS.register("atlantis_build_and_travel", () -> ModGameTests::atlantisBuildAndTravel);
         TESTS.register("atlantis_portal_power", () -> ModGameTests::atlantisPortalPower);
+        TESTS.register("batman_suit_summon_and_swap", () -> ModGameTests::batmanSuitSummonAndSwap);
+        TESTS.register("batman_belt_recharges", () -> ModGameTests::batmanBeltRecharges);
+        TESTS.register("batman_batarang_returns", () -> ModGameTests::batmanBatarangReturns);
+        TESTS.register("batman_grapple_hooks_and_releases", () -> ModGameTests::batmanGrappleHooksAndReleases);
+        TESTS.register("batman_bat_swarm", () -> ModGameTests::batmanBatSwarm);
+        TESTS.register("batman_batmobile", () -> ModGameTests::batmanBatmobile);
     }
 
     private ModGameTests() {}
@@ -1129,5 +1145,149 @@ public final class ModGameTests {
             remove(player);
         }
         helper.succeed();
+    }
+
+    // ---- Batman ---------------------------------------------------------------------------------------
+
+    private static ItemStack giveBelt(ServerPlayer player, int charge) {
+        ItemStack belt = new ItemStack(ModItems.UTILITY_BELT.get());
+        BatCharge.set(belt, charge);
+        player.setItemInHand(InteractionHand.MAIN_HAND, belt);
+        return player.getMainHandItem();
+    }
+
+    public static void batmanSuitSummonAndSwap(GameTestHelper helper) {
+        ServerPlayer player = player(helper, 7.5, 1, 7.5, 0, 0);
+        player.setItemSlot(EquipmentSlot.HEAD, new ItemStack(Items.IRON_HELMET));
+        player.setItemSlot(EquipmentSlot.CHEST, new ItemStack(Items.IRON_CHESTPLATE));
+        // Aquaman first, then Batman replaces him (one hero at a time).
+        player.getInventory().add(new ItemStack(ModItems.AQUAMAN_EMBLEM.get()));
+        AquamanSuit.summon(player);
+        helper.assertTrue(AquamanHelper.isSuited(player), "aquaman suit should be on");
+        giveBelt(player, 0);
+        use(player); // not suited as Batman: right click summons the suit
+        helper.assertTrue(BatmanHelper.isSuited(player), "batman suit should be summoned");
+        helper.assertFalse(AquamanHelper.isSuited(player), "the aquaman suit should be gone");
+        helper.assertTrue(BatmanHelper.hasCowl(player), "the cowl replaces the helmet");
+        helper.assertTrue(player.getItemBySlot(EquipmentSlot.LEGS).is(ModItems.BATMAN_LEGGINGS.get()), "leggings should be worn");
+        helper.assertTrue(player.getItemBySlot(EquipmentSlot.FEET).is(ModItems.BATMAN_BOOTS.get()), "boots should be worn");
+        BatmanSuit.dismiss(player, false);
+        helper.assertFalse(BatmanHelper.isSuited(player), "batman suit should be dismissed");
+        helper.assertTrue(player.getItemBySlot(EquipmentSlot.HEAD).is(Items.IRON_HELMET), "iron helmet should be restored");
+        helper.assertTrue(player.getItemBySlot(EquipmentSlot.CHEST).is(Items.IRON_CHESTPLATE), "iron chestplate should be restored");
+        remove(player);
+        helper.succeed();
+    }
+
+    public static void batmanBeltRecharges(GameTestHelper helper) {
+        ServerPlayer player = player(helper, 7.5, 1, 7.5, 0, 0);
+        ItemStack belt = giveBelt(player, 0);
+        BatmanSuit.summon(player);
+        helper.startSequence()
+                .thenExecuteFor(41, player::doTick)
+                .thenExecute(() -> {
+                    int stored = BatCharge.get(belt).stored();
+                    helper.assertTrue(stored >= 10, "the belt should recharge on its own, got " + stored);
+                    helper.assertTrue(player.hasEffect(net.minecraft.world.effect.MobEffects.NIGHT_VISION), "the cowl gives night vision");
+                    BatPower.select(belt, BatPower.BAT_SWARM);
+                    BatCharge.set(belt, 0);
+                    helper.assertFalse(BatmanServer.usePower(player, belt, BatPower.BAT_SWARM), "no charge, no gadget");
+                    remove(player);
+                })
+                .thenSucceed();
+    }
+
+    public static void batmanBatarangReturns(GameTestHelper helper) {
+        ServerPlayer player = player(helper, 7.5, 1, 2.5, 0, 0);
+        ItemStack belt = giveBelt(player, 1000);
+        BatmanSuit.summon(player);
+        BatPower.select(belt, BatPower.BATARANG);
+        Zombie zombie = dummy(helper, 7.5, 1, 7.5);
+        float health = zombie.getHealth();
+        player.setXRot(8.0F);
+        use(player);
+        helper.assertTrue(BatarangEntity.findAll(player).size() == 1, "a batarang should be in flight");
+        helper.assertTrue(BatCharge.get(belt).stored() == 1000 - BatPower.BATARANG.cost(), "the batarang should cost charge");
+        helper.startSequence()
+                .thenWaitUntil(() -> helper.assertTrue(zombie.getHealth() < health || zombie.isDeadOrDying(), "zombie should be hit"))
+                .thenExecute(() -> helper.assertTrue(zombie.hasEffect(net.minecraft.world.effect.MobEffects.SLOWNESS), "the batarang slows the target"))
+                .thenWaitUntil(() -> helper.assertTrue(BatarangEntity.findAll(player).isEmpty(), "the batarang should come back"))
+                .thenExecute(() -> remove(player))
+                .thenSucceed();
+    }
+
+    public static void batmanGrappleHooksAndReleases(GameTestHelper helper) {
+        ServerPlayer player = player(helper, 7.5, 1, 2.5, 0, 0);
+        for (int x = 5; x <= 10; x++) {
+            for (int y = 1; y <= 5; y++) helper.setBlock(new BlockPos(x, y, 11), Blocks.STONE);
+        }
+        ItemStack belt = giveBelt(player, 1000);
+        BatmanSuit.summon(player);
+        BatPower.select(belt, BatPower.GRAPPLE);
+        use(player);
+        helper.assertTrue(GrappleHookEntity.find(player) != null, "the hook should be fired");
+        helper.startSequence()
+                .thenWaitUntil(() -> {
+                    GrappleHookEntity hook = GrappleHookEntity.find(player);
+                    helper.assertTrue(hook != null && hook.isAttached(), "the hook should bite into the wall");
+                })
+                .thenExecute(() -> {
+                    GrappleHookEntity hook = GrappleHookEntity.find(player);
+                    BatmanServer.usePower(player, belt, BatPower.GRAPPLE);
+                    helper.assertTrue(hook.isRemoved(), "using the gadget again lets go of the cable");
+                    helper.assertTrue(BatCharge.get(belt).stored() == 1000 - BatPower.GRAPPLE.cost(), "letting go is free");
+                    remove(player);
+                })
+                .thenSucceed();
+    }
+
+    public static void batmanBatSwarm(GameTestHelper helper) {
+        ServerPlayer player = player(helper, 7.5, 1, 7.5, 0, 0);
+        ItemStack belt = giveBelt(player, 1000);
+        BatmanSuit.summon(player);
+        BatPower.select(belt, BatPower.BAT_SWARM);
+        Zombie zombie = dummy(helper, 7.5, 1, 11.5);
+        float health = zombie.getHealth();
+        use(player);
+        helper.assertTrue(BatDefenderEntity.findAll(player).size() == GLConfig.BAT_SWARM_COUNT.get(), "the whole swarm should come");
+        helper.assertTrue(BatmanServer.isSwarmActive(player), "the swarm is active");
+        helper.startSequence()
+                .thenWaitUntil(() -> helper.assertTrue(zombie.getHealth() < health || zombie.isDeadOrDying(), "the bats should attack the zombie"))
+                .thenExecute(() -> {
+                    helper.assertTrue(zombie.isDeadOrDying() || zombie.hasEffect(net.minecraft.world.effect.MobEffects.BLINDNESS), "the bats blind their prey");
+                    BatmanServer.usePower(player, belt, BatPower.BAT_SWARM);
+                    helper.assertFalse(BatmanServer.isSwarmActive(player), "using the gadget again scatters the bats");
+                })
+                .thenWaitUntil(() -> helper.assertTrue(around(player, BatDefenderEntity.class, 64).isEmpty(), "the scattered bats fly away"))
+                .thenExecute(() -> remove(player))
+                .thenSucceed();
+    }
+
+    public static void batmanBatmobile(GameTestHelper helper) {
+        ServerPlayer player = player(helper, 7.5, 1, 3.5, 0, 0);
+        ItemStack belt = giveBelt(player, 1000);
+        BatmanSuit.summon(player);
+        BatPower.select(belt, BatPower.BATMOBILE);
+        Zombie zombie = dummy(helper, 7.5, 1, 12.5);
+        float health = zombie.getHealth();
+        use(player);
+        BatmobileEntity car = BatmobileEntity.find(player);
+        helper.assertTrue(car != null, "the Batmobile should arrive");
+        helper.assertTrue(player.getVehicle() == car, "Batman should be in the Batmobile");
+        helper.assertTrue(BatCharge.get(belt).stored() == 1000 - BatPower.BATMOBILE.cost(), "the Batmobile should cost charge");
+        helper.startSequence()
+                .thenExecuteFor(2, player::doTick)
+                .thenExecute(() -> helper.assertTrue(car.fireMissiles(), "the missiles should fire"))
+                .thenWaitUntil(() -> helper.assertTrue(!around(player, BatmobileMissileEntity.class, 32).isEmpty()
+                        || zombie.getHealth() < health || zombie.isDeadOrDying(), "missiles should launch"))
+                .thenWaitUntil(() -> helper.assertTrue(zombie.getHealth() < health || zombie.isDeadOrDying(), "the missiles should hit the zombie"))
+                .thenExecute(() -> {
+                    helper.assertTrue(player.isAlive() && player.getVehicle() == car, "the driver is safe from his own missiles");
+                    BatmanServer.usePower(player, BatmanHelper.findBelt(player), BatPower.BATMOBILE);
+                    helper.assertTrue(car.isRemoved(), "using the gadget again sends the car away");
+                    helper.assertFalse(player.isPassenger(), "Batman gets out");
+                    remove(player);
+                })
+                .thenSucceed();
     }
 }

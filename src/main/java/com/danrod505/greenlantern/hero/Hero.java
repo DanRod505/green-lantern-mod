@@ -2,6 +2,8 @@ package com.danrod505.greenlantern.hero;
 
 import com.danrod505.greenlantern.aquaman.AquamanHelper;
 import com.danrod505.greenlantern.aquaman.AquamanSuit;
+import com.danrod505.greenlantern.batman.BatmanHelper;
+import com.danrod505.greenlantern.batman.BatmanSuit;
 import com.danrod505.greenlantern.flash.FlashHelper;
 import com.danrod505.greenlantern.flash.FlashSuit;
 import com.danrod505.greenlantern.ring.RingHelper;
@@ -17,14 +19,21 @@ public enum Hero {
     NONE,
     LANTERN,
     FLASH,
-    AQUAMAN;
+    AQUAMAN,
+    BATMAN;
 
     /** The hero whose suit the player is wearing, or {@link #NONE}. */
     public static Hero suited(Player player) {
         if (RingHelper.isSuited(player)) return LANTERN;
         if (FlashHelper.isSuited(player)) return FLASH;
         if (AquamanHelper.isSuited(player)) return AQUAMAN;
+        if (BatmanHelper.isSuited(player)) return BATMAN;
         return NONE;
+    }
+
+    /** Whether this hero picks powers on the power wheel (every hero but the Lantern, who has constructs). */
+    public boolean hasPowers() {
+        return this == FLASH || this == AQUAMAN || this == BATMAN;
     }
 
     /** The hero the shared keys control right now (see the class comment), or {@link #NONE}. */
@@ -34,9 +43,11 @@ public enum Hero {
         if (!RingHelper.heldRing(player).isEmpty()) return LANTERN;
         if (!FlashHelper.heldRing(player).isEmpty()) return FLASH;
         if (!AquamanHelper.heldEmblem(player).isEmpty()) return AQUAMAN;
+        if (!BatmanHelper.heldBelt(player).isEmpty()) return BATMAN;
         if (!RingHelper.findRing(player).isEmpty()) return LANTERN;
         if (!FlashHelper.findRing(player).isEmpty()) return FLASH;
         if (!AquamanHelper.findEmblem(player).isEmpty()) return AQUAMAN;
+        if (!BatmanHelper.findBelt(player).isEmpty()) return BATMAN;
         return NONE;
     }
 
@@ -45,5 +56,6 @@ public enum Hero {
         if (keep != LANTERN && RingHelper.isSuited(player)) Uniform.dismiss(player, false);
         if (keep != FLASH && FlashHelper.isSuited(player)) FlashSuit.dismiss(player, false);
         if (keep != AQUAMAN && AquamanHelper.isSuited(player)) AquamanSuit.dismiss(player, false);
+        if (keep != BATMAN && BatmanHelper.isSuited(player)) BatmanSuit.dismiss(player, false);
     }
 }
