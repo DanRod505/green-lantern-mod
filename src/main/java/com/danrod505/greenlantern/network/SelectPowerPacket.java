@@ -30,6 +30,10 @@ public record SelectPowerPacket(int value, boolean relative) {
             AquamanServer.selectPower(player, packet.value, packet.relative);
             return;
         }
+        if (Hero.context(player) == Hero.SUPERMAN) {
+            com.danrod505.greenlantern.superman.SupermanServer.selectPower(player, packet.value, packet.relative);
+            return;
+        }
         if (Hero.context(player) == Hero.BATMAN) {
             com.danrod505.greenlantern.batman.BatmanServer.selectPower(player, packet.value, packet.relative);
             return;

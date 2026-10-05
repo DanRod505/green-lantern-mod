@@ -22,6 +22,9 @@ public final class SidedHooks {
     /** Client handler for the speedster state / moves of players (the local one included). */
     public static java.util.function.Consumer<com.danrod505.greenlantern.network.SpeedSyncPacket> speedSync = packet -> {};
 
+    /** Client handler for the powers / events of a Superman (the local one included). */
+    public static java.util.function.Consumer<com.danrod505.greenlantern.network.SupermanSyncPacket> supermanSync = packet -> {};
+
     /** Opens the Corps Manual (guide book) screen on the local client. */
     public static Runnable openGuide = () -> {};
 

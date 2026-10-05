@@ -8,6 +8,8 @@ import com.danrod505.greenlantern.flash.FlashHelper;
 import com.danrod505.greenlantern.flash.FlashSuit;
 import com.danrod505.greenlantern.ring.RingHelper;
 import com.danrod505.greenlantern.ring.Uniform;
+import com.danrod505.greenlantern.superman.SupermanHelper;
+import com.danrod505.greenlantern.superman.SupermanSuit;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
@@ -20,7 +22,8 @@ public enum Hero {
     LANTERN,
     FLASH,
     AQUAMAN,
-    BATMAN;
+    BATMAN,
+    SUPERMAN;
 
     /** The hero whose suit the player is wearing, or {@link #NONE}. */
     public static Hero suited(Player player) {
@@ -28,12 +31,13 @@ public enum Hero {
         if (FlashHelper.isSuited(player)) return FLASH;
         if (AquamanHelper.isSuited(player)) return AQUAMAN;
         if (BatmanHelper.isSuited(player)) return BATMAN;
+        if (SupermanHelper.isSuited(player)) return SUPERMAN;
         return NONE;
     }
 
     /** Whether this hero picks powers on the power wheel (every hero but the Lantern, who has constructs). */
     public boolean hasPowers() {
-        return this == FLASH || this == AQUAMAN || this == BATMAN;
+        return this == FLASH || this == AQUAMAN || this == BATMAN || this == SUPERMAN;
     }
 
     /** The hero the shared keys control right now (see the class comment), or {@link #NONE}. */
@@ -44,10 +48,12 @@ public enum Hero {
         if (!FlashHelper.heldRing(player).isEmpty()) return FLASH;
         if (!AquamanHelper.heldEmblem(player).isEmpty()) return AQUAMAN;
         if (!BatmanHelper.heldBelt(player).isEmpty()) return BATMAN;
+        if (!SupermanHelper.heldCrystal(player).isEmpty()) return SUPERMAN;
         if (!RingHelper.findRing(player).isEmpty()) return LANTERN;
         if (!FlashHelper.findRing(player).isEmpty()) return FLASH;
         if (!AquamanHelper.findEmblem(player).isEmpty()) return AQUAMAN;
         if (!BatmanHelper.findBelt(player).isEmpty()) return BATMAN;
+        if (!SupermanHelper.findCrystal(player).isEmpty()) return SUPERMAN;
         return NONE;
     }
 
@@ -57,5 +63,6 @@ public enum Hero {
         if (keep != FLASH && FlashHelper.isSuited(player)) FlashSuit.dismiss(player, false);
         if (keep != AQUAMAN && AquamanHelper.isSuited(player)) AquamanSuit.dismiss(player, false);
         if (keep != BATMAN && BatmanHelper.isSuited(player)) BatmanSuit.dismiss(player, false);
+        if (keep != SUPERMAN && SupermanHelper.isSuited(player)) SupermanSuit.dismiss(player, false);
     }
 }

@@ -156,6 +156,33 @@ public final class GLConfig {
     public static final ForgeConfigSpec.DoubleValue BATMOBILE_RAM_DAMAGE;
     public static final ForgeConfigSpec.DoubleValue BATMOBILE_DAMAGE_REDUCTION;
 
+    // Superman
+    public static final ForgeConfigSpec.IntValue SOLAR_CAPACITY;
+    public static final ForgeConfigSpec.IntValue SOLAR_REGEN;
+    public static final ForgeConfigSpec.DoubleValue SOLAR_RAIN_FACTOR;
+    public static final ForgeConfigSpec.IntValue SUPERMAN_FLIGHT_COST_PER_SECOND;
+    public static final ForgeConfigSpec.DoubleValue SUPERMAN_CRUISE_SPEED;
+    public static final ForgeConfigSpec.DoubleValue SUPERMAN_MAX_SPEED;
+    public static final ForgeConfigSpec.DoubleValue SUPERMAN_SECONDS_TO_SOUND_BARRIER;
+    public static final ForgeConfigSpec.DoubleValue SUPERMAN_LANDING_MULTIPLIER;
+    public static final ForgeConfigSpec.DoubleValue SUPERMAN_DAMAGE_REDUCTION;
+    public static final ForgeConfigSpec.IntValue HEAT_VISION_COST_PER_SECOND;
+    public static final ForgeConfigSpec.DoubleValue HEAT_VISION_DAMAGE;
+    public static final ForgeConfigSpec.DoubleValue HEAT_VISION_RANGE;
+    public static final ForgeConfigSpec.DoubleValue HEAT_VISION_SECONDS;
+    public static final ForgeConfigSpec.BooleanValue HEAT_VISION_IGNITES;
+    public static final ForgeConfigSpec.IntValue SUPER_PUNCH_COST;
+    public static final ForgeConfigSpec.DoubleValue SUPER_PUNCH_DAMAGE;
+    public static final ForgeConfigSpec.DoubleValue SUPER_PUNCH_RADIUS;
+    public static final ForgeConfigSpec.BooleanValue SUPER_PUNCH_BREAKS_BLOCKS;
+    public static final ForgeConfigSpec.IntValue SUPER_BREATH_COST_PER_SECOND;
+    public static final ForgeConfigSpec.DoubleValue SUPER_BREATH_DAMAGE;
+    public static final ForgeConfigSpec.DoubleValue SUPER_BREATH_RANGE;
+    public static final ForgeConfigSpec.DoubleValue SUPER_BREATH_SECONDS;
+    public static final ForgeConfigSpec.BooleanValue SUPER_BREATH_FREEZES;
+    public static final ForgeConfigSpec.IntValue XRAY_COST_PER_SECOND;
+    public static final ForgeConfigSpec.IntValue XRAY_RADIUS;
+
     public static final ForgeConfigSpec SPEC;
 
     static {
@@ -326,6 +353,34 @@ public final class GLConfig {
         BATMOBILE_MISSILES_BREAK_BLOCKS = BUILDER.comment("Whether the Batmobile's missiles break blocks.").define("batmobileMissilesBreakBlocks", false);
         BATMOBILE_RAM_DAMAGE = BUILDER.comment("Damage when the Batmobile rams a creature at full speed (less when slower).").defineInRange("batmobileRamDamage", 14.0, 0.0, 1000.0);
         BATMOBILE_DAMAGE_REDUCTION = BUILDER.comment("Fraction of the damage the armored Batmobile takes for its driver (0-1).").defineInRange("batmobileDamageReduction", 0.8, 0.0, 1.0);
+        BUILDER.pop();
+
+        BUILDER.comment("Superman: the Kryptonian Crystal, solar energy, super flight, heat vision, the super punch, super breath and X-ray vision.").push("superman");
+        SOLAR_CAPACITY = BUILDER.comment("Maximum solar energy stored in Superman's cells (kept in the Kryptonian Crystal).").defineInRange("solarCapacity", 6000, 100, 1_000_000);
+        SOLAR_REGEN = BUILDER.comment("Solar energy absorbed per second under the open sky in daylight (50% more high up, above y=150).").defineInRange("solarRegen", 60, 0, 100_000);
+        SOLAR_RAIN_FACTOR = BUILDER.comment("Fraction of the sunlight that gets through the clouds when it rains.").defineInRange("solarRainFactor", 0.35, 0.0, 1.0);
+        SUPERMAN_FLIGHT_COST_PER_SECOND = BUILDER.comment("Solar energy drained per second while flying (x supersonicCostMultiplier at top speed).").defineInRange("flightCostPerSecond", 2, 0, 10_000);
+        SUPERMAN_CRUISE_SPEED = BUILDER.comment("Speed (blocks/tick) when Superman's power flight starts.").defineInRange("cruiseSpeed", 1.0, 0.2, 5.0);
+        SUPERMAN_MAX_SPEED = BUILDER.comment("Superman's top speed (blocks/tick). Keep it below 9 so servers don't reject the movement.").defineInRange("maxSpeed", 7.5, 0.5, 9.0);
+        SUPERMAN_SECONDS_TO_SOUND_BARRIER = BUILDER.comment("Seconds of acceleration Superman needs to break the sound barrier.").defineInRange("secondsToSoundBarrier", 1.6, 0.2, 60.0);
+        SUPERMAN_LANDING_MULTIPLIER = BUILDER.comment("Superman's hero landing: damage and radius multiplier over the Lantern's.").defineInRange("heroLandingMultiplier", 1.8, 0.0, 10.0);
+        SUPERMAN_DAMAGE_REDUCTION = BUILDER.comment("Fraction of the damage Superman shrugs off while he has solar energy (0-1).").defineInRange("damageReduction", 0.6, 0.0, 1.0);
+        HEAT_VISION_COST_PER_SECOND = BUILDER.comment("Solar energy drained per second of heat vision.").defineInRange("heatVisionCostPerSecond", 60, 0, 100_000);
+        HEAT_VISION_DAMAGE = BUILDER.comment("Damage of heat vision, dealt 5 times a second (it also sets the target on fire).").defineInRange("heatVisionDamage", 5.0, 0.0, 1000.0);
+        HEAT_VISION_RANGE = BUILDER.comment("Reach of heat vision (blocks).").defineInRange("heatVisionRange", 64.0, 4.0, 160.0);
+        HEAT_VISION_SECONDS = BUILDER.comment("How long a burst of heat vision lasts (seconds); press again to stop sooner.").defineInRange("heatVisionSeconds", 4.0, 0.5, 60.0);
+        HEAT_VISION_IGNITES = BUILDER.comment("Whether heat vision sets blocks on fire and melts ice and snow.").define("heatVisionIgnites", true);
+        SUPER_PUNCH_COST = BUILDER.comment("Solar energy cost of the super punch.").defineInRange("superPunchCost", 150, 0, 100_000);
+        SUPER_PUNCH_DAMAGE = BUILDER.comment("Damage of the super punch at its center (less at the edge of the blast).").defineInRange("superPunchDamage", 28.0, 0.0, 1000.0);
+        SUPER_PUNCH_RADIUS = BUILDER.comment("Radius of the super punch shockwave.").defineInRange("superPunchRadius", 6.0, 1.0, 24.0);
+        SUPER_PUNCH_BREAKS_BLOCKS = BUILDER.comment("Whether the super punch smashes the weak blocks (dirt, sand, leaves, glass...) in front of it.").define("superPunchBreaksBlocks", false);
+        SUPER_BREATH_COST_PER_SECOND = BUILDER.comment("Solar energy drained per second of super breath.").defineInRange("superBreathCostPerSecond", 45, 0, 100_000);
+        SUPER_BREATH_DAMAGE = BUILDER.comment("Freezing damage of super breath, dealt 4 times a second.").defineInRange("superBreathDamage", 2.5, 0.0, 1000.0);
+        SUPER_BREATH_RANGE = BUILDER.comment("Reach of super breath (blocks).").defineInRange("superBreathRange", 16.0, 2.0, 64.0);
+        SUPER_BREATH_SECONDS = BUILDER.comment("How long a gust of super breath lasts (seconds); press again to stop sooner.").defineInRange("superBreathSeconds", 3.0, 0.5, 60.0);
+        SUPER_BREATH_FREEZES = BUILDER.comment("Whether super breath freezes water into ice and puts out fires.").define("superBreathFreezes", true);
+        XRAY_COST_PER_SECOND = BUILDER.comment("Solar energy drained per second of X-ray vision.").defineInRange("xrayCostPerSecond", 5, 0, 100_000);
+        XRAY_RADIUS = BUILDER.comment("How far X-ray vision sees through walls (blocks): ores and chests at this distance, creatures at twice it.").defineInRange("xrayRadius", 20, 4, 48);
         BUILDER.pop();
 
         SPEC = BUILDER.build();

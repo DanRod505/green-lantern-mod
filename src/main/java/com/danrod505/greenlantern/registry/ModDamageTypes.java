@@ -35,5 +35,23 @@ public final class ModDamageTypes {
         return new DamageSource(level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(KRAKEN), direct, attacker);
     }
 
+    public static final ResourceKey<DamageType> HEAT_VISION = ResourceKey.create(Registries.DAMAGE_TYPE, GreenLantern.id("heat_vision"));
+
+    public static DamageSource heatVision(Level level, @Nullable Entity attacker) {
+        return new DamageSource(level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(HEAT_VISION), attacker, attacker);
+    }
+
+    public static final ResourceKey<DamageType> SUPER_PUNCH = ResourceKey.create(Registries.DAMAGE_TYPE, GreenLantern.id("super_punch"));
+
+    public static DamageSource superPunch(Level level, @Nullable Entity attacker) {
+        return new DamageSource(level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(SUPER_PUNCH), attacker, attacker);
+    }
+
+    public static final ResourceKey<DamageType> SUPER_BREATH = ResourceKey.create(Registries.DAMAGE_TYPE, GreenLantern.id("super_breath"));
+
+    public static DamageSource superBreath(Level level, @Nullable Entity attacker) {
+        return new DamageSource(level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(SUPER_BREATH), attacker, attacker);
+    }
+
     private ModDamageTypes() {}
 }

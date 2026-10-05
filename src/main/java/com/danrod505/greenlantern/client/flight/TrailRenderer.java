@@ -38,6 +38,8 @@ public class TrailRenderer extends EntityRenderer<FlightTrailEntity, TrailRender
     private static final int KIND_SPEED_BOLT = 3;
     private static final int KIND_AQUA_WAKE = 4;
     private static final int KIND_AQUA_SPIRAL = 5;
+    private static final int KIND_SUPERMAN = 6;
+    private static final int KIND_SUPERMAN_SUPERSONIC = 7;
     /** Floats per ribbon point: center xyz, side xyz, u, alpha. */
     private static final int STRIDE = 8;
     private static FlightTrailEntity holder;
@@ -110,10 +112,13 @@ public class TrailRenderer extends EntityRenderer<FlightTrailEntity, TrailRender
             }
             float[] data = build(points, attrs, cam, origin);
             if (data == null) continue;
-            state.ribbons.add(new Ribbon(data, points.size(), visual.supersonic() ? KIND_LANTERN_SUPERSONIC : KIND_LANTERN));
+            int kind = visual.superman ? (visual.supersonic() ? KIND_SUPERMAN_SUPERSONIC : KIND_SUPERMAN)
+                    : (visual.supersonic() ? KIND_LANTERN_SUPERSONIC : KIND_LANTERN);
+            state.ribbons.add(new Ribbon(data, points.size(), kind));
         }
         extractSpeedTrails(state, mc, level, cam, origin, now, partialTick);
         extractSwimTrails(state, mc, level, cam, origin, now, partialTick);
+        com.danrod505.greenlantern.client.superman.SupermanVisuals.extract(state.superman, mc, level, cam, origin, partialTick);
     }
 
     /**
@@ -269,6 +274,7 @@ public class TrailRenderer extends EntityRenderer<FlightTrailEntity, TrailRender
 
     @Override
     public void submit(State state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
+        com.danrod505.greenlantern.client.superman.SupermanVisuals.submit(state.superman, poseStack, collector);
         if (state.ribbons.isEmpty()) return;
         List<Ribbon> ribbons = List.copyOf(state.ribbons);
         if (ribbons.stream().anyMatch(r -> r.kind <= KIND_LANTERN_SUPERSONIC)) {
@@ -297,6 +303,12 @@ public class TrailRenderer extends EntityRenderer<FlightTrailEntity, TrailRender
                     } else if (ribbon.kind == KIND_AQUA_SPIRAL) {
                         emit(vc, pose, ribbon, 2.6F, 0.35F, 0xFF7FF0E6);
                         emit(vc, pose, ribbon, 1.0F, 0.9F, 0xFFE8FFFC);
+                    } else if (ribbon.kind == KIND_SUPERMAN || ribbon.kind == KIND_SUPERMAN_SUPERSONIC) {
+                        // A white vapor trail with a blue glow (and a red edge past the sound barrier).
+                        boolean supersonic = ribbon.kind == KIND_SUPERMAN_SUPERSONIC;
+                        emit(vc, pose, ribbon, 2.6F, supersonic ? 0.38F : 0.26F, 0xFF2E6BFF);
+                        if (supersonic) emit(vc, pose, ribbon, 1.7F, 0.3F, 0xFFE8303A);
+                        emit(vc, pose, ribbon, 1.0F, supersonic ? 0.95F : 0.7F, 0xFFF4F8FF);
                     }
                 }
             });
@@ -330,5 +342,7 @@ public class TrailRenderer extends EntityRenderer<FlightTrailEntity, TrailRender
 
     public static class State extends EntityRenderState {
         final List<Ribbon> ribbons = new ArrayList<>();
+        /** Heat vision beams and X-ray outlines (see {@code client.superman.SupermanVisuals}). */
+        final com.danrod505.greenlantern.client.superman.SupermanVisuals.Frame superman = new com.danrod505.greenlantern.client.superman.SupermanVisuals.Frame();
     }
 }

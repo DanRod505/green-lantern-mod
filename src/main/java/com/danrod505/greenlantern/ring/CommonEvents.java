@@ -53,6 +53,8 @@ public final class CommonEvents {
                 AquamanServer.remove(player);
                 if (com.danrod505.greenlantern.batman.BatmanHelper.isSuited(player)) com.danrod505.greenlantern.batman.BatmanSuit.dismiss(player, false);
                 com.danrod505.greenlantern.batman.BatmanServer.remove(player);
+                if (com.danrod505.greenlantern.superman.SupermanHelper.isSuited(player)) com.danrod505.greenlantern.superman.SupermanSuit.dismiss(player, false);
+                com.danrod505.greenlantern.superman.SupermanServer.remove(player);
             }
         });
     }
@@ -91,12 +93,18 @@ public final class CommonEvents {
             // The batsuit folds back into the belt: no belt, no suit.
             com.danrod505.greenlantern.batman.BatmanSuit.dismiss(player, true);
         }
+        if (com.danrod505.greenlantern.superman.SupermanHelper.isSuited(player)
+                && com.danrod505.greenlantern.superman.SupermanHelper.findCrystal(player).isEmpty()) {
+            // The suit belongs to the crystal: no crystal, no suit.
+            com.danrod505.greenlantern.superman.SupermanSuit.dismiss(player, true);
+        }
         if (player.tickCount % 10 == 0) {
             Uniform.removeStrayPieces(player);
         }
         com.danrod505.greenlantern.flash.SpeedsterServer.tick(player);
         AquamanServer.tick(player);
         com.danrod505.greenlantern.batman.BatmanServer.tick(player);
+        com.danrod505.greenlantern.superman.SupermanServer.tick(player);
         com.danrod505.greenlantern.aquaman.Respirator.tick(player);
         if (player.tickCount % 5 == 0) {
             chargeFromCentralBattery(player);
@@ -170,6 +178,11 @@ public final class CommonEvents {
             // The Batmobile's armor takes most of the blow.
             event.setAmount(event.getAmount() * (1.0F - GLConfig.BATMOBILE_DAMAGE_REDUCTION.get().floatValue()));
         }
+        if (com.danrod505.greenlantern.superman.SupermanHelper.isPowered(player)
+                && !event.getSource().is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+            // The Man of Steel: most blows barely hurt him while the sun charges his cells.
+            event.setAmount(event.getAmount() * (1.0F - GLConfig.SUPERMAN_DAMAGE_REDUCTION.get().floatValue()));
+        }
         BubbleConstructEntity bubble = BubbleConstructEntity.find(player);
         if (bubble != null && !event.getSource().is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY)) {
             float reduction = GLConfig.BUBBLE_DAMAGE_REDUCTION.get().floatValue();
@@ -182,6 +195,7 @@ public final class CommonEvents {
     private static void onLivingFall(LivingFallEvent event) {
         if (event.getEntity() instanceof net.minecraft.world.entity.player.Player player
                 && (RingHelper.isSuited(player) || com.danrod505.greenlantern.flash.FlashHelper.isSuited(player)
+                        || com.danrod505.greenlantern.superman.SupermanHelper.isSuited(player)
                         || (AquamanHelper.isSuited(player) && event.getDistance() < 24.0F))) {
             // The ring cushions every landing; a speedster lands running; an Atlantean, built for the
             // crushing deep, shrugs off any ordinary fall.
@@ -205,6 +219,9 @@ public final class CommonEvents {
         }
         if (event.getEntity() instanceof ServerPlayer player && com.danrod505.greenlantern.batman.BatmanHelper.isSuited(player)) {
             com.danrod505.greenlantern.batman.BatmanSuit.dismiss(player, false);
+        }
+        if (event.getEntity() instanceof ServerPlayer player && com.danrod505.greenlantern.superman.SupermanHelper.isSuited(player)) {
+            com.danrod505.greenlantern.superman.SupermanSuit.dismiss(player, false);
         }
     }
 

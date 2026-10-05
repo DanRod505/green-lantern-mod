@@ -39,5 +39,9 @@ public final class ModDataComponents {
     public static final RegistryObject<DataComponentType<Integer>> RESPIRATOR_AIR = COMPONENTS.register("respirator_air",
             () -> DataComponentType.<Integer>builder().persistent(com.mojang.serialization.Codec.INT).networkSynchronized(net.minecraft.network.codec.ByteBufCodecs.VAR_INT).build());
 
+    /** Solar energy stored in Superman's Kryptonian Crystal (selected power: {@link #SELECTED_POWER}). */
+    public static final RegistryObject<DataComponentType<RingEnergy>> SOLAR_ENERGY = COMPONENTS.register("solar_energy",
+            () -> DataComponentType.<RingEnergy>builder().persistent(RingEnergy.CODEC).networkSynchronized(RingEnergy.STREAM_CODEC).build());
+
     private ModDataComponents() {}
 }

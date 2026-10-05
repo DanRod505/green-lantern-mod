@@ -3,7 +3,20 @@
 > *"No dia mais claro, na noite mais densa, o mal sucumbirá ante a minha presença!"*
 
 Mod de heróis do **Universo DC** para **Minecraft Java 1.21.11** com **Forge 61.2.0** (compilado com **Java 25**).
-Começou como o mod do Lanterna Verde e agora traz também **o Flash** (v1.7.0) **o Aquaman** (v1.8.0), **Atlântida** (v1.9.0) **o Kraken do Aquaman** (v1.10.0), **o Batman** (v1.11.0), **as criaturas de Atlântida** (v1.12.0) e **o Fosso**, os inimigos do Aquaman (v1.13.0). O id do mod continua `greenlantern`, então mundos e configurações antigas continuam funcionando.
+Começou como o mod do Lanterna Verde e agora traz também **o Flash** (v1.7.0) **o Aquaman** (v1.8.0), **Atlântida** (v1.9.0) **o Kraken do Aquaman** (v1.10.0), **o Batman** (v1.11.0), **as criaturas de Atlântida** (v1.12.0) **o Fosso**, os inimigos do Aquaman (v1.13.0), e **o Superman** (v1.14.0). O id do mod continua `greenlantern`, então mundos e configurações antigas continuam funcionando.
+
+## O Superman (novo na 1.14.0)
+
+* **Cristal Kryptoniano:** o item do herói. Clique direito (ou **G**) veste o traje: azul com o escudo do S, sunga e botas vermelhas, cinto amarelo, cabelo preto com o cacho na testa e uma longa capa vermelha que balança, se abre quando ele paira e voa esticada atrás dele em alta velocidade.
+* **O Homem de Aço:** com o traje ele bate muito forte, tem mais alcance, mais vida, recebe bem menos dano, corre, pula e quebra blocos mais rápido, sobe blocos andando, é imune a fogo e lava e não toma dano de queda.
+* **Voo super rápido:** **dois toques no pulo**, como o Lanterna, mas mais rápido e poderoso: quebra a barreira do som mais cedo (cone de vapor branco e estrondo de trovão), vai bem além dela, faz curvas mais fechadas e a aterrissagem faz tudo em volta tremer. Tem rastro azul e vermelho e trilha sonora original própria.
+* **Energia solar:** o cristal guarda muita energia (6000) e recarrega com a luz direta do sol (de dia, ao ar livre, mais rápido bem alto no céu, mais devagar na chuva). Ficar no sol também cura.
+* **Menu radial (R, depois V):**
+  * **Visão de Calor:** dois raios vermelhos saem dos olhos, queimam e incendeiam criaturas, derretem gelo e neve e acendem TNT.
+  * **Super Soco:** um trovão que fere e arremessa tudo em volta e derruba projéteis; mais forte voando rápido.
+  * **Super Sopro:** ventania congelante que empurra, fere, deixa lento e congela, transforma água em gelo e lava em pedra, e apaga o fogo.
+  * **Visão de Raio-X:** as criaturas brilham através das paredes e minérios, baús e geradores aparecem coloridos através da pedra (tela azulada).
+* **Sons e trilha originais**, sem samples; nova seção **Superman** no Guia dos Heróis; seção `superman` na configuração (energia, voo, dano e custo de cada poder).
 
 ## O Fosso (novo na 1.13.0)
 
@@ -183,6 +196,8 @@ Por direitos autorais, o mod não pode incluir músicas de terceiros, como a tri
 | **Pulo** (segurar) caindo, com o traje do Batman | Planar com a capa |
 | **R** (segurar / tocar) com o traje do Batman | Menu radial de equipamentos / próximo equipamento |
 | No Batmóvel: **Ctrl** / botão esquerdo | Boost / mísseis |
+| **Dois toques no pulo** com o traje do Superman | Decolar / parar de voar |
+| **R** (segurar / tocar) com o traje do Superman | Menu radial de poderes / próximo poder |
 
 ### Receitas
 
@@ -225,6 +240,13 @@ Cinto de Utilidades
  L  G  L
  I  M  I       L = couro, G = barra de ouro, I = barra de ferro, M = membrana de phantom
  L  G  L
+```
+
+```
+Cristal Kryptoniano
+ A  D  A
+ G  S  G       A = fragmento de ametista, D = diamante, G = barra de ouro, S = girassol
+ A  D  A
 ```
 
 Também estão na aba criativa **Heróis do Universo DC** (inclui os anéis já carregados).
@@ -356,6 +378,8 @@ python tools/generate_aquaman_textures.py # emblema, traje, tridente, tubarão e
 python tools/generate_aquaman_audio.py    # sons originais do Aquaman
 python tools/generate_batman_textures.py  # cinto, traje e ícones do Batman
 python tools/generate_batman_audio.py     # sons originais do Batman e do Batmóvel
+python tools/generate_superman_textures.py # cristal, traje, partículas e ícones do Superman
+python tools/generate_superman_audio.py    # sons originais do Superman e a trilha do voo
 ```
 
 ## Licença

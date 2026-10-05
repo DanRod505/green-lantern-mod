@@ -98,4 +98,18 @@ public class SonicRingParticle extends SingleQuadParticle {
             return new SonicRingParticle(level, x, y, z, xd, yd, zd, sprites, 1.0F, 0.82F, 0.35F);
         }
     }
+
+    /** Superman's version: a white ring with a hint of blue. */
+    public static class SupermanProvider implements ParticleProvider<SimpleParticleType> {
+        private final SpriteSet sprites;
+
+        public SupermanProvider(SpriteSet sprites) {
+            this.sprites = sprites;
+        }
+
+        @Override
+        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xd, double yd, double zd, RandomSource random) {
+            return new SonicRingParticle(level, x, y, z, xd, yd, zd, sprites, 0.9F, 0.95F, 1.0F);
+        }
+    }
 }
