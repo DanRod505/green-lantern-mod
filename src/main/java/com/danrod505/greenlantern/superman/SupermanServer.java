@@ -142,8 +142,8 @@ public final class SupermanServer {
             player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, FIRE_RESISTANCE_TICKS, 0, true, false, true));
         }
 
-        // The yellow sun recharges his cells.
-        float sun = sunlight(player);
+        // The yellow sun recharges his cells (not while he is pouring energy out through his eyes or his breath).
+        float sun = state.heatTicks > 0 || state.breathTicks > 0 ? 0.0F : sunlight(player);
         if (sun > 0.0F) {
             state.pendingSolar += GLConfig.SOLAR_REGEN.get() * sun / 20.0F;
             if (state.pendingSolar >= 1.0F) {
