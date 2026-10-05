@@ -501,7 +501,7 @@ public final class SupermanServer {
     private static void freeze(ServerLevel level, Vec3 mouth, Vec3 look, double range) {
         for (int i = 0; i < 10; i++) {
             Vec3 dir = look.add(level.random.nextGaussian() * 0.25, level.random.nextGaussian() * 0.25, level.random.nextGaussian() * 0.25).normalize();
-            BlockHitResult hit = level.clip(new ClipContext(mouth, mouth.add(dir.scale(range)), ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, (Entity) null));
+            BlockHitResult hit = level.clip(new ClipContext(mouth, mouth.add(dir.scale(range)), ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, net.minecraft.world.phys.shapes.CollisionContext.empty()));
             if (hit.getType() == HitResult.Type.MISS) continue;
             BlockPos pos = hit.getBlockPos();
             BlockState state = level.getBlockState(pos);
