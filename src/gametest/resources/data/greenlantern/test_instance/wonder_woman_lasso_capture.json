@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:function",
+  "function": "greenlantern:wonder_woman_lasso_capture",
+  "environment": "minecraft:default",
+  "structure": "greenlantern:arena",
+  "max_ticks": 400,
+  "required": true
+}

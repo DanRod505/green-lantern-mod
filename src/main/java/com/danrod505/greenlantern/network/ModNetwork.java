@@ -8,7 +8,7 @@ import net.minecraftforge.network.SimpleChannel;
 
 /** Network channel of the mod. Bump {@link #PROTOCOL} whenever a packet format changes. */
 public final class ModNetwork {
-    public static final int PROTOCOL = 8;
+    public static final int PROTOCOL = 9;
 
     public static final SimpleChannel CHANNEL = ChannelBuilder.named(GreenLantern.id("main"))
             .networkProtocolVersion(PROTOCOL)
@@ -73,6 +73,10 @@ public final class ModNetwork {
                 .codec(BatmobileFirePacket.STREAM_CODEC)
                 .consumerMainThread(BatmobileFirePacket::handle)
                 .add();
+        CHANNEL.messageBuilder(JetCloakPacket.class, NetworkDirection.PLAY_TO_SERVER)
+                .codec(JetCloakPacket.STREAM_CODEC)
+                .consumerMainThread(JetCloakPacket::handle)
+                .add();
         CHANNEL.messageBuilder(SpeedSyncPacket.class, NetworkDirection.PLAY_TO_CLIENT)
                 .codec(SpeedSyncPacket.STREAM_CODEC)
                 .consumerMainThread(SpeedSyncPacket::handle)
@@ -80,6 +84,10 @@ public final class ModNetwork {
         CHANNEL.messageBuilder(SupermanSyncPacket.class, NetworkDirection.PLAY_TO_CLIENT)
                 .codec(SupermanSyncPacket.STREAM_CODEC)
                 .consumerMainThread(SupermanSyncPacket::handle)
+                .add();
+        CHANNEL.messageBuilder(WonderWomanSyncPacket.class, NetworkDirection.PLAY_TO_CLIENT)
+                .codec(WonderWomanSyncPacket.STREAM_CODEC)
+                .consumerMainThread(WonderWomanSyncPacket::handle)
                 .add();
         CHANNEL.messageBuilder(FlightSyncPacket.class, NetworkDirection.PLAY_TO_CLIENT)
                 .codec(FlightSyncPacket.STREAM_CODEC)

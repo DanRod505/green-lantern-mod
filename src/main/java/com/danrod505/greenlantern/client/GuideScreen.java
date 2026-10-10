@@ -106,7 +106,11 @@ public class GuideScreen extends Screen {
             Items.AMETHYST_SHARD, Items.DIAMOND, Items.AMETHYST_SHARD,
             Items.GOLD_INGOT, Items.SUNFLOWER, Items.GOLD_INGOT,
             Items.AMETHYST_SHARD, Items.DIAMOND, Items.AMETHYST_SHARD));
-    private static final Recipe GUIDE_BOOK = new Recipe("guide_book", () -> new ItemStack(ModItems.GUIDE_BOOK.get()), () -> grid(
+    private static final Recipe AMAZON_TIARA = new Recipe("amazon_tiara", () -> new ItemStack(ModItems.AMAZON_TIARA.get()), () -> grid(
+            Items.GOLD_INGOT, Items.RED_DYE, Items.GOLD_INGOT,
+            Items.LEAD, Items.DIAMOND, Items.LEAD,
+            null, null, null));
+    private static final Recipe GUIDE_BOOK =new Recipe("guide_book", () -> new ItemStack(ModItems.GUIDE_BOOK.get()), () -> grid(
             Items.BOOK, Items.EMERALD, null,
             null, null, null,
             null, null, null));
@@ -132,7 +136,9 @@ public class GuideScreen extends Screen {
             new Section("batman", () -> new ItemStack(ModItems.UTILITY_BELT.get()), 0xFFB8C0CC, List.of(
                     text("batman"), text("batman_powers"), text("controls_batman"), recipes("batman", UTILITY_BELT))),
             new Section("superman", () -> com.danrod505.greenlantern.item.KryptonianCrystalItem.charged(ModItems.KRYPTONIAN_CRYSTAL.get().getDefaultInstance()), 0xFF4A86FF, List.of(
-                    text("superman"), text("superman_powers"), text("controls_superman"), recipes("superman", KRYPTONIAN_CRYSTAL))));
+                    text("superman"), text("superman_powers"), text("controls_superman"), recipes("superman", KRYPTONIAN_CRYSTAL))),
+            new Section("wonder_woman", () -> com.danrod505.greenlantern.item.AmazonTiaraItem.charged(ModItems.AMAZON_TIARA.get().getDefaultInstance()), 0xFFE0303A, List.of(
+                    text("wonder_woman"), text("wonder_woman_powers"), text("controls_wonder_woman"), recipes("wonder_woman", AMAZON_TIARA))));
 
     // Remembered while the game runs, so the guide reopens where the player stopped reading.
     private static int lastSection;

@@ -53,5 +53,12 @@ public final class ModDamageTypes {
         return new DamageSource(level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(SUPER_BREATH), attacker, attacker);
     }
 
+    public static final ResourceKey<DamageType> AMAZON = ResourceKey.create(Registries.DAMAGE_TYPE, GreenLantern.id("amazon"));
+
+    /** Wonder Woman's might: the bracelets' shockwave, the whirling lasso, the thrown shield, her landing. */
+    public static DamageSource amazon(Level level, @Nullable Entity direct, @Nullable Entity attacker) {
+        return new DamageSource(level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(AMAZON), direct, attacker);
+    }
+
     private ModDamageTypes() {}
 }

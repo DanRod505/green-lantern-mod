@@ -29,6 +29,10 @@ public record UsePowerPacket(int power) {
             com.danrod505.greenlantern.superman.SupermanServer.usePowerKey(player, packet.power);
             return;
         }
+        if (Hero.context(player) == Hero.WONDER_WOMAN) {
+            com.danrod505.greenlantern.wonderwoman.WonderWomanServer.usePowerKey(player, packet.power);
+            return;
+        }
         if (Hero.context(player) == Hero.BATMAN) {
             com.danrod505.greenlantern.batman.BatmanServer.usePowerKey(player, packet.power);
             return;

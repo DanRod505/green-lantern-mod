@@ -80,6 +80,8 @@ public final class ClientSetup {
         InputEvent.InteractionKeyMappingTriggered.BUS.addListener(SharkControls::onInteraction);
         InputEvent.InteractionKeyMappingTriggered.BUS.addListener(KrakenControls::onInteraction);
         InputEvent.InteractionKeyMappingTriggered.BUS.addListener(BatmobileControls::onInteraction);
+        InputEvent.InteractionKeyMappingTriggered.BUS.addListener(JetControls::onInteraction);
+        com.danrod505.greenlantern.client.wonderwoman.WonderWomanRenderHandler.register();
         com.danrod505.greenlantern.client.batman.BatmanRenderHandler.register();
         ViewportEvent.ComputeCameraAngles.BUS.addListener(CameraShake::onCameraAngles);
     }
@@ -98,6 +100,7 @@ public final class ClientSetup {
         SidedHooks.flightSync = FlightVisuals::onSync;
         SidedHooks.speedSync = SpeedVisuals::onSync;
         SidedHooks.supermanSync = com.danrod505.greenlantern.client.superman.SupermanVisuals::onSync;
+        SidedHooks.wonderWomanSync = com.danrod505.greenlantern.client.wonderwoman.WonderWomanVisuals::onSync;
     }
 
     private static void onRegisterKeys(RegisterKeyMappingsEvent event) {
@@ -136,6 +139,9 @@ public final class ClientSetup {
         event.registerEntityRenderer(ModEntities.BAT_DEFENDER.get(), com.danrod505.greenlantern.client.render.batman.BatDefenderRenderer::new);
         event.registerEntityRenderer(ModEntities.BATMOBILE.get(), com.danrod505.greenlantern.client.render.batman.BatmobileRenderer::new);
         event.registerEntityRenderer(ModEntities.BATMOBILE_MISSILE.get(), com.danrod505.greenlantern.client.render.batman.BatmobileMissileRenderer::new);
+        event.registerEntityRenderer(ModEntities.LASSO.get(), com.danrod505.greenlantern.client.render.wonderwoman.LassoRenderer::new);
+        event.registerEntityRenderer(ModEntities.AMAZON_SHIELD.get(), com.danrod505.greenlantern.client.render.wonderwoman.AmazonShieldRenderer::new);
+        event.registerEntityRenderer(ModEntities.INVISIBLE_JET.get(), com.danrod505.greenlantern.client.render.wonderwoman.InvisibleJetRenderer::new);
     }
 
     private static void onRegisterParticles(RegisterParticleProvidersEvent event) {
@@ -152,6 +158,8 @@ public final class ClientSetup {
         event.registerSpriteSet(ModParticles.FROST_BREATH.get(), com.danrod505.greenlantern.client.particle.SuperParticle.FrostProvider::new);
         event.registerSpriteSet(ModParticles.SUPER_RING.get(), SonicRingParticle.SupermanProvider::new);
         event.registerSpriteSet(ModParticles.SUPER_SHOCKWAVE.get(), ShockwaveParticle.SupermanProvider::new);
+        event.registerSpriteSet(ModParticles.AMAZON_SPARK.get(), com.danrod505.greenlantern.client.particle.SuperParticle.AmazonProvider::new);
+        event.registerSpriteSet(ModParticles.AMAZON_SHOCKWAVE.get(), ShockwaveParticle.AmazonProvider::new);
     }
 
     private static void onRegisterLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
@@ -174,6 +182,7 @@ public final class ClientSetup {
                 renderer.addLayer(new com.danrod505.greenlantern.client.render.aqua.RespiratorLayer(renderer));
                 renderer.addLayer(new com.danrod505.greenlantern.client.render.batman.BatmanLayer(renderer));
                 renderer.addLayer(new com.danrod505.greenlantern.client.superman.SupermanLayer(renderer));
+                renderer.addLayer(new com.danrod505.greenlantern.client.render.wonderwoman.WonderWomanLayer(renderer));
             }
         }
     }
@@ -189,6 +198,7 @@ public final class ClientSetup {
         com.danrod505.greenlantern.client.batman.BatmanVisuals.tick();
         com.danrod505.greenlantern.client.batman.BatmanAudio.tick();
         com.danrod505.greenlantern.client.superman.SupermanVisuals.tick();
+        com.danrod505.greenlantern.client.wonderwoman.WonderWomanVisuals.tick();
     }
 
     private static void onPlayerTickPre(TickEvent.PlayerTickEvent.Pre event) {
@@ -219,6 +229,7 @@ public final class ClientSetup {
         event.getLayeredDraw().add(ForgeLayeredDraw.POST_SLEEP_STACK, GreenLantern.id("aqua_hud"), AquaHud::render);
         event.getLayeredDraw().add(ForgeLayeredDraw.POST_SLEEP_STACK, GreenLantern.id("bat_hud"), BatHud::render);
         event.getLayeredDraw().add(ForgeLayeredDraw.POST_SLEEP_STACK, GreenLantern.id("superman_hud"), SupermanHud::render);
+        event.getLayeredDraw().add(ForgeLayeredDraw.POST_SLEEP_STACK, GreenLantern.id("wonder_woman_hud"), WonderWomanHud::render);
         event.getLayeredDraw().add(ForgeLayeredDraw.POST_SLEEP_STACK, GreenLantern.id("respirator_hud"), RespiratorHud::render);
     }
 }

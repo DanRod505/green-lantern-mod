@@ -48,6 +48,8 @@ public final class FlightVisuals {
         public int heroLanding;
         /** Superman (white vapor trail, blue and red glow) rather than a Lantern (green hard light). */
         public boolean superman;
+        /** Wonder Woman (a golden, crimson-edged trail and sparks of divine light). */
+        public boolean amazon;
         /** Flying right now (power flight or hovering). */
         public boolean flying;
         /** Smoothed 0-1 version of {@link #flying} (the cape billows in and out). */
@@ -165,6 +167,7 @@ public final class FlightVisuals {
         visual.lastPos = pos;
         boolean suited = FlightProfile.canPowerFly(player);
         visual.superman = FlightProfile.isSuperman(player);
+        visual.amazon = FlightProfile.isWonderWoman(player);
 
         float targetSpeed;
         int flags;
@@ -211,7 +214,7 @@ public final class FlightVisuals {
             visual.rollDir = 0;
         }
 
-        float auraTarget = flying && !visual.superman ? 0.45F + 0.55F * Mth.clamp(visual.speed / GLConfig.SOUND_BARRIER_SPEED.get().floatValue(), 0, 1) : 0.0F;
+        float auraTarget = flying && !visual.superman && !visual.amazon ? 0.45F + 0.55F * Mth.clamp(visual.speed / GLConfig.SOUND_BARRIER_SPEED.get().floatValue(), 0, 1) : 0.0F;
         visual.aura += (auraTarget - visual.aura) * 0.15F;
 
         // Trail.
@@ -254,6 +257,25 @@ public final class FlightVisuals {
         }
     }
 
+    /** Wonder Woman: golden sparks of divine light trail behind her, and a breath of vapor at speed. */
+    private static void spawnAmazonParticles(ClientLevel level, Visual visual, Vec3 delta, Vec3 c, RandomSource random) {
+        float speed = visual.speed;
+        if (random.nextFloat() < (speed < 0.6F ? 0.15F : 0.5F)) {
+            level.addParticle(ModParticles.AMAZON_SPARK.get(), c.x + (random.nextDouble() - 0.5) * 0.7, c.y + (random.nextDouble() - 0.5) * 1.2,
+                    c.z + (random.nextDouble() - 0.5) * 0.7, 0, 0.01, 0);
+        }
+        if (speed < 1.0F) return;
+        int steps = Mth.clamp((int) (delta.length() * 1.5), 1, 8);
+        for (int i = 0; i < steps; i++) {
+            Vec3 p = c.subtract(delta.scale((double) i / steps));
+            if (random.nextFloat() < 0.3F) {
+                Vec3 back = visual.dir.scale(-0.04 * speed);
+                level.addParticle(net.minecraft.core.particles.ParticleTypes.CLOUD, p.x + random.nextGaussian() * 0.2, p.y + random.nextGaussian() * 0.2,
+                        p.z + random.nextGaussian() * 0.2, back.x, back.y, back.z);
+            }
+        }
+    }
+
     private static void pruneTrail(Visual visual, int life) {
         while (visual.trail.size() > TRAIL_POINTS) visual.trail.removeLast();
         while (!visual.trail.isEmpty() && gameTime - visual.trail.peekLast().time() > life) visual.trail.removeLast();
@@ -265,6 +287,10 @@ public final class FlightVisuals {
         float speed = visual.speed;
         if (visual.superman) {
             spawnSupermanParticles(level, player, visual, delta, c, random);
+            return;
+        }
+        if (visual.amazon) {
+            spawnAmazonParticles(level, visual, delta, c, random);
             return;
         }
         // Aura motes around the body.

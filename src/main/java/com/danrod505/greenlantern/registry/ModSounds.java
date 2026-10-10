@@ -144,6 +144,26 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> TRENCH_RAID = register("trench_raid");
     public static final RegistryObject<SoundEvent> COCOON_BURST = register("cocoon_burst");
 
+    // ---- Wonder Woman ----
+    public static final RegistryObject<SoundEvent> WONDER_WOMAN_SUIT_UP = register("wonder_woman_suit_up");
+    public static final RegistryObject<SoundEvent> WONDER_WOMAN_SUIT_DOWN = register("wonder_woman_suit_down");
+    public static final RegistryObject<SoundEvent> LASSO_THROW = register("lasso_throw");
+    public static final RegistryObject<SoundEvent> LASSO_CAPTURE = register("lasso_capture");
+    public static final RegistryObject<SoundEvent> LASSO_PULL = register("lasso_pull");
+    public static final RegistryObject<SoundEvent> LASSO_SPIN = register("lasso_spin");
+    public static final RegistryObject<SoundEvent> BRACELET_GUARD = register("bracelet_guard");
+    public static final RegistryObject<SoundEvent> BRACELET_DEFLECT = register("bracelet_deflect");
+    public static final RegistryObject<SoundEvent> BRACELET_SHOCKWAVE = register("bracelet_shockwave");
+    public static final RegistryObject<SoundEvent> AMAZON_SWORD_SWING = register("amazon_sword_swing");
+    public static final RegistryObject<SoundEvent> SHIELD_THROW = register("shield_throw");
+    public static final RegistryObject<SoundEvent> SHIELD_HIT = register("shield_hit");
+    public static final RegistryObject<SoundEvent> SHIELD_RETURN = register("shield_return");
+    public static final RegistryObject<SoundEvent> INVISIBLE_JET_SUMMON = register("invisible_jet_summon");
+    public static final RegistryObject<SoundEvent> INVISIBLE_JET_ENGINE = register("invisible_jet_engine");
+    public static final RegistryObject<SoundEvent> INVISIBLE_JET_CLOAK = register("invisible_jet_cloak");
+    public static final RegistryObject<SoundEvent> WONDER_WOMAN_THEME_BASE = register("wonder_woman_theme_base");
+    public static final RegistryObject<SoundEvent> WONDER_WOMAN_THEME_PEAK = register("wonder_woman_theme_peak");
+
     private static RegistryObject<SoundEvent> register(String name) {
         return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(GreenLantern.id(name)));
     }

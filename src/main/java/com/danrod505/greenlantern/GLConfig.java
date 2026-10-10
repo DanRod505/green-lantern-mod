@@ -183,6 +183,37 @@ public final class GLConfig {
     public static final ForgeConfigSpec.IntValue XRAY_COST_PER_SECOND;
     public static final ForgeConfigSpec.IntValue XRAY_RADIUS;
 
+    // Wonder Woman
+    public static final ForgeConfigSpec.IntValue DIVINE_CAPACITY;
+    public static final ForgeConfigSpec.IntValue DIVINE_REGEN;
+    public static final ForgeConfigSpec.IntValue SWORD_HIT_CHARGE;
+    public static final ForgeConfigSpec.DoubleValue WONDER_WOMAN_CRUISE_SPEED;
+    public static final ForgeConfigSpec.DoubleValue WONDER_WOMAN_MAX_SPEED;
+    public static final ForgeConfigSpec.DoubleValue WONDER_WOMAN_SECONDS_TO_MAX;
+    public static final ForgeConfigSpec.DoubleValue WONDER_WOMAN_DAMAGE_REDUCTION;
+    public static final ForgeConfigSpec.DoubleValue AMAZON_SWORD_DAMAGE;
+    public static final ForgeConfigSpec.IntValue LASSO_CAPTURE_COST;
+    public static final ForgeConfigSpec.DoubleValue LASSO_CAPTURE_SECONDS;
+    public static final ForgeConfigSpec.IntValue LASSO_PULL_COST;
+    public static final ForgeConfigSpec.DoubleValue LASSO_RANGE;
+    public static final ForgeConfigSpec.IntValue LASSO_SPIN_COST;
+    public static final ForgeConfigSpec.DoubleValue LASSO_SPIN_DAMAGE;
+    public static final ForgeConfigSpec.IntValue BRACELET_GUARD_COST_PER_SECOND;
+    public static final ForgeConfigSpec.DoubleValue BRACELET_GUARD_SECONDS;
+    public static final ForgeConfigSpec.DoubleValue BRACELET_PASSIVE_DEFLECT_CHANCE;
+    public static final ForgeConfigSpec.IntValue BRACELET_SHOCKWAVE_COST;
+    public static final ForgeConfigSpec.DoubleValue BRACELET_SHOCKWAVE_DAMAGE;
+    public static final ForgeConfigSpec.DoubleValue BRACELET_SHOCKWAVE_RADIUS;
+    public static final ForgeConfigSpec.BooleanValue BRACELET_SHOCKWAVE_BREAKS_GLASS;
+    public static final ForgeConfigSpec.IntValue SWORD_AND_SHIELD_COST;
+    public static final ForgeConfigSpec.IntValue SHIELD_THROW_COST;
+    public static final ForgeConfigSpec.DoubleValue SHIELD_THROW_DAMAGE;
+    public static final ForgeConfigSpec.IntValue SHIELD_BOUNCES;
+    public static final ForgeConfigSpec.IntValue INVISIBLE_JET_COST;
+    public static final ForgeConfigSpec.DoubleValue INVISIBLE_JET_SPEED;
+    public static final ForgeConfigSpec.DoubleValue INVISIBLE_JET_BOOST_SPEED;
+    public static final ForgeConfigSpec.DoubleValue INVISIBLE_JET_DAMAGE_REDUCTION;
+
     public static final ForgeConfigSpec SPEC;
 
     static {
@@ -381,6 +412,38 @@ public final class GLConfig {
         SUPER_BREATH_FREEZES = BUILDER.comment("Whether super breath freezes water into ice and puts out fires.").define("superBreathFreezes", true);
         XRAY_COST_PER_SECOND = BUILDER.comment("Solar energy drained per second of X-ray vision.").defineInRange("xrayCostPerSecond", 5, 0, 100_000);
         XRAY_RADIUS = BUILDER.comment("How far X-ray vision sees through walls (blocks): ores and chests at this distance, creatures at twice it.").defineInRange("xrayRadius", 20, 4, 48);
+        BUILDER.pop();
+
+        BUILDER.comment("Wonder Woman: the Tiara of Themyscira, divine power, flight, the Lasso of Truth, the Bracelets of Submission, the Amazon sword and shield and the Invisible Jet.").push("wonderWoman");
+        DIVINE_CAPACITY = BUILDER.comment("Maximum divine power stored in the Tiara of Themyscira.").defineInRange("divineCapacity", 1000, 50, 1_000_000);
+        DIVINE_REGEN = BUILDER.comment("Divine power regained per second while the armor is worn.").defineInRange("divineRegen", 8, 0, 100_000);
+        SWORD_HIT_CHARGE = BUILDER.comment("Divine power regained with every blow of the Amazon sword.").defineInRange("swordHitCharge", 12, 0, 100_000);
+        WONDER_WOMAN_CRUISE_SPEED = BUILDER.comment("Speed (blocks/tick) when Wonder Woman's flight starts.").defineInRange("cruiseSpeed", 0.6, 0.2, 5.0);
+        WONDER_WOMAN_MAX_SPEED = BUILDER.comment("Wonder Woman's top flying speed (blocks/tick). Below the Green Lantern's, and below the sound barrier by default.").defineInRange("maxSpeed", 2.3, 0.5, 9.0);
+        WONDER_WOMAN_SECONDS_TO_MAX = BUILDER.comment("Seconds of acceleration (holding forward) Wonder Woman needs to reach top speed.").defineInRange("secondsToTopSpeed", 6.0, 0.5, 60.0);
+        WONDER_WOMAN_DAMAGE_REDUCTION = BUILDER.comment("Fraction of the damage Wonder Woman shrugs off with the armor on (0-1).").defineInRange("damageReduction", 0.35, 0.0, 1.0);
+        AMAZON_SWORD_DAMAGE = BUILDER.comment("Attack damage of the Amazon sword (before the armor's strength bonus).").defineInRange("swordDamage", 11.0, 1.0, 1000.0);
+        LASSO_CAPTURE_COST = BUILDER.comment("Divine power cost of catching a creature with the Lasso of Truth.").defineInRange("lassoCaptureCost", 40, 0, 100_000);
+        LASSO_CAPTURE_SECONDS = BUILDER.comment("How long the lasso holds a creature (seconds).").defineInRange("lassoCaptureSeconds", 10.0, 1.0, 120.0);
+        LASSO_PULL_COST = BUILDER.comment("Divine power cost of pulling with the lasso.").defineInRange("lassoPullCost", 25, 0, 100_000);
+        LASSO_RANGE = BUILDER.comment("How far the lasso reaches (blocks).").defineInRange("lassoRange", 24.0, 4.0, 64.0);
+        LASSO_SPIN_COST = BUILDER.comment("Divine power cost of whirling the lasso.").defineInRange("lassoSpinCost", 60, 0, 100_000);
+        LASSO_SPIN_DAMAGE = BUILDER.comment("Damage of each sweep of the whirling lasso (and of the creature swung on it).").defineInRange("lassoSpinDamage", 6.0, 0.0, 1000.0);
+        BRACELET_GUARD_COST_PER_SECOND = BUILDER.comment("Divine power drained per second while the bracelets are raised.").defineInRange("braceletGuardCostPerSecond", 12, 0, 100_000);
+        BRACELET_GUARD_SECONDS = BUILDER.comment("How long the bracelets stay raised (seconds); press again to lower them sooner.").defineInRange("braceletGuardSeconds", 6.0, 0.5, 60.0);
+        BRACELET_PASSIVE_DEFLECT_CHANCE = BUILDER.comment("Chance that an arrow coming from the front bounces off the bracelets even without raising them (0-1).").defineInRange("braceletPassiveDeflectChance", 0.35, 0.0, 1.0);
+        BRACELET_SHOCKWAVE_COST = BUILDER.comment("Divine power cost of clashing the bracelets.").defineInRange("braceletShockwaveCost", 150, 0, 100_000);
+        BRACELET_SHOCKWAVE_DAMAGE = BUILDER.comment("Damage of the bracelets' shockwave at its center (more after blocking hits, less at the edge).").defineInRange("braceletShockwaveDamage", 14.0, 0.0, 1000.0);
+        BRACELET_SHOCKWAVE_RADIUS = BUILDER.comment("Radius of the bracelets' shockwave (it grows after blocking hits).").defineInRange("braceletShockwaveRadius", 7.0, 1.0, 24.0);
+        BRACELET_SHOCKWAVE_BREAKS_GLASS = BUILDER.comment("Whether the bracelets' shockwave shatters the glass around.").define("braceletShockwaveBreaksGlass", true);
+        SWORD_AND_SHIELD_COST = BUILDER.comment("Divine power cost of calling the Amazon sword and shield.").defineInRange("swordAndShieldCost", 20, 0, 100_000);
+        SHIELD_THROW_COST = BUILDER.comment("Divine power cost of throwing the shield.").defineInRange("shieldThrowCost", 30, 0, 100_000);
+        SHIELD_THROW_DAMAGE = BUILDER.comment("Damage of the thrown shield to each creature it hits.").defineInRange("shieldThrowDamage", 10.0, 0.0, 1000.0);
+        SHIELD_BOUNCES = BUILDER.comment("How many creatures the thrown shield can bounce between before it flies back.").defineInRange("shieldBounces", 3, 1, 16);
+        INVISIBLE_JET_COST = BUILDER.comment("Divine power cost of calling the Invisible Jet.").defineInRange("invisibleJetCost", 100, 0, 100_000);
+        INVISIBLE_JET_SPEED = BUILDER.comment("Cruising speed of the Invisible Jet (blocks/tick).").defineInRange("invisibleJetSpeed", 1.6, 0.2, 6.0);
+        INVISIBLE_JET_BOOST_SPEED = BUILDER.comment("Top speed of the Invisible Jet with the afterburner (sprint) on (blocks/tick).").defineInRange("invisibleJetBoostSpeed", 2.8, 0.2, 8.0);
+        INVISIBLE_JET_DAMAGE_REDUCTION = BUILDER.comment("Fraction of the damage the Invisible Jet takes for its pilot (0-1).").defineInRange("invisibleJetDamageReduction", 0.7, 0.0, 1.0);
         BUILDER.pop();
 
         SPEC = BUILDER.build();

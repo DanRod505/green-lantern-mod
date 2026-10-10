@@ -34,6 +34,10 @@ public record SelectPowerPacket(int value, boolean relative) {
             com.danrod505.greenlantern.superman.SupermanServer.selectPower(player, packet.value, packet.relative);
             return;
         }
+        if (Hero.context(player) == Hero.WONDER_WOMAN) {
+            com.danrod505.greenlantern.wonderwoman.WonderWomanServer.selectPower(player, packet.value, packet.relative);
+            return;
+        }
         if (Hero.context(player) == Hero.BATMAN) {
             com.danrod505.greenlantern.batman.BatmanServer.selectPower(player, packet.value, packet.relative);
             return;

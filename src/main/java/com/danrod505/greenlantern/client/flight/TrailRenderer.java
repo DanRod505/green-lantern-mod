@@ -40,6 +40,7 @@ public class TrailRenderer extends EntityRenderer<FlightTrailEntity, TrailRender
     private static final int KIND_AQUA_SPIRAL = 5;
     private static final int KIND_SUPERMAN = 6;
     private static final int KIND_SUPERMAN_SUPERSONIC = 7;
+    private static final int KIND_AMAZON = 8;
     /** Floats per ribbon point: center xyz, side xyz, u, alpha. */
     private static final int STRIDE = 8;
     private static FlightTrailEntity holder;
@@ -112,7 +113,7 @@ public class TrailRenderer extends EntityRenderer<FlightTrailEntity, TrailRender
             }
             float[] data = build(points, attrs, cam, origin);
             if (data == null) continue;
-            int kind = visual.superman ? (visual.supersonic() ? KIND_SUPERMAN_SUPERSONIC : KIND_SUPERMAN)
+            int kind = visual.amazon ? KIND_AMAZON : visual.superman ? (visual.supersonic() ? KIND_SUPERMAN_SUPERSONIC : KIND_SUPERMAN)
                     : (visual.supersonic() ? KIND_LANTERN_SUPERSONIC : KIND_LANTERN);
             state.ribbons.add(new Ribbon(data, points.size(), kind));
         }
@@ -309,6 +310,11 @@ public class TrailRenderer extends EntityRenderer<FlightTrailEntity, TrailRender
                         emit(vc, pose, ribbon, 2.6F, supersonic ? 0.38F : 0.26F, 0xFF2E6BFF);
                         if (supersonic) emit(vc, pose, ribbon, 1.7F, 0.3F, 0xFFE8303A);
                         emit(vc, pose, ribbon, 1.0F, supersonic ? 0.95F : 0.7F, 0xFFF4F8FF);
+                    } else if (ribbon.kind == KIND_AMAZON) {
+                        // Wonder Woman: a crimson edge, a golden glow and a bright white-gold core.
+                        emit(vc, pose, ribbon, 2.5F, 0.22F, 0xFFC8102E);
+                        emit(vc, pose, ribbon, 1.7F, 0.32F, 0xFFF2B71C);
+                        emit(vc, pose, ribbon, 0.9F, 0.75F, 0xFFFFF4D0);
                     }
                 }
             });

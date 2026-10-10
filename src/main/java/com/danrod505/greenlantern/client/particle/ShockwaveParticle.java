@@ -87,4 +87,18 @@ public class ShockwaveParticle extends SingleQuadParticle {
             return new ShockwaveParticle(level, x, y, z, sprites, 0.95F, 0.97F, 1.0F, 9.0F, 16);
         }
     }
+
+    /** Wonder Woman's: a ring of golden force (the bracelets' shockwave, her landings). */
+    public static class AmazonProvider implements ParticleProvider<SimpleParticleType> {
+        private final SpriteSet sprites;
+
+        public AmazonProvider(SpriteSet sprites) {
+            this.sprites = sprites;
+        }
+
+        @Override
+        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xd, double yd, double zd, RandomSource random) {
+            return new ShockwaveParticle(level, x, y, z, sprites, 1.0F, 0.82F, 0.35F, 11.0F, 18);
+        }
+    }
 }

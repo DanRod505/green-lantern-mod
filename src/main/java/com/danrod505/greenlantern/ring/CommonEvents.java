@@ -55,6 +55,8 @@ public final class CommonEvents {
                 com.danrod505.greenlantern.batman.BatmanServer.remove(player);
                 if (com.danrod505.greenlantern.superman.SupermanHelper.isSuited(player)) com.danrod505.greenlantern.superman.SupermanSuit.dismiss(player, false);
                 com.danrod505.greenlantern.superman.SupermanServer.remove(player);
+                if (com.danrod505.greenlantern.wonderwoman.WonderWomanHelper.isSuited(player)) com.danrod505.greenlantern.wonderwoman.WonderWomanSuit.dismiss(player, false);
+                com.danrod505.greenlantern.wonderwoman.WonderWomanServer.remove(player);
             }
         });
     }
@@ -98,6 +100,10 @@ public final class CommonEvents {
             // The suit belongs to the crystal: no crystal, no suit.
             com.danrod505.greenlantern.superman.SupermanSuit.dismiss(player, true);
         }
+        if (com.danrod505.greenlantern.wonderwoman.WonderWomanHelper.isSuited(player) && com.danrod505.greenlantern.wonderwoman.WonderWomanHelper.findTiara(player).isEmpty()) {
+            // The armor answers the tiara: no tiara, no armor.
+            com.danrod505.greenlantern.wonderwoman.WonderWomanSuit.dismiss(player, true);
+        }
         if (player.tickCount % 10 == 0) {
             Uniform.removeStrayPieces(player);
         }
@@ -105,6 +111,7 @@ public final class CommonEvents {
         AquamanServer.tick(player);
         com.danrod505.greenlantern.batman.BatmanServer.tick(player);
         com.danrod505.greenlantern.superman.SupermanServer.tick(player);
+        com.danrod505.greenlantern.wonderwoman.WonderWomanServer.tick(player);
         com.danrod505.greenlantern.aquaman.Respirator.tick(player);
         if (player.tickCount % 5 == 0) {
             chargeFromCentralBattery(player);
@@ -159,6 +166,15 @@ public final class CommonEvents {
             kraken.shieldRider(rider, event.getSource(), event.getAmount());
             return true;
         }
+        // A creature bound by the Lasso of Truth can't fight.
+        if (event.getSource().getEntity() != null && com.danrod505.greenlantern.entity.LassoEntity.isBound(event.getSource().getEntity())
+                && !event.getSource().is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+            return true;
+        }
+        // Wonder Woman's raised bracelets block blows and send projectiles back.
+        if (event.getEntity() instanceof ServerPlayer amazon && com.danrod505.greenlantern.wonderwoman.WonderWomanServer.onAttacked(amazon, event.getSource())) {
+            return true;
+        }
         // The Batmobile's own missiles never hurt its driver.
         if (event.getEntity() instanceof ServerPlayer driver && driver.getVehicle() instanceof com.danrod505.greenlantern.entity.BatmobileEntity
                 && event.getSource().getDirectEntity() instanceof com.danrod505.greenlantern.entity.BatmobileMissileEntity missile
@@ -178,6 +194,15 @@ public final class CommonEvents {
             // The Batmobile's armor takes most of the blow.
             event.setAmount(event.getAmount() * (1.0F - GLConfig.BATMOBILE_DAMAGE_REDUCTION.get().floatValue()));
         }
+        if (player.getVehicle() instanceof com.danrod505.greenlantern.entity.InvisibleJetEntity
+                && !event.getSource().is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+            // The jet's canopy takes most of the blow.
+            event.setAmount(event.getAmount() * (1.0F - GLConfig.INVISIBLE_JET_DAMAGE_REDUCTION.get().floatValue()));
+        }
+        if (com.danrod505.greenlantern.wonderwoman.WonderWomanHelper.isSuited(player) && !event.getSource().is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+            // An Amazon princess, made of clay and given life by the gods: tough, though not as tough as Superman.
+            event.setAmount(event.getAmount() * (1.0F - GLConfig.WONDER_WOMAN_DAMAGE_REDUCTION.get().floatValue()));
+        }
         if (com.danrod505.greenlantern.superman.SupermanHelper.isPowered(player)
                 && !event.getSource().is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY)) {
             // The Man of Steel: most blows barely hurt him while the sun charges his cells.
@@ -196,6 +221,7 @@ public final class CommonEvents {
         if (event.getEntity() instanceof net.minecraft.world.entity.player.Player player
                 && (RingHelper.isSuited(player) || com.danrod505.greenlantern.flash.FlashHelper.isSuited(player)
                         || com.danrod505.greenlantern.superman.SupermanHelper.isSuited(player)
+                        || com.danrod505.greenlantern.wonderwoman.WonderWomanHelper.isSuited(player)
                         || (AquamanHelper.isSuited(player) && event.getDistance() < 24.0F))) {
             // The ring cushions every landing; a speedster lands running; an Atlantean, built for the
             // crushing deep, shrugs off any ordinary fall.
@@ -223,6 +249,9 @@ public final class CommonEvents {
         if (event.getEntity() instanceof ServerPlayer player && com.danrod505.greenlantern.superman.SupermanHelper.isSuited(player)) {
             com.danrod505.greenlantern.superman.SupermanSuit.dismiss(player, false);
         }
+        if (event.getEntity() instanceof ServerPlayer player && com.danrod505.greenlantern.wonderwoman.WonderWomanHelper.isSuited(player)) {
+            com.danrod505.greenlantern.wonderwoman.WonderWomanSuit.dismiss(player, false);
+        }
     }
 
     /** New players get the Corps Manual once (remembered in their persistent data, which survives death). */
@@ -238,8 +267,9 @@ public final class CommonEvents {
     }
 
     private static boolean onEntityJoin(EntityJoinLevelEvent event) {
-        // Uniform pieces and Aquaman's trident never exist as dropped items.
+        // Uniform pieces, Aquaman's trident and Wonder Woman's sword and shield never exist as dropped items.
         return event.getEntity() instanceof ItemEntity item
-                && (item.getItem().getItem() instanceof SuitArmorItem || AquamanHelper.isTrident(item.getItem()));
+                && (item.getItem().getItem() instanceof SuitArmorItem || AquamanHelper.isTrident(item.getItem())
+                        || com.danrod505.greenlantern.wonderwoman.WonderWomanHelper.isSword(item.getItem()) || com.danrod505.greenlantern.wonderwoman.WonderWomanHelper.isShield(item.getItem()));
     }
 }

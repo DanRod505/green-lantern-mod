@@ -21,7 +21,7 @@ import net.minecraft.world.item.equipment.EquipmentAssets;
 import org.jspecify.annotations.Nullable;
 
 /**
- * A piece of a hero suit (the hard-light Green Lantern uniform, the Flash suit, the armor of Atlantis or the batsuit). Pieces are
+ * A piece of a hero suit (the hard-light Green Lantern uniform, the Flash suit, the armor of Atlantis, the batsuit, Superman's suit or Wonder Woman's armor). Pieces are
  * created by a ring, can't be taken off (Curse of Binding) and disappear as soon as they leave an
  * armor slot.
  */
@@ -31,6 +31,7 @@ public class SuitArmorItem extends Item {
     public static final ResourceKey<EquipmentAsset> AQUAMAN_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, GreenLantern.id("aquaman"));
     public static final ResourceKey<EquipmentAsset> BATMAN_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, GreenLantern.id("batman"));
     public static final ResourceKey<EquipmentAsset> SUPERMAN_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, GreenLantern.id("superman"));
+    public static final ResourceKey<EquipmentAsset> WONDER_WOMAN_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, GreenLantern.id("wonder_woman"));
 
     public static final ArmorMaterial MATERIAL = new ArmorMaterial(
             1000,
@@ -85,6 +86,17 @@ public class SuitArmorItem extends Item {
             0.2F,
             ItemTags.REPAIRS_NETHERITE_ARMOR,
             SUPERMAN_ASSET);
+
+    /** Wonder Woman's armor: forged on Themyscira, as tough as netherite. */
+    public static final ArmorMaterial WONDER_WOMAN_MATERIAL = new ArmorMaterial(
+            1000,
+            Map.of(ArmorType.HELMET, 3, ArmorType.CHESTPLATE, 8, ArmorType.LEGGINGS, 6, ArmorType.BOOTS, 3, ArmorType.BODY, 8),
+            1,
+            SoundEvents.ARMOR_EQUIP_GOLD,
+            3.0F,
+            0.1F,
+            ItemTags.REPAIRS_GOLD_ARMOR,
+            WONDER_WOMAN_ASSET);
 
     private final ArmorType type;
 

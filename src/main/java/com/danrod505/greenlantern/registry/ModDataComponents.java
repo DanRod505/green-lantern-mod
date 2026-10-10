@@ -43,5 +43,9 @@ public final class ModDataComponents {
     public static final RegistryObject<DataComponentType<RingEnergy>> SOLAR_ENERGY = COMPONENTS.register("solar_energy",
             () -> DataComponentType.<RingEnergy>builder().persistent(RingEnergy.CODEC).networkSynchronized(RingEnergy.STREAM_CODEC).build());
 
+    /** Divine power stored in Wonder Woman's Tiara of Themyscira (selected power: {@link #SELECTED_POWER}). */
+    public static final RegistryObject<DataComponentType<RingEnergy>> DIVINE_POWER = COMPONENTS.register("divine_power",
+            () -> DataComponentType.<RingEnergy>builder().persistent(RingEnergy.CODEC).networkSynchronized(RingEnergy.STREAM_CODEC).build());
+
     private ModDataComponents() {}
 }
