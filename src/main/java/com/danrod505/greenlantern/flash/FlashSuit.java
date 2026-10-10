@@ -42,7 +42,7 @@ public final class FlashSuit {
             return false;
         }
         // Only one hero suit at a time.
-        com.danrod505.greenlantern.hero.Hero.dismissOthers(player, com.danrod505.greenlantern.hero.Hero.FLASH);
+        com.danrod505.greenlantern.hero.HeroRegistry.dismissOthers(player, FlashHero.INSTANCE);
         Uniform.equipSuit(player,
                 ModItems.FLASH_MASK.get().getDefaultInstance(),
                 ModItems.FLASH_SUIT.get().getDefaultInstance(),

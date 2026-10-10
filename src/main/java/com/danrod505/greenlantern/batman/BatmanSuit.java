@@ -1,7 +1,7 @@
 package com.danrod505.greenlantern.batman;
 
 import com.danrod505.greenlantern.GreenLantern;
-import com.danrod505.greenlantern.hero.Hero;
+import com.danrod505.greenlantern.hero.HeroRegistry;
 import com.danrod505.greenlantern.registry.ModItems;
 import com.danrod505.greenlantern.registry.ModSounds;
 import com.danrod505.greenlantern.ring.FlightHandler;
@@ -47,7 +47,7 @@ public final class BatmanSuit {
             return false;
         }
         // Only one hero suit at a time.
-        Hero.dismissOthers(player, Hero.BATMAN);
+        HeroRegistry.dismissOthers(player, BatmanHero.INSTANCE);
         Uniform.equipSuit(player,
                 ModItems.BATMAN_COWL.get().getDefaultInstance(),
                 ModItems.BATMAN_SUIT.get().getDefaultInstance(),

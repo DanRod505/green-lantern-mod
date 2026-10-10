@@ -1,9 +1,7 @@
 package com.danrod505.greenlantern.client;
 
-import com.danrod505.greenlantern.aquaman.AquamanHelper;
-import com.danrod505.greenlantern.batman.BatmanHelper;
-import com.danrod505.greenlantern.flash.FlashHelper;
-import com.danrod505.greenlantern.hero.Hero;
+import com.danrod505.greenlantern.hero.HeroDefinition;
+import com.danrod505.greenlantern.hero.HeroRegistry;
 import com.danrod505.greenlantern.network.CycleConstructPacket;
 import com.danrod505.greenlantern.network.ModNetwork;
 import com.danrod505.greenlantern.network.SelectPowerPacket;
@@ -28,17 +26,14 @@ public final class ClientEvents {
         if (player == null || mc.level == null) return;
 
         while (KeyBindings.TOGGLE_UNIFORM.consumeClick()) {
-            if (Hero.context(player) != Hero.NONE) ModNetwork.sendToServer(new ToggleUniformPacket());
+            if (HeroRegistry.context(player).isPresent()) ModNetwork.sendToServer(new ToggleUniformPacket());
         }
         while (KeyBindings.HERO_POWER.consumeClick()) {
-            Hero hero = Hero.context(player);
-            if (mc.screen == null && hero.hasPowers()) ModNetwork.sendToServer(new UsePowerPacket(-1));
+            boolean powers = HeroRegistry.context(player).map(HeroDefinition::hasPowers).orElse(false);
+            if (mc.screen == null && powers) ModNetwork.sendToServer(new UsePowerPacket(-1));
         }
         tickWheelKey(mc, player);
-        MechaControls.tick(mc);
-        SharkControls.tick(mc);
-        KrakenControls.tick(mc);
-        BatmobileControls.tick(mc);
+        for (HeroClient hero : ClientSetup.heroes()) hero.controlsTick(mc);
 
         if (mc.isPaused()) return;
         // Green aura trail behind every flying Lantern in view.
@@ -65,12 +60,12 @@ public final class ClientEvents {
         // Clicks are handled through isDown(); drop queued clicks so they don't pile up.
         while (KeyBindings.CONSTRUCT_WHEEL.consumeClick()) {
         }
-        Hero hero = Hero.context(player);
-        boolean powers = hero.hasPowers();
-        if (mc.screen != null || hero == Hero.NONE) {
+        HeroDefinition hero = HeroRegistry.context(player).orElse(null);
+        if (mc.screen != null || hero == null) {
             wheelKeyTicks = 0;
             return;
         }
+        boolean powers = hero.hasPowers();
         if (KeyBindings.CONSTRUCT_WHEEL.isDown()) {
             if (++wheelKeyTicks == WHEEL_HOLD_TICKS) {
                 mc.setScreen(powers ? new PowerWheelScreen(hero) : new ConstructWheelScreen());
@@ -83,16 +78,19 @@ public final class ClientEvents {
         }
     }
 
-    /** Sneak + mouse wheel cycles constructs (or powers) while holding the ring, emblem or belt. */
+    /** Sneak + mouse wheel cycles constructs (or powers) while holding a hero item (ring, emblem, belt...). */
     public static boolean onMouseScroll(InputEvent.MouseScrollingEvent event) {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         if (player == null || mc.screen != null || !player.isShiftKeyDown()) return false;
-        boolean powers = !FlashHelper.heldRing(player).isEmpty() || !AquamanHelper.heldEmblem(player).isEmpty()
-                || !BatmanHelper.heldBelt(player).isEmpty()
-                || !com.danrod505.greenlantern.superman.SupermanHelper.heldCrystal(player).isEmpty()
-                || !com.danrod505.greenlantern.wonderwoman.WonderWomanHelper.heldTiara(player).isEmpty();
-        if (!powers && RingHelper.heldRing(player).isEmpty()) return false;
+        boolean powers = false;
+        boolean constructs = false;
+        for (HeroDefinition hero : HeroRegistry.all()) {
+            if (hero.heldItem(player).isEmpty()) continue;
+            if (hero.hasPowers()) powers = true;
+            else constructs = true;
+        }
+        if (!powers && !constructs) return false;
         double delta = event.getDeltaY();
         if (delta == 0) return false;
         ModNetwork.sendToServer(powers ? new SelectPowerPacket(delta > 0 ? -1 : 1, true) : new CycleConstructPacket(delta > 0 ? -1 : 1));

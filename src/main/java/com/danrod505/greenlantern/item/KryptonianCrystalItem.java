@@ -1,9 +1,9 @@
 package com.danrod505.greenlantern.item;
 
 import com.danrod505.greenlantern.ring.RingEnergy;
-import com.danrod505.greenlantern.superman.SolarEnergy;
 import com.danrod505.greenlantern.superman.SuperPower;
 import com.danrod505.greenlantern.superman.SupermanHelper;
+import com.danrod505.greenlantern.superman.SupermanHero;
 import com.danrod505.greenlantern.superman.SupermanServer;
 import com.danrod505.greenlantern.superman.SupermanSuit;
 import java.util.function.Consumer;
@@ -34,7 +34,7 @@ public class KryptonianCrystalItem extends Item {
 
     /** Returns the given crystal full of sunlight (used for the creative tab). */
     public static ItemStack charged(ItemStack crystal) {
-        SolarEnergy.set(crystal, SolarEnergy.capacity());
+        SupermanHero.SOLAR_ENERGY.set(crystal, SupermanHero.SOLAR_ENERGY.capacity());
         return crystal;
     }
 
@@ -46,7 +46,7 @@ public class KryptonianCrystalItem extends Item {
             return InteractionResult.SUCCESS;
         }
         if (player instanceof ServerPlayer serverPlayer) {
-            SupermanServer.usePower(serverPlayer, crystal, SuperPower.selected(crystal));
+            SupermanServer.usePower(serverPlayer, crystal, SuperPower.POWERS.selected(crystal));
         }
         return InteractionResult.SUCCESS;
     }
@@ -60,22 +60,22 @@ public class KryptonianCrystalItem extends Item {
 
     @Override
     public int getBarWidth(ItemStack crystal) {
-        return Math.round(13.0F * SolarEnergy.get(crystal).fraction());
+        return Math.round(13.0F * SupermanHero.SOLAR_ENERGY.get(crystal).fraction());
     }
 
     @Override
     public int getBarColor(ItemStack crystal) {
-        float f = SolarEnergy.get(crystal).fraction();
+        float f = SupermanHero.SOLAR_ENERGY.get(crystal).fraction();
         return f < 0.2F ? 0xFF4040 : Mth.hsvToRgb(0.11F + 0.04F * f, 0.85F, 1.0F);
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public void appendHoverText(ItemStack crystal, TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flag) {
-        RingEnergy energy = SolarEnergy.get(crystal);
+        RingEnergy energy = SupermanHero.SOLAR_ENERGY.get(crystal);
         tooltip.accept(Component.translatable("tooltip.greenlantern.solar_energy", energy.stored(), energy.capacity())
                 .withStyle(energy.fraction() < 0.2F ? ChatFormatting.RED : ChatFormatting.GOLD));
-        tooltip.accept(Component.translatable("tooltip.greenlantern.power", SuperPower.selected(crystal).displayName()).withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.translatable("tooltip.greenlantern.power", SuperPower.POWERS.selected(crystal).displayName()).withStyle(ChatFormatting.GRAY));
         tooltip.accept(Component.translatable("tooltip.greenlantern.kryptonian_crystal_hint").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
     }
 }

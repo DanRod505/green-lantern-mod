@@ -4,8 +4,8 @@ import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.registry.ModParticles;
 import com.danrod505.greenlantern.registry.ModSounds;
-import com.danrod505.greenlantern.wonderwoman.DivinePower;
 import com.danrod505.greenlantern.wonderwoman.WonderWomanHelper;
+import com.danrod505.greenlantern.wonderwoman.WonderWomanHero;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
@@ -84,7 +84,7 @@ public class AmazonSwordItem extends Item {
         // Battle feeds the gifts of the gods.
         if (attacker instanceof Player player && WonderWomanHelper.isSuited(player)) {
             ItemStack tiara = WonderWomanHelper.findTiara(player);
-            if (!tiara.isEmpty()) DivinePower.add(tiara, GLConfig.SWORD_HIT_CHARGE.get());
+            if (!tiara.isEmpty()) WonderWomanHero.DIVINE_POWER.add(tiara, GLConfig.SWORD_HIT_CHARGE.get());
         }
     }
 

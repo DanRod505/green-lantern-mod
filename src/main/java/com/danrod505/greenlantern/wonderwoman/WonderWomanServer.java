@@ -31,10 +31,10 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
@@ -138,7 +138,7 @@ public final class WonderWomanServer {
             if (state.pendingRegen >= 1.0F) {
                 int whole = (int) state.pendingRegen;
                 state.pendingRegen -= whole;
-                DivinePower.add(tiara, whole);
+                WonderWomanHero.DIVINE_POWER.add(tiara, whole);
             }
         }
         if (player.tickCount % 60 == 0 && player.getHealth() < player.getMaxHealth()) player.heal(1.0F);
@@ -221,7 +221,7 @@ public final class WonderWomanServer {
         if (state.spinTicks > 0) return false;
         if (player.getCooldowns().isOnCooldown(tiara)) return false;
         int cost = power == AmazonPower.BRACELET_GUARD ? Math.max(1, power.cost() / 4) : power.cost();
-        if (!player.isCreative() && !DivinePower.has(tiara, cost)) {
+        if (!player.isCreative() && !WonderWomanHero.DIVINE_POWER.has(tiara, cost)) {
             notifyNoPower(player);
             return false;
         }
@@ -245,7 +245,7 @@ public final class WonderWomanServer {
         };
         if (!used) return false;
         // The guard pays per second while it is up (the first drop now).
-        if (!player.isCreative()) DivinePower.tryConsume(tiara, power == AmazonPower.BRACELET_GUARD ? 0 : power.cost());
+        if (!player.isCreative()) WonderWomanHero.DIVINE_POWER.tryConsume(tiara, power == AmazonPower.BRACELET_GUARD ? 0 : power.cost());
         int cooldown = switch (power) {
             case LASSO_CAPTURE, LASSO_PULL, SHIELD_THROW -> 8;
             case LASSO_SPIN -> 20;
@@ -422,8 +422,8 @@ public final class WonderWomanServer {
             if (state.pendingCost >= 1.0F) {
                 int whole = (int) state.pendingCost;
                 state.pendingCost -= whole;
-                boolean enough = DivinePower.has(tiara, whole);
-                DivinePower.drain(tiara, whole);
+                boolean enough = WonderWomanHero.DIVINE_POWER.has(tiara, whole);
+                WonderWomanHero.DIVINE_POWER.drain(tiara, whole);
                 if (!enough) {
                     notifyNoPower(player);
                     endGuard(player, state);
@@ -727,24 +727,4 @@ public final class WonderWomanServer {
 
     // ---- power wheel / key packets -----------------------------------------------------------------------
 
-    public static void selectPower(ServerPlayer player, int value, boolean relative) {
-        ItemStack tiara = WonderWomanHelper.findTiara(player);
-        if (tiara.isEmpty()) return;
-        AmazonPower power;
-        if (relative) {
-            power = AmazonPower.cycle(tiara, Mth.clamp(value, -1, 1));
-        } else {
-            power = AmazonPower.byIndex(value);
-            AmazonPower.select(tiara, power);
-        }
-        player.displayClientMessage(Component.translatable("message.greenlantern.power_selected", power.displayName().copy().withStyle(ChatFormatting.GOLD)), true);
-        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.POWER_SELECT.get(), SoundSource.PLAYERS,
-                0.7F, 0.85F + 0.06F * power.ordinal());
-    }
-
-    public static void usePowerKey(ServerPlayer player, int index) {
-        ItemStack tiara = WonderWomanHelper.findTiara(player);
-        if (tiara.isEmpty()) return;
-        usePower(player, tiara, index < 0 ? AmazonPower.selected(tiara) : AmazonPower.byIndex(index));
-    }
 }

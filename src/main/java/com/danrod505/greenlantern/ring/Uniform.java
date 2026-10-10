@@ -3,8 +3,8 @@ package com.danrod505.greenlantern.ring;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.item.SuitArmorItem;
 import com.danrod505.greenlantern.registry.ModItems;
-import com.danrod505.greenlantern.registry.ModSounds;
 import com.danrod505.greenlantern.registry.ModParticles;
+import com.danrod505.greenlantern.registry.ModSounds;
 import com.mojang.serialization.Codec;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +55,7 @@ public final class Uniform {
         }
 
         // Only one hero suit at a time.
-        com.danrod505.greenlantern.hero.Hero.dismissOthers(player, com.danrod505.greenlantern.hero.Hero.LANTERN);
+        com.danrod505.greenlantern.hero.HeroRegistry.dismissOthers(player, LanternHero.INSTANCE);
         equipSuit(player,
                 ModItems.LANTERN_MASK.get().getDefaultInstance(),
                 ModItems.LANTERN_SUIT.get().getDefaultInstance(),

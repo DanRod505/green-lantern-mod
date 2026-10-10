@@ -1,10 +1,6 @@
 package com.danrod505.greenlantern.superman;
 
 import com.danrod505.greenlantern.item.KryptonianCrystalItem;
-import com.danrod505.greenlantern.registry.ModItems;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -18,28 +14,17 @@ public final class SupermanHelper {
 
     /** The crystal held in either hand (main hand first), or {@link ItemStack#EMPTY}. */
     public static ItemStack heldCrystal(Player player) {
-        for (InteractionHand hand : InteractionHand.values()) {
-            ItemStack stack = player.getItemInHand(hand);
-            if (isCrystal(stack)) return stack;
-        }
-        return ItemStack.EMPTY;
+        return SupermanHero.INSTANCE.heldItem(player);
     }
 
     /** The crystal held in a hand or, failing that, the first one found in the inventory. */
     public static ItemStack findCrystal(Player player) {
-        ItemStack held = heldCrystal(player);
-        if (!held.isEmpty()) return held;
-        Inventory inventory = player.getInventory();
-        for (int i = 0; i < inventory.getContainerSize(); i++) {
-            ItemStack stack = inventory.getItem(i);
-            if (isCrystal(stack)) return stack;
-        }
-        return ItemStack.EMPTY;
+        return SupermanHero.INSTANCE.findItem(player);
     }
 
     /** A player is Superman while wearing the suit with the S. */
     public static boolean isSuited(Player player) {
-        return player.getItemBySlot(EquipmentSlot.CHEST).is(ModItems.SUPERMAN_SUIT.get());
+        return SupermanHero.INSTANCE.isSuited(player);
     }
 
     /** Superman with solar energy left in his cells (his powers need it; the suit stays on without it). */
@@ -47,6 +32,6 @@ public final class SupermanHelper {
         if (!isSuited(player)) return false;
         if (player.isCreative()) return true;
         ItemStack crystal = findCrystal(player);
-        return !crystal.isEmpty() && SolarEnergy.get(crystal).stored() > 0;
+        return !crystal.isEmpty() && SupermanHero.SOLAR_ENERGY.get(crystal).stored() > 0;
     }
 }

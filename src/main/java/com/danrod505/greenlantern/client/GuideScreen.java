@@ -1,6 +1,5 @@
 package com.danrod505.greenlantern.client;
 
-import com.danrod505.greenlantern.item.PowerRingItem;
 import com.danrod505.greenlantern.registry.ModItems;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,10 +41,10 @@ public class GuideScreen extends Screen {
     private static final int MUTED = 0xFF98A4B4;
 
     /** A shaped 3x3 recipe as shown in the guide (mirrors the JSON recipes in data/greenlantern/recipe). */
-    private record Recipe(String id, Supplier<ItemStack> result, Supplier<ItemStack[]> grid) {}
+    public record Recipe(String id, Supplier<ItemStack> result, Supplier<ItemStack[]> grid) {}
 
     /** A subsection: a text (split in pages) or, when it has recipes, one recipe per page. */
-    private record Entry(String id, List<Recipe> recipes) {
+    public record Entry(String id, List<Recipe> recipes) {
         Component title() {
             return Component.translatable(recipes.isEmpty() ? "guide.greenlantern." + id + ".title" : "guide.greenlantern.recipes.title");
         }
@@ -60,85 +59,36 @@ public class GuideScreen extends Screen {
     }
 
     /** A section of the guide, with its icon, its accent color and its subsections. */
-    private record Section(String id, Supplier<ItemStack> icon, int accent, List<Entry> entries) {
+    public record Section(String id, Supplier<ItemStack> icon, int accent, List<Entry> entries) {
         Component title() {
             return Component.translatable("guide.greenlantern.section." + id);
         }
     }
 
-    private static Entry text(String id) {
+    /** A text subsection: {@code guide.greenlantern.<id>.title} and {@code guide.greenlantern.<id>} in the lang files. */
+    public static Entry text(String id) {
         return new Entry(id, List.of());
     }
 
-    private static Entry recipes(String section, Recipe... recipes) {
+    public static Entry recipes(String section, Recipe... recipes) {
         return new Entry("recipes_" + section, List.of(recipes));
     }
 
-    private static final Recipe POWER_RING = new Recipe("power_ring", () -> new ItemStack(ModItems.POWER_RING.get()), () -> grid(
-            null, Items.DIAMOND, null,
-            Items.EMERALD, null, Items.EMERALD,
-            null, Items.EMERALD, null));
-    private static final Recipe POWER_BATTERY = new Recipe("power_battery", () -> new ItemStack(ModItems.POWER_BATTERY.get()), () -> grid(
-            Items.IRON_INGOT, Items.LIME_STAINED_GLASS, Items.IRON_INGOT,
-            Items.LIME_STAINED_GLASS, Items.LANTERN, Items.LIME_STAINED_GLASS,
-            Items.IRON_INGOT, Items.EMERALD_BLOCK, Items.IRON_INGOT));
-    private static final Recipe FLASH_RING = new Recipe("flash_ring", () -> new ItemStack(ModItems.FLASH_RING.get()), () -> grid(
-            Items.REDSTONE, Items.GOLD_INGOT, Items.REDSTONE,
-            Items.GOLD_INGOT, Items.LIGHTNING_ROD, Items.GOLD_INGOT,
-            Items.REDSTONE, Items.GOLD_INGOT, Items.REDSTONE));
-    private static final Recipe AQUAMAN_EMBLEM = new Recipe("aquaman_emblem", () -> new ItemStack(ModItems.AQUAMAN_EMBLEM.get()), () -> grid(
-            Items.PRISMARINE_SHARD, Items.GOLD_INGOT, Items.PRISMARINE_SHARD,
-            Items.GOLD_INGOT, Items.NAUTILUS_SHELL, Items.GOLD_INGOT,
-            Items.PRISMARINE_SHARD, Items.GOLD_INGOT, Items.PRISMARINE_SHARD));
-    private static final Recipe ATLANTIS_GATE = new Recipe("atlantis_gate", () -> new ItemStack(ModItems.ATLANTIS_GATE.get()), () -> grid(
-            Items.GOLD_INGOT, Items.PRISMARINE_CRYSTALS, Items.GOLD_INGOT,
-            Items.PRISMARINE_CRYSTALS, Items.HEART_OF_THE_SEA, Items.PRISMARINE_CRYSTALS,
-            Items.GOLD_INGOT, Items.ENDER_PEARL, Items.GOLD_INGOT));
-    private static final Recipe ATLANTEAN_RESPIRATOR = new Recipe("atlantean_respirator", () -> new ItemStack(ModItems.ATLANTEAN_RESPIRATOR.get()), () -> grid(
-            Items.PRISMARINE_SHARD, Items.GOLD_INGOT, Items.PRISMARINE_SHARD,
-            Items.KELP, Items.GLASS_BOTTLE, Items.KELP,
-            null, Items.PRISMARINE_SHARD, null));
-    private static final Recipe UTILITY_BELT = new Recipe("utility_belt", () -> new ItemStack(ModItems.UTILITY_BELT.get()), () -> grid(
-            Items.LEATHER, Items.GOLD_INGOT, Items.LEATHER,
-            Items.IRON_INGOT, Items.PHANTOM_MEMBRANE, Items.IRON_INGOT,
-            Items.LEATHER, Items.GOLD_INGOT, Items.LEATHER));
-    private static final Recipe KRYPTONIAN_CRYSTAL = new Recipe("kryptonian_crystal", () -> new ItemStack(ModItems.KRYPTONIAN_CRYSTAL.get()), () -> grid(
-            Items.AMETHYST_SHARD, Items.DIAMOND, Items.AMETHYST_SHARD,
-            Items.GOLD_INGOT, Items.SUNFLOWER, Items.GOLD_INGOT,
-            Items.AMETHYST_SHARD, Items.DIAMOND, Items.AMETHYST_SHARD));
-    private static final Recipe AMAZON_TIARA = new Recipe("amazon_tiara", () -> new ItemStack(ModItems.AMAZON_TIARA.get()), () -> grid(
-            Items.GOLD_INGOT, Items.RED_DYE, Items.GOLD_INGOT,
-            Items.LEAD, Items.DIAMOND, Items.LEAD,
-            null, null, null));
-    private static final Recipe GUIDE_BOOK =new Recipe("guide_book", () -> new ItemStack(ModItems.GUIDE_BOOK.get()), () -> grid(
+    private static final Recipe GUIDE_BOOK = new Recipe("guide_book", () -> new ItemStack(ModItems.GUIDE_BOOK.get()), () -> grid(
             Items.BOOK, Items.EMERALD, null,
             null, null, null,
             null, null, null));
 
-    private static final List<Section> SECTIONS = List.of(
-            new Section("start", () -> new ItemStack(ModItems.GUIDE_BOOK.get()), 0xFFFFD86A, List.of(
-                    text("welcome"), text("heroes"), text("tips"), recipes("start", GUIDE_BOOK))),
-            new Section("lantern", () -> PowerRingItem.charged(ModItems.POWER_RING.get().getDefaultInstance()), 0xFF4CE070, List.of(
-                    text("ring"), text("battery"), text("uniform"), text("flight"), text("constructs"), text("drill"), text("mecha"),
-                    text("oa"), text("controls_lantern"), recipes("lantern", POWER_RING, POWER_BATTERY))),
-            new Section("flash", () -> new ItemStack(ModItems.FLASH_RING.get()), 0xFFFF5A4A, List.of(
-                    text("flash"), text("flash_powers"), text("controls_flash"), recipes("flash", FLASH_RING))),
-            new Section("aquaman", () -> new ItemStack(ModItems.AQUAMAN_EMBLEM.get()), 0xFFFFA040, List.of(
-                    text("aquaman"), text("aquaman_swim"), text("aquaman_trident"), text("aquaman_shark"), text("aquaman_sea_call"),
-                    text("kraken"), text("controls_aquaman"), recipes("aquaman", AQUAMAN_EMBLEM))),
-            new Section("atlantis", () -> new ItemStack(ModItems.ATLANTIS_GATE.get()), 0xFF4FE0E8, List.of(
-                    text("atlantis"), text("atlantis_people"), text("atlantis_travel"), text("atlantis_respirator"),
-                    text("atlantis_creatures"), text("atlantis_manta"), text("atlantis_seahorse"), text("atlantis_dolphin"),
-                    recipes("atlantis", ATLANTIS_GATE, ATLANTEAN_RESPIRATOR))),
-            new Section("trench", () -> new ItemStack(ModItems.TRENCH_CREATURE_EGG.get()), 0xFFD0453A, List.of(
-                    text("trench"), text("trench_territory"), text("trench_nest"), text("trench_creatures"), text("trench_captives"),
-                    text("trench_raids"))),
-            new Section("batman", () -> new ItemStack(ModItems.UTILITY_BELT.get()), 0xFFB8C0CC, List.of(
-                    text("batman"), text("batman_powers"), text("controls_batman"), recipes("batman", UTILITY_BELT))),
-            new Section("superman", () -> com.danrod505.greenlantern.item.KryptonianCrystalItem.charged(ModItems.KRYPTONIAN_CRYSTAL.get().getDefaultInstance()), 0xFF4A86FF, List.of(
-                    text("superman"), text("superman_powers"), text("controls_superman"), recipes("superman", KRYPTONIAN_CRYSTAL))),
-            new Section("wonder_woman", () -> com.danrod505.greenlantern.item.AmazonTiaraItem.charged(ModItems.AMAZON_TIARA.get().getDefaultInstance()), 0xFFE0303A, List.of(
-                    text("wonder_woman"), text("wonder_woman_powers"), text("controls_wonder_woman"), recipes("wonder_woman", AMAZON_TIARA))));
+    /** "Getting started", then each hero's sections (see {@link HeroClient#guideSections()}), in hero order. */
+    private static final List<Section> SECTIONS = sections();
+
+    private static List<Section> sections() {
+        List<Section> sections = new ArrayList<>();
+        sections.add(new Section("start", () -> new ItemStack(ModItems.GUIDE_BOOK.get()), 0xFFFFD86A, List.of(
+                    text("welcome"), text("heroes"), text("tips"), recipes("start", GUIDE_BOOK))));
+        for (HeroClient hero : ClientSetup.heroes()) sections.addAll(hero.guideSections());
+        return List.copyOf(sections);
+    }
 
     // Remembered while the game runs, so the guide reopens where the player stopped reading.
     private static int lastSection;
@@ -183,7 +133,8 @@ public class GuideScreen extends Screen {
         return new GuideScreen();
     }
 
-    private static ItemStack[] grid(Object... items) {
+    /** The 3x3 grid of a recipe, row by row (null for an empty slot). */
+    public static ItemStack[] grid(Object... items) {
         ItemStack[] stacks = new ItemStack[9];
         for (int i = 0; i < 9; i++) {
             stacks[i] = items[i] == null ? ItemStack.EMPTY : new ItemStack((net.minecraft.world.level.ItemLike) items[i]);

@@ -4,67 +4,52 @@ import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.aquaman.AquaPower;
 import com.danrod505.greenlantern.aquaman.AquamanHelper;
+import com.danrod505.greenlantern.aquaman.AquamanHero;
 import com.danrod505.greenlantern.aquaman.AquamanServer;
 import com.danrod505.greenlantern.aquaman.AquamanSuit;
 import com.danrod505.greenlantern.aquaman.SeaCall;
-import com.danrod505.greenlantern.aquaman.SeaForce;
-import com.danrod505.greenlantern.batman.BatCharge;
 import com.danrod505.greenlantern.batman.BatPower;
 import com.danrod505.greenlantern.batman.BatmanHelper;
+import com.danrod505.greenlantern.batman.BatmanHero;
 import com.danrod505.greenlantern.batman.BatmanServer;
 import com.danrod505.greenlantern.batman.BatmanSuit;
-import com.danrod505.greenlantern.superman.SolarEnergy;
-import com.danrod505.greenlantern.superman.SuperPower;
-import com.danrod505.greenlantern.superman.SupermanHelper;
-import com.danrod505.greenlantern.superman.SupermanServer;
-import com.danrod505.greenlantern.superman.SupermanSuit;
-import com.danrod505.greenlantern.wonderwoman.AmazonPower;
-import com.danrod505.greenlantern.wonderwoman.DivinePower;
-import com.danrod505.greenlantern.wonderwoman.WonderWomanHelper;
-import com.danrod505.greenlantern.wonderwoman.WonderWomanServer;
-import com.danrod505.greenlantern.wonderwoman.WonderWomanSuit;
-import com.danrod505.greenlantern.entity.LassoEntity;
+import com.danrod505.greenlantern.block.PowerBatteryBlockEntity;
+import com.danrod505.greenlantern.construct.Construct;
+import com.danrod505.greenlantern.construct.ConstructRegistry;
 import com.danrod505.greenlantern.entity.AmazonShieldEntity;
-import com.danrod505.greenlantern.entity.InvisibleJetEntity;
-import com.danrod505.greenlantern.flight.FlightProfile;
+import com.danrod505.greenlantern.entity.AquaTridentEntity;
 import com.danrod505.greenlantern.entity.BatDefenderEntity;
 import com.danrod505.greenlantern.entity.BatarangEntity;
 import com.danrod505.greenlantern.entity.BatmobileEntity;
 import com.danrod505.greenlantern.entity.BatmobileMissileEntity;
-import com.danrod505.greenlantern.entity.GrappleHookEntity;
-import com.danrod505.greenlantern.entity.AquaTridentEntity;
-import com.danrod505.greenlantern.entity.GreatWhiteSharkEntity;
-import com.danrod505.greenlantern.entity.KrakenEntity;
-import com.danrod505.greenlantern.entity.TrenchCocoonEntity;
-import com.danrod505.greenlantern.entity.TrenchCreatureEntity;
-import com.danrod505.greenlantern.trench.Trench;
-import com.danrod505.greenlantern.trench.TrenchBuilder;
-import com.danrod505.greenlantern.trench.TrenchLife;
-import com.danrod505.greenlantern.trench.TrenchNest;
-import net.minecraft.world.entity.npc.villager.Villager;
-import com.danrod505.greenlantern.item.AquaTridentItem;
-import com.danrod505.greenlantern.flight.FlightAction;
-import com.danrod505.greenlantern.flight.FlightFlags;
-import com.danrod505.greenlantern.flight.ServerFlightTracker;
-import com.danrod505.greenlantern.block.PowerBatteryBlockEntity;
-import com.danrod505.greenlantern.construct.Construct;
-import com.danrod505.greenlantern.construct.ConstructRegistry;
 import com.danrod505.greenlantern.entity.BubbleConstructEntity;
 import com.danrod505.greenlantern.entity.DrillConstructEntity;
 import com.danrod505.greenlantern.entity.EnergyBoltEntity;
+import com.danrod505.greenlantern.entity.GrappleHookEntity;
+import com.danrod505.greenlantern.entity.GreatWhiteSharkEntity;
 import com.danrod505.greenlantern.entity.GunConstructEntity;
 import com.danrod505.greenlantern.entity.HammerConstructEntity;
+import com.danrod505.greenlantern.entity.InvisibleJetEntity;
+import com.danrod505.greenlantern.entity.KrakenEntity;
+import com.danrod505.greenlantern.entity.LassoEntity;
 import com.danrod505.greenlantern.entity.MechaEntity;
 import com.danrod505.greenlantern.entity.SawConstructEntity;
 import com.danrod505.greenlantern.entity.SpeedLightningEntity;
 import com.danrod505.greenlantern.entity.SpeedTornadoEntity;
+import com.danrod505.greenlantern.entity.TrenchCocoonEntity;
+import com.danrod505.greenlantern.entity.TrenchCreatureEntity;
 import com.danrod505.greenlantern.flash.FlashHelper;
+import com.danrod505.greenlantern.flash.FlashHero;
 import com.danrod505.greenlantern.flash.FlashSuit;
 import com.danrod505.greenlantern.flash.SafeSpot;
 import com.danrod505.greenlantern.flash.SpeedFlags;
-import com.danrod505.greenlantern.flash.SpeedForce;
 import com.danrod505.greenlantern.flash.SpeedsterPower;
 import com.danrod505.greenlantern.flash.SpeedsterServer;
+import com.danrod505.greenlantern.flight.FlightAction;
+import com.danrod505.greenlantern.flight.FlightFlags;
+import com.danrod505.greenlantern.flight.FlightProfile;
+import com.danrod505.greenlantern.flight.ServerFlightTracker;
+import com.danrod505.greenlantern.item.AquaTridentItem;
 import com.danrod505.greenlantern.item.PowerRingItem;
 import com.danrod505.greenlantern.registry.ModBlocks;
 import com.danrod505.greenlantern.registry.ModDamageTypes;
@@ -72,6 +57,20 @@ import com.danrod505.greenlantern.registry.ModItems;
 import com.danrod505.greenlantern.ring.RingEnergy;
 import com.danrod505.greenlantern.ring.RingHelper;
 import com.danrod505.greenlantern.ring.Uniform;
+import com.danrod505.greenlantern.superman.SuperPower;
+import com.danrod505.greenlantern.superman.SupermanHelper;
+import com.danrod505.greenlantern.superman.SupermanHero;
+import com.danrod505.greenlantern.superman.SupermanServer;
+import com.danrod505.greenlantern.superman.SupermanSuit;
+import com.danrod505.greenlantern.trench.Trench;
+import com.danrod505.greenlantern.trench.TrenchBuilder;
+import com.danrod505.greenlantern.trench.TrenchLife;
+import com.danrod505.greenlantern.trench.TrenchNest;
+import com.danrod505.greenlantern.wonderwoman.AmazonPower;
+import com.danrod505.greenlantern.wonderwoman.WonderWomanHelper;
+import com.danrod505.greenlantern.wonderwoman.WonderWomanHero;
+import com.danrod505.greenlantern.wonderwoman.WonderWomanServer;
+import com.danrod505.greenlantern.wonderwoman.WonderWomanSuit;
 import com.mojang.authlib.GameProfile;
 import io.netty.channel.embedded.EmbeddedChannel;
 import java.util.List;
@@ -94,6 +93,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.zombie.Zombie;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.player.Input;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -697,7 +697,7 @@ public final class ModGameTests {
 
     private static ItemStack giveFlashRing(ServerPlayer player, int speedForce) {
         ItemStack ring = new ItemStack(ModItems.FLASH_RING.get());
-        SpeedForce.set(ring, speedForce);
+        FlashHero.SPEED_FORCE.set(ring, speedForce);
         player.setItemInHand(InteractionHand.MAIN_HAND, ring);
         return player.getMainHandItem();
     }
@@ -734,7 +734,7 @@ public final class ModGameTests {
         helper.startSequence()
                 .thenExecuteFor(41, player::doTick)
                 .thenExecute(() -> {
-                    int idle = SpeedForce.get(ring).stored();
+                    int idle = FlashHero.SPEED_FORCE.get(ring).stored();
                     helper.assertTrue(idle > 0, "the Speed Force should regenerate while suited, got " + idle);
                     // Reported running at top speed: charges much faster.
                     SpeedsterServer.onState(player, GLConfig.RUN_MAX_SPEED.get().floatValue(), SpeedFlags.RUNNING | SpeedFlags.SUPERSONIC);
@@ -744,7 +744,7 @@ public final class ModGameTests {
                     player.doTick();
                 })
                 .thenExecute(() -> {
-                    int stored = SpeedForce.get(ring).stored();
+                    int stored = FlashHero.SPEED_FORCE.get(ring).stored();
                     helper.assertTrue(stored >= 20, "running should charge the Speed Force, got " + stored);
                     remove(player);
                 })
@@ -755,12 +755,12 @@ public final class ModGameTests {
         ServerPlayer player = player(helper, 7.5, 1, 2.5, 0, 0);
         ItemStack ring = giveFlashRing(player, 1000);
         FlashSuit.summon(player);
-        SpeedsterPower.select(ring, SpeedsterPower.LIGHTNING);
+        SpeedsterPower.POWERS.select(ring, SpeedsterPower.LIGHTNING);
         Zombie zombie = dummy(helper, 7.5, 1, 9.5);
         float health = zombie.getHealth();
         use(player);
         helper.assertTrue(!around(player, SpeedLightningEntity.class, 5).isEmpty(), "a bolt of lightning should be thrown");
-        helper.assertTrue(SpeedForce.get(ring).stored() == 1000 - SpeedsterPower.LIGHTNING.cost(), "lightning should cost Speed Force");
+        helper.assertTrue(FlashHero.SPEED_FORCE.get(ring).stored() == 1000 - SpeedsterPower.LIGHTNING.cost(), "lightning should cost Speed Force");
         helper.succeedWhen(() -> {
             helper.assertTrue(zombie.getHealth() < health || zombie.isDeadOrDying(), "zombie should be struck");
             remove(player);
@@ -771,7 +771,7 @@ public final class ModGameTests {
         ServerPlayer player = player(helper, 7.5, 1, 4.5, 0, 0);
         ItemStack ring = giveFlashRing(player, 1000);
         FlashSuit.summon(player);
-        SpeedsterPower.select(ring, SpeedsterPower.TORNADO);
+        SpeedsterPower.POWERS.select(ring, SpeedsterPower.TORNADO);
         Zombie zombie = dummy(helper, 8.5, 1, 7.5);
         float health = zombie.getHealth();
         use(player);
@@ -780,7 +780,7 @@ public final class ModGameTests {
                 .thenExecuteFor(40, player::doTick)
                 .thenExecute(() -> {
                     helper.assertTrue(zombie.getHealth() < health, "the vortex should hurt creatures");
-                    helper.assertTrue(SpeedForce.get(ring).stored() < 1000 - SpeedsterPower.TORNADO.cost(), "the tornado should drain Speed Force over time");
+                    helper.assertTrue(FlashHero.SPEED_FORCE.get(ring).stored() < 1000 - SpeedsterPower.TORNADO.cost(), "the tornado should drain Speed Force over time");
                     SpeedsterServer.usePower(player, ring, SpeedsterPower.TORNADO); // second use stops it
                 })
                 .thenIdle(20)
@@ -795,7 +795,7 @@ public final class ModGameTests {
         ServerPlayer player = player(helper, 7.5, 1, 7.5, 0, 0);
         ItemStack ring = giveFlashRing(player, 1000);
         FlashSuit.summon(player);
-        SpeedsterPower.select(ring, SpeedsterPower.PHASE);
+        SpeedsterPower.POWERS.select(ring, SpeedsterPower.PHASE);
         use(player);
         helper.assertTrue(SpeedsterServer.isPhasing(player), "should be phasing");
         // Sink into the stone floor, like phasing through the ground.
@@ -824,7 +824,7 @@ public final class ModGameTests {
 
     private static ItemStack giveEmblem(ServerPlayer player, int seaForce) {
         ItemStack emblem = new ItemStack(ModItems.AQUAMAN_EMBLEM.get());
-        SeaForce.set(emblem, seaForce);
+        AquamanHero.SEA_FORCE.set(emblem, seaForce);
         player.setItemInHand(InteractionHand.MAIN_HAND, emblem);
         return player.getMainHandItem();
     }
@@ -876,7 +876,7 @@ public final class ModGameTests {
                 .thenExecute(() -> {
                     helper.assertTrue(player.isInWater(), "the player should be in the water");
                     helper.assertTrue(player.getAirSupply() == player.getMaxAirSupply(), "Aquaman breathes underwater, air " + player.getAirSupply());
-                    int stored = SeaForce.get(emblem).stored();
+                    int stored = AquamanHero.SEA_FORCE.get(emblem).stored();
                     helper.assertTrue(stored >= 30, "the Power of the Seas should refill quickly in water, got " + stored);
                     remove(player);
                 })
@@ -887,14 +887,14 @@ public final class ModGameTests {
         ServerPlayer player = player(helper, 7.5, 1, 2.5, 0, 0);
         ItemStack emblem = giveEmblem(player, 1000);
         AquamanSuit.summon(player);
-        AquaPower.select(emblem, AquaPower.TRIDENT);
+        AquaPower.POWERS.select(emblem, AquaPower.TRIDENT);
         Zombie zombie = dummy(helper, 7.5, 1, 7.5);
         float health = zombie.getHealth();
         use(player);
         ItemStack trident = player.getMainHandItem();
         helper.assertTrue(AquamanHelper.isTrident(trident), "the trident should appear in the main hand");
         helper.assertFalse(AquamanHelper.findEmblem(player).isEmpty(), "the emblem should move to the inventory");
-        helper.assertTrue(SeaForce.get(AquamanHelper.findEmblem(player)).stored() == 1000 - AquaPower.TRIDENT.cost(), "the trident should cost Power of the Seas");
+        helper.assertTrue(AquamanHero.SEA_FORCE.get(AquamanHelper.findEmblem(player)).stored() == 1000 - AquaPower.TRIDENT.cost(), "the trident should cost Power of the Seas");
         player.setXRot(10.0F);
         AquaTridentItem.throwTrident(player, trident);
         helper.assertTrue(AquamanHelper.tridentSlot(player) < 0, "the thrown trident leaves the hand");
@@ -917,7 +917,7 @@ public final class ModGameTests {
         ServerPlayer player = player(helper, 7.5, 2, 3.5, 0, 0);
         ItemStack emblem = giveEmblem(player, 1000);
         AquamanSuit.summon(player);
-        AquaPower.select(emblem, AquaPower.SHARK);
+        AquaPower.POWERS.select(emblem, AquaPower.SHARK);
         helper.startSequence()
                 .thenExecuteFor(3, player::doTick) // notice the water
                 .thenExecute(() -> {
@@ -1003,7 +1003,7 @@ public final class ModGameTests {
         ServerPlayer player = player(helper, 7.5, 2, 7.5, 0, 0);
         ItemStack emblem = giveEmblem(player, 1000);
         AquamanSuit.summon(player);
-        AquaPower.select(emblem, AquaPower.KRAKEN);
+        AquaPower.POWERS.select(emblem, AquaPower.KRAKEN);
         helper.startSequence()
                 .thenExecuteFor(3, player::doTick) // notice the water
                 .thenExecute(() -> {
@@ -1014,7 +1014,7 @@ public final class ModGameTests {
                     helper.assertTrue(player.getVehicle() == kraken, "Aquaman should ride the Kraken");
                     helper.assertTrue(kraken.isSwimmingMode(), "called in deep water, the Kraken swims");
                     helper.assertTrue(kraken.getHealth() == KrakenEntity.maxHealth(), "the Kraken starts with full life");
-                    int stored = SeaForce.get(AquamanHelper.findEmblem(player)).stored();
+                    int stored = AquamanHero.SEA_FORCE.get(AquamanHelper.findEmblem(player)).stored();
                     helper.assertTrue(stored <= 1000 - AquaPower.KRAKEN.cost(), "the Kraken should cost Power of the Seas, left " + stored);
                 })
                 .thenExecuteFor(5, player::doTick)
@@ -1063,7 +1063,7 @@ public final class ModGameTests {
                 .thenExecute(() -> {
                     helper.assertTrue(kraken.isJetting(), "the water jet should be firing");
                     helper.assertTrue(jetTarget[0].isDeadOrDying() || jetTarget[0].getHealth() < before[0], "the water jet should batter the zombie");
-                    helper.assertTrue(SeaForce.get(emblem).stored() < 1000, "the jet drains Power of the Seas");
+                    helper.assertTrue(AquamanHero.SEA_FORCE.get(emblem).stored() < 1000, "the jet drains Power of the Seas");
                     kraken.setJetFiring(false);
                 })
                 // Past the newcomer's spawn protection, so hits reach the rider.
@@ -1088,7 +1088,7 @@ public final class ModGameTests {
                 .thenExecuteFor(KrakenEntity.DEATH_TICKS + 5, player::doTick)
                 .thenExecute(() -> {
                     helper.assertTrue(kraken.isRemoved(), "the dead Kraken is gone after its death throes");
-                    AquaPower.select(emblem, AquaPower.KRAKEN);
+                    AquaPower.POWERS.select(emblem, AquaPower.KRAKEN);
                     helper.assertFalse(AquamanServer.usePower(player, emblem, AquaPower.KRAKEN), "it cannot be called while recovering");
                     KrakenEntity.clearRecovery(player);
                     remove(player);
@@ -1101,7 +1101,7 @@ public final class ModGameTests {
         ServerPlayer player = player(helper, 7.5, 2, 3.5, 0, 0);
         ItemStack emblem = giveEmblem(player, 1000);
         AquamanSuit.summon(player);
-        AquaPower.select(emblem, AquaPower.SEA_CALL);
+        AquaPower.POWERS.select(emblem, AquaPower.SEA_CALL);
         helper.spawn(EntityType.COD, new Vec3(5.5, 3, 4.5));
         helper.spawn(EntityType.SQUID, new Vec3(9.5, 3, 4.5));
         Zombie zombie = dummy(helper, 7.5, 2, 9.5);
@@ -1221,7 +1221,7 @@ public final class ModGameTests {
         AquamanSuit.summon(player);
         boolean used = AquamanServer.usePower(player, emblem, AquaPower.ATLANTIS_PORTAL);
         helper.assertFalse(used, "no Atlantis in this world: no portal");
-        helper.assertTrue(SeaForce.get(emblem).stored() == 1000, "a failed portal costs nothing");
+        helper.assertTrue(AquamanHero.SEA_FORCE.get(emblem).stored() == 1000, "a failed portal costs nothing");
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.ATLANTIS_GATE.get()));
         use(player);
         helper.assertTrue(around(player, com.danrod505.greenlantern.entity.AtlantisPortalEntity.class, 8.0).isEmpty(), "the gate opens nothing either");
@@ -1236,7 +1236,7 @@ public final class ModGameTests {
             var portals = around(player, com.danrod505.greenlantern.entity.AtlantisPortalEntity.class, 8.0);
             helper.assertTrue(portals.size() == 1, "one whirlpool, found " + portals.size());
             helper.assertFalse(portals.getFirst().leadsHome(), "far from Atlantis, the portal leads there");
-            helper.assertTrue(SeaForce.get(emblem).stored() == 1000 - AquaPower.ATLANTIS_PORTAL.cost(), "the portal costs Power of the Seas");
+            helper.assertTrue(AquamanHero.SEA_FORCE.get(emblem).stored() == 1000 - AquaPower.ATLANTIS_PORTAL.cost(), "the portal costs Power of the Seas");
             portals.forEach(p -> p.discard());
         } finally {
             com.danrod505.greenlantern.atlantis.Atlantis.setSiteForTesting(server, null, false);
@@ -1249,7 +1249,7 @@ public final class ModGameTests {
 
     private static ItemStack giveBelt(ServerPlayer player, int charge) {
         ItemStack belt = new ItemStack(ModItems.UTILITY_BELT.get());
-        BatCharge.set(belt, charge);
+        BatmanHero.BAT_CHARGE.set(belt, charge);
         player.setItemInHand(InteractionHand.MAIN_HAND, belt);
         return player.getMainHandItem();
     }
@@ -1284,11 +1284,11 @@ public final class ModGameTests {
         helper.startSequence()
                 .thenExecuteFor(41, player::doTick)
                 .thenExecute(() -> {
-                    int stored = BatCharge.get(belt).stored();
+                    int stored = BatmanHero.BAT_CHARGE.get(belt).stored();
                     helper.assertTrue(stored >= 10, "the belt should recharge on its own, got " + stored);
                     helper.assertTrue(player.hasEffect(net.minecraft.world.effect.MobEffects.NIGHT_VISION), "the cowl gives night vision");
-                    BatPower.select(belt, BatPower.BAT_SWARM);
-                    BatCharge.set(belt, 0);
+                    BatPower.POWERS.select(belt, BatPower.BAT_SWARM);
+                    BatmanHero.BAT_CHARGE.set(belt, 0);
                     helper.assertFalse(BatmanServer.usePower(player, belt, BatPower.BAT_SWARM), "no charge, no gadget");
                     remove(player);
                 })
@@ -1299,13 +1299,13 @@ public final class ModGameTests {
         ServerPlayer player = player(helper, 7.5, 1, 2.5, 0, 0);
         ItemStack belt = giveBelt(player, 1000);
         BatmanSuit.summon(player);
-        BatPower.select(belt, BatPower.BATARANG);
+        BatPower.POWERS.select(belt, BatPower.BATARANG);
         Zombie zombie = dummy(helper, 7.5, 1, 7.5);
         float health = zombie.getHealth();
         player.setXRot(8.0F);
         use(player);
         helper.assertTrue(BatarangEntity.findAll(player).size() == 1, "a batarang should be in flight");
-        helper.assertTrue(BatCharge.get(belt).stored() == 1000 - BatPower.BATARANG.cost(), "the batarang should cost charge");
+        helper.assertTrue(BatmanHero.BAT_CHARGE.get(belt).stored() == 1000 - BatPower.BATARANG.cost(), "the batarang should cost charge");
         helper.startSequence()
                 // Waits for the batarang's own hit (it slows the target): the zombie may also burn in the sun.
                 .thenWaitUntil(() -> helper.assertTrue(zombie.hasEffect(net.minecraft.world.effect.MobEffects.SLOWNESS) || zombie.isDeadOrDying(),
@@ -1323,7 +1323,7 @@ public final class ModGameTests {
         }
         ItemStack belt = giveBelt(player, 1000);
         BatmanSuit.summon(player);
-        BatPower.select(belt, BatPower.GRAPPLE);
+        BatPower.POWERS.select(belt, BatPower.GRAPPLE);
         use(player);
         helper.assertTrue(GrappleHookEntity.find(player) != null, "the hook should be fired");
         helper.startSequence()
@@ -1335,7 +1335,7 @@ public final class ModGameTests {
                     GrappleHookEntity hook = GrappleHookEntity.find(player);
                     BatmanServer.usePower(player, belt, BatPower.GRAPPLE);
                     helper.assertTrue(hook.isRemoved(), "using the gadget again lets go of the cable");
-                    helper.assertTrue(BatCharge.get(belt).stored() == 1000 - BatPower.GRAPPLE.cost(), "letting go is free");
+                    helper.assertTrue(BatmanHero.BAT_CHARGE.get(belt).stored() == 1000 - BatPower.GRAPPLE.cost(), "letting go is free");
                     remove(player);
                 })
                 .thenSucceed();
@@ -1345,7 +1345,7 @@ public final class ModGameTests {
         ServerPlayer player = player(helper, 7.5, 1, 7.5, 0, 0);
         ItemStack belt = giveBelt(player, 1000);
         BatmanSuit.summon(player);
-        BatPower.select(belt, BatPower.BAT_SWARM);
+        BatPower.POWERS.select(belt, BatPower.BAT_SWARM);
         Zombie zombie = dummy(helper, 7.5, 1, 11.5);
         float health = zombie.getHealth();
         use(player);
@@ -1369,14 +1369,14 @@ public final class ModGameTests {
         ServerPlayer player = player(helper, 7.5, 1, 3.5, 0, 0);
         ItemStack belt = giveBelt(player, 1000);
         BatmanSuit.summon(player);
-        BatPower.select(belt, BatPower.BATMOBILE);
+        BatPower.POWERS.select(belt, BatPower.BATMOBILE);
         Zombie zombie = dummy(helper, 7.5, 1, 12.5);
         float health = zombie.getHealth();
         use(player);
         BatmobileEntity car = BatmobileEntity.find(player);
         helper.assertTrue(car != null, "the Batmobile should arrive");
         helper.assertTrue(player.getVehicle() == car, "Batman should be in the Batmobile");
-        helper.assertTrue(BatCharge.get(belt).stored() == 1000 - BatPower.BATMOBILE.cost(), "the Batmobile should cost charge");
+        helper.assertTrue(BatmanHero.BAT_CHARGE.get(belt).stored() == 1000 - BatPower.BATMOBILE.cost(), "the Batmobile should cost charge");
         helper.startSequence()
                 .thenExecuteFor(2, player::doTick)
                 .thenExecute(() -> helper.assertTrue(car.fireMissiles(), "the missiles should fire"))
@@ -1397,7 +1397,7 @@ public final class ModGameTests {
 
     private static ItemStack giveCrystal(ServerPlayer player, int energy) {
         ItemStack crystal = new ItemStack(ModItems.KRYPTONIAN_CRYSTAL.get());
-        SolarEnergy.set(crystal, energy);
+        SupermanHero.SOLAR_ENERGY.set(crystal, energy);
         player.setItemInHand(InteractionHand.MAIN_HAND, crystal);
         return player.getMainHandItem();
     }
@@ -1447,7 +1447,7 @@ public final class ModGameTests {
         helper.startSequence()
                 .thenExecuteFor(41, player::doTick)
                 .thenExecute(() -> {
-                    int stored = SolarEnergy.get(crystal).stored();
+                    int stored = SupermanHero.SOLAR_ENERGY.get(crystal).stored();
                     helper.assertTrue(stored >= 10, "the sun should recharge the crystal, got " + stored);
                     remove(player);
                 })
@@ -1458,7 +1458,7 @@ public final class ModGameTests {
         ServerPlayer player = player(helper, 7.5, 1, 2.5, 0, 0);
         ItemStack crystal = giveCrystal(player, 3000);
         SupermanSuit.summon(player);
-        SuperPower.select(crystal, SuperPower.HEAT_VISION);
+        SuperPower.POWERS.select(crystal, SuperPower.HEAT_VISION);
         net.minecraft.world.entity.animal.pig.Pig pig = dummyPig(helper, 7.5, 1, 7.5);
         float health = pig.getHealth();
         player.setXRot(8.0F);
@@ -1468,7 +1468,7 @@ public final class ModGameTests {
                 .thenExecuteFor(12, player::doTick)
                 .thenExecute(() -> {
                     helper.assertTrue(pig.getHealth() < health || pig.isDeadOrDying(), "the beams should burn the pig");
-                    helper.assertTrue(SolarEnergy.get(crystal).stored() < 3000, "heat vision should cost solar energy");
+                    helper.assertTrue(SupermanHero.SOLAR_ENERGY.get(crystal).stored() < 3000, "heat vision should cost solar energy");
                     SupermanServer.usePower(player, crystal, SuperPower.HEAT_VISION);
                     helper.assertFalse(SupermanServer.isUsingHeatVision(player), "using it again stops the beams");
                     remove(player);
@@ -1480,14 +1480,14 @@ public final class ModGameTests {
         ServerPlayer player = player(helper, 7.5, 1, 4.5, 0, 0);
         ItemStack crystal = giveCrystal(player, 3000);
         SupermanSuit.summon(player);
-        SuperPower.select(crystal, SuperPower.SUPER_PUNCH);
+        SuperPower.POWERS.select(crystal, SuperPower.SUPER_PUNCH);
         // One pig right in front and two more off to the sides: the blast hits them all.
         net.minecraft.world.entity.animal.pig.Pig front = dummyPig(helper, 7.5, 1, 6.5);
         net.minecraft.world.entity.animal.pig.Pig left = dummyPig(helper, 10.5, 1, 7.5);
         net.minecraft.world.entity.animal.pig.Pig right = dummyPig(helper, 4.5, 1, 7.5);
         float health = front.getHealth();
         use(player);
-        helper.assertTrue(SolarEnergy.get(crystal).stored() == 3000 - SuperPower.SUPER_PUNCH.cost(), "the punch should cost solar energy");
+        helper.assertTrue(SupermanHero.SOLAR_ENERGY.get(crystal).stored() == 3000 - SuperPower.SUPER_PUNCH.cost(), "the punch should cost solar energy");
         for (net.minecraft.world.entity.animal.pig.Pig pig : List.of(front, left, right)) {
             helper.assertTrue(pig.getHealth() < health || pig.isDeadOrDying(), "the punch should hit every pig around");
         }
@@ -1499,7 +1499,7 @@ public final class ModGameTests {
         ServerPlayer player = player(helper, 7.5, 1, 2.5, 0, 0);
         ItemStack crystal = giveCrystal(player, 3000);
         SupermanSuit.summon(player);
-        SuperPower.select(crystal, SuperPower.SUPER_BREATH);
+        SuperPower.POWERS.select(crystal, SuperPower.SUPER_BREATH);
         net.minecraft.world.entity.animal.pig.Pig pig = dummyPig(helper, 7.5, 1, 6.5);
         float health = pig.getHealth();
         use(player);
@@ -1520,7 +1520,7 @@ public final class ModGameTests {
         ServerPlayer player = player(helper, 7.5, 1, 7.5, 0, 0);
         ItemStack crystal = giveCrystal(player, 3000);
         SupermanSuit.summon(player);
-        SuperPower.select(crystal, SuperPower.XRAY_VISION);
+        SuperPower.POWERS.select(crystal, SuperPower.XRAY_VISION);
         use(player);
         helper.assertTrue(SupermanServer.isXray(player), "X-ray vision should be on");
         helper.startSequence()
@@ -1539,7 +1539,7 @@ public final class ModGameTests {
 
     private static ItemStack giveTiara(ServerPlayer player, int power) {
         ItemStack tiara = new ItemStack(ModItems.AMAZON_TIARA.get());
-        DivinePower.set(tiara, power);
+        WonderWomanHero.DIVINE_POWER.set(tiara, power);
         player.setItemInHand(InteractionHand.MAIN_HAND, tiara);
         return player.getMainHandItem();
     }
@@ -1559,7 +1559,7 @@ public final class ModGameTests {
         helper.assertTrue(player.getItemBySlot(EquipmentSlot.FEET).is(ModItems.WONDER_WOMAN_BOOTS.get()), "boots should be worn");
         helper.assertTrue(player.getAbilities().mayfly, "Wonder Woman can fly");
         // Her flight is weaker than the Lantern's: lower top speed, and she never breaks the sound barrier.
-        FlightProfile amazon = FlightProfile.wonderWoman();
+        FlightProfile amazon = com.danrod505.greenlantern.wonderwoman.WonderWomanHero.INSTANCE.flightProfile();
         FlightProfile lantern = FlightProfile.lantern();
         helper.assertTrue(amazon.max() < lantern.max(), "her top speed should be below the Lantern's");
         helper.assertTrue(amazon.max() < amazon.barrier(), "she should stay below the sound barrier");
@@ -1578,7 +1578,7 @@ public final class ModGameTests {
         ServerPlayer player = player(helper, 7.5, 1, 3.5, 0, 0);
         ItemStack tiara = giveTiara(player, 1000);
         WonderWomanSuit.summon(player);
-        AmazonPower.select(tiara, AmazonPower.LASSO_CAPTURE);
+        AmazonPower.POWERS.select(tiara, AmazonPower.LASSO_CAPTURE);
         net.minecraft.world.entity.animal.pig.Pig pig = dummyPig(helper, 7.5, 1, 7.5);
         // The loop leaves from her right hand, a little below the eyes: aim it at the middle of the pig.
         Vec3 eye = player.getEyePosition();
@@ -1588,7 +1588,7 @@ public final class ModGameTests {
         player.xRotO = pitch;
         use(player);
         helper.assertTrue(LassoEntity.find(player) != null, "the lasso should be thrown");
-        helper.assertTrue(DivinePower.get(tiara).stored() < 1000, "the lasso should cost divine power");
+        helper.assertTrue(WonderWomanHero.DIVINE_POWER.get(tiara).stored() < 1000, "the lasso should cost divine power");
         helper.startSequence()
                 .thenExecuteFor(15, player::doTick)
                 .thenExecute(() -> {
@@ -1624,9 +1624,9 @@ public final class ModGameTests {
         helper.startSequence()
                 .thenExecuteFor(8, player::doTick)
                 .thenExecute(() -> {
-                    int before = DivinePower.get(tiara).stored();
+                    int before = WonderWomanHero.DIVINE_POWER.get(tiara).stored();
                     helper.assertTrue(WonderWomanServer.usePower(player, tiara, AmazonPower.BRACELET_SHOCKWAVE), "the bracelets should clash");
-                    helper.assertTrue(DivinePower.get(tiara).stored() < before, "the shockwave should cost divine power");
+                    helper.assertTrue(WonderWomanHero.DIVINE_POWER.get(tiara).stored() < before, "the shockwave should cost divine power");
                     for (net.minecraft.world.entity.animal.pig.Pig pig : List.of(front, behind)) {
                         helper.assertTrue(pig.getHealth() < health || pig.isDeadOrDying(), "the shockwave should hit every pig around");
                     }

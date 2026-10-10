@@ -2,7 +2,7 @@ package com.danrod505.greenlantern.entity;
 
 import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.flash.FlashHelper;
-import com.danrod505.greenlantern.flash.SpeedForce;
+import com.danrod505.greenlantern.flash.FlashHero;
 import com.danrod505.greenlantern.flash.SpeedsterServer;
 import com.danrod505.greenlantern.registry.ModDamageTypes;
 import com.danrod505.greenlantern.registry.ModEntities;
@@ -140,7 +140,7 @@ public class SpeedTornadoEntity extends Entity {
                 collapse();
             } else if (life % 20 == 0 && !((ServerPlayer) owner).isCreative()) {
                 ItemStack ring = FlashHelper.findRing(owner);
-                if (ring.isEmpty() || !SpeedForce.tryConsume(ring, GLConfig.TORNADO_COST_PER_SECOND.get())) {
+                if (ring.isEmpty() || !FlashHero.SPEED_FORCE.tryConsume(ring, GLConfig.TORNADO_COST_PER_SECOND.get())) {
                     SpeedsterServer.notifyNoSpeedForce((ServerPlayer) owner);
                     collapse();
                 }

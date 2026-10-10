@@ -2,8 +2,8 @@ package com.danrod505.greenlantern.item;
 
 import com.danrod505.greenlantern.ring.RingEnergy;
 import com.danrod505.greenlantern.wonderwoman.AmazonPower;
-import com.danrod505.greenlantern.wonderwoman.DivinePower;
 import com.danrod505.greenlantern.wonderwoman.WonderWomanHelper;
+import com.danrod505.greenlantern.wonderwoman.WonderWomanHero;
 import com.danrod505.greenlantern.wonderwoman.WonderWomanServer;
 import com.danrod505.greenlantern.wonderwoman.WonderWomanSuit;
 import java.util.function.Consumer;
@@ -35,7 +35,7 @@ public class AmazonTiaraItem extends Item {
 
     /** Returns the given tiara full of divine power (used for the creative tab). */
     public static ItemStack charged(ItemStack tiara) {
-        DivinePower.set(tiara, DivinePower.capacity());
+        WonderWomanHero.DIVINE_POWER.set(tiara, WonderWomanHero.DIVINE_POWER.capacity());
         return tiara;
     }
 
@@ -47,7 +47,7 @@ public class AmazonTiaraItem extends Item {
             return InteractionResult.SUCCESS;
         }
         if (player instanceof ServerPlayer serverPlayer) {
-            WonderWomanServer.usePower(serverPlayer, tiara, AmazonPower.selected(tiara));
+            WonderWomanServer.usePower(serverPlayer, tiara, AmazonPower.POWERS.selected(tiara));
         }
         return InteractionResult.SUCCESS;
     }
@@ -61,22 +61,22 @@ public class AmazonTiaraItem extends Item {
 
     @Override
     public int getBarWidth(ItemStack tiara) {
-        return Math.round(13.0F * DivinePower.get(tiara).fraction());
+        return Math.round(13.0F * WonderWomanHero.DIVINE_POWER.get(tiara).fraction());
     }
 
     @Override
     public int getBarColor(ItemStack tiara) {
-        float f = DivinePower.get(tiara).fraction();
+        float f = WonderWomanHero.DIVINE_POWER.get(tiara).fraction();
         return f < 0.2F ? 0xFF4040 : Mth.hsvToRgb(0.12F + 0.02F * f, 0.8F, 1.0F);
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public void appendHoverText(ItemStack tiara, TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flag) {
-        RingEnergy energy = DivinePower.get(tiara);
+        RingEnergy energy = WonderWomanHero.DIVINE_POWER.get(tiara);
         tooltip.accept(Component.translatable("tooltip.greenlantern.divine_power", energy.stored(), energy.capacity())
                 .withStyle(energy.fraction() < 0.2F ? ChatFormatting.RED : ChatFormatting.GOLD));
-        tooltip.accept(Component.translatable("tooltip.greenlantern.power", AmazonPower.selected(tiara).displayName()).withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.translatable("tooltip.greenlantern.power", AmazonPower.POWERS.selected(tiara).displayName()).withStyle(ChatFormatting.GRAY));
         tooltip.accept(Component.translatable("tooltip.greenlantern.amazon_tiara_hint").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
     }
 }

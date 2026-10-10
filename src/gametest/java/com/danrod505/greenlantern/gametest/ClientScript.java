@@ -342,7 +342,7 @@ public final class ClientScript {
 
     private static void flashPower(com.danrod505.greenlantern.flash.SpeedsterPower power) {
         server(sp -> {
-            com.danrod505.greenlantern.flash.SpeedsterPower.select(sp.getMainHandItem(), power);
+            com.danrod505.greenlantern.flash.SpeedsterPower.POWERS.select(sp.getMainHandItem(), power);
             sp.getCooldowns().removeCooldown(sp.getCooldowns().getCooldownGroup(sp.getMainHandItem()));
             com.danrod505.greenlantern.flash.SpeedsterServer.usePower(sp, sp.getMainHandItem(), power);
         });
@@ -528,7 +528,7 @@ public final class ClientScript {
             if (mc().screen != null) mc().screen.keyReleased(new net.minecraft.client.input.KeyEvent(org.lwjgl.glfw.GLFW.GLFW_KEY_R, 0, 0));
         });
         step(10, () -> com.danrod505.greenlantern.GreenLantern.LOGGER.info("CLIENTSCRIPT power selected={}",
-                com.danrod505.greenlantern.flash.SpeedsterPower.selected(mc().player.getMainHandItem()).id()));
+                com.danrod505.greenlantern.flash.SpeedsterPower.POWERS.selected(mc().player.getMainHandItem()).id()));
         step(20, () -> mc().stop());
     }
 
@@ -537,7 +537,7 @@ public final class ClientScript {
     private static void aquaPower(com.danrod505.greenlantern.aquaman.AquaPower power) {
         server(sp -> {
             ItemStack emblem = com.danrod505.greenlantern.aquaman.AquamanHelper.findEmblem(sp);
-            com.danrod505.greenlantern.aquaman.AquaPower.select(emblem, power);
+            com.danrod505.greenlantern.aquaman.AquaPower.POWERS.select(emblem, power);
             sp.getCooldowns().removeCooldown(sp.getCooldowns().getCooldownGroup(emblem));
             com.danrod505.greenlantern.aquaman.AquamanServer.usePower(sp, emblem, power);
         });
@@ -753,7 +753,7 @@ public final class ClientScript {
             if (mc().screen != null) mc().screen.keyReleased(new net.minecraft.client.input.KeyEvent(org.lwjgl.glfw.GLFW.GLFW_KEY_R, 0, 0));
         });
         step(10, () -> com.danrod505.greenlantern.GreenLantern.LOGGER.info("CLIENTSCRIPT power selected={}",
-                com.danrod505.greenlantern.aquaman.AquaPower.selected(com.danrod505.greenlantern.aquaman.AquamanHelper.findEmblem(mc().player)).id()));
+                com.danrod505.greenlantern.aquaman.AquaPower.POWERS.selected(com.danrod505.greenlantern.aquaman.AquamanHelper.findEmblem(mc().player)).id()));
         // The manual.
         step(5, () -> mc().setScreen(new com.danrod505.greenlantern.client.GuideScreen()));
         step(10, () -> shot("aq13_guide"));
@@ -766,7 +766,7 @@ public final class ClientScript {
     private static void batPower(com.danrod505.greenlantern.batman.BatPower power) {
         server(sp -> {
             ItemStack belt = com.danrod505.greenlantern.batman.BatmanHelper.findBelt(sp);
-            com.danrod505.greenlantern.batman.BatPower.select(belt, power);
+            com.danrod505.greenlantern.batman.BatPower.POWERS.select(belt, power);
             sp.getCooldowns().removeCooldown(sp.getCooldowns().getCooldownGroup(belt));
             com.danrod505.greenlantern.batman.BatmanServer.usePower(sp, belt, power);
         });
@@ -1012,7 +1012,7 @@ public final class ClientScript {
             if (mc().screen != null) mc().screen.keyReleased(new net.minecraft.client.input.KeyEvent(org.lwjgl.glfw.GLFW.GLFW_KEY_R, 0, 0));
         });
         step(10, () -> com.danrod505.greenlantern.GreenLantern.LOGGER.info("CLIENTSCRIPT gadget selected={}",
-                com.danrod505.greenlantern.batman.BatPower.selected(com.danrod505.greenlantern.batman.BatmanHelper.findBelt(mc().player)).id()));
+                com.danrod505.greenlantern.batman.BatPower.POWERS.selected(com.danrod505.greenlantern.batman.BatmanHelper.findBelt(mc().player)).id()));
         // The manual.
         step(5, () -> mc().setScreen(com.danrod505.greenlantern.client.GuideScreen.atChapter("batman")));
         step(10, () -> shot("bat11_guide"));
@@ -1026,7 +1026,7 @@ public final class ClientScript {
     private static void supPower(com.danrod505.greenlantern.superman.SuperPower power) {
         server(sp -> {
             ItemStack crystal = com.danrod505.greenlantern.superman.SupermanHelper.findCrystal(sp);
-            com.danrod505.greenlantern.superman.SuperPower.select(crystal, power);
+            com.danrod505.greenlantern.superman.SuperPower.POWERS.select(crystal, power);
             sp.getCooldowns().removeCooldown(sp.getCooldowns().getCooldownGroup(crystal));
             com.danrod505.greenlantern.superman.SupermanServer.usePower(sp, crystal, power);
         });
@@ -1263,7 +1263,7 @@ public final class ClientScript {
             if (mc().screen != null) mc().screen.keyReleased(new net.minecraft.client.input.KeyEvent(org.lwjgl.glfw.GLFW.GLFW_KEY_R, 0, 0));
         });
         step(10, () -> com.danrod505.greenlantern.GreenLantern.LOGGER.info("CLIENTSCRIPT power selected={}",
-                com.danrod505.greenlantern.superman.SuperPower.selected(com.danrod505.greenlantern.superman.SupermanHelper.findCrystal(mc().player)).id()));
+                com.danrod505.greenlantern.superman.SuperPower.POWERS.selected(com.danrod505.greenlantern.superman.SupermanHelper.findCrystal(mc().player)).id()));
         // The guide.
         step(5, () -> mc().setScreen(com.danrod505.greenlantern.client.GuideScreen.atChapter("superman")));
         step(10, () -> shot("sup13_guide"));
@@ -1277,7 +1277,7 @@ public final class ClientScript {
     private static void wwPower(com.danrod505.greenlantern.wonderwoman.AmazonPower power) {
         server(sp -> {
             ItemStack tiara = com.danrod505.greenlantern.wonderwoman.WonderWomanHelper.findTiara(sp);
-            com.danrod505.greenlantern.wonderwoman.AmazonPower.select(tiara, power);
+            com.danrod505.greenlantern.wonderwoman.AmazonPower.POWERS.select(tiara, power);
             sp.getCooldowns().removeCooldown(sp.getCooldowns().getCooldownGroup(tiara));
             boolean used = com.danrod505.greenlantern.wonderwoman.WonderWomanServer.usePower(sp, tiara, power);
             com.danrod505.greenlantern.GreenLantern.LOGGER.info("CLIENTSCRIPT power {} used={}", power.id(), used);
@@ -1591,7 +1591,7 @@ public final class ClientScript {
             if (mc().screen != null) mc().screen.keyReleased(new net.minecraft.client.input.KeyEvent(org.lwjgl.glfw.GLFW.GLFW_KEY_R, 0, 0));
         });
         step(10, () -> com.danrod505.greenlantern.GreenLantern.LOGGER.info("CLIENTSCRIPT power selected={}",
-                com.danrod505.greenlantern.wonderwoman.AmazonPower.selected(com.danrod505.greenlantern.wonderwoman.WonderWomanHelper.findTiara(mc().player)).id()));
+                com.danrod505.greenlantern.wonderwoman.AmazonPower.POWERS.selected(com.danrod505.greenlantern.wonderwoman.WonderWomanHelper.findTiara(mc().player)).id()));
         // The guide.
         step(5, () -> mc().setScreen(com.danrod505.greenlantern.client.GuideScreen.atChapter("wonder_woman")));
         step(10, () -> shot("ww17_guide"));
@@ -2938,7 +2938,7 @@ public final class ClientScript {
                     mc.player.blockPosition(), com.danrod505.greenlantern.client.flight.FlightController.isPowerFlying(),
                     String.format("%.2f", com.danrod505.greenlantern.client.flight.FlightController.mach()),
                     com.danrod505.greenlantern.client.superman.SupermanVisuals.flags(mc.player.getId()),
-                    crystal.isEmpty() ? -1 : com.danrod505.greenlantern.superman.SolarEnergy.get(crystal).stored(),
+                    crystal.isEmpty() ? -1 : com.danrod505.greenlantern.superman.SupermanHero.SOLAR_ENERGY.get(crystal).stored(),
                     com.danrod505.greenlantern.client.flight.FlightAudio.describeMusic());
         }
         if (mc.player.tickCount % 10 == 0 && "wonderwoman".equals(System.getenv("GL_CLIENT_SCRIPT"))) {
@@ -2947,7 +2947,7 @@ public final class ClientScript {
                     mc.player.blockPosition(), com.danrod505.greenlantern.client.flight.FlightController.isPowerFlying(),
                     String.format("%.2f", com.danrod505.greenlantern.client.flight.FlightController.speed()),
                     com.danrod505.greenlantern.client.wonderwoman.WonderWomanVisuals.flags(mc.player.getId()),
-                    tiara.isEmpty() ? -1 : com.danrod505.greenlantern.wonderwoman.DivinePower.get(tiara).stored(),
+                    tiara.isEmpty() ? -1 : com.danrod505.greenlantern.wonderwoman.WonderWomanHero.DIVINE_POWER.get(tiara).stored(),
                     mc.player.getVehicle() instanceof com.danrod505.greenlantern.entity.InvisibleJetEntity jet
                             ? jet.blockPosition() + " boost=" + jet.isBoosting() + " cloak=" + jet.isCloaked() : "-",
                     com.danrod505.greenlantern.client.flight.FlightAudio.describeMusic());

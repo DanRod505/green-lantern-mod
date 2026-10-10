@@ -78,7 +78,7 @@ public final class AquamanServer {
         if (state.pendingCharge >= 1.0F) {
             int whole = (int) state.pendingCharge;
             state.pendingCharge -= whole;
-            SeaForce.add(emblem, whole);
+            AquamanHero.SEA_FORCE.add(emblem, whole);
         }
 
         // Swimming at Atlantean speed shouldn't starve you: give back most of the food vanilla
@@ -154,7 +154,7 @@ public final class AquamanServer {
             }
         }
         if (player.getCooldowns().isOnCooldown(emblem)) return false;
-        if (!player.isCreative() && !SeaForce.has(emblem, power.cost())) {
+        if (!player.isCreative() && !AquamanHero.SEA_FORCE.has(emblem, power.cost())) {
             notifyNoSeaForce(player);
             return false;
         }
@@ -166,7 +166,7 @@ public final class AquamanServer {
             case KRAKEN -> summonKraken(player);
         };
         if (used) {
-            if (!player.isCreative()) SeaForce.tryConsume(emblem, power.cost());
+            if (!player.isCreative()) AquamanHero.SEA_FORCE.tryConsume(emblem, power.cost());
             player.getCooldowns().addCooldown(emblem, power == AquaPower.ATLANTIS_PORTAL ? 60 : 20);
         }
         return used;
@@ -328,24 +328,4 @@ public final class AquamanServer {
 
     // ---- power wheel / key packets -----------------------------------------------------------------------
 
-    public static void selectPower(ServerPlayer player, int value, boolean relative) {
-        ItemStack emblem = AquamanHelper.findEmblem(player);
-        if (emblem.isEmpty()) return;
-        AquaPower power;
-        if (relative) {
-            power = AquaPower.cycle(emblem, Mth.clamp(value, -1, 1));
-        } else {
-            power = AquaPower.byIndex(value);
-            AquaPower.select(emblem, power);
-        }
-        player.displayClientMessage(Component.translatable("message.greenlantern.power_selected", power.displayName().copy().withStyle(ChatFormatting.AQUA)), true);
-        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.POWER_SELECT.get(), SoundSource.PLAYERS,
-                0.7F, 0.8F + 0.08F * power.ordinal());
-    }
-
-    public static void usePowerKey(ServerPlayer player, int index) {
-        ItemStack emblem = AquamanHelper.findEmblem(player);
-        if (emblem.isEmpty()) return;
-        usePower(player, emblem, index < 0 ? AquaPower.selected(emblem) : AquaPower.byIndex(index));
-    }
 }

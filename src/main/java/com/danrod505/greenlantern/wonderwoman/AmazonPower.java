@@ -1,10 +1,8 @@
 package com.danrod505.greenlantern.wonderwoman;
 
 import com.danrod505.greenlantern.GLConfig;
-import com.danrod505.greenlantern.registry.ModDataComponents;
-import net.minecraft.network.chat.Component;
-import net.minecraft.util.Mth;
-import net.minecraft.world.item.ItemStack;
+import com.danrod505.greenlantern.hero.HeroPower;
+import com.danrod505.greenlantern.hero.PowerSet;
 
 /**
  * Powers of Wonder Woman, picked on the power wheel (hold the wheel key) and used with the power key
@@ -14,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
  * at the same index), its name / description to the lang files and its behaviour to
  * {@link WonderWomanServer#usePower}.
  */
-public enum AmazonPower {
+public enum AmazonPower implements HeroPower {
     /** The Lasso of Truth catches a creature: it is bound, can't run and won't fight while held. */
     LASSO_CAPTURE("lasso_capture"),
     /** The lasso yanks a creature to you; thrown at a block, it pulls you there. */
@@ -32,7 +30,8 @@ public enum AmazonPower {
     /** The Invisible Jet lands next to you and you climb aboard. */
     INVISIBLE_JET("invisible_jet");
 
-    private static final AmazonPower[] VALUES = values();
+    /** The powers in wheel order, and the selection kept on the hero's item. */
+    public static final PowerSet<AmazonPower> POWERS = new PowerSet<>(values());
 
     private final String id;
 
@@ -40,23 +39,13 @@ public enum AmazonPower {
         this.id = id;
     }
 
+    @Override
     public String id() {
         return id;
     }
 
-    public int iconIndex() {
-        return ordinal();
-    }
-
-    public Component displayName() {
-        return Component.translatable("power.greenlantern." + id);
-    }
-
-    public Component description() {
-        return Component.translatable("power.greenlantern." + id + ".desc");
-    }
-
     /** Divine power needed to use the power (per second for the bracelet guard). */
+    @Override
     public int cost() {
         return switch (this) {
             case LASSO_CAPTURE -> GLConfig.LASSO_CAPTURE_COST.get();
@@ -68,28 +57,5 @@ public enum AmazonPower {
             case SHIELD_THROW -> GLConfig.SHIELD_THROW_COST.get();
             case INVISIBLE_JET -> GLConfig.INVISIBLE_JET_COST.get();
         };
-    }
-
-    public static AmazonPower byIndex(int index) {
-        return VALUES[Mth.clamp(index, 0, VALUES.length - 1)];
-    }
-
-    public static int count() {
-        return VALUES.length;
-    }
-
-    public static AmazonPower selected(ItemStack tiara) {
-        Integer index = tiara.get(ModDataComponents.SELECTED_POWER.get());
-        return byIndex(index == null ? 0 : index);
-    }
-
-    public static void select(ItemStack tiara, AmazonPower power) {
-        tiara.set(ModDataComponents.SELECTED_POWER.get(), power.ordinal());
-    }
-
-    public static AmazonPower cycle(ItemStack tiara, int offset) {
-        AmazonPower next = VALUES[Math.floorMod(selected(tiara).ordinal() + offset, VALUES.length)];
-        select(tiara, next);
-        return next;
     }
 }

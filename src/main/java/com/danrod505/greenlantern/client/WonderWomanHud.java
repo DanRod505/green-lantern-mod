@@ -6,13 +6,14 @@ import com.danrod505.greenlantern.client.wonderwoman.WonderWomanVisuals;
 import com.danrod505.greenlantern.entity.InvisibleJetEntity;
 import com.danrod505.greenlantern.entity.LassoEntity;
 import com.danrod505.greenlantern.flash.FlashHelper;
+import com.danrod505.greenlantern.hero.WheelStyle;
 import com.danrod505.greenlantern.ring.RingEnergy;
 import com.danrod505.greenlantern.ring.RingHelper;
 import com.danrod505.greenlantern.superman.SupermanHelper;
 import com.danrod505.greenlantern.wonderwoman.AmazonFlags;
 import com.danrod505.greenlantern.wonderwoman.AmazonPower;
-import com.danrod505.greenlantern.wonderwoman.DivinePower;
 import com.danrod505.greenlantern.wonderwoman.WonderWomanHelper;
+import com.danrod505.greenlantern.wonderwoman.WonderWomanHero;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -44,7 +45,7 @@ public final class WonderWomanHud {
         boolean suited = WonderWomanHelper.isSuited(player);
         if (!held && !suited) return;
 
-        RingEnergy energy = DivinePower.get(tiara);
+        RingEnergy energy = WonderWomanHero.DIVINE_POWER.get(tiara);
         float fraction = energy.fraction();
         if (displayedFraction < 0) displayedFraction = fraction;
         displayedFraction += (fraction - displayedFraction) * 0.15F;
@@ -59,8 +60,8 @@ public final class WonderWomanHud {
         if (!SupermanHelper.findCrystal(player).isEmpty() && (!SupermanHelper.heldCrystal(player).isEmpty() || SupermanHelper.isSuited(player))) y += 58;
 
         // The golden eagle emblem (last icon of the strip).
-        int iconsW = PowerWheelScreen.AMAZON_ICONS_W;
-        graphics.blit(RenderPipelines.GUI_TEXTURED, PowerWheelScreen.AMAZON_ICONS, x, y - 2, AmazonPower.count() * 16, 0, 16, 16, iconsW, PowerWheelScreen.ICONS_H);
+        int iconsW = WonderWomanHero.WHEEL.iconsWidth();
+        graphics.blit(RenderPipelines.GUI_TEXTURED, WonderWomanHero.WHEEL.icons(), x, y - 2, AmazonPower.POWERS.count() * 16, 0, 16, 16, iconsW, WheelStyle.ICONS_HEIGHT);
         int barX = x + 19;
         int barY = y + 2;
         int barW = 100;
@@ -81,12 +82,12 @@ public final class WonderWomanHud {
         graphics.fill(barX, barY, barX + fill, barY + 1, 0x90FFFFFF);
         graphics.drawString(mc.font, energy.stored() + " / " + energy.capacity(), barX + barW + 4, barY, low ? 0xFFFF5555 : 0xFFFFD24A, true);
 
-        AmazonPower selected = AmazonPower.selected(tiara);
+        AmazonPower selected = AmazonPower.POWERS.selected(tiara);
         int iconsY = y + 15;
         int flags = WonderWomanVisuals.flags(player.getId());
         LassoEntity lasso = LassoEntity.find(player);
-        for (int i = 0; i < AmazonPower.count(); i++) {
-            AmazonPower power = AmazonPower.byIndex(i);
+        for (int i = 0; i < AmazonPower.POWERS.count(); i++) {
+            AmazonPower power = AmazonPower.POWERS.byIndex(i);
             int ix = x + 19 + i * 20;
             boolean isSelected = power == selected;
             boolean active = switch (power) {
@@ -99,8 +100,8 @@ public final class WonderWomanHud {
             };
             if (isSelected) graphics.fill(ix - 1, iconsY - 1, ix + 17, iconsY + 17, 0xC0C8102E);
             if (active) graphics.fill(ix - 1, iconsY + 17, ix + 17, iconsY + 19, 0xFFF2B71C);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, PowerWheelScreen.AMAZON_ICONS, ix, iconsY, power.iconIndex() * 16, 0, 16, 16,
-                    iconsW, PowerWheelScreen.ICONS_H, isSelected || active ? 0xFFFFFFFF : 0x90FFFFFF);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, WonderWomanHero.WHEEL.icons(), ix, iconsY, power.iconIndex() * 16, 0, 16, 16,
+                    iconsW, WheelStyle.ICONS_HEIGHT, isSelected || active ? 0xFFFFFFFF : 0x90FFFFFF);
         }
         graphics.drawString(mc.font, Component.translatable("hud.greenlantern.power_key", selected.displayName(), KeyBindings.HERO_POWER.getTranslatedKeyMessage()),
                 x + 19, iconsY + 21, 0xFFFFECE0, true);

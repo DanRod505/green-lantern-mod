@@ -80,7 +80,7 @@ public final class BatmanServer {
         if (state.pendingCharge >= 1.0F) {
             int whole = (int) state.pendingCharge;
             state.pendingCharge -= whole;
-            BatCharge.add(belt, whole);
+            BatmanHero.BAT_CHARGE.add(belt, whole);
         }
 
         // Gliding (reported by the client): no fall damage, ever.
@@ -173,7 +173,7 @@ public final class BatmanServer {
             }
         }
         if (player.getCooldowns().isOnCooldown(belt)) return false;
-        if (!player.isCreative() && !BatCharge.has(belt, power.cost())) {
+        if (!player.isCreative() && !BatmanHero.BAT_CHARGE.has(belt, power.cost())) {
             notifyNoCharge(player);
             return false;
         }
@@ -184,7 +184,7 @@ public final class BatmanServer {
             case BATMOBILE -> summonBatmobile(player);
         };
         if (used) {
-            if (!player.isCreative()) BatCharge.tryConsume(belt, power.cost());
+            if (!player.isCreative()) BatmanHero.BAT_CHARGE.tryConsume(belt, power.cost());
             int cooldown = switch (power) {
                 case BATARANG -> 6;
                 case GRAPPLE -> 8;
@@ -302,24 +302,4 @@ public final class BatmanServer {
 
     // ---- power wheel / key packets -----------------------------------------------------------------------
 
-    public static void selectPower(ServerPlayer player, int value, boolean relative) {
-        ItemStack belt = BatmanHelper.findBelt(player);
-        if (belt.isEmpty()) return;
-        BatPower power;
-        if (relative) {
-            power = BatPower.cycle(belt, Mth.clamp(value, -1, 1));
-        } else {
-            power = BatPower.byIndex(value);
-            BatPower.select(belt, power);
-        }
-        player.displayClientMessage(Component.translatable("message.greenlantern.power_selected", power.displayName().copy().withStyle(ChatFormatting.YELLOW)), true);
-        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.POWER_SELECT.get(), SoundSource.PLAYERS,
-                0.7F, 0.7F + 0.08F * power.ordinal());
-    }
-
-    public static void usePowerKey(ServerPlayer player, int index) {
-        ItemStack belt = BatmanHelper.findBelt(player);
-        if (belt.isEmpty()) return;
-        usePower(player, belt, index < 0 ? BatPower.selected(belt) : BatPower.byIndex(index));
-    }
 }

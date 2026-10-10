@@ -1,7 +1,7 @@
 package com.danrod505.greenlantern.aquaman;
 
 import com.danrod505.greenlantern.GreenLantern;
-import com.danrod505.greenlantern.hero.Hero;
+import com.danrod505.greenlantern.hero.HeroRegistry;
 import com.danrod505.greenlantern.registry.ModItems;
 import com.danrod505.greenlantern.registry.ModSounds;
 import com.danrod505.greenlantern.ring.FlightHandler;
@@ -49,7 +49,7 @@ public final class AquamanSuit {
             return false;
         }
         // Only one hero suit at a time.
-        Hero.dismissOthers(player, Hero.AQUAMAN);
+        HeroRegistry.dismissOthers(player, AquamanHero.INSTANCE);
         Uniform.equipSuit(player,
                 ItemStack.EMPTY,
                 ModItems.AQUAMAN_SUIT.get().getDefaultInstance(),

@@ -4,11 +4,12 @@ import com.danrod505.greenlantern.aquaman.AquamanHelper;
 import com.danrod505.greenlantern.batman.BatmanHelper;
 import com.danrod505.greenlantern.client.superman.SupermanVisuals;
 import com.danrod505.greenlantern.flash.FlashHelper;
+import com.danrod505.greenlantern.hero.WheelStyle;
 import com.danrod505.greenlantern.ring.RingEnergy;
 import com.danrod505.greenlantern.ring.RingHelper;
-import com.danrod505.greenlantern.superman.SolarEnergy;
 import com.danrod505.greenlantern.superman.SuperPower;
 import com.danrod505.greenlantern.superman.SupermanHelper;
+import com.danrod505.greenlantern.superman.SupermanHero;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -46,7 +47,7 @@ public final class SupermanHud {
         boolean suited = SupermanHelper.isSuited(player);
         if (!held && !suited) return;
 
-        RingEnergy energy = SolarEnergy.get(crystal);
+        RingEnergy energy = SupermanHero.SOLAR_ENERGY.get(crystal);
         float fraction = energy.fraction();
         if (displayedFraction < 0) displayedFraction = fraction;
         displayedFraction += (fraction - displayedFraction) * 0.15F;
@@ -63,8 +64,8 @@ public final class SupermanHud {
         if (!BatmanHelper.findBelt(player).isEmpty() && (!BatmanHelper.heldBelt(player).isEmpty() || BatmanHelper.isSuited(player))) y += 58;
 
         // The S shield (last icon of the strip).
-        int iconsW = PowerWheelScreen.SUPER_ICONS_W;
-        graphics.blit(RenderPipelines.GUI_TEXTURED, PowerWheelScreen.SUPER_ICONS, x, y - 2, SuperPower.count() * 16, 0, 16, 16, iconsW, PowerWheelScreen.ICONS_H);
+        int iconsW = SupermanHero.WHEEL.iconsWidth();
+        graphics.blit(RenderPipelines.GUI_TEXTURED, SupermanHero.WHEEL.icons(), x, y - 2, SuperPower.POWERS.count() * 16, 0, 16, 16, iconsW, WheelStyle.ICONS_HEIGHT);
         int barX = x + 19;
         int barY = y + 2;
         int barW = 100;
@@ -95,11 +96,11 @@ public final class SupermanHud {
         String text = energy.stored() + " / " + energy.capacity();
         graphics.drawString(mc.font, text, barX + barW + 4, barY, low ? 0xFFFF5555 : 0xFFFFD84A, true);
 
-        SuperPower selected = SuperPower.selected(crystal);
+        SuperPower selected = SuperPower.POWERS.selected(crystal);
         int iconsY = y + 15;
         int flags = SupermanVisuals.flags(player.getId());
-        for (int i = 0; i < SuperPower.count(); i++) {
-            SuperPower power = SuperPower.byIndex(i);
+        for (int i = 0; i < SuperPower.POWERS.count(); i++) {
+            SuperPower power = SuperPower.POWERS.byIndex(i);
             int ix = x + 19 + i * 20;
             boolean isSelected = power == selected;
             boolean active = switch (power) {
@@ -110,8 +111,8 @@ public final class SupermanHud {
             };
             if (isSelected) graphics.fill(ix - 1, iconsY - 1, ix + 17, iconsY + 17, 0xC02E6BFF);
             if (active) graphics.fill(ix - 1, iconsY + 17, ix + 17, iconsY + 19, 0xFFE8303A);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, PowerWheelScreen.SUPER_ICONS, ix, iconsY, power.iconIndex() * 16, 0, 16, 16,
-                    iconsW, PowerWheelScreen.ICONS_H, isSelected || active ? 0xFFFFFFFF : 0x90FFFFFF);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, SupermanHero.WHEEL.icons(), ix, iconsY, power.iconIndex() * 16, 0, 16, 16,
+                    iconsW, WheelStyle.ICONS_HEIGHT, isSelected || active ? 0xFFFFFFFF : 0x90FFFFFF);
         }
         graphics.drawString(mc.font, Component.translatable("hud.greenlantern.power_key", selected.displayName(), KeyBindings.HERO_POWER.getTranslatedKeyMessage()),
                 x + 19, iconsY + 21, 0xFFE6ECFF, true);

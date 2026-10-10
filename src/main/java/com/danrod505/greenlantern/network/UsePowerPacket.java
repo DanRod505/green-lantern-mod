@@ -1,17 +1,13 @@
 package com.danrod505.greenlantern.network;
 
-import com.danrod505.greenlantern.aquaman.AquamanServer;
-import com.danrod505.greenlantern.flash.FlashHelper;
-import com.danrod505.greenlantern.flash.SpeedsterPower;
-import com.danrod505.greenlantern.flash.SpeedsterServer;
-import com.danrod505.greenlantern.hero.Hero;
+import com.danrod505.greenlantern.hero.HeroDefinition;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 
-/** Client -> server: use a hero power ({@code power} = -1 for the selected one), for the speedster, Aquaman or Batman. */
+/** Client -> server: use a hero power ({@code power} = -1 for the selected one). */
 public record UsePowerPacket(int power) {
     public static final StreamCodec<RegistryFriendlyByteBuf, UsePowerPacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT, (UsePowerPacket p) -> p.power + 1,
@@ -21,25 +17,9 @@ public record UsePowerPacket(int power) {
         context.setPacketHandled(true);
         var player = context.getSender();
         if (player == null || !player.isAlive()) return;
-        if (Hero.context(player) == Hero.AQUAMAN) {
-            AquamanServer.usePowerKey(player, packet.power);
-            return;
-        }
-        if (Hero.context(player) == Hero.SUPERMAN) {
-            com.danrod505.greenlantern.superman.SupermanServer.usePowerKey(player, packet.power);
-            return;
-        }
-        if (Hero.context(player) == Hero.WONDER_WOMAN) {
-            com.danrod505.greenlantern.wonderwoman.WonderWomanServer.usePowerKey(player, packet.power);
-            return;
-        }
-        if (Hero.context(player) == Hero.BATMAN) {
-            com.danrod505.greenlantern.batman.BatmanServer.usePowerKey(player, packet.power);
-            return;
-        }
-        ItemStack ring = FlashHelper.findRing(player);
-        if (ring.isEmpty()) return;
-        SpeedsterPower power = packet.power < 0 ? SpeedsterPower.selected(ring) : SpeedsterPower.byIndex(packet.power);
-        SpeedsterServer.usePower(player, ring, power);
+        HeroDefinition hero = SelectPowerPacket.powerHero(player);
+        ItemStack item = hero.findItem(player);
+        if (item.isEmpty()) return;
+        hero.powers().use(player, item, packet.power);
     }
 }

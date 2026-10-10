@@ -1,7 +1,7 @@
 package com.danrod505.greenlantern.wonderwoman;
 
 import com.danrod505.greenlantern.GreenLantern;
-import com.danrod505.greenlantern.hero.Hero;
+import com.danrod505.greenlantern.hero.HeroRegistry;
 import com.danrod505.greenlantern.registry.ModItems;
 import com.danrod505.greenlantern.registry.ModParticles;
 import com.danrod505.greenlantern.registry.ModSounds;
@@ -54,7 +54,7 @@ public final class WonderWomanSuit {
             return false;
         }
         // Only one hero suit at a time.
-        Hero.dismissOthers(player, Hero.WONDER_WOMAN);
+        HeroRegistry.dismissOthers(player, WonderWomanHero.INSTANCE);
         Uniform.equipSuit(player,
                 ModItems.WONDER_WOMAN_HAIR.get().getDefaultInstance(),
                 ModItems.WONDER_WOMAN_SUIT.get().getDefaultInstance(),

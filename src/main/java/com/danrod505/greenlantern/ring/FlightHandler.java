@@ -3,8 +3,8 @@ package com.danrod505.greenlantern.ring;
 import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.flight.ServerFlightTracker;
 import com.danrod505.greenlantern.registry.ModSounds;
-import com.danrod505.greenlantern.superman.SolarEnergy;
 import com.danrod505.greenlantern.superman.SupermanHelper;
+import com.danrod505.greenlantern.superman.SupermanHero;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -48,7 +48,7 @@ public final class FlightHandler {
                 int cost = Math.round(base * multiplier);
                 if (player.tickCount % 20 == 0 && cost > 0) {
                     if (superman) {
-                        SolarEnergy.drain(source, cost);
+                        SupermanHero.SOLAR_ENERGY.drain(source, cost);
                     } else {
                         RingEnergy.tryConsume(source, cost);
                     }
@@ -84,7 +84,7 @@ public final class FlightHandler {
     }
 
     private static int energy(ItemStack source, boolean superman) {
-        return superman ? SolarEnergy.get(source).stored() : RingEnergy.get(source).stored();
+        return superman ? SupermanHero.SOLAR_ENERGY.get(source).stored() : RingEnergy.get(source).stored();
     }
 
     /** Restores the abilities granted by the current game mode, then re-applies ring flight if allowed. */
@@ -101,7 +101,7 @@ public final class FlightHandler {
             }
         } else if (SupermanHelper.isSuited(player)) {
             ItemStack crystal = SupermanHelper.findCrystal(player);
-            if (!crystal.isEmpty() && (SolarEnergy.get(crystal).stored() > 0 || player.isCreative())) {
+            if (!crystal.isEmpty() && (SupermanHero.SOLAR_ENERGY.get(crystal).stored() > 0 || player.isCreative())) {
                 abilities.mayfly = true;
                 abilities.flying = wasFlying;
                 abilities.setFlyingSpeed(GLConfig.FLIGHT_SPEED.get().floatValue());

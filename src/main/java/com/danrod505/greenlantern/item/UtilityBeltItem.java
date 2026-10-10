@@ -1,8 +1,8 @@
 package com.danrod505.greenlantern.item;
 
-import com.danrod505.greenlantern.batman.BatCharge;
 import com.danrod505.greenlantern.batman.BatPower;
 import com.danrod505.greenlantern.batman.BatmanHelper;
+import com.danrod505.greenlantern.batman.BatmanHero;
 import com.danrod505.greenlantern.batman.BatmanServer;
 import com.danrod505.greenlantern.batman.BatmanSuit;
 import com.danrod505.greenlantern.ring.RingEnergy;
@@ -34,7 +34,7 @@ public class UtilityBeltItem extends Item {
 
     /** Returns the given belt fully charged (used for the creative tab). */
     public static ItemStack charged(ItemStack belt) {
-        BatCharge.set(belt, BatCharge.capacity());
+        BatmanHero.BAT_CHARGE.set(belt, BatmanHero.BAT_CHARGE.capacity());
         return belt;
     }
 
@@ -46,7 +46,7 @@ public class UtilityBeltItem extends Item {
             return InteractionResult.SUCCESS;
         }
         if (player instanceof ServerPlayer serverPlayer) {
-            BatmanServer.usePower(serverPlayer, belt, BatPower.selected(belt));
+            BatmanServer.usePower(serverPlayer, belt, BatPower.POWERS.selected(belt));
         }
         return InteractionResult.SUCCESS;
     }
@@ -60,22 +60,22 @@ public class UtilityBeltItem extends Item {
 
     @Override
     public int getBarWidth(ItemStack belt) {
-        return Math.round(13.0F * BatCharge.get(belt).fraction());
+        return Math.round(13.0F * BatmanHero.BAT_CHARGE.get(belt).fraction());
     }
 
     @Override
     public int getBarColor(ItemStack belt) {
-        float f = BatCharge.get(belt).fraction();
+        float f = BatmanHero.BAT_CHARGE.get(belt).fraction();
         return f < 0.2F ? 0xFF4040 : Mth.hsvToRgb(0.13F + 0.02F * f, 0.9F, 1.0F);
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public void appendHoverText(ItemStack belt, TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flag) {
-        RingEnergy charge = BatCharge.get(belt);
+        RingEnergy charge = BatmanHero.BAT_CHARGE.get(belt);
         tooltip.accept(Component.translatable("tooltip.greenlantern.bat_charge", charge.stored(), charge.capacity())
                 .withStyle(charge.fraction() < 0.2F ? ChatFormatting.RED : ChatFormatting.YELLOW));
-        tooltip.accept(Component.translatable("tooltip.greenlantern.gadget", BatPower.selected(belt).displayName()).withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.translatable("tooltip.greenlantern.gadget", BatPower.POWERS.selected(belt).displayName()).withStyle(ChatFormatting.GRAY));
         tooltip.accept(Component.translatable("tooltip.greenlantern.utility_belt_hint").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
     }
 }

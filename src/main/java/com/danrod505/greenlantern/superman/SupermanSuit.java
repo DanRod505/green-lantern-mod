@@ -1,7 +1,7 @@
 package com.danrod505.greenlantern.superman;
 
 import com.danrod505.greenlantern.GreenLantern;
-import com.danrod505.greenlantern.hero.Hero;
+import com.danrod505.greenlantern.hero.HeroRegistry;
 import com.danrod505.greenlantern.registry.ModItems;
 import com.danrod505.greenlantern.registry.ModParticles;
 import com.danrod505.greenlantern.registry.ModSounds;
@@ -56,7 +56,7 @@ public final class SupermanSuit {
             return false;
         }
         // Only one hero suit at a time.
-        Hero.dismissOthers(player, Hero.SUPERMAN);
+        HeroRegistry.dismissOthers(player, SupermanHero.INSTANCE);
         Uniform.equipSuit(player,
                 ModItems.SUPERMAN_HAIR.get().getDefaultInstance(),
                 ModItems.SUPERMAN_SUIT.get().getDefaultInstance(),
