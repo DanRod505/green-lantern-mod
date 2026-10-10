@@ -121,6 +121,7 @@ public final class ModGameTests {
         TESTS.register("guide_given_on_first_join", () -> ModGameTests::guideGivenOnFirstJoin);
         TESTS.register("lantern_charges_ring", () -> ModGameTests::lanternChargesRing);
         TESTS.register("data_loaded", () -> ModGameTests::dataLoaded);
+        TESTS.register("creative_tab_order", () -> ModGameTests::creativeTabOrder);
         TESTS.register("sonic_boom_requires_speed", () -> ModGameTests::sonicBoomRequiresSpeed);
         TESTS.register("hero_landing_shockwave", () -> ModGameTests::heroLandingShockwave);
         TESTS.register("flight_cost_scales_with_speed", () -> ModGameTests::flightCostScalesWithSpeed);
@@ -685,6 +686,22 @@ public final class ModGameTests {
             helper.assertTrue(server.getRecipeManager().byKey(key).isPresent(), "recipe " + recipe + " should load");
         }
         helper.assertTrue(PowerRingItem.charged(new ItemStack(ModItems.POWER_RING.get())).getBarWidth() == 13, "charged ring shows a full bar");
+        helper.succeed();
+    }
+
+    /** Each hero lists its own items in the creative tab: the tab keeps its order (heroes in registry order). */
+    public static void creativeTabOrder(GameTestHelper helper) {
+        var level = helper.getLevel();
+        var tab = com.danrod505.greenlantern.registry.ModCreativeTabs.MAIN.get();
+        tab.buildContents(new net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters(level.enabledFeatures(), false, level.registryAccess()));
+        List<net.minecraft.world.item.Item> items = tab.getDisplayItems().stream().map(ItemStack::getItem).toList();
+        List<net.minecraft.world.item.Item> expected = List.of(ModItems.POWER_RING.get(), ModItems.POWER_RING.get(), ModItems.POWER_BATTERY.get(),
+                ModItems.GUIDE_BOOK.get(), ModItems.FLASH_RING.get(), ModItems.FLASH_RING.get(), ModItems.AQUAMAN_EMBLEM.get(), ModItems.AQUAMAN_EMBLEM.get(),
+                ModItems.ATLANTIS_GATE.get(), ModItems.ATLANTEAN_RESPIRATOR.get(), ModItems.MANTA_RAY_EGG.get(), ModItems.GIANT_SEAHORSE_EGG.get(),
+                ModItems.ATLANTEAN_DOLPHIN_EGG.get(), ModItems.TRENCH_CREATURE_EGG.get(), ModItems.TRENCH_BRUTE_EGG.get(), ModItems.UTILITY_BELT.get(),
+                ModItems.UTILITY_BELT.get(), ModItems.KRYPTONIAN_CRYSTAL.get(), ModItems.KRYPTONIAN_CRYSTAL.get(), ModItems.AMAZON_TIARA.get(),
+                ModItems.AMAZON_TIARA.get());
+        helper.assertTrue(items.equals(expected), "creative tab order changed: " + items);
         helper.succeed();
     }
 
