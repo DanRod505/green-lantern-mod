@@ -226,6 +226,11 @@ public abstract class HeroDefinition {
         return 1.0F;
     }
 
+    /** Height of the hero's HUD on screen; the HUDs of the heroes listed after it start below it (see {@code client.HeroHud}). */
+    public int hudHeight() {
+        return 58;
+    }
+
     /** Items that belong to the suit or a power and must never lie around as dropped items. */
     public boolean neverDropped(ItemStack stack) {
         return false;
