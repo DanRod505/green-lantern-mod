@@ -31,6 +31,8 @@ public final class CommonEvents {
 
     public static void register() {
         TickEvent.PlayerTickEvent.Post.BUS.addListener(CommonEvents::onPlayerTick);
+        TickEvent.ServerTickEvent.Post.BUS.addListener(event -> com.danrod505.greenlantern.atlantis.AtlantisBuilder.tick(event.server()));
+        net.minecraftforge.event.server.ServerStoppedEvent.BUS.addListener(event -> com.danrod505.greenlantern.atlantis.AtlantisBuilder.onServerStopped(event.getServer()));
         LivingAttackEvent.BUS.addListener(CommonEvents::onLivingAttack);
         LivingHurtEvent.BUS.addListener(CommonEvents::onLivingHurt);
         LivingFallEvent.BUS.addListener(CommonEvents::onLivingFall);
@@ -85,6 +87,7 @@ public final class CommonEvents {
         }
         com.danrod505.greenlantern.flash.SpeedsterServer.tick(player);
         AquamanServer.tick(player);
+        com.danrod505.greenlantern.aquaman.Respirator.tick(player);
         if (player.tickCount % 5 == 0) {
             chargeFromCentralBattery(player);
         }

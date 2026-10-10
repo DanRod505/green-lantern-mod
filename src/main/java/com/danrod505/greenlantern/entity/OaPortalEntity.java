@@ -76,9 +76,14 @@ public class OaPortalEntity extends Entity {
         if (tickCount < OPEN_TICKS || tickCount > LIFETIME - CLOSE_TICKS) return;
         for (ServerPlayer player : level.getEntitiesOfClass(ServerPlayer.class, getBoundingBox().inflate(1.0))) {
             if (!player.isSpectator() && player.isAlive() && insideOpening(player) && travelled.add(player.getUUID())) {
-                OaTravel.travel(player);
+                travel(player);
             }
         }
+    }
+
+    /** Sends a player who walked through the portal on their way. */
+    protected void travel(ServerPlayer player) {
+        OaTravel.travel(player);
     }
 
     /** Whether the player stands in the oval opening (in the portal's own frame). */
@@ -89,10 +94,11 @@ public class OaPortalEntity extends Entity {
         double depth = dx * -Mth.sin(yaw) + dz * Mth.cos(yaw);
         double lateral = dx * Mth.cos(yaw) + dz * Mth.sin(yaw);
         double dy = entity.getY() - getY();
-        return Math.abs(depth) < 0.8 && Math.abs(lateral) < HALF_WIDTH && dy > -0.6 && dy < CENTER_Y + 0.6;
+        // A step down (or into water) just in front of the portal still counts.
+        return Math.abs(depth) < 0.8 && Math.abs(lateral) < HALF_WIDTH && dy > -1.6 && dy < CENTER_Y + 0.6;
     }
 
-    private void clientParticles() {
+    protected void clientParticles() {
         float open = openness(0.0F);
         if (open <= 0.05F) return;
         float yaw = getYRot() * Mth.DEG_TO_RAD;

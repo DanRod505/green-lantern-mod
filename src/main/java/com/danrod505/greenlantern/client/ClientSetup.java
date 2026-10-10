@@ -119,6 +119,8 @@ public final class ClientSetup {
         event.registerEntityRenderer(ModEntities.LANTERN_CORPSMAN.get(), com.danrod505.greenlantern.client.render.oa.LanternCorpsmanRenderer::new);
         event.registerEntityRenderer(ModEntities.AQUA_TRIDENT.get(), com.danrod505.greenlantern.client.render.aqua.AquaTridentRenderer::new);
         event.registerEntityRenderer(ModEntities.GREAT_WHITE_SHARK.get(), com.danrod505.greenlantern.client.render.aqua.SharkRenderer::new);
+        event.registerEntityRenderer(ModEntities.ATLANTIS_PORTAL.get(), com.danrod505.greenlantern.client.render.oa.OaPortalRenderer::new);
+        event.registerEntityRenderer(ModEntities.ATLANTEAN.get(), com.danrod505.greenlantern.client.render.aqua.AtlanteanRenderer::new);
     }
 
     private static void onRegisterParticles(RegisterParticleProvidersEvent event) {
@@ -143,6 +145,7 @@ public final class ClientSetup {
             AvatarRenderer<AbstractClientPlayer> renderer = event.getPlayerRenderer(type);
             if (renderer != null) {
                 renderer.addLayer(new AuraLayer(renderer, new HumanoidModel<>(event.getEntityModels().bakeLayer(AuraLayer.LAYER))));
+                renderer.addLayer(new com.danrod505.greenlantern.client.render.aqua.RespiratorLayer(renderer));
             }
         }
     }
@@ -179,5 +182,6 @@ public final class ClientSetup {
         event.getLayeredDraw().add(ForgeLayeredDraw.POST_SLEEP_STACK, GreenLantern.id("speed_hud"), SpeedHud::render);
         event.getLayeredDraw().add(ForgeLayeredDraw.POST_SLEEP_STACK, GreenLantern.id("flash_hud"), FlashHud::render);
         event.getLayeredDraw().add(ForgeLayeredDraw.POST_SLEEP_STACK, GreenLantern.id("aqua_hud"), AquaHud::render);
+        event.getLayeredDraw().add(ForgeLayeredDraw.POST_SLEEP_STACK, GreenLantern.id("respirator_hud"), RespiratorHud::render);
     }
 }

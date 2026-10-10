@@ -107,6 +107,13 @@ public final class GLConfig {
     public static final ForgeConfigSpec.IntValue SEA_CALL_MAX_CREATURES;
     public static final ForgeConfigSpec.IntValue SEA_CALL_HELPERS;
     public static final ForgeConfigSpec.DoubleValue SEA_CALL_DAMAGE_MULTIPLIER;
+    public static final ForgeConfigSpec.IntValue ATLANTIS_PORTAL_COST;
+
+    // Atlantis
+    public static final ForgeConfigSpec.BooleanValue ATLANTIS_ENABLED;
+    public static final ForgeConfigSpec.IntValue ATLANTIS_GATE_COOLDOWN;
+    public static final ForgeConfigSpec.IntValue RESPIRATOR_SECONDS;
+    public static final ForgeConfigSpec.IntValue RESPIRATOR_RECHARGE_SECONDS;
 
     public static final ForgeConfigSpec SPEC;
 
@@ -225,6 +232,14 @@ public final class GLConfig {
         SEA_CALL_MAX_CREATURES = BUILDER.comment("Most creatures that answer one call.").defineInRange("seaCallMaxCreatures", 24, 1, 256);
         SEA_CALL_HELPERS = BUILDER.comment("If fewer creatures than this answer (and Aquaman is in the water), dolphins come from the deep to make up the number (0 = never).").defineInRange("seaCallHelpers", 3, 0, 16);
         SEA_CALL_DAMAGE_MULTIPLIER = BUILDER.comment("Multiplier of the damage dealt by the called creatures (dolphins bite for 5, small fish for 2).").defineInRange("seaCallDamageMultiplier", 1.0, 0.0, 100.0);
+        ATLANTIS_PORTAL_COST = BUILDER.comment("Power of the Seas cost of the portal to Atlantis (and back).").defineInRange("atlantisPortalCost", 250, 0, 100_000);
+        BUILDER.pop();
+
+        BUILDER.comment("Atlantis: the sunken city at the bottom of a deep ocean, the Atlantean Gate and the Atlantean Respirator.").push("atlantis");
+        ATLANTIS_ENABLED = BUILDER.comment("Whether Atlantis is raised in the overworld (in a deep ocean, some way from spawn).").define("enabled", true);
+        ATLANTIS_GATE_COOLDOWN = BUILDER.comment("Seconds before the Atlantean Gate can open another portal.").defineInRange("gateCooldownSeconds", 10, 0, 3600);
+        RESPIRATOR_SECONDS = BUILDER.comment("Seconds of air stored in the Atlantean Respirator.").defineInRange("respiratorSeconds", 480, 10, 100_000);
+        RESPIRATOR_RECHARGE_SECONDS = BUILDER.comment("Seconds out of the water for an empty respirator to fill up again.").defineInRange("respiratorRechargeSeconds", 24, 1, 100_000);
         BUILDER.pop();
 
         SPEC = BUILDER.build();

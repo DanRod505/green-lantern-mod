@@ -65,6 +65,7 @@ public class GuideScreen extends Screen {
             new Chapter("flash_powers", () -> new ItemStack(Items.LIGHTNING_ROD)),
             new Chapter("aquaman", () -> new ItemStack(ModItems.AQUAMAN_EMBLEM.get())),
             new Chapter("aquaman_powers", () -> new ItemStack(Items.TRIDENT)),
+            new Chapter("atlantis", () -> new ItemStack(ModItems.ATLANTIS_GATE.get())),
             new Chapter("controls", () -> new ItemStack(Items.LEVER)),
             new Chapter(RECIPES, () -> new ItemStack(Items.CRAFTING_TABLE)),
             new Chapter("tips", () -> new ItemStack(Items.TORCH)));
@@ -86,6 +87,14 @@ public class GuideScreen extends Screen {
                     Items.PRISMARINE_SHARD, Items.GOLD_INGOT, Items.PRISMARINE_SHARD,
                     Items.GOLD_INGOT, Items.NAUTILUS_SHELL, Items.GOLD_INGOT,
                     Items.PRISMARINE_SHARD, Items.GOLD_INGOT, Items.PRISMARINE_SHARD)),
+            new Recipe("atlantis_gate", () -> new ItemStack(ModItems.ATLANTIS_GATE.get()), () -> grid(
+                    Items.GOLD_INGOT, Items.PRISMARINE_CRYSTALS, Items.GOLD_INGOT,
+                    Items.PRISMARINE_CRYSTALS, Items.HEART_OF_THE_SEA, Items.PRISMARINE_CRYSTALS,
+                    Items.GOLD_INGOT, Items.ENDER_PEARL, Items.GOLD_INGOT)),
+            new Recipe("atlantean_respirator", () -> new ItemStack(ModItems.ATLANTEAN_RESPIRATOR.get()), () -> grid(
+                    Items.PRISMARINE_SHARD, Items.GOLD_INGOT, Items.PRISMARINE_SHARD,
+                    Items.KELP, Items.GLASS_BOTTLE, Items.KELP,
+                    null, Items.PRISMARINE_SHARD, null)),
             new Recipe("guide_book", () -> new ItemStack(ModItems.GUIDE_BOOK.get()), () -> grid(
                     Items.BOOK, Items.EMERALD, null,
                     null, null, null,
@@ -109,6 +118,17 @@ public class GuideScreen extends Screen {
         super(Component.translatable("guide.greenlantern.title"));
         this.chapter = Mth.clamp(lastChapter, 0, CHAPTERS.size() - 1);
         this.page = lastPage;
+    }
+
+    /** Opens the manual at the chapter with the given id (e.g. "atlantis"). */
+    public static GuideScreen atChapter(String id) {
+        for (int i = 0; i < CHAPTERS.size(); i++) {
+            if (CHAPTERS.get(i).id().equals(id)) {
+                lastChapter = i;
+                lastPage = 0;
+            }
+        }
+        return new GuideScreen();
     }
 
     private static ItemStack[] grid(Object... items) {

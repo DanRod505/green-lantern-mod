@@ -78,6 +78,22 @@ public final class ModItems {
     public static final RegistryObject<SuitArmorItem> AQUAMAN_LEGGINGS = aquamanSuit("aquaman_leggings", ArmorType.LEGGINGS);
     public static final RegistryObject<SuitArmorItem> AQUAMAN_BOOTS = aquamanSuit("aquaman_boots", ArmorType.BOOTS);
 
+    // ---- Atlantis -------------------------------------------------------------------------------
+
+    /** Opens the whirlpool portal to Atlantis (and back), like Aquaman's power. */
+    public static final RegistryObject<com.danrod505.greenlantern.item.AtlantisGateItem> ATLANTIS_GATE = ITEMS.register("atlantis_gate",
+            () -> new com.danrod505.greenlantern.item.AtlantisGateItem(new Item.Properties()
+                    .setId(ITEMS.key("atlantis_gate"))
+                    .stacksTo(1)
+                    .rarity(Rarity.RARE)));
+
+    /** Lets anyone breathe underwater from anywhere in the inventory (works with every hero suit). */
+    public static final RegistryObject<com.danrod505.greenlantern.item.AtlanteanRespiratorItem> ATLANTEAN_RESPIRATOR = ITEMS.register("atlantean_respirator",
+            () -> new com.danrod505.greenlantern.item.AtlanteanRespiratorItem(new Item.Properties()
+                    .setId(ITEMS.key("atlantean_respirator"))
+                    .stacksTo(1)
+                    .rarity(Rarity.UNCOMMON)));
+
     private static RegistryObject<SuitArmorItem> aquamanSuit(String name, ArmorType type) {
         return ITEMS.register(name, () -> new SuitArmorItem(type, SuitArmorItem.properties(SuitArmorItem.AQUAMAN_MATERIAL, type).setId(ITEMS.key(name))));
     }

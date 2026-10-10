@@ -345,8 +345,8 @@ def make_shark():
 # --------------------------------------------------------------------------------------- gui
 
 def make_gui():
-    """Power icons (16x16 each): trident, shark, call of the sea, then the emblem."""
-    img = blank(64, 16)
+    """Power icons (16x16 each): trident, shark, call of the sea, portal to Atlantis, then the emblem."""
+    img = blank(80, 16)
     trident = [
         "..Z....Z....Z...",
         "..Y....Y....Y...",
@@ -401,9 +401,27 @@ def make_gui():
         "......wwww......",
         "................",
     ]
-    for i, rows in enumerate((trident, shark, sea_call, EMBLEM)):
+    portal = [
+        "................",
+        ".....YYYYYY.....",
+        "...YYttttttYY...",
+        "..YttTTTTTTttY..",
+        ".YtTTUUUUUUTTtY.",
+        ".YtTUUwwwwUUTtY.",
+        "YtTUUw.TT.wUUTtY",
+        "YtTUw.TUUT.wUTtY",
+        "YtTUw.TUUT.wUTtY",
+        "YtTUUw.TT.wUUTtY",
+        ".YtTUUwwwwUUTtY.",
+        ".YtTTUUUUUUTTtY.",
+        "..YttTTTTTTttY..",
+        "...YYttttttYY...",
+        ".....YYYYYY.....",
+        "................",
+    ]
+    for i, rows in enumerate((trident, shark, sea_call, portal, EMBLEM)):
         icon = from_map(rows, A)
-        if i < 3:
+        if i < 4:
             # Deep sea glow behind the icon so it reads on any background.
             glow = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
             mask = icon.split()[3].filter(ImageFilter.MaxFilter(3))

@@ -102,6 +102,18 @@ public final class ModEntities {
                     .clientTrackingRange(10).updateInterval(1).noSummon()
                     .build(ENTITIES.key("great_white_shark")));
 
+    /** Whirlpool portal to Atlantis (and back), opened by Aquaman or the Atlantean Gate. */
+    public static final RegistryObject<EntityType<com.danrod505.greenlantern.entity.AtlantisPortalEntity>> ATLANTIS_PORTAL = ENTITIES.register("atlantis_portal",
+            () -> EntityType.Builder.<com.danrod505.greenlantern.entity.AtlantisPortalEntity>of(com.danrod505.greenlantern.entity.AtlantisPortalEntity::new, MobCategory.MISC)
+                    .noLootTable().sized(3.0F, 4.0F).clientTrackingRange(10).updateInterval(20).fireImmune().noSummon()
+                    .build(ENTITIES.key("atlantis_portal")));
+
+    /** The people of Atlantis: citizens and the royal guard. */
+    public static final RegistryObject<EntityType<com.danrod505.greenlantern.entity.AtlanteanEntity>> ATLANTEAN = ENTITIES.register("atlantean",
+            () -> EntityType.Builder.<com.danrod505.greenlantern.entity.AtlanteanEntity>of(com.danrod505.greenlantern.entity.AtlanteanEntity::new, MobCategory.MISC)
+                    .noLootTable().sized(0.6F, 1.95F).clientTrackingRange(10).updateInterval(2)
+                    .build(ENTITIES.key("atlantean")));
+
     /** Client-only trail renderer holder (never spawned on the server). */
     public static final RegistryObject<EntityType<FlightTrailEntity>> FLIGHT_TRAIL = ENTITIES.register("flight_trail",
             () -> EntityType.Builder.<FlightTrailEntity>of(FlightTrailEntity::new, MobCategory.MISC)

@@ -54,6 +54,7 @@ public final class GreenLantern {
         net.minecraftforge.event.entity.EntityAttributeCreationEvent.getBus(modBus).addListener(event -> {
             event.put(ModEntities.OA_GUARDIAN.get(), com.danrod505.greenlantern.entity.OaGuardianEntity.createAttributes().build());
             event.put(ModEntities.LANTERN_CORPSMAN.get(), com.danrod505.greenlantern.entity.LanternCorpsmanEntity.createAttributes().build());
+            event.put(ModEntities.ATLANTEAN.get(), com.danrod505.greenlantern.entity.AtlanteanEntity.createAttributes().build());
         });
 
         registerGameTests(modBus);

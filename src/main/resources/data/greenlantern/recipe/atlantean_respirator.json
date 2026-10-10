@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "SGS",
+    "KBK",
+    " S "
+  ],
+  "key": {
+    "S": "minecraft:prismarine_shard",
+    "G": "minecraft:gold_ingot",
+    "K": "minecraft:kelp",
+    "B": "minecraft:glass_bottle"
+  },
+  "result": {
+    "id": "greenlantern:atlantean_respirator",
+    "count": 1
+  }
+}

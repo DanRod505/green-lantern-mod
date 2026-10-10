@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:function",
+  "function": "greenlantern:atlantis_portal_power",
+  "environment": "minecraft:default",
+  "structure": "greenlantern:arena",
+  "max_ticks": 400,
+  "required": true
+}

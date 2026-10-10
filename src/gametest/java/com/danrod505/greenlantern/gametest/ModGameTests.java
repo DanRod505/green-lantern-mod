@@ -106,6 +106,10 @@ public final class ModGameTests {
         TESTS.register("aquaman_trident_throw_returns", () -> ModGameTests::aquamanTridentThrowReturns);
         TESTS.register("aquaman_shark_bite", () -> ModGameTests::aquamanSharkBite);
         TESTS.register("aquaman_sea_call", () -> ModGameTests::aquamanSeaCall);
+        TESTS.register("respirator_breathes_with_any_suit", () -> ModGameTests::respiratorBreathesWithAnySuit);
+        TESTS.register("respirator_refills_out_of_water", () -> ModGameTests::respiratorRefillsOutOfWater);
+        TESTS.register("atlantis_build_and_travel", () -> ModGameTests::atlantisBuildAndTravel);
+        TESTS.register("atlantis_portal_power", () -> ModGameTests::atlantisPortalPower);
     }
 
     private ModGameTests() {}
@@ -905,5 +909,124 @@ public final class ModGameTests {
                     remove(player);
                 })
                 .thenSucceed();
+    }
+
+    // ---- Atlantis ---------------------------------------------------------------------------------
+
+    public static void respiratorBreathesWithAnySuit(GameTestHelper helper) {
+        flood(helper, 5);
+        ServerPlayer player = player(helper, 7.5, 2, 7.5, 0, 0);
+        giveRing(player, 3000);
+        Uniform.summon(player); // the Lantern mask holds the helmet slot: the respirator works anyway
+        player.getInventory().setItem(20, new ItemStack(ModItems.ATLANTEAN_RESPIRATOR.get()));
+        player.setAirSupply(0);
+        helper.startSequence()
+                .thenExecuteFor(41, player::doTick)
+                .thenExecute(() -> {
+                    helper.assertTrue(player.isEyeInFluid(net.minecraft.tags.FluidTags.WATER), "the player's head should be underwater");
+                    helper.assertTrue(player.getAirSupply() == player.getMaxAirSupply(), "the respirator breathes for the player, air " + player.getAirSupply());
+                    helper.assertTrue(player.getItemBySlot(EquipmentSlot.HEAD).is(ModItems.LANTERN_MASK.get()), "the mask stays on");
+                    ItemStack respirator = player.getInventory().getItem(20);
+                    int air = com.danrod505.greenlantern.aquaman.Respirator.air(respirator);
+                    helper.assertTrue(air < com.danrod505.greenlantern.aquaman.Respirator.capacity(), "the respirator should spend air, has " + air);
+                    remove(player);
+                })
+                .thenSucceed();
+    }
+
+    public static void respiratorRefillsOutOfWater(GameTestHelper helper) {
+        ServerPlayer player = player(helper, 7.5, 1, 7.5, 0, 0);
+        ItemStack respirator = new ItemStack(ModItems.ATLANTEAN_RESPIRATOR.get());
+        com.danrod505.greenlantern.aquaman.Respirator.setAir(respirator, 0);
+        player.getInventory().setItem(9, respirator);
+        helper.startSequence()
+                .thenExecuteFor(41, player::doTick)
+                .thenExecute(() -> {
+                    int air = com.danrod505.greenlantern.aquaman.Respirator.air(player.getInventory().getItem(9));
+                    helper.assertTrue(air > 0, "the respirator should refill out of the water, has " + air);
+                    remove(player);
+                })
+                .thenSucceed();
+    }
+
+    /** Raises a whole Atlantis far from the tests, checks its landmarks and makes the round trip. */
+    public static void atlantisBuildAndTravel(GameTestHelper helper) {
+        var server = helper.getLevel().getServer();
+        ServerLevel overworld = server.overworld();
+        com.danrod505.greenlantern.atlantis.Atlantis.Site site = new com.danrod505.greenlantern.atlantis.Atlantis.Site(6000, 6000, -30, 20);
+        long start = System.nanoTime();
+        com.danrod505.greenlantern.atlantis.AtlantisBuilder.buildAllAt(overworld, site);
+        GreenLantern.LOGGER.info("GAMETEST atlantis built in {} ms", (System.nanoTime() - start) / 1_000_000);
+        BlockPos c = site.center();
+        helper.assertTrue(overworld.getBlockState(c.above(24)).is(Blocks.BEACON), "the palace beacon");
+        helper.assertTrue(overworld.getBlockState(c.above(23)).is(Blocks.GOLD_BLOCK), "the beacon stands on gold");
+        BlockPos pavilion = c.offset(0, 1, com.danrod505.greenlantern.atlantis.Atlantis.PAVILION_Z);
+        helper.assertTrue(overworld.getBlockState(pavilion).isAir(), "the pavilion is full of air");
+        helper.assertTrue(overworld.getBlockState(c.offset(0, 0, com.danrod505.greenlantern.atlantis.Atlantis.PAVILION_Z - com.danrod505.greenlantern.atlantis.Atlantis.PAVILION_RADIUS)).is(Blocks.WAXED_OXIDIZED_COPPER_DOOR), "the pavilion door");
+        helper.assertTrue(overworld.getBlockState(c.offset(0, 1, 15)).is(Blocks.WATER), "the plaza is under water");
+        helper.assertTrue(overworld.getBlockState(c.offset(30, 3, 40)).getFluidState().is(net.minecraft.tags.FluidTags.WATER)
+                || !overworld.getBlockState(c.offset(30, 3, 40)).isAir(), "no air pockets in the city");
+        helper.assertTrue(overworld.getBlockState(c.offset(0, 20, 70)).is(Blocks.WATER), "the slopes are flooded");
+        // The pavilion's chest holds a respirator for visitors.
+        boolean found = false;
+        for (int dx = -6; dx <= 6 && !found; dx++) {
+            for (int dz = -6; dz <= 6 && !found; dz++) {
+                if (overworld.getBlockEntity(pavilion.offset(dx, -1, dz)) instanceof net.minecraft.world.level.block.entity.ChestBlockEntity chest) {
+                    for (int i = 0; i < chest.getContainerSize(); i++) {
+                        if (chest.getItem(i).is(ModItems.ATLANTEAN_RESPIRATOR.get())) found = true;
+                    }
+                }
+            }
+        }
+        helper.assertTrue(found, "a respirator waits in the pavilion");
+
+        com.danrod505.greenlantern.atlantis.Atlantis.setSiteForTesting(server, site, true);
+        ServerPlayer player = player(helper, 7.5, 1, 7.5, 0, 0);
+        Vec3 home = player.position();
+        try {
+            helper.assertTrue(com.danrod505.greenlantern.atlantis.AtlantisTravel.sendToAtlantis(player), "the trip to Atlantis");
+            helper.assertTrue(player.level() == overworld && player.position().distanceTo(site.arrival()) < 1.0,
+                    "arrives in the pavilion, at " + player.position());
+            helper.assertTrue(com.danrod505.greenlantern.atlantis.AtlantisTravel.leadsHome(overworld, player.position()), "in Atlantis, portals lead home");
+            com.danrod505.greenlantern.atlantis.AtlantisTravel.returnHome(player);
+            helper.assertTrue(player.position().distanceTo(home) < 1.0, "back to the exact spot, at " + player.position());
+        } finally {
+            com.danrod505.greenlantern.atlantis.Atlantis.setSiteForTesting(server, null, false);
+            remove(player);
+        }
+        helper.succeed();
+    }
+
+    /** Without an Atlantis in the world, the power says so and costs nothing; the gate opens nothing. */
+    public static void atlantisPortalPower(GameTestHelper helper) {
+        var server = helper.getLevel().getServer();
+        com.danrod505.greenlantern.atlantis.Atlantis.setSiteForTesting(server, null, false);
+        ServerPlayer player = player(helper, 7.5, 1, 3.5, 0, 0);
+        ItemStack emblem = giveEmblem(player, 1000);
+        AquamanSuit.summon(player);
+        boolean used = AquamanServer.usePower(player, emblem, AquaPower.ATLANTIS_PORTAL);
+        helper.assertFalse(used, "no Atlantis in this world: no portal");
+        helper.assertTrue(SeaForce.get(emblem).stored() == 1000, "a failed portal costs nothing");
+        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.ATLANTIS_GATE.get()));
+        use(player);
+        helper.assertTrue(around(player, com.danrod505.greenlantern.entity.AtlantisPortalEntity.class, 8.0).isEmpty(), "the gate opens nothing either");
+
+        // With an Atlantis (pretend), the power opens the whirlpool and pays for it.
+        var site = new com.danrod505.greenlantern.atlantis.Atlantis.Site(9000, 9000, -30, 20);
+        com.danrod505.greenlantern.atlantis.Atlantis.setSiteForTesting(server, site, true);
+        try {
+            player.setItemInHand(InteractionHand.MAIN_HAND, emblem);
+            player.getCooldowns().removeCooldown(player.getCooldowns().getCooldownGroup(emblem));
+            helper.assertTrue(AquamanServer.usePower(player, emblem, AquaPower.ATLANTIS_PORTAL), "the power opens a portal");
+            var portals = around(player, com.danrod505.greenlantern.entity.AtlantisPortalEntity.class, 8.0);
+            helper.assertTrue(portals.size() == 1, "one whirlpool, found " + portals.size());
+            helper.assertFalse(portals.getFirst().leadsHome(), "far from Atlantis, the portal leads there");
+            helper.assertTrue(SeaForce.get(emblem).stored() == 1000 - AquaPower.ATLANTIS_PORTAL.cost(), "the portal costs Power of the Seas");
+            portals.forEach(p -> p.discard());
+        } finally {
+            com.danrod505.greenlantern.atlantis.Atlantis.setSiteForTesting(server, null, false);
+            remove(player);
+        }
+        helper.succeed();
     }
 }

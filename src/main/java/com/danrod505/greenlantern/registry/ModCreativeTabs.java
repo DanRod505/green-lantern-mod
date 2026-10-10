@@ -25,6 +25,8 @@ public final class ModCreativeTabs {
                 output.accept(ModItems.FLASH_RING.get());
                 output.accept(com.danrod505.greenlantern.item.AquamanEmblemItem.charged(ModItems.AQUAMAN_EMBLEM.get().getDefaultInstance()));
                 output.accept(ModItems.AQUAMAN_EMBLEM.get());
+                output.accept(ModItems.ATLANTIS_GATE.get());
+                output.accept(ModItems.ATLANTEAN_RESPIRATOR.get());
             })
             .build());
 

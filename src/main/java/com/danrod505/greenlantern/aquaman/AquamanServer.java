@@ -133,6 +133,7 @@ public final class AquamanServer {
                     return true;
                 }
             }
+            case ATLANTIS_PORTAL -> {}
         }
         if (player.getCooldowns().isOnCooldown(emblem)) return false;
         if (!player.isCreative() && !SeaForce.has(emblem, power.cost())) {
@@ -143,10 +144,11 @@ public final class AquamanServer {
             case TRIDENT -> summonTrident(player);
             case SHARK -> summonShark(player);
             case SEA_CALL -> callTheSea(player);
+            case ATLANTIS_PORTAL -> openAtlantisPortal(player);
         };
         if (used) {
             if (!player.isCreative()) SeaForce.tryConsume(emblem, power.cost());
-            player.getCooldowns().addCooldown(emblem, 20);
+            player.getCooldowns().addCooldown(emblem, power == AquaPower.ATLANTIS_PORTAL ? 60 : 20);
         }
         return used;
     }
@@ -254,6 +256,17 @@ public final class AquamanServer {
             return false;
         }
         player.displayClientMessage(Component.translatable("message.greenlantern.sea_call", SeaCall.allies(player)).withStyle(ChatFormatting.AQUA), true);
+        return true;
+    }
+
+    // ---- the way to Atlantis ----------------------------------------------------------------------------
+
+    /** The sea opens before Aquaman: a whirlpool to Atlantis, or back home from the city. */
+    private static boolean openAtlantisPortal(ServerPlayer player) {
+        if (!com.danrod505.greenlantern.atlantis.AtlantisTravel.available(player)) return false;
+        com.danrod505.greenlantern.entity.AtlantisPortalEntity portal = com.danrod505.greenlantern.entity.AtlantisPortalEntity.open(player.level(), player);
+        player.displayClientMessage(Component.translatable(portal.leadsHome()
+                ? "message.greenlantern.atlantis_portal_home" : "message.greenlantern.atlantis_portal").withStyle(ChatFormatting.AQUA), true);
         return true;
     }
 
