@@ -884,11 +884,12 @@ public final class {cls}Script {{
                 sp.setGameMode(GameType.SURVIVAL);
                 sp.setItemInHand(InteractionHand.MAIN_HAND, {cls}Content.ITEM.get().charged(new ItemStack({cls}Content.ITEM.get())));
                 for (int i = -1; i <= 1; i++) {{
-                    var zombie = EntityType.ZOMBIE.create(sp.level(), EntitySpawnReason.COMMAND);
-                    zombie.snapTo(sp.getX() + i * 2.5, sp.getY(), sp.getZ() + 8.5, 180, 0);
-                    zombie.setNoAi(true);
-                    zombie.setPersistenceRequired();
-                    sp.level().addFreshEntity(zombie);
+                    // Husks: targets that don't burn in the sun.
+                    var husk = EntityType.HUSK.create(sp.level(), EntitySpawnReason.COMMAND);
+                    husk.snapTo(sp.getX() + i * 2.5, sp.getY(), sp.getZ() + 8.5, 180, 0);
+                    husk.setNoAi(true);
+                    husk.setPersistenceRequired();
+                    sp.level().addFreshEntity(husk);
                 }}
                 {cls}Hero.INSTANCE.summonSuit(sp);
             }});
@@ -897,6 +898,10 @@ public final class {cls}Script {{
         step(40, () -> {{
             camera(CameraType.THIRD_PERSON_FRONT);
             look(0, 10);
+        }});
+        step(20, () -> {{
+            mc().gui.getChat().clearMessages(false);
+            mc().options.hideGui = true;
         }});
         step(10, () -> clean("{code}00_suit_front"));
         step(2, () -> camera(CameraType.THIRD_PERSON_BACK));
