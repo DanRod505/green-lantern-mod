@@ -1,6 +1,8 @@
 package com.danrod505.greenlantern.network;
 
 import com.danrod505.greenlantern.GreenLantern;
+import com.danrod505.greenlantern.hero.HeroDefinition;
+import com.danrod505.greenlantern.hero.HeroRegistry;
 import net.minecraftforge.network.ChannelBuilder;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.PacketDistributor;
@@ -93,6 +95,8 @@ public final class ModNetwork {
                 .codec(FlightSyncPacket.STREAM_CODEC)
                 .consumerMainThread(FlightSyncPacket::handle)
                 .add();
+        // Packets of newer heroes come last, in hero order.
+        for (HeroDefinition hero : HeroRegistry.all()) hero.registerPackets(CHANNEL);
     }
 
     /** Sends a packet to every player tracking (seeing) the given entity, excluding the entity itself. */

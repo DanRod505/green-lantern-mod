@@ -1,11 +1,10 @@
 package com.danrod505.greenlantern.ring;
 
 import com.danrod505.greenlantern.GLConfig;
-import com.danrod505.greenlantern.aquaman.AquamanHelper;
-import com.danrod505.greenlantern.aquaman.AquamanServer;
-import com.danrod505.greenlantern.aquaman.AquamanSuit;
 import com.danrod505.greenlantern.entity.BubbleConstructEntity;
 import com.danrod505.greenlantern.entity.MechaEntity;
+import com.danrod505.greenlantern.hero.HeroDefinition;
+import com.danrod505.greenlantern.hero.HeroRegistry;
 import com.danrod505.greenlantern.item.SuitArmorItem;
 import com.danrod505.greenlantern.registry.ModItems;
 import com.danrod505.greenlantern.registry.ModSounds;
@@ -47,16 +46,7 @@ public final class CommonEvents {
         net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent.BUS.addListener(event -> {
             if (event.getEntity() instanceof ServerPlayer player) {
                 com.danrod505.greenlantern.flight.ServerFlightTracker.remove(player);
-                com.danrod505.greenlantern.flash.SpeedsterServer.endPhase(player, false);
-                com.danrod505.greenlantern.flash.SpeedsterServer.remove(player);
-                if (AquamanHelper.isSuited(player)) AquamanSuit.dismiss(player, false);
-                AquamanServer.remove(player);
-                if (com.danrod505.greenlantern.batman.BatmanHelper.isSuited(player)) com.danrod505.greenlantern.batman.BatmanSuit.dismiss(player, false);
-                com.danrod505.greenlantern.batman.BatmanServer.remove(player);
-                if (com.danrod505.greenlantern.superman.SupermanHelper.isSuited(player)) com.danrod505.greenlantern.superman.SupermanSuit.dismiss(player, false);
-                com.danrod505.greenlantern.superman.SupermanServer.remove(player);
-                if (com.danrod505.greenlantern.wonderwoman.WonderWomanHelper.isSuited(player)) com.danrod505.greenlantern.wonderwoman.WonderWomanSuit.dismiss(player, false);
-                com.danrod505.greenlantern.wonderwoman.WonderWomanServer.remove(player);
+                for (HeroDefinition hero : HeroRegistry.all()) hero.onLogout(player);
             }
         });
     }
@@ -64,54 +54,14 @@ public final class CommonEvents {
     private static void onPlayerTick(TickEvent.PlayerTickEvent.Post event) {
         if (!(event.player() instanceof ServerPlayer player)) return;
 
-        if (RingHelper.isSuited(player)) {
-            ItemStack ring = RingHelper.findRing(player);
-            if (ring.isEmpty()) {
-                Uniform.dismiss(player, true);
-                return;
-            }
-            RingEnergy energy = RingEnergy.get(ring);
-            if (energy.stored() <= 0 && !player.isCreative()) {
-                player.displayClientMessage(Component.translatable("message.greenlantern.power_out").withStyle(ChatFormatting.RED), true);
-                Uniform.dismiss(player, true);
-                return;
-            }
-            if (energy.fraction() <= 0.1F && player.tickCount % 100 == 0) {
-                player.displayClientMessage(Component.translatable("message.greenlantern.low_energy").withStyle(ChatFormatting.GOLD), true);
-                player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.LOW_ENERGY.get(), SoundSource.PLAYERS, 0.6F, 1.0F);
-            }
-        }
-        if (com.danrod505.greenlantern.flash.FlashHelper.isSuited(player)
-                && com.danrod505.greenlantern.flash.FlashHelper.findRing(player).isEmpty()) {
-            // The suit lives in the ring: no ring, no suit.
-            com.danrod505.greenlantern.flash.FlashSuit.dismiss(player, true);
-        }
-        if (AquamanHelper.isSuited(player) && AquamanHelper.findEmblem(player).isEmpty()) {
-            // The suit answers the emblem: no emblem, no suit.
-            AquamanSuit.dismiss(player, true);
-        }
-        if (com.danrod505.greenlantern.batman.BatmanHelper.isSuited(player)
-                && com.danrod505.greenlantern.batman.BatmanHelper.findBelt(player).isEmpty()) {
-            // The batsuit folds back into the belt: no belt, no suit.
-            com.danrod505.greenlantern.batman.BatmanSuit.dismiss(player, true);
-        }
-        if (com.danrod505.greenlantern.superman.SupermanHelper.isSuited(player)
-                && com.danrod505.greenlantern.superman.SupermanHelper.findCrystal(player).isEmpty()) {
-            // The suit belongs to the crystal: no crystal, no suit.
-            com.danrod505.greenlantern.superman.SupermanSuit.dismiss(player, true);
-        }
-        if (com.danrod505.greenlantern.wonderwoman.WonderWomanHelper.isSuited(player) && com.danrod505.greenlantern.wonderwoman.WonderWomanHelper.findTiara(player).isEmpty()) {
-            // The armor answers the tiara: no tiara, no armor.
-            com.danrod505.greenlantern.wonderwoman.WonderWomanSuit.dismiss(player, true);
+        // Each hero keeps its suit honest (no item, no suit); the Lantern may end the tick here.
+        for (HeroDefinition hero : HeroRegistry.all()) {
+            if (!hero.checkSuit(player)) return;
         }
         if (player.tickCount % 10 == 0) {
             Uniform.removeStrayPieces(player);
         }
-        com.danrod505.greenlantern.flash.SpeedsterServer.tick(player);
-        AquamanServer.tick(player);
-        com.danrod505.greenlantern.batman.BatmanServer.tick(player);
-        com.danrod505.greenlantern.superman.SupermanServer.tick(player);
-        com.danrod505.greenlantern.wonderwoman.WonderWomanServer.tick(player);
+        for (HeroDefinition hero : HeroRegistry.all()) hero.tick(player);
         com.danrod505.greenlantern.aquaman.Respirator.tick(player);
         if (player.tickCount % 5 == 0) {
             chargeFromCentralBattery(player);
@@ -199,14 +149,10 @@ public final class CommonEvents {
             // The jet's canopy takes most of the blow.
             event.setAmount(event.getAmount() * (1.0F - GLConfig.INVISIBLE_JET_DAMAGE_REDUCTION.get().floatValue()));
         }
-        if (com.danrod505.greenlantern.wonderwoman.WonderWomanHelper.isSuited(player) && !event.getSource().is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY)) {
-            // An Amazon princess, made of clay and given life by the gods: tough, though not as tough as Superman.
-            event.setAmount(event.getAmount() * (1.0F - GLConfig.WONDER_WOMAN_DAMAGE_REDUCTION.get().floatValue()));
-        }
-        if (com.danrod505.greenlantern.superman.SupermanHelper.isPowered(player)
-                && !event.getSource().is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY)) {
-            // The Man of Steel: most blows barely hurt him while the sun charges his cells.
-            event.setAmount(event.getAmount() * (1.0F - GLConfig.SUPERMAN_DAMAGE_REDUCTION.get().floatValue()));
+        for (HeroDefinition hero : HeroRegistry.all()) {
+            // Tough heroes (Superman, Wonder Woman) shrug off part of every blow.
+            float multiplier = hero.damageTakenMultiplier(player, event.getSource());
+            if (multiplier != 1.0F) event.setAmount(event.getAmount() * multiplier);
         }
         BubbleConstructEntity bubble = BubbleConstructEntity.find(player);
         if (bubble != null && !event.getSource().is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY)) {
@@ -218,39 +164,20 @@ public final class CommonEvents {
     }
 
     private static void onLivingFall(LivingFallEvent event) {
-        if (event.getEntity() instanceof net.minecraft.world.entity.player.Player player
-                && (RingHelper.isSuited(player) || com.danrod505.greenlantern.flash.FlashHelper.isSuited(player)
-                        || com.danrod505.greenlantern.superman.SupermanHelper.isSuited(player)
-                        || com.danrod505.greenlantern.wonderwoman.WonderWomanHelper.isSuited(player)
-                        || (AquamanHelper.isSuited(player) && event.getDistance() < 24.0F))) {
-            // The ring cushions every landing; a speedster lands running; an Atlantean, built for the
-            // crushing deep, shrugs off any ordinary fall.
-            event.setDamageMultiplier(0.0F);
-        } else if (event.getEntity() instanceof ServerPlayer batman && com.danrod505.greenlantern.batman.BatmanHelper.isSuited(batman)) {
-            // The cape breaks a glide's landing; otherwise years of training soften the fall.
-            event.setDamageMultiplier(com.danrod505.greenlantern.batman.BatmanServer.safeLanding(batman) ? 0.0F : 0.5F);
-        }
+        if (!(event.getEntity() instanceof net.minecraft.world.entity.player.Player player)) return;
+        // The ring cushions every landing; a speedster lands running; an Atlantean shrugs off any
+        // ordinary fall; Batman's cape and training soften it (see each hero's fallDamageMultiplier).
+        HeroRegistry.suited(player).ifPresent(hero -> {
+            float multiplier = hero.fallDamageMultiplier(player, event.getDistance());
+            if (multiplier >= 0.0F) event.setDamageMultiplier(multiplier);
+        });
     }
 
     private static void onLivingDeath(LivingDeathEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player && RingHelper.isSuited(player)) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        for (HeroDefinition hero : HeroRegistry.all()) {
             // Give back the stashed armor before the inventory is dropped.
-            Uniform.dismiss(player, false);
-        }
-        if (event.getEntity() instanceof ServerPlayer player && com.danrod505.greenlantern.flash.FlashHelper.isSuited(player)) {
-            com.danrod505.greenlantern.flash.FlashSuit.dismiss(player, false);
-        }
-        if (event.getEntity() instanceof ServerPlayer player && AquamanHelper.isSuited(player)) {
-            AquamanSuit.dismiss(player, false);
-        }
-        if (event.getEntity() instanceof ServerPlayer player && com.danrod505.greenlantern.batman.BatmanHelper.isSuited(player)) {
-            com.danrod505.greenlantern.batman.BatmanSuit.dismiss(player, false);
-        }
-        if (event.getEntity() instanceof ServerPlayer player && com.danrod505.greenlantern.superman.SupermanHelper.isSuited(player)) {
-            com.danrod505.greenlantern.superman.SupermanSuit.dismiss(player, false);
-        }
-        if (event.getEntity() instanceof ServerPlayer player && com.danrod505.greenlantern.wonderwoman.WonderWomanHelper.isSuited(player)) {
-            com.danrod505.greenlantern.wonderwoman.WonderWomanSuit.dismiss(player, false);
+            if (hero.isSuited(player)) hero.dismissSuit(player, false);
         }
     }
 
@@ -267,9 +194,12 @@ public final class CommonEvents {
     }
 
     private static boolean onEntityJoin(EntityJoinLevelEvent event) {
-        // Uniform pieces, Aquaman's trident and Wonder Woman's sword and shield never exist as dropped items.
-        return event.getEntity() instanceof ItemEntity item
-                && (item.getItem().getItem() instanceof SuitArmorItem || AquamanHelper.isTrident(item.getItem())
-                        || com.danrod505.greenlantern.wonderwoman.WonderWomanHelper.isSword(item.getItem()) || com.danrod505.greenlantern.wonderwoman.WonderWomanHelper.isShield(item.getItem()));
+        // Suit pieces and power items (Aquaman's trident, Wonder Woman's sword and shield) never exist as dropped items.
+        if (!(event.getEntity() instanceof ItemEntity item)) return false;
+        if (item.getItem().getItem() instanceof SuitArmorItem) return true;
+        for (HeroDefinition hero : HeroRegistry.all()) {
+            if (hero.neverDropped(item.getItem())) return true;
+        }
+        return false;
     }
 }

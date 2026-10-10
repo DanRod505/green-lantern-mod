@@ -2,9 +2,10 @@ package com.danrod505.greenlantern.client;
 
 import com.danrod505.greenlantern.aquaman.AquaPower;
 import com.danrod505.greenlantern.aquaman.AquamanHelper;
-import com.danrod505.greenlantern.aquaman.SeaForce;
+import com.danrod505.greenlantern.aquaman.AquamanHero;
 import com.danrod505.greenlantern.entity.KrakenEntity;
 import com.danrod505.greenlantern.flash.FlashHelper;
+import com.danrod505.greenlantern.hero.WheelStyle;
 import com.danrod505.greenlantern.ring.RingEnergy;
 import com.danrod505.greenlantern.ring.RingHelper;
 import java.util.List;
@@ -36,7 +37,7 @@ public final class AquaHud {
         boolean suited = AquamanHelper.isSuited(player);
         if (!held && !suited) return;
 
-        RingEnergy force = SeaForce.get(emblem);
+        RingEnergy force = AquamanHero.SEA_FORCE.get(emblem);
         float fraction = force.fraction();
         if (displayedFraction < 0) displayedFraction = fraction;
         displayedFraction += (fraction - displayedFraction) * 0.15F;
@@ -48,9 +49,9 @@ public final class AquaHud {
         if (!FlashHelper.findRing(player).isEmpty() && (!FlashHelper.heldRing(player).isEmpty() || FlashHelper.isSuited(player))) y += 58;
 
         // Emblem: the golden "A" (last icon of the strip).
-        int emblemIcon = AquaPower.count();
-        int iconsW = PowerWheelScreen.AQUA_ICONS_W;
-        graphics.blit(RenderPipelines.GUI_TEXTURED, PowerWheelScreen.AQUA_ICONS, x, y - 2, emblemIcon * 16, 0, 16, 16, iconsW, PowerWheelScreen.ICONS_H);
+        int emblemIcon = AquaPower.POWERS.count();
+        int iconsW = AquamanHero.WHEEL.iconsWidth();
+        graphics.blit(RenderPipelines.GUI_TEXTURED, AquamanHero.WHEEL.icons(), x, y - 2, emblemIcon * 16, 0, 16, 16, iconsW, WheelStyle.ICONS_HEIGHT);
         int barX = x + 19;
         int barY = y + 1;
         int border = 0xFFC8A02A;
@@ -75,15 +76,15 @@ public final class AquaHud {
         String text = force.stored() + " / " + force.capacity();
         graphics.drawString(mc.font, text, barX + 104, barY + 2, low ? 0xFFFF5555 : 0xFFF2C94A, true);
 
-        AquaPower selected = AquaPower.selected(emblem);
+        AquaPower selected = AquaPower.POWERS.selected(emblem);
         int iconsY = y + 17;
-        for (int i = 0; i < AquaPower.count(); i++) {
-            AquaPower power = AquaPower.byIndex(i);
+        for (int i = 0; i < AquaPower.POWERS.count(); i++) {
+            AquaPower power = AquaPower.POWERS.byIndex(i);
             int ix = x + 19 + i * 20;
             boolean isSelected = power == selected;
             if (isSelected) graphics.fill(ix - 1, iconsY - 1, ix + 17, iconsY + 17, 0xC03CE0D0);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, PowerWheelScreen.AQUA_ICONS, ix, iconsY, power.iconIndex() * 16, 0, 16, 16,
-                    iconsW, PowerWheelScreen.ICONS_H, isSelected ? 0xFFFFFFFF : 0x90FFFFFF);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, AquamanHero.WHEEL.icons(), ix, iconsY, power.iconIndex() * 16, 0, 16, 16,
+                    iconsW, WheelStyle.ICONS_HEIGHT, isSelected ? 0xFFFFFFFF : 0x90FFFFFF);
         }
         graphics.drawString(mc.font, Component.translatable("hud.greenlantern.power_key", selected.displayName(), KeyBindings.HERO_POWER.getTranslatedKeyMessage()),
                 x + 19, iconsY + 19, 0xFF8FF0E4, true);

@@ -1,10 +1,8 @@
 package com.danrod505.greenlantern.batman;
 
 import com.danrod505.greenlantern.GLConfig;
-import com.danrod505.greenlantern.registry.ModDataComponents;
-import net.minecraft.network.chat.Component;
-import net.minecraft.util.Mth;
-import net.minecraft.world.item.ItemStack;
+import com.danrod505.greenlantern.hero.HeroPower;
+import com.danrod505.greenlantern.hero.PowerSet;
 
 /**
  * Gadgets of Batman, picked on the power wheel (hold the wheel key) and used with the power key or
@@ -14,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
  * the same index), its name / description to the lang files and its behaviour to
  * {@link BatmanServer#usePower}.
  */
-public enum BatPower {
+public enum BatPower implements HeroPower {
     /** A batarang flies from the hand, hits whatever it meets and curves back to the belt. */
     BATARANG("batarang"),
     /** The grapnel gun: the hook bites into a wall or a ledge and the cable reels Batman up to it. */
@@ -24,7 +22,8 @@ public enum BatPower {
     /** The Batmobile roars up: drive it, boost with sprint and fire missiles with left click. */
     BATMOBILE("batmobile");
 
-    private static final BatPower[] VALUES = values();
+    /** The powers in wheel order, and the selection kept on the hero's item. */
+    public static final PowerSet<BatPower> POWERS = new PowerSet<>(values());
 
     private final String id;
 
@@ -32,23 +31,13 @@ public enum BatPower {
         this.id = id;
     }
 
+    @Override
     public String id() {
         return id;
     }
 
-    public int iconIndex() {
-        return ordinal();
-    }
-
-    public Component displayName() {
-        return Component.translatable("power.greenlantern." + id);
-    }
-
-    public Component description() {
-        return Component.translatable("power.greenlantern." + id + ".desc");
-    }
-
     /** Belt charge needed to use the gadget. */
+    @Override
     public int cost() {
         return switch (this) {
             case BATARANG -> GLConfig.BATARANG_COST.get();
@@ -56,28 +45,5 @@ public enum BatPower {
             case BAT_SWARM -> GLConfig.BAT_SWARM_COST.get();
             case BATMOBILE -> GLConfig.BATMOBILE_COST.get();
         };
-    }
-
-    public static BatPower byIndex(int index) {
-        return VALUES[Mth.clamp(index, 0, VALUES.length - 1)];
-    }
-
-    public static int count() {
-        return VALUES.length;
-    }
-
-    public static BatPower selected(ItemStack belt) {
-        Integer index = belt.get(ModDataComponents.SELECTED_POWER.get());
-        return byIndex(index == null ? 0 : index);
-    }
-
-    public static void select(ItemStack belt, BatPower power) {
-        belt.set(ModDataComponents.SELECTED_POWER.get(), power.ordinal());
-    }
-
-    public static BatPower cycle(ItemStack belt, int offset) {
-        BatPower next = VALUES[Math.floorMod(selected(belt).ordinal() + offset, VALUES.length)];
-        select(belt, next);
-        return next;
     }
 }

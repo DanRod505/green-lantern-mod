@@ -145,7 +145,7 @@ public final class SpeedsterServer {
 
     public static void tick(ServerPlayer player) {
         boolean suited = FlashHelper.isSuited(player);
-        if (player.tickCount % 20 == 0) FlashSuit.updateModifiers(player, suited);
+        if (player.tickCount % 20 == 0) FlashHero.INSTANCE.updateSuitModifiers(player, suited);
         State state = STATES.get(player.getUUID());
         if (!suited) {
             if (state != null && state.phaseTicks >= 0) endPhase(player, true);
@@ -161,7 +161,7 @@ public final class SpeedsterServer {
         if (state.pendingCharge >= 1.0F) {
             int whole = (int) state.pendingCharge;
             state.pendingCharge -= whole;
-            SpeedForce.add(ring, whole);
+            FlashHero.SPEED_FORCE.add(ring, whole);
         }
         // A speedster's metabolism: running makes you hungry (a little).
         if (fraction > 0 && !player.isCreative()) {
@@ -193,7 +193,7 @@ public final class SpeedsterServer {
             }
         }
         if (player.getCooldowns().isOnCooldown(ring)) return false;
-        if (!player.isCreative() && !SpeedForce.has(ring, power.cost())) {
+        if (!player.isCreative() && !FlashHero.SPEED_FORCE.has(ring, power.cost())) {
             notifyNoSpeedForce(player);
             return false;
         }
@@ -203,7 +203,7 @@ public final class SpeedsterServer {
             case LIGHTNING -> throwLightning(player);
         };
         if (used) {
-            if (!player.isCreative()) SpeedForce.tryConsume(ring, power.cost());
+            if (!player.isCreative()) FlashHero.SPEED_FORCE.tryConsume(ring, power.cost());
             int cooldown = power == SpeedsterPower.LIGHTNING ? 14 : 20;
             player.getCooldowns().addCooldown(ring, cooldown);
         }
@@ -267,7 +267,7 @@ public final class SpeedsterServer {
         boolean outOfTime = state.phaseTicks > GLConfig.PHASE_MAX_SECONDS.get() * 20;
         boolean outOfForce = false;
         if (state.phaseTicks % 20 == 0 && !player.isCreative()) {
-            outOfForce = !SpeedForce.tryConsume(ring, GLConfig.PHASE_COST_PER_SECOND.get());
+            outOfForce = !FlashHero.SPEED_FORCE.tryConsume(ring, GLConfig.PHASE_COST_PER_SECOND.get());
         }
         if (outOfTime || outOfForce) {
             if (outOfForce) notifyNoSpeedForce(player);

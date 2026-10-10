@@ -1,21 +1,15 @@
 package com.danrod505.greenlantern.network;
 
-import com.danrod505.greenlantern.aquaman.AquamanServer;
-import com.danrod505.greenlantern.flash.FlashHelper;
-import com.danrod505.greenlantern.flash.SpeedsterPower;
-import com.danrod505.greenlantern.hero.Hero;
-import com.danrod505.greenlantern.registry.ModSounds;
-import net.minecraft.ChatFormatting;
+import com.danrod505.greenlantern.flash.FlashHero;
+import com.danrod505.greenlantern.hero.HeroDefinition;
+import com.danrod505.greenlantern.hero.HeroRegistry;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 
-/** Client -> server: pick a hero power (speedster, Aquaman or Batman) (from the power wheel) or step to the next / previous one. */
+/** Client -> server: pick a hero power (from the power wheel) or step to the next / previous one. */
 public record SelectPowerPacket(int value, boolean relative) {
     public static final StreamCodec<RegistryFriendlyByteBuf, SelectPowerPacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT, (SelectPowerPacket p) -> p.value + 1,
@@ -26,33 +20,17 @@ public record SelectPowerPacket(int value, boolean relative) {
         context.setPacketHandled(true);
         var player = context.getSender();
         if (player == null) return;
-        if (Hero.context(player) == Hero.AQUAMAN) {
-            AquamanServer.selectPower(player, packet.value, packet.relative);
-            return;
-        }
-        if (Hero.context(player) == Hero.SUPERMAN) {
-            com.danrod505.greenlantern.superman.SupermanServer.selectPower(player, packet.value, packet.relative);
-            return;
-        }
-        if (Hero.context(player) == Hero.WONDER_WOMAN) {
-            com.danrod505.greenlantern.wonderwoman.WonderWomanServer.selectPower(player, packet.value, packet.relative);
-            return;
-        }
-        if (Hero.context(player) == Hero.BATMAN) {
-            com.danrod505.greenlantern.batman.BatmanServer.selectPower(player, packet.value, packet.relative);
-            return;
-        }
-        ItemStack ring = FlashHelper.findRing(player);
-        if (ring.isEmpty()) return;
-        SpeedsterPower power;
-        if (packet.relative) {
-            power = SpeedsterPower.cycle(ring, Mth.clamp(packet.value, -1, 1));
-        } else {
-            power = SpeedsterPower.byIndex(packet.value);
-            SpeedsterPower.select(ring, power);
-        }
-        player.displayClientMessage(Component.translatable("message.greenlantern.power_selected", power.displayName().copy().withStyle(ChatFormatting.YELLOW)), true);
-        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.POWER_SELECT.get(), SoundSource.PLAYERS,
-                0.7F, 1.0F + 0.08F * power.ordinal());
+        HeroDefinition hero = powerHero(player);
+        ItemStack item = hero.findItem(player);
+        if (item.isEmpty()) return;
+        hero.powers().select(player, item, packet.value, packet.relative);
+    }
+
+    /**
+     * The hero whose powers the power keys talk to: the one in context if it has a power wheel,
+     * else the Flash (the first power hero, whose ring answers when the Lantern is in context).
+     */
+    static HeroDefinition powerHero(net.minecraft.world.entity.player.Player player) {
+        return HeroRegistry.context(player).filter(HeroDefinition::hasPowers).orElse(FlashHero.INSTANCE);
     }
 }

@@ -1,11 +1,12 @@
 package com.danrod505.greenlantern.client;
 
 import com.danrod505.greenlantern.aquaman.AquamanHelper;
-import com.danrod505.greenlantern.batman.BatCharge;
 import com.danrod505.greenlantern.batman.BatPower;
 import com.danrod505.greenlantern.batman.BatmanHelper;
+import com.danrod505.greenlantern.batman.BatmanHero;
 import com.danrod505.greenlantern.entity.BatmobileEntity;
 import com.danrod505.greenlantern.flash.FlashHelper;
+import com.danrod505.greenlantern.hero.WheelStyle;
 import com.danrod505.greenlantern.ring.RingEnergy;
 import com.danrod505.greenlantern.ring.RingHelper;
 import net.minecraft.client.DeltaTracker;
@@ -37,7 +38,7 @@ public final class BatHud {
         boolean suited = BatmanHelper.isSuited(player);
         if (!held && !suited) return;
 
-        RingEnergy charge = BatCharge.get(belt);
+        RingEnergy charge = BatmanHero.BAT_CHARGE.get(belt);
         float fraction = charge.fraction();
         if (displayedFraction < 0) displayedFraction = fraction;
         displayedFraction += (fraction - displayedFraction) * 0.15F;
@@ -50,8 +51,8 @@ public final class BatHud {
         if (!AquamanHelper.findEmblem(player).isEmpty() && (!AquamanHelper.heldEmblem(player).isEmpty() || AquamanHelper.isSuited(player))) y += 70;
 
         // The belt buckle (last icon of the strip).
-        int iconsW = PowerWheelScreen.BAT_ICONS_W;
-        graphics.blit(RenderPipelines.GUI_TEXTURED, PowerWheelScreen.BAT_ICONS, x, y - 2, BatPower.count() * 16, 0, 16, 16, iconsW, PowerWheelScreen.ICONS_H);
+        int iconsW = BatmanHero.WHEEL.iconsWidth();
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BatmanHero.WHEEL.icons(), x, y - 2, BatPower.POWERS.count() * 16, 0, 16, 16, iconsW, WheelStyle.ICONS_HEIGHT);
         int barX = x + 19;
         int barY = y + 1;
         int border = 0xFF5A5A62;
@@ -79,15 +80,15 @@ public final class BatHud {
         String text = charge.stored() + " / " + charge.capacity();
         graphics.drawString(mc.font, text, barX + 104, barY + 2, low ? 0xFFFF5555 : 0xFFF2D03A, true);
 
-        BatPower selected = BatPower.selected(belt);
+        BatPower selected = BatPower.POWERS.selected(belt);
         int iconsY = y + 17;
-        for (int i = 0; i < BatPower.count(); i++) {
-            BatPower power = BatPower.byIndex(i);
+        for (int i = 0; i < BatPower.POWERS.count(); i++) {
+            BatPower power = BatPower.POWERS.byIndex(i);
             int ix = x + 19 + i * 20;
             boolean isSelected = power == selected;
             if (isSelected) graphics.fill(ix - 1, iconsY - 1, ix + 17, iconsY + 17, 0xC0F2D03A);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, PowerWheelScreen.BAT_ICONS, ix, iconsY, power.iconIndex() * 16, 0, 16, 16,
-                    iconsW, PowerWheelScreen.ICONS_H, isSelected ? 0xFFFFFFFF : 0x90FFFFFF);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, BatmanHero.WHEEL.icons(), ix, iconsY, power.iconIndex() * 16, 0, 16, 16,
+                    iconsW, WheelStyle.ICONS_HEIGHT, isSelected ? 0xFFFFFFFF : 0x90FFFFFF);
         }
         graphics.drawString(mc.font, Component.translatable("hud.greenlantern.power_key", selected.displayName(), KeyBindings.HERO_POWER.getTranslatedKeyMessage()),
                 x + 19, iconsY + 19, 0xFFE0E0E6, true);

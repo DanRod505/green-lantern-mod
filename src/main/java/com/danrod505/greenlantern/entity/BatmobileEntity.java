@@ -3,8 +3,8 @@ package com.danrod505.greenlantern.entity;
 import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.SidedHooks;
-import com.danrod505.greenlantern.batman.BatCharge;
 import com.danrod505.greenlantern.batman.BatmanHelper;
+import com.danrod505.greenlantern.batman.BatmanHero;
 import com.danrod505.greenlantern.batman.BatmanServer;
 import com.danrod505.greenlantern.registry.ModEntities;
 import com.danrod505.greenlantern.registry.ModSounds;
@@ -446,12 +446,12 @@ public class BatmobileEntity extends ConstructEntity {
         ItemStack belt = BatmanHelper.findBelt(driver);
         boolean creative = driver.isCreative();
         int cost = GLConfig.BATMOBILE_BOOST_COST_PER_SECOND.get();
-        boolean canBoost = creative || BatCharge.has(belt, Math.max(1, cost));
+        boolean canBoost = creative || BatmanHero.BAT_CHARGE.has(belt, Math.max(1, cost));
         entityData.set(DATA_BOOST_OK, canBoost);
         boolean boostingNow = canBoost && driver.getLastClientInput().sprint() && driver.getLastClientInput().forward();
         entityData.set(DATA_BOOSTING, boostingNow);
         if (boostingNow) {
-            if (tickCount % 20 == 0 && !creative && !BatCharge.tryConsume(belt, cost)) {
+            if (tickCount % 20 == 0 && !creative && !BatmanHero.BAT_CHARGE.tryConsume(belt, cost)) {
                 BatmanServer.notifyNoCharge(driver);
             }
             if (boostSoundTicks-- <= 0) {
@@ -496,7 +496,7 @@ public class BatmobileEntity extends ConstructEntity {
     public boolean fireMissiles() {
         if (!(level() instanceof ServerLevel level) || !(getOwner() instanceof ServerPlayer driver)) return false;
         if (missileCooldown > 0 || missilesQueued > 0) return false;
-        if (!driver.isCreative() && !BatCharge.tryConsume(BatmanHelper.findBelt(driver), GLConfig.BATMOBILE_MISSILE_COST.get())) {
+        if (!driver.isCreative() && !BatmanHero.BAT_CHARGE.tryConsume(BatmanHelper.findBelt(driver), GLConfig.BATMOBILE_MISSILE_COST.get())) {
             BatmanServer.notifyNoCharge(driver);
             return false;
         }

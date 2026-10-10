@@ -1,10 +1,6 @@
 package com.danrod505.greenlantern.flash;
 
 import com.danrod505.greenlantern.item.FlashRingItem;
-import com.danrod505.greenlantern.registry.ModItems;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -18,27 +14,16 @@ public final class FlashHelper {
 
     /** The Flash ring held in either hand (main hand first), or {@link ItemStack#EMPTY}. */
     public static ItemStack heldRing(Player player) {
-        for (InteractionHand hand : InteractionHand.values()) {
-            ItemStack stack = player.getItemInHand(hand);
-            if (isRing(stack)) return stack;
-        }
-        return ItemStack.EMPTY;
+        return FlashHero.INSTANCE.heldItem(player);
     }
 
     /** The Flash ring held in a hand or, failing that, the first one found in the inventory. */
     public static ItemStack findRing(Player player) {
-        ItemStack held = heldRing(player);
-        if (!held.isEmpty()) return held;
-        Inventory inventory = player.getInventory();
-        for (int i = 0; i < inventory.getContainerSize(); i++) {
-            ItemStack stack = inventory.getItem(i);
-            if (isRing(stack)) return stack;
-        }
-        return ItemStack.EMPTY;
+        return FlashHero.INSTANCE.findItem(player);
     }
 
     /** A player is the Flash while wearing the Flash suit chest piece. */
     public static boolean isSuited(Player player) {
-        return player.getItemBySlot(EquipmentSlot.CHEST).is(ModItems.FLASH_SUIT.get());
+        return FlashHero.INSTANCE.isSuited(player);
     }
 }

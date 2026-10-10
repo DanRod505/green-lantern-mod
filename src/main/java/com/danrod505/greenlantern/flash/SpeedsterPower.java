@@ -1,10 +1,8 @@
 package com.danrod505.greenlantern.flash;
 
 import com.danrod505.greenlantern.GLConfig;
-import com.danrod505.greenlantern.registry.ModDataComponents;
-import net.minecraft.network.chat.Component;
-import net.minecraft.util.Mth;
-import net.minecraft.world.item.ItemStack;
+import com.danrod505.greenlantern.hero.HeroPower;
+import com.danrod505.greenlantern.hero.PowerSet;
 
 /**
  * Powers of the Flash, picked on the power wheel (hold the wheel key while wearing the suit) and
@@ -14,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
  * the same index), its name / description to the lang files and its behaviour to
  * {@link SpeedsterServer#usePower}.
  */
-public enum SpeedsterPower {
+public enum SpeedsterPower implements HeroPower {
     /** Run in circles to create a vortex that lifts and batters everything around it. */
     TORNADO("tornado"),
     /** Vibrate your molecules to pass through solid matter. */
@@ -22,7 +20,8 @@ public enum SpeedsterPower {
     /** Throw a bolt of Speed Force lightning. */
     LIGHTNING("lightning");
 
-    private static final SpeedsterPower[] VALUES = values();
+    /** The powers in wheel order, and the selection kept on the hero's item. */
+    public static final PowerSet<SpeedsterPower> POWERS = new PowerSet<>(values());
 
     private final String id;
 
@@ -30,51 +29,18 @@ public enum SpeedsterPower {
         this.id = id;
     }
 
+    @Override
     public String id() {
         return id;
     }
 
-    public int iconIndex() {
-        return ordinal();
-    }
-
-    public Component displayName() {
-        return Component.translatable("power.greenlantern." + id);
-    }
-
-    public Component description() {
-        return Component.translatable("power.greenlantern." + id + ".desc");
-    }
-
     /** Speed Force needed to activate the power. */
+    @Override
     public int cost() {
         return switch (this) {
             case TORNADO -> GLConfig.TORNADO_COST.get();
             case PHASE -> GLConfig.PHASE_COST.get();
             case LIGHTNING -> GLConfig.LIGHTNING_COST.get();
         };
-    }
-
-    public static SpeedsterPower byIndex(int index) {
-        return VALUES[Mth.clamp(index, 0, VALUES.length - 1)];
-    }
-
-    public static int count() {
-        return VALUES.length;
-    }
-
-    public static SpeedsterPower selected(ItemStack ring) {
-        Integer index = ring.get(ModDataComponents.SELECTED_POWER.get());
-        return byIndex(index == null ? 0 : index);
-    }
-
-    public static void select(ItemStack ring, SpeedsterPower power) {
-        ring.set(ModDataComponents.SELECTED_POWER.get(), power.ordinal());
-    }
-
-    public static SpeedsterPower cycle(ItemStack ring, int offset) {
-        SpeedsterPower next = VALUES[Math.floorMod(selected(ring).ordinal() + offset, VALUES.length)];
-        select(ring, next);
-        return next;
     }
 }

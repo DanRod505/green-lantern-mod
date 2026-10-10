@@ -1,13 +1,13 @@
 package com.danrod505.greenlantern.flight;
 
 import com.danrod505.greenlantern.GLConfig;
-import com.danrod505.greenlantern.ring.RingHelper;
-import com.danrod505.greenlantern.superman.SupermanHelper;
-import com.danrod505.greenlantern.wonderwoman.WonderWomanHelper;
+import com.danrod505.greenlantern.hero.HeroDefinition;
+import com.danrod505.greenlantern.hero.HeroRegistry;
 import net.minecraft.world.entity.player.Player;
 
 /**
- * How a hero power-flies. The Green Lantern, Superman and Wonder Woman share the same power flight
+ * How fast a hero power-flies (each hero with power flight gives its own: see {@code HeroDefinition#flightProfile}; the
+ * looks and handling are in {@link FlightStyle}). The Green Lantern, Superman and Wonder Woman share the same power flight
  * (hold forward to keep accelerating, break the sound barrier, barrel rolls, hero landings);
  * Superman's is much faster and stronger, Wonder Woman's is slower than the Lantern's (by default
  * she never reaches the sound barrier).
@@ -20,43 +20,20 @@ import net.minecraft.world.entity.player.Player;
  * @param landingPower damage and radius multiplier of the hero landing
  */
 public record FlightProfile(double cruise, double barrier, double max, double seconds, double sprintBoost, double landingPower) {
-    /** Whether the player power-flies right now (wears the Lantern uniform, Superman's suit or Wonder Woman's armor). */
+    /** Whether the player power-flies right now (wears the suit of a hero with a flight profile). */
     public static boolean canPowerFly(Player player) {
-        return RingHelper.isSuited(player) || SupermanHelper.isSuited(player) || WonderWomanHelper.isSuited(player);
+        return HeroRegistry.suited(player).map(HeroDefinition::flightProfile).isPresent();
     }
 
-    public static boolean isWonderWoman(Player player) {
-        return WonderWomanHelper.isSuited(player);
-    }
-
-    public static boolean isSuperman(Player player) {
-        return SupermanHelper.isSuited(player);
-    }
-
+    /** The suited hero's flight profile (the Lantern's when none). */
     public static FlightProfile of(Player player) {
-        return isSuperman(player) ? superman() : isWonderWoman(player) ? wonderWoman() : lantern();
+        FlightProfile profile = HeroRegistry.suited(player).map(HeroDefinition::flightProfile).orElse(null);
+        return profile != null ? profile : lantern();
     }
 
     public static FlightProfile lantern() {
         double barrier = GLConfig.SOUND_BARRIER_SPEED.get();
         return new FlightProfile(GLConfig.CRUISE_SPEED.get(), barrier, Math.max(barrier, GLConfig.MAX_FLIGHT_SPEED.get()),
                 GLConfig.SECONDS_TO_SOUND_BARRIER.get(), 1.6, 1.0);
-    }
-
-    public static FlightProfile superman() {
-        double barrier = GLConfig.SOUND_BARRIER_SPEED.get();
-        return new FlightProfile(GLConfig.SUPERMAN_CRUISE_SPEED.get(), barrier, Math.max(barrier, GLConfig.SUPERMAN_MAX_SPEED.get()),
-                GLConfig.SUPERMAN_SECONDS_TO_SOUND_BARRIER.get(), 2.0, GLConfig.SUPERMAN_LANDING_MULTIPLIER.get());
-    }
-
-    /** Wonder Woman: a strong, steady flight, but slower than the Lantern's. */
-    public static FlightProfile wonderWoman() {
-        double barrier = GLConfig.SOUND_BARRIER_SPEED.get();
-        double cruise = GLConfig.WONDER_WOMAN_CRUISE_SPEED.get();
-        double max = Math.max(cruise + 0.1, GLConfig.WONDER_WOMAN_MAX_SPEED.get());
-        double toMax = GLConfig.WONDER_WOMAN_SECONDS_TO_MAX.get();
-        // The flight accelerates at (barrier - cruise) / seconds: scaled so top speed comes after toMax seconds.
-        double seconds = max < barrier ? toMax * (barrier - cruise) / (max - cruise) : toMax;
-        return new FlightProfile(cruise, barrier, max, seconds, 1.4, 0.8);
     }
 }

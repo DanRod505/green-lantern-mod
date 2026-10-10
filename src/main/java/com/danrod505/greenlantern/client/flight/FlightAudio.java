@@ -2,7 +2,9 @@ package com.danrod505.greenlantern.client.flight;
 
 import com.danrod505.greenlantern.GLClientConfig;
 import com.danrod505.greenlantern.GLConfig;
+import com.danrod505.greenlantern.flight.FlightStyle;
 import com.danrod505.greenlantern.registry.ModSounds;
+import com.danrod505.greenlantern.ring.LanternHero;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -27,8 +29,8 @@ public final class FlightAudio {
     private static int fastTicks;
     private static int idleTicks;
     private static int supersonicMemory;
-    /** Whose theme is playing (each power flyer has their own): 0 the Lantern, 1 Superman, 2 Wonder Woman. */
-    private static int theme;
+    /** Whose theme is playing (each power flyer has their own). */
+    private static FlightStyle theme = LanternHero.FLIGHT_STYLE;
 
     private FlightAudio() {}
 
@@ -77,27 +79,19 @@ public final class FlightAudio {
         }
         supersonicMemory = FlightController.isSupersonic() ? 80 : Math.max(0, supersonicMemory - 1);
         boolean playing = base != null && !base.isStopped();
-        if (playing && fast && theme != currentTheme()) {
+        if (playing && fast && theme != FlightController.style()) {
             // Another hero took to the skies: their own theme starts.
             stopMusic(mc);
             playing = false;
         }
         boolean wantBase = GLClientConfig.FLIGHT_MUSIC.get() && (fastTicks > 15 || (playing && idleTicks < 100));
         // Wonder Woman never breaks the sound barrier: her peak layer joins near her top speed.
-        boolean wantPeak = wantBase && (theme == 2 ? FlightController.speedFraction() > 0.8F : supersonicMemory > 0);
+        boolean wantPeak = wantBase && (theme.peakNearTopSpeed() ? FlightController.speedFraction() > 0.8F : supersonicMemory > 0);
 
         if (wantBase && !playing) {
-            theme = currentTheme();
-            base = new ThemeSound(switch (theme) {
-                case 1 -> ModSounds.SUPERMAN_THEME_BASE.get();
-                case 2 -> ModSounds.WONDER_WOMAN_THEME_BASE.get();
-                default -> ModSounds.FLIGHT_THEME_BASE.get();
-            }, 0.025F, 0.012F);
-            peak = new ThemeSound(switch (theme) {
-                case 1 -> ModSounds.SUPERMAN_THEME_PEAK.get();
-                case 2 -> ModSounds.WONDER_WOMAN_THEME_PEAK.get();
-                default -> ModSounds.FLIGHT_THEME_PEAK.get();
-            }, 0.09F, 0.012F);
+            theme = FlightController.style();
+            base = new ThemeSound(theme.themeBase().get(), 0.025F, 0.012F);
+            peak = new ThemeSound(theme.themePeak().get(), 0.09F, 0.012F);
             // The peak layer stays in sync by playing silently until it is needed.
             peak.stopWhenSilent = false;
             mc.getSoundManager().play(base);
@@ -114,10 +108,6 @@ public final class FlightAudio {
             mc.getSoundManager().stop(peak);
             peak = null;
         }
-    }
-
-    private static int currentTheme() {
-        return FlightController.isSuperman() ? 1 : FlightController.isWonderWoman() ? 2 : 0;
     }
 
     private static void stopMusic(Minecraft mc) {

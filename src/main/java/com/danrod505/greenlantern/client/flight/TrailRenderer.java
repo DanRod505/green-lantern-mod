@@ -113,8 +113,11 @@ public class TrailRenderer extends EntityRenderer<FlightTrailEntity, TrailRender
             }
             float[] data = build(points, attrs, cam, origin);
             if (data == null) continue;
-            int kind = visual.amazon ? KIND_AMAZON : visual.superman ? (visual.supersonic() ? KIND_SUPERMAN_SUPERSONIC : KIND_SUPERMAN)
-                    : (visual.supersonic() ? KIND_LANTERN_SUPERSONIC : KIND_LANTERN);
+            int kind = switch (visual.look) {
+                case AMAZON -> KIND_AMAZON;
+                case SUPERMAN -> visual.supersonic() ? KIND_SUPERMAN_SUPERSONIC : KIND_SUPERMAN;
+                case LANTERN -> visual.supersonic() ? KIND_LANTERN_SUPERSONIC : KIND_LANTERN;
+            };
             state.ribbons.add(new Ribbon(data, points.size(), kind));
         }
         extractSpeedTrails(state, mc, level, cam, origin, now, partialTick);

@@ -1,6 +1,7 @@
 package com.danrod505.greenlantern.client;
 
-import com.danrod505.greenlantern.GreenLantern;
+import com.danrod505.greenlantern.hero.WheelTheme;
+import com.danrod505.greenlantern.ring.LanternHero;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
@@ -22,51 +23,19 @@ public final class WheelTextures {
     private static final float GAP_PIXELS = 2.2F;
     private static final int SAMPLES = 2;
 
-    /**
-     * Colours of a hero's wheel: each hero has their own (green hard light for the Lantern, red and
-     * gold Speed Force for the Flash, teal and gold for Aquaman, black, gray and yellow for Batman).
-     */
-    public record Theme(String name, int centerInner, int centerOuter, int centerRing, int border, int sliceInner, int sliceOuter,
-                        int highlightInner, int highlightOuter, int highlightEdge, int highlightRim, int current) {
-        public static final Theme LANTERN = new Theme("wheel", 0x07120A, 0x030604, 0x2A8A44, 0x2E6A3E, 0x060D08, 0x0F2216,
-                0x0F4A20, 0x2FA84E, 0x7CFF96, 0xC8FFD2, 0x3CE064);
-        public static final Theme FLASH = new Theme("speed_wheel", 0x160604, 0x080202, 0xC8902A, 0x8A2A1C, 0x120504, 0x2A0A06,
-                0x6A1408, 0xC8301A, 0xFFD24A, 0xFFF0B0, 0xFFC830);
-        public static final Theme AQUAMAN = new Theme("sea_wheel", 0x021216, 0x010608, 0xC8A02A, 0x1C6A6A, 0x020C10, 0x06222A,
-                0x0A4A52, 0x1AA8A0, 0xF2C94A, 0xFFF0B0, 0x3CE0D0);
-        public static final Theme BATMAN = new Theme("bat_wheel", 0x0C0C0E, 0x040405, 0xD8B020, 0x4A4A52, 0x08080A, 0x1A1A1F,
-                0x2A2A30, 0x55555E, 0xF2D03A, 0xFFF4B0, 0xF2D03A);
-        public static final Theme SUPERMAN = new Theme("super_wheel", 0x06102A, 0x020614, 0xF2C21A, 0xB01820, 0x050C22, 0x0E1E4A,
-                0x1E4AB8, 0x2E6BFF, 0xFFD84A, 0xFFF4C0, 0xE8303A);
-        public static final Theme WONDER_WOMAN = new Theme("amazon_wheel", 0x1A0408, 0x0A0204, 0xF2B71C, 0x9A1020, 0x14040A, 0x2E0A12,
-                0x7A0E1C, 0xC8102E, 0xFFD24A, 0xFFF4C8, 0x2E5BD8);
-
-        public Identifier base() {
-            return GreenLantern.id("dynamic/" + name + "_base");
-        }
-
-        public Identifier highlight() {
-            return GreenLantern.id("dynamic/" + name + "_highlight");
-        }
-
-        public Identifier currentLayer() {
-            return GreenLantern.id("dynamic/" + name + "_current");
-        }
-    }
-
-    public static final Identifier BASE = Theme.LANTERN.base();
-    public static final Identifier HIGHLIGHT = Theme.LANTERN.highlight();
-    public static final Identifier CURRENT = Theme.LANTERN.currentLayer();
+    public static final Identifier BASE = LanternHero.WHEEL_THEME.base();
+    public static final Identifier HIGHLIGHT = LanternHero.WHEEL_THEME.highlight();
+    public static final Identifier CURRENT = LanternHero.WHEEL_THEME.currentLayer();
 
     private static final java.util.Map<String, Integer> GENERATED = new java.util.HashMap<>();
 
     private WheelTextures() {}
 
     public static void ensure(int slices) {
-        ensure(Theme.LANTERN, slices);
+        ensure(LanternHero.WHEEL_THEME, slices);
     }
 
-    public static void ensure(Theme theme, int slices) {
+    public static void ensure(WheelTheme theme, int slices) {
         Integer done = GENERATED.get(theme.name());
         if (done != null && done == slices) return;
         GENERATED.put(theme.name(), slices);
@@ -77,7 +46,7 @@ public final class WheelTextures {
 
     private enum Layer { BASE, HIGHLIGHT, CURRENT }
 
-    private static void register(Identifier id, int slices, Layer layer, Theme theme) {
+    private static void register(Identifier id, int slices, Layer layer, WheelTheme theme) {
         NativeImage image = new NativeImage(SIZE, SIZE, true);
         float half = SIZE / 2.0F;
         float pixelsPerUnit = half / EXTENT;
@@ -108,7 +77,7 @@ public final class WheelTextures {
     }
 
     /** Colour (ARGB) of the wheel at normalized position (x, y). */
-    private static int sample(float x, float y, int slices, Layer layer, float pixelsPerUnit, Theme theme) {
+    private static int sample(float x, float y, int slices, Layer layer, float pixelsPerUnit, WheelTheme theme) {
         float radius = Mth.sqrt(x * x + y * y);
         // Angle from straight up, clockwise, in [-180, 180).
         float angle = (float) Math.toDegrees(Math.atan2(y, x)) + 90.0F;

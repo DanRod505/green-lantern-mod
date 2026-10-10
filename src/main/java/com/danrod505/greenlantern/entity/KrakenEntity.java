@@ -4,9 +4,9 @@ import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.SidedHooks;
 import com.danrod505.greenlantern.aquaman.AquamanHelper;
+import com.danrod505.greenlantern.aquaman.AquamanHero;
 import com.danrod505.greenlantern.aquaman.AquamanServer;
 import com.danrod505.greenlantern.aquaman.SeaCall;
-import com.danrod505.greenlantern.aquaman.SeaForce;
 import com.danrod505.greenlantern.registry.ModDamageTypes;
 import com.danrod505.greenlantern.registry.ModEntities;
 import com.danrod505.greenlantern.registry.ModSounds;
@@ -867,7 +867,7 @@ public class KrakenEntity extends ConstructEntity {
         if (firing && tickCount % 20 == 0 && !rider.isCreative()) {
             ItemStack emblem = AquamanHelper.findEmblem(rider);
             int cost = GLConfig.KRAKEN_JET_COST_PER_SECOND.get();
-            if (cost > 0 && (emblem.isEmpty() || !SeaForce.tryConsume(emblem, cost))) {
+            if (cost > 0 && (emblem.isEmpty() || !AquamanHero.SEA_FORCE.tryConsume(emblem, cost))) {
                 if (rider instanceof ServerPlayer sp) AquamanServer.notifyNoSeaForce(sp);
                 jetRequested = false;
                 firing = false;

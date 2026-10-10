@@ -1,6 +1,9 @@
 package com.danrod505.greenlantern;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
 
 /**
  * Tiny bridge that lets common code read client-only state without referencing client classes.
@@ -29,6 +32,21 @@ public final class SidedHooks {
 
     /** Opens the Corps Manual (guide book) screen on the local client. */
     public static Runnable openGuide = () -> {};
+
+    /** Client handlers of newer heroes' packets, by packet class (see {@link #onClient}). */
+    private static final Map<Class<?>, Consumer<?>> CLIENT_HANDLERS = new ConcurrentHashMap<>();
+
+    /** Lets a hero's client half handle one of its server -> client packets (call it from {@code HeroClient#registerEvents}). */
+    public static <P> void onClient(Class<P> type, Consumer<P> handler) {
+        CLIENT_HANDLERS.put(type, handler);
+    }
+
+    /** Hands a server -> client packet to its client handler; nothing happens on a dedicated server. */
+    @SuppressWarnings("unchecked")
+    public static <P> void handleOnClient(P packet) {
+        Consumer<P> handler = (Consumer<P>) CLIENT_HANDLERS.get(packet.getClass());
+        if (handler != null) handler.accept(packet);
+    }
 
     @FunctionalInterface
     public interface ShakeHandler {

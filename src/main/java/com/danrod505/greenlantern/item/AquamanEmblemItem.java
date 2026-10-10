@@ -2,9 +2,8 @@ package com.danrod505.greenlantern.item;
 
 import com.danrod505.greenlantern.aquaman.AquaPower;
 import com.danrod505.greenlantern.aquaman.AquamanHelper;
+import com.danrod505.greenlantern.aquaman.AquamanHero;
 import com.danrod505.greenlantern.aquaman.AquamanServer;
-import com.danrod505.greenlantern.aquaman.AquamanSuit;
-import com.danrod505.greenlantern.aquaman.SeaForce;
 import com.danrod505.greenlantern.ring.RingEnergy;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
@@ -35,7 +34,7 @@ public class AquamanEmblemItem extends Item {
 
     /** Returns the given emblem full of Power of the Seas (used for the creative tab). */
     public static ItemStack charged(ItemStack emblem) {
-        SeaForce.set(emblem, SeaForce.capacity());
+        AquamanHero.SEA_FORCE.set(emblem, AquamanHero.SEA_FORCE.capacity());
         return emblem;
     }
 
@@ -43,11 +42,11 @@ public class AquamanEmblemItem extends Item {
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack emblem = player.getItemInHand(hand);
         if (!AquamanHelper.isSuited(player)) {
-            if (player instanceof ServerPlayer serverPlayer) AquamanSuit.summon(serverPlayer);
+            if (player instanceof ServerPlayer serverPlayer) AquamanHero.INSTANCE.summonSuit(serverPlayer);
             return InteractionResult.SUCCESS;
         }
         if (player instanceof ServerPlayer serverPlayer) {
-            AquamanServer.usePower(serverPlayer, emblem, AquaPower.selected(emblem));
+            AquamanServer.usePower(serverPlayer, emblem, AquaPower.POWERS.selected(emblem));
         }
         return InteractionResult.SUCCESS;
     }
@@ -61,22 +60,22 @@ public class AquamanEmblemItem extends Item {
 
     @Override
     public int getBarWidth(ItemStack emblem) {
-        return Math.round(13.0F * SeaForce.get(emblem).fraction());
+        return Math.round(13.0F * AquamanHero.SEA_FORCE.get(emblem).fraction());
     }
 
     @Override
     public int getBarColor(ItemStack emblem) {
-        float f = SeaForce.get(emblem).fraction();
+        float f = AquamanHero.SEA_FORCE.get(emblem).fraction();
         return f < 0.2F ? 0xFF4040 : Mth.hsvToRgb(0.47F + 0.03F * f, 0.85F, 1.0F);
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public void appendHoverText(ItemStack emblem, TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flag) {
-        RingEnergy force = SeaForce.get(emblem);
+        RingEnergy force = AquamanHero.SEA_FORCE.get(emblem);
         tooltip.accept(Component.translatable("tooltip.greenlantern.sea_force", force.stored(), force.capacity())
                 .withStyle(force.fraction() < 0.2F ? ChatFormatting.RED : ChatFormatting.AQUA));
-        tooltip.accept(Component.translatable("tooltip.greenlantern.power", AquaPower.selected(emblem).displayName()).withStyle(ChatFormatting.GOLD));
+        tooltip.accept(Component.translatable("tooltip.greenlantern.power", AquaPower.POWERS.selected(emblem).displayName()).withStyle(ChatFormatting.GOLD));
         tooltip.accept(Component.translatable("tooltip.greenlantern.aquaman_emblem_hint").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
     }
 }

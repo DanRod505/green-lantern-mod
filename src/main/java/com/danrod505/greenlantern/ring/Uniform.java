@@ -2,9 +2,6 @@ package com.danrod505.greenlantern.ring;
 
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.item.SuitArmorItem;
-import com.danrod505.greenlantern.registry.ModItems;
-import com.danrod505.greenlantern.registry.ModSounds;
-import com.danrod505.greenlantern.registry.ModParticles;
 import com.mojang.serialization.Codec;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,18 +10,15 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 
 /**
- * Summons and dismisses the Green Lantern uniform. Whatever armor the player was wearing is kept
- * safe in the player's persistent data and given back when the uniform is dismissed.
+ * Puts hero suits on and takes them off (see {@code HeroDefinition#summonSuit}). Whatever armor the
+ * player was wearing is kept safe in the player's persistent data and given back when the suit comes off.
  */
 public final class Uniform {
     private static final String STASH_KEY = GreenLantern.MODID + ".stashed_armor";
@@ -32,54 +26,6 @@ public final class Uniform {
     private static final Codec<List<ItemStack>> STASH_CODEC = ItemStack.OPTIONAL_CODEC.listOf();
 
     private Uniform() {}
-
-    public static void toggle(ServerPlayer player) {
-        if (RingHelper.isSuited(player)) {
-            dismiss(player, true);
-        } else {
-            summon(player);
-        }
-    }
-
-    public static boolean summon(ServerPlayer player) {
-        if (RingHelper.isSuited(player)) return true;
-        ItemStack ring = RingHelper.findRing(player);
-        if (ring.isEmpty()) {
-            player.displayClientMessage(Component.translatable("message.greenlantern.no_ring"), true);
-            return false;
-        }
-        if (RingEnergy.get(ring).stored() <= 0) {
-            player.displayClientMessage(Component.translatable("message.greenlantern.no_energy"), true);
-            player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.LOW_ENERGY.get(), SoundSource.PLAYERS, 0.8F, 1.0F);
-            return false;
-        }
-
-        // Only one hero suit at a time.
-        com.danrod505.greenlantern.hero.Hero.dismissOthers(player, com.danrod505.greenlantern.hero.Hero.LANTERN);
-        equipSuit(player,
-                ModItems.LANTERN_MASK.get().getDefaultInstance(),
-                ModItems.LANTERN_SUIT.get().getDefaultInstance(),
-                ModItems.LANTERN_LEGGINGS.get().getDefaultInstance(),
-                ModItems.LANTERN_BOOTS.get().getDefaultInstance());
-
-        ServerLevel level = player.level();
-        level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.RING_ACTIVATE.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
-        level.sendParticles(ModParticles.GLOW.get(), player.getX(), player.getY() + 1.0, player.getZ(), 40, 0.4, 0.9, 0.4, 0.02);
-        level.sendParticles(ModParticles.SPARK.get(), player.getX(), player.getY() + 1.0, player.getZ(), 30, 0.5, 1.0, 0.5, 0.15);
-        FlightHandler.refreshAbilities(player);
-        return true;
-    }
-
-    public static void dismiss(ServerPlayer player, boolean effects) {
-        removeSuit(player);
-        FlightHandler.refreshAbilities(player);
-
-        if (effects) {
-            ServerLevel level = player.level();
-            level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.RING_DEACTIVATE.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
-            level.sendParticles(ModParticles.GLOW.get(), player.getX(), player.getY() + 1.0, player.getZ(), 25, 0.4, 0.9, 0.4, 0.01);
-        }
-    }
 
     // ---- shared by every hero suit -----------------------------------------------------------------
 

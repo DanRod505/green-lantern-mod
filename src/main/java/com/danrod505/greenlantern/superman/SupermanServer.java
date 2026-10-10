@@ -127,7 +127,7 @@ public final class SupermanServer {
 
     public static void tick(ServerPlayer player) {
         boolean suited = SupermanHelper.isSuited(player);
-        if (player.tickCount % 20 == 0) SupermanSuit.updateModifiers(player, suited);
+        if (player.tickCount % 20 == 0) SupermanHero.INSTANCE.updateSuitModifiers(player, suited);
         if (!suited) {
             if (STATES.containsKey(player.getUUID())) remove(player);
             return;
@@ -149,20 +149,20 @@ public final class SupermanServer {
             if (state.pendingSolar >= 1.0F) {
                 int whole = (int) state.pendingSolar;
                 state.pendingSolar -= whole;
-                SolarEnergy.add(crystal, whole);
+                SupermanHero.SOLAR_ENERGY.add(crystal, whole);
             }
             if (player.tickCount % 40 == 0 && player.getHealth() < player.getMaxHealth()) player.heal(1.0F);
-            if (player.tickCount % 8 == 0 && !SolarEnergy.get(crystal).isFull()) {
+            if (player.tickCount % 8 == 0 && !SupermanHero.SOLAR_ENERGY.get(crystal).isFull()) {
                 level.sendParticles(ModParticles.SOLAR_GLOW.get(), player.getX(), player.getY() + 1.0, player.getZ(), 1, 0.35, 0.8, 0.35, 0.01);
             }
         }
-        boolean full = SolarEnergy.get(crystal).isFull();
+        boolean full = SupermanHero.SOLAR_ENERGY.get(crystal).isFull();
         if (full && !state.wasFull) {
             level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.SOLAR_CHARGED.get(), SoundSource.PLAYERS, 0.8F, 1.0F);
             player.displayClientMessage(Component.translatable("message.greenlantern.solar_full").withStyle(ChatFormatting.GOLD), true);
         }
         state.wasFull = full;
-        float fraction = SolarEnergy.get(crystal).fraction();
+        float fraction = SupermanHero.SOLAR_ENERGY.get(crystal).fraction();
         if (!player.isCreative() && fraction <= 0.1F && player.tickCount % 100 == 0) {
             player.displayClientMessage(Component.translatable(fraction <= 0.0F ? "message.greenlantern.no_solar" : "message.greenlantern.low_solar")
                     .withStyle(ChatFormatting.GOLD), true);
@@ -197,8 +197,8 @@ public final class SupermanServer {
         if (state.pendingCost >= 1.0F) {
             int whole = (int) state.pendingCost;
             state.pendingCost -= whole;
-            boolean enough = SolarEnergy.has(crystal, whole);
-            SolarEnergy.drain(crystal, whole);
+            boolean enough = SupermanHero.SOLAR_ENERGY.has(crystal, whole);
+            SupermanHero.SOLAR_ENERGY.drain(crystal, whole);
             if (!enough) {
                 notifyNoEnergy(player);
                 return false;
@@ -241,7 +241,7 @@ public final class SupermanServer {
             case SUPER_PUNCH -> {}
         }
         if (player.getCooldowns().isOnCooldown(crystal)) return false;
-        if (!player.isCreative() && !SolarEnergy.has(crystal, Math.max(1, power.cost()))) {
+        if (!player.isCreative() && !SupermanHero.SOLAR_ENERGY.has(crystal, Math.max(1, power.cost()))) {
             notifyNoEnergy(player);
             return false;
         }
@@ -255,7 +255,7 @@ public final class SupermanServer {
             }
             case SUPER_PUNCH -> {
                 superPunch(player, level);
-                if (!player.isCreative()) SolarEnergy.tryConsume(crystal, power.cost());
+                if (!player.isCreative()) SupermanHero.SOLAR_ENERGY.tryConsume(crystal, power.cost());
             }
             case SUPER_BREATH -> {
                 if (state.heatTicks > 0) endHeatVision(player, state);
@@ -572,24 +572,4 @@ public final class SupermanServer {
 
     // ---- power wheel / key packets -----------------------------------------------------------------------
 
-    public static void selectPower(ServerPlayer player, int value, boolean relative) {
-        ItemStack crystal = SupermanHelper.findCrystal(player);
-        if (crystal.isEmpty()) return;
-        SuperPower power;
-        if (relative) {
-            power = SuperPower.cycle(crystal, Mth.clamp(value, -1, 1));
-        } else {
-            power = SuperPower.byIndex(value);
-            SuperPower.select(crystal, power);
-        }
-        player.displayClientMessage(Component.translatable("message.greenlantern.power_selected", power.displayName().copy().withStyle(ChatFormatting.AQUA)), true);
-        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.POWER_SELECT.get(), SoundSource.PLAYERS,
-                0.7F, 0.9F + 0.08F * power.ordinal());
-    }
-
-    public static void usePowerKey(ServerPlayer player, int index) {
-        ItemStack crystal = SupermanHelper.findCrystal(player);
-        if (crystal.isEmpty()) return;
-        usePower(player, crystal, index < 0 ? SuperPower.selected(crystal) : SuperPower.byIndex(index));
-    }
 }

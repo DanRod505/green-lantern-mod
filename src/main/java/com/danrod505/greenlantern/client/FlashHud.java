@@ -1,8 +1,9 @@
 package com.danrod505.greenlantern.client;
 
 import com.danrod505.greenlantern.flash.FlashHelper;
-import com.danrod505.greenlantern.flash.SpeedForce;
+import com.danrod505.greenlantern.flash.FlashHero;
 import com.danrod505.greenlantern.flash.SpeedsterPower;
+import com.danrod505.greenlantern.hero.WheelStyle;
 import com.danrod505.greenlantern.ring.RingEnergy;
 import com.danrod505.greenlantern.ring.RingHelper;
 import net.minecraft.client.DeltaTracker;
@@ -33,7 +34,7 @@ public final class FlashHud {
         boolean suited = FlashHelper.isSuited(player);
         if (!held && !suited) return;
 
-        RingEnergy force = SpeedForce.get(ring);
+        RingEnergy force = FlashHero.SPEED_FORCE.get(ring);
         float fraction = force.fraction();
         if (displayedFraction < 0) displayedFraction = fraction;
         displayedFraction += (fraction - displayedFraction) * 0.15F;
@@ -44,7 +45,7 @@ public final class FlashHud {
         int y = lanternHud ? 66 : 8;
 
         // Emblem: the lightning bolt in a white circle.
-        graphics.blit(RenderPipelines.GUI_TEXTURED, PowerWheelScreen.ICONS, x, y - 2, 48, 0, 16, 16, PowerWheelScreen.ICONS_W, PowerWheelScreen.ICONS_H);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, FlashHero.WHEEL.icons(), x, y - 2, 48, 0, 16, 16, FlashHero.WHEEL.iconsWidth(), WheelStyle.ICONS_HEIGHT);
         int barX = x + 19;
         int barY = y + 1;
         graphics.fill(barX, barY, barX + 102, barY + 12, 0xC0200806);
@@ -65,15 +66,15 @@ public final class FlashHud {
         String text = force.stored() + " / " + force.capacity();
         graphics.drawString(mc.font, text, barX + 104, barY + 2, low ? 0xFFFF5555 : 0xFFFFD24A, true);
 
-        SpeedsterPower selected = SpeedsterPower.selected(ring);
+        SpeedsterPower selected = SpeedsterPower.POWERS.selected(ring);
         int iconsY = y + 17;
-        for (int i = 0; i < SpeedsterPower.count(); i++) {
-            SpeedsterPower power = SpeedsterPower.byIndex(i);
+        for (int i = 0; i < SpeedsterPower.POWERS.count(); i++) {
+            SpeedsterPower power = SpeedsterPower.POWERS.byIndex(i);
             int ix = x + 19 + i * 20;
             boolean isSelected = power == selected;
             if (isSelected) graphics.fill(ix - 1, iconsY - 1, ix + 17, iconsY + 17, 0xC0FFC830);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, PowerWheelScreen.ICONS, ix, iconsY, power.iconIndex() * 16, 0, 16, 16,
-                    PowerWheelScreen.ICONS_W, PowerWheelScreen.ICONS_H, isSelected ? 0xFFFFFFFF : 0x90FFFFFF);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, FlashHero.WHEEL.icons(), ix, iconsY, power.iconIndex() * 16, 0, 16, 16,
+                    FlashHero.WHEEL.iconsWidth(), WheelStyle.ICONS_HEIGHT, isSelected ? 0xFFFFFFFF : 0x90FFFFFF);
         }
         graphics.drawString(mc.font, Component.translatable("hud.greenlantern.power_key", selected.displayName(), KeyBindings.HERO_POWER.getTranslatedKeyMessage()),
                 x + 19, iconsY + 19, 0xFFFFD27A, true);

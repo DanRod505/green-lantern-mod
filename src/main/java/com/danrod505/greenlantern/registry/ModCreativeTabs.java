@@ -1,6 +1,8 @@
 package com.danrod505.greenlantern.registry;
 
 import com.danrod505.greenlantern.GreenLantern;
+import com.danrod505.greenlantern.hero.HeroDefinition;
+import com.danrod505.greenlantern.hero.HeroRegistry;
 import com.danrod505.greenlantern.item.PowerRingItem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -17,27 +19,8 @@ public final class ModCreativeTabs {
             .withTabsBefore(CreativeModeTabs.COMBAT)
             .icon(() -> PowerRingItem.charged(ModItems.POWER_RING.get().getDefaultInstance()))
             .displayItems((params, output) -> {
-                output.accept(PowerRingItem.charged(ModItems.POWER_RING.get().getDefaultInstance()));
-                output.accept(ModItems.POWER_RING.get());
-                output.accept(ModItems.POWER_BATTERY.get());
-                output.accept(ModItems.GUIDE_BOOK.get());
-                output.accept(com.danrod505.greenlantern.item.FlashRingItem.charged(ModItems.FLASH_RING.get().getDefaultInstance()));
-                output.accept(ModItems.FLASH_RING.get());
-                output.accept(com.danrod505.greenlantern.item.AquamanEmblemItem.charged(ModItems.AQUAMAN_EMBLEM.get().getDefaultInstance()));
-                output.accept(ModItems.AQUAMAN_EMBLEM.get());
-                output.accept(ModItems.ATLANTIS_GATE.get());
-                output.accept(ModItems.ATLANTEAN_RESPIRATOR.get());
-                output.accept(ModItems.MANTA_RAY_EGG.get());
-                output.accept(ModItems.GIANT_SEAHORSE_EGG.get());
-                output.accept(ModItems.ATLANTEAN_DOLPHIN_EGG.get());
-                output.accept(ModItems.TRENCH_CREATURE_EGG.get());
-                output.accept(ModItems.TRENCH_BRUTE_EGG.get());
-                output.accept(com.danrod505.greenlantern.item.UtilityBeltItem.charged(ModItems.UTILITY_BELT.get().getDefaultInstance()));
-                output.accept(ModItems.UTILITY_BELT.get());
-                output.accept(com.danrod505.greenlantern.item.KryptonianCrystalItem.charged(ModItems.KRYPTONIAN_CRYSTAL.get().getDefaultInstance()));
-                output.accept(ModItems.KRYPTONIAN_CRYSTAL.get());
-                output.accept(com.danrod505.greenlantern.item.AmazonTiaraItem.charged(ModItems.AMAZON_TIARA.get().getDefaultInstance()));
-                output.accept(ModItems.AMAZON_TIARA.get());
+                // Each hero adds its own items, in hero order.
+                for (HeroDefinition hero : HeroRegistry.all()) hero.creativeTabItems(output);
             })
             .build());
 
