@@ -247,6 +247,86 @@ def drill_grind():
     return (crunch + rocks + grind) * env_adsr(n, 0.01, 0.1, 0.8, 0.25)
 
 
+def mecha_summon():
+    # giant power-up: rising hum, servo whine and armour plates locking into place
+    dur = 2.2
+    t = t_axis(dur)
+    n = len(t)
+    hum = np.sin(sweep(40, 110, dur)) + 0.5 * np.sin(sweep(80, 220, dur))
+    hum = lowpass(hum, 900) * env_adsr(n, 0.6, 0.2, 0.9, 0.5)
+    whine = np.sin(sweep(300, 1400, dur)) * env_adsr(n, 0.8, 0.3, 0.5, 0.6) * 0.25
+    clanks = np.zeros(n)
+    for k, at in enumerate([0.55, 0.85, 1.1, 1.3, 1.7]):
+        i = int(at * SR)
+        m = int(0.25 * SR)
+        hit = lowpass(noise(m), 700 + 300 * k) * env_exp(m, 16) * 1.4
+        hit += np.sin(2 * np.pi * (90 + 20 * k) * t_axis(0.25)) * env_exp(m, 10) * 0.8
+        clanks[i:i + m] += hit[:max(0, min(m, n - i))]
+    shine = shimmer(t, 146.8, 6) * env_adsr(n, 1.2, 0.2, 0.8, 0.5) * 0.4
+    return hum + whine + clanks + shine
+
+
+def mecha_step():
+    # heavy footfall: sub thump, ground crunch and a metallic servo clank
+    dur = 0.9
+    t = t_axis(dur)
+    n = len(t)
+    thump = np.sin(sweep(70, 28, dur)) * env_exp(n, 7) * 1.4
+    crunch = lowpass(noise(n), 1200) * env_exp(n, 14)
+    clank = np.sin(2 * np.pi * 410 * t) * np.sin(2 * np.pi * 37 * t) * env_exp(n, 22) * 0.35
+    hiss = highpass(noise(n), 3500) * env_adsr(n, 0.08, 0.1, 0.3, 0.3) * 0.12
+    return thump + crunch + clank + hiss
+
+
+def mecha_thruster():
+    # seamless 1 second jet roar
+    dur = 1.0
+    t = t_axis(dur)
+    n = len(t)
+    roar = lowpass(noise(n), 700) * 1.2 + highpass(lowpass(noise(n), 3000), 900) * 0.4
+    rumble = np.sin(2 * np.pi * 46 * t) * 0.5 + np.sin(2 * np.pi * 92 * t) * 0.2
+    flutter = 1 + 0.15 * np.sin(2 * np.pi * 6 * t)
+    return (roar + rumble) * flutter
+
+
+def mecha_laser():
+    # 1 second energy beam: bright detuned buzz with a pulsing core
+    dur = 1.0
+    t = t_axis(dur)
+    n = len(t)
+    core = shimmer(t, 523.25, 6, 0.006) + 0.6 * shimmer(t, 784.0, 4, 0.005)
+    buzz = np.sign(np.sin(2 * np.pi * 110 * t)) * 0.25
+    buzz = lowpass(buzz, 2000)
+    pulse = 1 + 0.3 * np.sin(2 * np.pi * 12 * t)
+    zap = np.sin(sweep(2400, 600, 0.15)) * env_exp(int(0.15 * SR), 8)
+    out = (core + buzz) * pulse * env_adsr(n, 0.02, 0.1, 0.9, 0.15)
+    out[:len(zap)] += zap * 0.8
+    return out
+
+
+def mecha_missile():
+    # pod launch: pop, then the rocket motor igniting and flying off
+    dur = 1.0
+    t = t_axis(dur)
+    n = len(t)
+    pop = lowpass(noise(n), 1500) * env_exp(n, 30) * 1.2
+    motor = lowpass(noise(n), 400 + 2600 * np.clip(t * 4, 0, 1)) * env_adsr(n, 0.06, 0.2, 0.6, 0.55)
+    tone = np.sin(sweep(220, 520, dur)) * env_adsr(n, 0.08, 0.2, 0.5, 0.5) * 0.25
+    return pop + motor + tone
+
+
+def mecha_land():
+    # massive landing: boom, debris and a long rumble
+    dur = 2.4
+    t = t_axis(dur)
+    n = len(t)
+    boom = np.sin(sweep(80, 22, dur)) * env_exp(n, 4) * 1.6
+    blast = lowpass(noise(n), 1600) * env_exp(n, 6) * 1.1
+    debris = highpass(noise(n), 2500) * (rng.random(n) > 0.992) * env_exp(n, 3) * 2.5
+    ring = shimmer(t, 98.0, 5) * env_exp(n, 3) * 0.3
+    return boom + blast + debris + ring
+
+
 def hammer_summon():
     dur = 0.9
     t = t_axis(dur)
@@ -340,6 +420,16 @@ def main():
     save("drill_summon", drill_summon())
     save("drill_loop", drill_loop(), 0.7)
     save("drill_grind", drill_grind(), 0.8)
+    save_mecha()
+
+
+def save_mecha():
+    save("mecha_summon", mecha_summon())
+    save("mecha_step", mecha_step(), 0.95)
+    save("mecha_thruster", mecha_thruster(), 0.7)
+    save("mecha_laser", mecha_laser(), 0.7)
+    save("mecha_missile", mecha_missile(), 0.8)
+    save("mecha_land", mecha_land(), 0.95)
 
 
 if __name__ == "__main__":

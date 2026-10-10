@@ -227,5 +227,59 @@
         "name": "greenlantern:drill_grind"
       }
     ]
+  },
+  "mecha_summon": {
+    "subtitle": "subtitles.greenlantern.mecha_summon",
+    "sounds": [
+      {
+        "name": "greenlantern:mecha_summon",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "mecha_step": {
+    "subtitle": "subtitles.greenlantern.mecha_step",
+    "sounds": [
+      {
+        "name": "greenlantern:mecha_step",
+        "attenuation_distance": 40
+      }
+    ]
+  },
+  "mecha_thruster": {
+    "subtitle": "subtitles.greenlantern.mecha_thruster",
+    "sounds": [
+      {
+        "name": "greenlantern:mecha_thruster",
+        "attenuation_distance": 40
+      }
+    ]
+  },
+  "mecha_laser": {
+    "subtitle": "subtitles.greenlantern.mecha_laser",
+    "sounds": [
+      {
+        "name": "greenlantern:mecha_laser",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "mecha_missile": {
+    "subtitle": "subtitles.greenlantern.mecha_missile",
+    "sounds": [
+      {
+        "name": "greenlantern:mecha_missile",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "mecha_land": {
+    "subtitle": "subtitles.greenlantern.mecha_land",
+    "sounds": [
+      {
+        "name": "greenlantern:mecha_land",
+        "attenuation_distance": 64
+      }
+    ]
   }
 }

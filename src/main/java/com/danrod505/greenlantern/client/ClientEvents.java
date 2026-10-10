@@ -25,6 +25,7 @@ public final class ClientEvents {
             if (!RingHelper.findRing(player).isEmpty()) ModNetwork.sendToServer(new ToggleUniformPacket());
         }
         tickWheelKey(mc, player);
+        MechaControls.tick(mc);
 
         if (mc.isPaused()) return;
         // Green aura trail behind every flying Lantern in view.

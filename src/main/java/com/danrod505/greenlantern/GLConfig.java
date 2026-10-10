@@ -48,6 +48,21 @@ public final class GLConfig {
     public static final ForgeConfigSpec.IntValue HAMMER_COST;
     public static final ForgeConfigSpec.DoubleValue HAMMER_DAMAGE;
     public static final ForgeConfigSpec.DoubleValue HAMMER_RADIUS;
+    public static final ForgeConfigSpec.IntValue MECHA_COST;
+    public static final ForgeConfigSpec.IntValue MECHA_COST_PER_SECOND;
+    public static final ForgeConfigSpec.IntValue MECHA_FLIGHT_COST_PER_SECOND;
+    public static final ForgeConfigSpec.DoubleValue MECHA_DAMAGE_ENERGY_COST;
+    public static final ForgeConfigSpec.DoubleValue MECHA_WALK_SPEED;
+    public static final ForgeConfigSpec.DoubleValue MECHA_FLIGHT_SPEED;
+    public static final ForgeConfigSpec.IntValue MECHA_LASER_COST_PER_SECOND;
+    public static final ForgeConfigSpec.DoubleValue MECHA_LASER_DAMAGE;
+    public static final ForgeConfigSpec.DoubleValue MECHA_LASER_RANGE;
+    public static final ForgeConfigSpec.IntValue MECHA_MISSILE_COST;
+    public static final ForgeConfigSpec.IntValue MECHA_MISSILES_PER_SALVO;
+    public static final ForgeConfigSpec.DoubleValue MECHA_MISSILE_POWER;
+    public static final ForgeConfigSpec.BooleanValue MECHA_MISSILES_BREAK_BLOCKS;
+    public static final ForgeConfigSpec.DoubleValue MECHA_LANDING_DAMAGE;
+    public static final ForgeConfigSpec.BooleanValue MECHA_TRAMPLES_LEAVES;
 
     public static final ForgeConfigSpec SPEC;
 
@@ -99,6 +114,24 @@ public final class GLConfig {
         HAMMER_COST = BUILDER.comment("Energy cost of the hammer slam.").defineInRange("hammerCost", 120, 0, 100_000);
         HAMMER_DAMAGE = BUILDER.comment("Damage at the center of the hammer slam.").defineInRange("hammerDamage", 16.0, 0.0, 1000.0);
         HAMMER_RADIUS = BUILDER.comment("Radius of the hammer shockwave in blocks.").defineInRange("hammerRadius", 5.5, 1.0, 32.0);
+        BUILDER.pop();
+
+        BUILDER.comment("Giant mecha: a 10 block tall armored suit the ring bearer pilots from the cockpit in its chest.").push("mecha");
+        MECHA_COST = BUILDER.comment("Energy cost to summon the mecha.").defineInRange("mechaCost", 150, 0, 100_000);
+        MECHA_COST_PER_SECOND = BUILDER.comment("Energy drained per second while piloting the mecha.").defineInRange("mechaCostPerSecond", 8, 0, 100_000);
+        MECHA_FLIGHT_COST_PER_SECOND = BUILDER.comment("Extra energy drained per second while the mecha flies.").defineInRange("mechaFlightCostPerSecond", 8, 0, 100_000);
+        MECHA_DAMAGE_ENERGY_COST = BUILDER.comment("Energy drained per point of damage the mecha absorbs for its pilot (the pilot takes no damage).").defineInRange("mechaDamageEnergyCost", 2.0, 0.0, 1000.0);
+        MECHA_WALK_SPEED = BUILDER.comment("Top walking speed in blocks per tick (sprinting is 60% faster).").defineInRange("mechaWalkSpeed", 0.24, 0.05, 2.0);
+        MECHA_FLIGHT_SPEED = BUILDER.comment("Top flight speed in blocks per tick (the afterburner, on sprint, is 70% faster).").defineInRange("mechaFlightSpeed", 0.75, 0.1, 4.0);
+        MECHA_LASER_COST_PER_SECOND = BUILDER.comment("Energy drained per second while the laser fires.").defineInRange("mechaLaserCostPerSecond", 10, 0, 100_000);
+        MECHA_LASER_DAMAGE = BUILDER.comment("Laser damage, dealt 4 times per second (targets also catch fire).").defineInRange("mechaLaserDamage", 5.0, 0.0, 1000.0);
+        MECHA_LASER_RANGE = BUILDER.comment("Laser range in blocks.").defineInRange("mechaLaserRange", 64.0, 4.0, 256.0);
+        MECHA_MISSILE_COST = BUILDER.comment("Energy cost of a missile salvo.").defineInRange("mechaMissileCost", 30, 0, 100_000);
+        MECHA_MISSILES_PER_SALVO = BUILDER.comment("Homing missiles launched per salvo.").defineInRange("mechaMissilesPerSalvo", 6, 1, 32);
+        MECHA_MISSILE_POWER = BUILDER.comment("Explosion power of each missile (creeper = 3, TNT = 4).").defineInRange("mechaMissilePower", 2.0, 0.5, 8.0);
+        MECHA_MISSILES_BREAK_BLOCKS = BUILDER.comment("Whether missile explosions break blocks.").define("mechaMissilesBreakBlocks", false);
+        MECHA_LANDING_DAMAGE = BUILDER.comment("Damage of the shockwave when the mecha lands hard.").defineInRange("mechaLandingDamage", 12.0, 0.0, 1000.0);
+        MECHA_TRAMPLES_LEAVES = BUILDER.comment("Whether the mecha bursts through leaves in its way.").define("mechaTramplesLeaves", true);
         BUILDER.pop();
 
         SPEC = BUILDER.build();

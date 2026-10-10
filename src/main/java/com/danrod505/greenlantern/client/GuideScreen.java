@@ -59,6 +59,7 @@ public class GuideScreen extends Screen {
             new Chapter("flight", () -> new ItemStack(Items.FEATHER)),
             new Chapter("constructs", () -> new ItemStack(Items.EMERALD)),
             new Chapter("drill", () -> new ItemStack(Items.DIAMOND_PICKAXE)),
+            new Chapter("mecha", () -> new ItemStack(Items.NETHERITE_CHESTPLATE)),
             new Chapter("controls", () -> new ItemStack(Items.LEVER)),
             new Chapter(RECIPES, () -> new ItemStack(Items.CRAFTING_TABLE)),
             new Chapter("tips", () -> new ItemStack(Items.TORCH)));
