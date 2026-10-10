@@ -20,6 +20,7 @@ public final class ModCreativeTabs {
                 output.accept(PowerRingItem.charged(ModItems.POWER_RING.get().getDefaultInstance()));
                 output.accept(ModItems.POWER_RING.get());
                 output.accept(ModItems.POWER_BATTERY.get());
+                output.accept(ModItems.GUIDE_BOOK.get());
             })
             .build());
 

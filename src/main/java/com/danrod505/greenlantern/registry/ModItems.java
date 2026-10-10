@@ -1,6 +1,7 @@
 package com.danrod505.greenlantern.registry;
 
 import com.danrod505.greenlantern.GreenLantern;
+import com.danrod505.greenlantern.item.GuideBookItem;
 import com.danrod505.greenlantern.item.PowerRingItem;
 import com.danrod505.greenlantern.item.SuitArmorItem;
 import net.minecraft.core.component.DataComponents;
@@ -31,6 +32,11 @@ public final class ModItems {
             .stacksTo(1)
             .rarity(Rarity.EPIC)
             .fireResistant()));
+
+    public static final RegistryObject<GuideBookItem> GUIDE_BOOK = ITEMS.register("guide_book", () -> new GuideBookItem(new Item.Properties()
+            .setId(ITEMS.key("guide_book"))
+            .stacksTo(1)
+            .rarity(Rarity.UNCOMMON)));
 
     // The uniform pieces are summoned by the ring; they cannot be crafted and vanish when removed.
     public static final RegistryObject<SuitArmorItem> LANTERN_MASK = suit("lantern_mask", ArmorType.HELMET);
