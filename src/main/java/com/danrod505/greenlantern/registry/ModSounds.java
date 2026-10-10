@@ -119,6 +119,17 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> ATLANTEAN_DOLPHIN_LEAP = register("atlantean_dolphin_leap");
     public static final RegistryObject<SoundEvent> ATLANTEAN_MOUNT_SADDLE = register("atlantean_mount_saddle");
 
+    // ---- The Trench (all original, see tools/generate_trench_audio.py) ----------------------------
+    public static final RegistryObject<SoundEvent> TRENCH_IDLE = register("trench_idle");
+    public static final RegistryObject<SoundEvent> TRENCH_SCREECH = register("trench_screech");
+    public static final RegistryObject<SoundEvent> TRENCH_HURT = register("trench_hurt");
+    public static final RegistryObject<SoundEvent> TRENCH_DEATH = register("trench_death");
+    public static final RegistryObject<SoundEvent> TRENCH_BITE = register("trench_bite");
+    public static final RegistryObject<SoundEvent> TRENCH_AMBIENCE = register("trench_ambience");
+    public static final RegistryObject<SoundEvent> TRENCH_TERRITORY = register("trench_territory");
+    public static final RegistryObject<SoundEvent> TRENCH_RAID = register("trench_raid");
+    public static final RegistryObject<SoundEvent> COCOON_BURST = register("cocoon_burst");
+
     private static RegistryObject<SoundEvent> register(String name) {
         return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(GreenLantern.id(name)));
     }

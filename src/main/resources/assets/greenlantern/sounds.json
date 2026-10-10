@@ -864,5 +864,118 @@
         "attenuation_distance": 16
       }
     ]
+  },
+  "trench_idle": {
+    "subtitle": "subtitles.greenlantern.trench_idle",
+    "sounds": [
+      {
+        "name": "greenlantern:trench_idle1",
+        "attenuation_distance": 20
+      },
+      {
+        "name": "greenlantern:trench_idle2",
+        "attenuation_distance": 20
+      },
+      {
+        "name": "greenlantern:trench_idle3",
+        "attenuation_distance": 20
+      }
+    ]
+  },
+  "trench_screech": {
+    "subtitle": "subtitles.greenlantern.trench_screech",
+    "sounds": [
+      {
+        "name": "greenlantern:trench_screech1",
+        "attenuation_distance": 40
+      },
+      {
+        "name": "greenlantern:trench_screech2",
+        "attenuation_distance": 40
+      }
+    ]
+  },
+  "trench_hurt": {
+    "subtitle": "subtitles.greenlantern.trench_hurt",
+    "sounds": [
+      {
+        "name": "greenlantern:trench_hurt1",
+        "attenuation_distance": 20
+      },
+      {
+        "name": "greenlantern:trench_hurt2",
+        "attenuation_distance": 20
+      }
+    ]
+  },
+  "trench_death": {
+    "subtitle": "subtitles.greenlantern.trench_death",
+    "sounds": [
+      {
+        "name": "greenlantern:trench_death",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "trench_bite": {
+    "subtitle": "subtitles.greenlantern.trench_bite",
+    "sounds": [
+      {
+        "name": "greenlantern:trench_bite1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "greenlantern:trench_bite2",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "trench_ambience": {
+    "subtitle": "subtitles.greenlantern.trench_ambience",
+    "sounds": [
+      {
+        "name": "greenlantern:trench_ambience1",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "greenlantern:trench_ambience2",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "greenlantern:trench_ambience3",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "greenlantern:trench_ambience4",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "trench_territory": {
+    "subtitle": "subtitles.greenlantern.trench_territory",
+    "sounds": [
+      {
+        "name": "greenlantern:trench_territory",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "trench_raid": {
+    "subtitle": "subtitles.greenlantern.trench_raid",
+    "sounds": [
+      {
+        "name": "greenlantern:trench_raid",
+        "attenuation_distance": 160
+      }
+    ]
+  },
+  "cocoon_burst": {
+    "subtitle": "subtitles.greenlantern.cocoon_burst",
+    "sounds": [
+      {
+        "name": "greenlantern:cocoon_burst",
+        "attenuation_distance": 20
+      }
+    ]
   }
 }

@@ -58,6 +58,8 @@ public final class GreenLantern {
             event.put(ModEntities.MANTA_RAY.get(), com.danrod505.greenlantern.entity.AtlanteanMountEntity.createAttributes(60.0).build());
             event.put(ModEntities.GIANT_SEAHORSE.get(), com.danrod505.greenlantern.entity.AtlanteanMountEntity.createAttributes(36.0).build());
             event.put(ModEntities.ATLANTEAN_DOLPHIN.get(), com.danrod505.greenlantern.entity.AtlanteanMountEntity.createAttributes(30.0).build());
+            event.put(ModEntities.TRENCH_CREATURE.get(), com.danrod505.greenlantern.entity.TrenchCreatureEntity.createAttributes().build());
+            event.put(ModEntities.TRENCH_COCOON.get(), com.danrod505.greenlantern.entity.TrenchCocoonEntity.createAttributes().build());
         });
 
         registerGameTests(modBus);

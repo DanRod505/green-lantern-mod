@@ -128,6 +128,8 @@ public final class ClientSetup {
         event.registerEntityRenderer(ModEntities.MANTA_RAY.get(), com.danrod505.greenlantern.client.render.aqua.MantaRayRenderer::new);
         event.registerEntityRenderer(ModEntities.GIANT_SEAHORSE.get(), com.danrod505.greenlantern.client.render.aqua.SeahorseRenderer::new);
         event.registerEntityRenderer(ModEntities.ATLANTEAN_DOLPHIN.get(), com.danrod505.greenlantern.client.render.aqua.AtlanteanDolphinRenderer::new);
+        event.registerEntityRenderer(ModEntities.TRENCH_CREATURE.get(), com.danrod505.greenlantern.client.render.trench.TrenchCreatureRenderer::new);
+        event.registerEntityRenderer(ModEntities.TRENCH_COCOON.get(), com.danrod505.greenlantern.client.render.trench.TrenchCocoonRenderer::new);
         event.registerEntityRenderer(ModEntities.BATARANG.get(), com.danrod505.greenlantern.client.render.batman.BatarangRenderer::new);
         event.registerEntityRenderer(ModEntities.GRAPPLE_HOOK.get(), com.danrod505.greenlantern.client.render.batman.GrappleHookRenderer::new);
         event.registerEntityRenderer(ModEntities.BAT_DEFENDER.get(), com.danrod505.greenlantern.client.render.batman.BatDefenderRenderer::new);
@@ -154,6 +156,8 @@ public final class ClientSetup {
         event.registerLayerDefinition(com.danrod505.greenlantern.client.render.aqua.MantaRayModel.LAYER, com.danrod505.greenlantern.client.render.aqua.MantaRayModel::createLayer);
         event.registerLayerDefinition(com.danrod505.greenlantern.client.render.aqua.SeahorseModel.LAYER, com.danrod505.greenlantern.client.render.aqua.SeahorseModel::createLayer);
         event.registerLayerDefinition(com.danrod505.greenlantern.client.render.aqua.AtlanteanDolphinModel.LAYER, com.danrod505.greenlantern.client.render.aqua.AtlanteanDolphinModel::createLayer);
+        event.registerLayerDefinition(com.danrod505.greenlantern.client.render.trench.TrenchCreatureModel.LAYER, com.danrod505.greenlantern.client.render.trench.TrenchCreatureModel::createLayer);
+        event.registerLayerDefinition(com.danrod505.greenlantern.client.render.trench.TrenchCocoonModel.LAYER, com.danrod505.greenlantern.client.render.trench.TrenchCocoonModel::createLayer);
     }
 
     private static void onAddLayers(EntityRenderersEvent.AddLayers event) {

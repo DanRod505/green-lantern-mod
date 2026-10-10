@@ -32,6 +32,8 @@ public final class CommonEvents {
     public static void register() {
         TickEvent.PlayerTickEvent.Post.BUS.addListener(CommonEvents::onPlayerTick);
         TickEvent.ServerTickEvent.Post.BUS.addListener(event -> com.danrod505.greenlantern.atlantis.AtlantisBuilder.tick(event.server()));
+        TickEvent.ServerTickEvent.Post.BUS.addListener(event -> com.danrod505.greenlantern.trench.TrenchBuilder.tick(event.server()));
+        net.minecraftforge.event.server.ServerStoppedEvent.BUS.addListener(event -> com.danrod505.greenlantern.trench.TrenchBuilder.onServerStopped(event.getServer()));
         net.minecraftforge.event.server.ServerStoppedEvent.BUS.addListener(event -> com.danrod505.greenlantern.atlantis.AtlantisBuilder.onServerStopped(event.getServer()));
         LivingAttackEvent.BUS.addListener(CommonEvents::onLivingAttack);
         LivingHurtEvent.BUS.addListener(CommonEvents::onLivingHurt);

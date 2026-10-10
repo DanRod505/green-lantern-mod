@@ -106,6 +106,15 @@ public final class ModItems {
                 .rarity(Rarity.UNCOMMON)));
     }
 
+    // Eggs of the Trench (creative mode, or for building your own nest of horrors).
+    public static final RegistryObject<com.danrod505.greenlantern.item.TrenchEggItem> TRENCH_CREATURE_EGG = trenchEgg("trench_creature_spawn_egg", false);
+    public static final RegistryObject<com.danrod505.greenlantern.item.TrenchEggItem> TRENCH_BRUTE_EGG = trenchEgg("trench_brute_spawn_egg", true);
+
+    private static RegistryObject<com.danrod505.greenlantern.item.TrenchEggItem> trenchEgg(String name, boolean brute) {
+        return ITEMS.register(name, () -> new com.danrod505.greenlantern.item.TrenchEggItem(brute, new Item.Properties()
+                .setId(ITEMS.key(name))));
+    }
+
     // ---- Batman ---------------------------------------------------------------------------------
 
     /** The Utility Belt: the batsuit is folded inside it, and its power cells run the gadgets. */

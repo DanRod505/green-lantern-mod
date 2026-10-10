@@ -122,6 +122,11 @@ public final class GLConfig {
 
     // Atlantis
     public static final ForgeConfigSpec.BooleanValue ATLANTIS_ENABLED;
+    public static final ForgeConfigSpec.BooleanValue TRENCH_ENABLED;
+    public static final ForgeConfigSpec.BooleanValue TRENCH_RAIDS;
+    public static final ForgeConfigSpec.IntValue TRENCH_RAID_INTERVAL_MINUTES;
+    public static final ForgeConfigSpec.DoubleValue TRENCH_RAID_CHANCE;
+    public static final ForgeConfigSpec.IntValue TRENCH_NEST_POPULATION;
     public static final ForgeConfigSpec.IntValue ATLANTIS_GATE_COOLDOWN;
     public static final ForgeConfigSpec.IntValue RESPIRATOR_SECONDS;
     public static final ForgeConfigSpec.IntValue RESPIRATOR_RECHARGE_SECONDS;
@@ -287,6 +292,14 @@ public final class GLConfig {
         ATLANTIS_GATE_COOLDOWN = BUILDER.comment("Seconds before the Atlantean Gate can open another portal.").defineInRange("gateCooldownSeconds", 10, 0, 3600);
         RESPIRATOR_SECONDS = BUILDER.comment("Seconds of air stored in the Atlantean Respirator.").defineInRange("respiratorSeconds", 480, 10, 100_000);
         RESPIRATOR_RECHARGE_SECONDS = BUILDER.comment("Seconds out of the water for an empty respirator to fill up again.").defineInRange("respiratorRechargeSeconds", 24, 1, 100_000);
+        BUILDER.pop();
+
+        BUILDER.comment("The Trench: hostile creatures of the deep living in nests around Atlantis, their dark territory, captives and raids.").push("trench");
+        TRENCH_ENABLED = BUILDER.comment("Whether the nests of the Trench are dug around Atlantis (needs Atlantis).").define("enabled", true);
+        TRENCH_RAIDS = BUILDER.comment("Whether the Trench raids Atlantis now and then while a player is there.").define("raids", true);
+        TRENCH_RAID_INTERVAL_MINUTES = BUILDER.comment("Average minutes between chances of a raid on Atlantis.").defineInRange("raidIntervalMinutes", 20, 1, 100_000);
+        TRENCH_RAID_CHANCE = BUILDER.comment("Chance (0-1) that a raid happens when its time comes and someone is in Atlantis.").defineInRange("raidChance", 0.5, 0.0, 1.0);
+        TRENCH_NEST_POPULATION = BUILDER.comment("Creatures living in each nest (one of them a brute); the dead are slowly replaced.").defineInRange("nestPopulation", 9, 1, 40);
         BUILDER.pop();
 
         BUILDER.comment("Batman: the Utility Belt, gliding with the cape, the batarang, the grapnel gun, the swarm of bats and the Batmobile.").push("batman");
