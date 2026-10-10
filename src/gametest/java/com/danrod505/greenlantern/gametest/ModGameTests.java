@@ -1575,18 +1575,26 @@ public final class ModGameTests {
     }
 
     public static void wonderWomanLassoCapture(GameTestHelper helper) {
-        ServerPlayer player = player(helper, 7.5, 1, 2.5, 0, 11.0F);
+        ServerPlayer player = player(helper, 7.5, 1, 3.5, 0, 0);
         ItemStack tiara = giveTiara(player, 1000);
         WonderWomanSuit.summon(player);
         AmazonPower.select(tiara, AmazonPower.LASSO_CAPTURE);
         net.minecraft.world.entity.animal.pig.Pig pig = dummyPig(helper, 7.5, 1, 7.5);
+        // The loop leaves from her right hand, a little below the eyes: aim it at the middle of the pig.
+        Vec3 eye = player.getEyePosition();
+        Vec3 to = pig.getBoundingBox().getCenter().subtract(eye.add(0, -0.3, 0));
+        float pitch = (float) -Math.toDegrees(Math.atan2(to.y, to.horizontalDistance()));
+        player.setXRot(pitch);
+        player.xRotO = pitch;
         use(player);
         helper.assertTrue(LassoEntity.find(player) != null, "the lasso should be thrown");
         helper.assertTrue(DivinePower.get(tiara).stored() < 1000, "the lasso should cost divine power");
         helper.startSequence()
                 .thenExecuteFor(15, player::doTick)
                 .thenExecute(() -> {
-                    helper.assertTrue(LassoEntity.isBound(pig), "the lasso should catch the pig");
+                    LassoEntity lasso = LassoEntity.find(player);
+                    helper.assertTrue(LassoEntity.isBound(pig), "the lasso should catch the pig (lasso "
+                            + (lasso == null ? "gone" : "state " + lasso.state() + " at " + lasso.position()) + ", pig at " + pig.position() + ", her at " + player.position() + ")");
                     double before = pig.distanceTo(player);
                     helper.assertTrue(WonderWomanServer.usePower(player, tiara, AmazonPower.LASSO_PULL), "pulling a bound creature should work");
                     helper.assertTrue(pig.getDeltaMovement().z < 0, "the pull should yank the pig toward her, distance " + before);
