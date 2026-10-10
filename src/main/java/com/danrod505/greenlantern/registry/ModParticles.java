@@ -40,5 +40,10 @@ public final class ModParticles {
     /** Big white ring on the ground: the super punch and Superman's landing. */
     public static final RegistryObject<SimpleParticleType> SUPER_SHOCKWAVE = PARTICLES.register("super_shockwave", () -> new SimpleParticleType(true));
 
+    /** Golden spark of the Amazons (the bracelets, the lasso, the armor). */
+    public static final RegistryObject<SimpleParticleType> AMAZON_SPARK = PARTICLES.register("amazon_spark", () -> new SimpleParticleType(true));
+    /** Big golden ring on the ground: the bracelets' shockwave and Wonder Woman's landing. */
+    public static final RegistryObject<SimpleParticleType> AMAZON_SHOCKWAVE = PARTICLES.register("amazon_shockwave", () -> new SimpleParticleType(true));
+
     private ModParticles() {}
 }

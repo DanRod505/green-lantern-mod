@@ -86,6 +86,7 @@ public final class ServerFlightTracker {
     public static void onAction(ServerPlayer player, FlightAction action) {
         if (!FlightProfile.canPowerFly(player)) return;
         boolean superman = FlightProfile.isSuperman(player);
+        boolean amazon = FlightProfile.isWonderWoman(player);
         ServerLevel level = player.level();
         State state = get(player);
         long now = level.getGameTime();
@@ -95,8 +96,8 @@ public final class ServerFlightTracker {
         switch (action) {
             case TAKEOFF -> {
                 playOthers(player, ModSounds.FLIGHT_TAKEOFF.get(), 1.0F, superman ? 0.8F : 1.0F);
-                level.sendParticles(superman ? ModParticles.SUPER_SHOCKWAVE.get() : ModParticles.SHOCKWAVE.get(), pos.x, pos.y + 0.1, pos.z, 1, 0, 0, 0, 0);
-                level.sendParticles(superman ? ModParticles.SOLAR_GLOW.get() : ModParticles.GLOW.get(), pos.x, pos.y + 0.2, pos.z, 30, 0.6, 0.1, 0.6, 0.08);
+                level.sendParticles(amazon ? ModParticles.AMAZON_SHOCKWAVE.get() : superman ? ModParticles.SUPER_SHOCKWAVE.get() : ModParticles.SHOCKWAVE.get(), pos.x, pos.y + 0.1, pos.z, 1, 0, 0, 0, 0);
+                level.sendParticles(amazon ? ModParticles.AMAZON_SPARK.get() : superman ? ModParticles.SOLAR_GLOW.get() : ModParticles.GLOW.get(), pos.x, pos.y + 0.2, pos.z, 30, 0.6, 0.1, 0.6, 0.08);
                 dust(level, pos, superman ? 2.6 : 1.8, superman ? 26 : 16);
             }
             case SONIC_BOOM -> {
@@ -114,13 +115,13 @@ public final class ServerFlightTracker {
                 }
                 GreenLantern.LOGGER.debug("Hero landing of {} at speed {}", player.getName().getString(), recent);
                 FlightProfile profile = FlightProfile.of(player);
-                heroLanding(player, level, Mth.clamp(recent / (float) profile.max(), 0.3F, 1.0F), (float) profile.landingPower(), superman);
+                heroLanding(player, level, Mth.clamp(recent / (float) profile.max(), 0.3F, 1.0F), (float) profile.landingPower(), superman, amazon);
             }
         }
         ModNetwork.sendToTracking(player, new FlightSyncPacket(player.getId(), state.speed, (byte) state.flags, action.ordinal()));
     }
 
-    private static void heroLanding(ServerPlayer player, ServerLevel level, float power, float multiplier, boolean superman) {
+    private static void heroLanding(ServerPlayer player, ServerLevel level, float power, float multiplier, boolean superman, boolean amazon) {
         Vec3 center = player.position();
         double radius = GLConfig.HERO_LANDING_RADIUS.get() * (0.6 + 0.4 * power) * Math.max(1.0F, (float) Math.sqrt(multiplier));
         float damage = GLConfig.HERO_LANDING_DAMAGE.get().floatValue() * (0.5F + 0.5F * power) * multiplier;
@@ -129,15 +130,15 @@ public final class ServerFlightTracker {
             double dist = Math.sqrt(target.distanceToSqr(center.x, target.getY(), center.z));
             if (dist > radius) continue;
             float falloff = (float) (1.0 - 0.6 * dist / radius);
-            target.hurtServer(level, superman ? ModDamageTypes.superPunch(level, player) : ModDamageTypes.hardLight(level, player, player), damage * falloff);
+            target.hurtServer(level, amazon ? ModDamageTypes.amazon(level, player, player) : superman ? ModDamageTypes.superPunch(level, player) : ModDamageTypes.hardLight(level, player, player), damage * falloff);
             Vec3 away = new Vec3(target.getX() - center.x, 0, target.getZ() - center.z);
             away = away.lengthSqr() < 1.0E-4 ? Vec3.ZERO : away.normalize().scale(1.1 * falloff);
             target.push(away.x, 0.45 * falloff + 0.15, away.z);
             target.hurtMarked = true;
         }
         playOthers(player, ModSounds.HERO_LANDING.get(), 1.6F, 1.0F);
-        level.sendParticles(superman ? ModParticles.SUPER_SHOCKWAVE.get() : ModParticles.SHOCKWAVE.get(), center.x, center.y + 0.1, center.z, 1, 0, 0, 0, 0);
-        level.sendParticles(superman ? ModParticles.SOLAR_GLOW.get() : ModParticles.SPARK.get(), center.x, center.y + 0.3, center.z, 50, radius * 0.3, 0.2, radius * 0.3, 0.3);
+        level.sendParticles(amazon ? ModParticles.AMAZON_SHOCKWAVE.get() : superman ? ModParticles.SUPER_SHOCKWAVE.get() : ModParticles.SHOCKWAVE.get(), center.x, center.y + 0.1, center.z, 1, 0, 0, 0, 0);
+        level.sendParticles(amazon ? ModParticles.AMAZON_SPARK.get() : superman ? ModParticles.SOLAR_GLOW.get() : ModParticles.SPARK.get(), center.x, center.y + 0.3, center.z, 50, radius * 0.3, 0.2, radius * 0.3, 0.3);
         level.sendParticles(ParticleTypes.EXPLOSION, center.x, center.y + 0.3, center.z, 1, 0, 0, 0, 0);
         dust(level, center, radius, 36);
     }

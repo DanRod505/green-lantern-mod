@@ -61,6 +61,7 @@ public final class FlightController {
     /** The flight of the hero flying right now (Lantern or Superman), refreshed every tick. */
     private static FlightProfile profile;
     private static boolean superman;
+    private static boolean amazon;
 
     private FlightController() {}
 
@@ -87,6 +88,11 @@ public final class FlightController {
     /** Whether the local flyer is Superman (his own trail, colours and theme). */
     public static boolean isSuperman() {
         return superman;
+    }
+
+    /** Whether the local flyer is Wonder Woman (golden trail, red and gold colours, her own theme). */
+    public static boolean isWonderWoman() {
+        return amazon;
     }
 
     private static FlightProfile profile() {
@@ -138,6 +144,7 @@ public final class FlightController {
         Abilities abilities = player.getAbilities();
         boolean flying = abilities.flying && FlightProfile.canPowerFly(player) && !player.isPassenger() && !player.isSpectator();
         superman = FlightProfile.isSuperman(player);
+        amazon = FlightProfile.isWonderWoman(player);
         profile = FlightProfile.of(player);
         if (!flying) {
             if (power) endPower(player);
@@ -200,10 +207,10 @@ public final class FlightController {
         Vec3 dir = velocity.lengthSqr() > 0.0025 ? velocity.normalize() : look;
         double fraction = speed / max;
         // Superman turns on a dime even at top speed.
-        double turn = Mth.lerp(fraction, 0.45, superman ? 0.2 : 0.13);
+        double turn = Mth.lerp(fraction, 0.45, superman ? 0.2 : amazon ? 0.16 : 0.13);
         Vec3 newDir = dir.lerp(look, turn).normalize();
         Vec3 v = newDir.scale(speed);
-        double lift = superman ? 0.35 : 0.2;
+        double lift = superman ? 0.35 : amazon ? 0.25 : 0.2;
         if (input.jump()) v = v.add(0, lift, 0);
         if (input.shift()) v = v.add(0, -lift, 0);
 
@@ -288,8 +295,9 @@ public final class FlightController {
     public static void spawnSonicRings(net.minecraft.world.entity.player.Player player, Vec3 dir) {
         var level = player.level();
         boolean kryptonian = FlightProfile.isSuperman(player);
-        var ring = kryptonian ? ModParticles.SUPER_RING.get() : ModParticles.SONIC_RING.get();
-        var glow = kryptonian ? ModParticles.SOLAR_GLOW.get() : ModParticles.GLOW.get();
+        boolean amazonian = FlightProfile.isWonderWoman(player);
+        var ring = kryptonian || amazonian ? ModParticles.SUPER_RING.get() : ModParticles.SONIC_RING.get();
+        var glow = amazonian ? ModParticles.AMAZON_SPARK.get() : kryptonian ? ModParticles.SOLAR_GLOW.get() : ModParticles.GLOW.get();
         Vec3 c = player.position().add(0, player.getBbHeight() * 0.5, 0);
         for (int i = 0; i < 4; i++) {
             Vec3 p = c.subtract(dir.scale(0.8 + i * 1.6));
@@ -333,17 +341,18 @@ public final class FlightController {
         var level = player.level();
         var random = player.getRandom();
         boolean kryptonian = FlightProfile.isSuperman(player);
-        level.addParticle(kryptonian ? ModParticles.SUPER_SHOCKWAVE.get() : ModParticles.SHOCKWAVE.get(), player.getX(), player.getY() + 0.1, player.getZ(), 0, 0, 0);
+        boolean amazonian = FlightProfile.isWonderWoman(player);
+        level.addParticle(amazonian ? ModParticles.AMAZON_SHOCKWAVE.get() : kryptonian ? ModParticles.SUPER_SHOCKWAVE.get() : ModParticles.SHOCKWAVE.get(), player.getX(), player.getY() + 0.1, player.getZ(), 0, 0, 0);
         level.addParticle(kryptonian ? ModParticles.SUPER_RING.get() : ModParticles.SONIC_RING.get(), player.getX(), player.getY() + 0.15, player.getZ(), 0, 1, 0);
         for (int i = 0; i < 40; i++) {
             double a = random.nextDouble() * Math.PI * 2;
             double r = 0.3 + random.nextDouble() * 0.6;
-            level.addParticle(kryptonian ? ModParticles.SOLAR_GLOW.get() : ModParticles.SPARK.get(), player.getX() + Math.cos(a) * r, player.getY() + 0.2, player.getZ() + Math.sin(a) * r,
+            level.addParticle(amazonian ? ModParticles.AMAZON_SPARK.get() : kryptonian ? ModParticles.SOLAR_GLOW.get() : ModParticles.SPARK.get(), player.getX() + Math.cos(a) * r, player.getY() + 0.2, player.getZ() + Math.sin(a) * r,
                     Math.cos(a) * 0.6, 0.1 + random.nextDouble() * 0.3, Math.sin(a) * 0.6);
         }
         for (int i = 0; i < 16; i++) {
             double a = random.nextDouble() * Math.PI * 2;
-            level.addParticle(kryptonian ? ParticleTypes.CLOUD : ModParticles.GLOW.get(), player.getX() + Math.cos(a), player.getY() + 0.3, player.getZ() + Math.sin(a),
+            level.addParticle(kryptonian || amazonian ? ParticleTypes.CLOUD : ModParticles.GLOW.get(), player.getX() + Math.cos(a), player.getY() + 0.3, player.getZ() + Math.sin(a),
                     Math.cos(a) * 0.25, 0.05, Math.sin(a) * 0.25);
         }
     }

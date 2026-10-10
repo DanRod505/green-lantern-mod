@@ -38,6 +38,8 @@ public final class WheelTextures {
                 0x2A2A30, 0x55555E, 0xF2D03A, 0xFFF4B0, 0xF2D03A);
         public static final Theme SUPERMAN = new Theme("super_wheel", 0x06102A, 0x020614, 0xF2C21A, 0xB01820, 0x050C22, 0x0E1E4A,
                 0x1E4AB8, 0x2E6BFF, 0xFFD84A, 0xFFF4C0, 0xE8303A);
+        public static final Theme WONDER_WOMAN = new Theme("amazon_wheel", 0x1A0408, 0x0A0204, 0xF2B71C, 0x9A1020, 0x14040A, 0x2E0A12,
+                0x7A0E1C, 0xC8102E, 0xFFD24A, 0xFFF4C8, 0x2E5BD8);
 
         public Identifier base() {
             return GreenLantern.id("dynamic/" + name + "_base");

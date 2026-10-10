@@ -36,7 +36,8 @@ import org.lwjgl.glfw.GLFW;
 /**
  * A hero's power wheel (same controls as the Lantern's construct wheel, in the hero's colours: Speed
  * Force red and gold for the Flash, sea teal and gold for Aquaman, night black and
- * utility-belt yellow for Batman, Kryptonian blue, red and gold for Superman): hold the wheel key, point at a
+ * utility-belt yellow for Batman, Kryptonian blue, red and gold for Superman, Amazon crimson, gold and
+ * blue for Wonder Woman): hold the wheel key, point at a
  * power and release the key (or click) to select it.
  */
 public class PowerWheelScreen extends Screen {
@@ -49,6 +50,8 @@ public class PowerWheelScreen extends Screen {
     public static final int BAT_ICONS_W = 80;
     public static final Identifier SUPER_ICONS = GreenLantern.id("textures/gui/superman_powers.png");
     public static final int SUPER_ICONS_W = 80;
+    public static final Identifier AMAZON_ICONS = GreenLantern.id("textures/gui/wonder_woman_powers.png");
+    public static final int AMAZON_ICONS_W = 144;
 
     /** Everything that differs between the heroes' wheels. */
     private record Powers(WheelTextures.Theme theme, Identifier icons, int iconsW, Function<Player, ItemStack> item,
@@ -79,6 +82,14 @@ public class PowerWheelScreen extends Screen {
                 i -> com.danrod505.greenlantern.superman.SuperPower.byIndex(i).cost(),
                 "wheel.greenlantern.solar_cost", "tooltip.greenlantern.solar_energy", 0x66020A24, 0xFFD84A, 0xFFE8A0, 0xE6ECFF,
                 0xA8B4D8, 0xFFD84A, 0xA8B4D0);
+        static final Powers WONDER_WOMAN = new Powers(WheelTextures.Theme.WONDER_WOMAN, AMAZON_ICONS, AMAZON_ICONS_W,
+                com.danrod505.greenlantern.wonderwoman.WonderWomanHelper::findTiara, com.danrod505.greenlantern.wonderwoman.DivinePower::get,
+                tiara -> com.danrod505.greenlantern.wonderwoman.AmazonPower.selected(tiara).ordinal(), com.danrod505.greenlantern.wonderwoman.AmazonPower.count(),
+                i -> com.danrod505.greenlantern.wonderwoman.AmazonPower.byIndex(i).displayName(),
+                i -> com.danrod505.greenlantern.wonderwoman.AmazonPower.byIndex(i).description(),
+                i -> com.danrod505.greenlantern.wonderwoman.AmazonPower.byIndex(i).cost(),
+                "wheel.greenlantern.divine_cost", "tooltip.greenlantern.divine_power", 0x661A0408, 0xFFD24A, 0xFFE6A0, 0xFFE8E0,
+                0xD8B0A8, 0xFFD24A, 0xD0B0A8);
     }
 
     private final Powers powers;
@@ -99,6 +110,7 @@ public class PowerWheelScreen extends Screen {
             case AQUAMAN -> Powers.AQUAMAN;
             case BATMAN -> Powers.BATMAN;
             case SUPERMAN -> Powers.SUPERMAN;
+            case WONDER_WOMAN -> Powers.WONDER_WOMAN;
             default -> Powers.FLASH;
         };
         this.count = powers.count();

@@ -14,7 +14,7 @@ import net.minecraft.util.RandomSource;
  * motes of sunlight and the icy puffs of super breath. All of them are fully bright.
  */
 public class SuperParticle extends SingleQuadParticle {
-    private enum Kind { HEAT, SOLAR, FROST }
+    private enum Kind { HEAT, SOLAR, FROST, AMAZON }
 
     private final SpriteSet sprites;
     private final Kind kind;
@@ -52,6 +52,18 @@ public class SuperParticle extends SingleQuadParticle {
                 this.hasPhysics = true;
                 setColor(0.82F + 0.15F * tint, 0.92F + 0.08F * tint, 1.0F);
             }
+            case AMAZON -> {
+                // Wonder Woman: sparks of golden divine light, a few of them crimson.
+                this.friction = 0.88F;
+                this.gravity = 0.01F;
+                this.lifetime = 10 + random.nextInt(12);
+                this.baseSize = 0.06F + random.nextFloat() * 0.08F;
+                if (random.nextFloat() < 0.2F) {
+                    setColor(1.0F, 0.25F + 0.2F * tint, 0.25F);
+                } else {
+                    setColor(1.0F, 0.78F + 0.18F * tint, 0.3F + 0.35F * tint);
+                }
+            }
             default -> throw new IllegalStateException();
         }
         this.quadSize = baseSize;
@@ -70,6 +82,10 @@ public class SuperParticle extends SingleQuadParticle {
             }
             case SOLAR -> {
                 quadSize = baseSize * (0.7F + 0.6F * Mth.sin(life * Mth.PI));
+                alpha = 1.0F - life * life;
+            }
+            case AMAZON -> {
+                quadSize = baseSize * (1.0F - 0.6F * life);
                 alpha = 1.0F - life * life;
             }
             case FROST -> {
@@ -126,6 +142,19 @@ public class SuperParticle extends SingleQuadParticle {
         @Override
         public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xd, double yd, double zd, RandomSource random) {
             return new SuperParticle(level, x, y, z, xd, yd, zd, sprites, Kind.FROST);
+        }
+    }
+
+    public static class AmazonProvider implements ParticleProvider<SimpleParticleType> {
+        private final SpriteSet sprites;
+
+        public AmazonProvider(SpriteSet sprites) {
+            this.sprites = sprites;
+        }
+
+        @Override
+        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xd, double yd, double zd, RandomSource random) {
+            return new SuperParticle(level, x, y, z, xd, yd, zd, sprites, Kind.AMAZON);
         }
     }
 }

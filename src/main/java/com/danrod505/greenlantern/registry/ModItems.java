@@ -153,6 +153,35 @@ public final class ModItems {
         return ITEMS.register(name, () -> new SuitArmorItem(type, SuitArmorItem.properties(SuitArmorItem.SUPERMAN_MATERIAL, type).setId(ITEMS.key(name))));
     }
 
+    // ---- Wonder Woman ---------------------------------------------------------------------------
+
+    /** The Tiara of Themyscira: Wonder Woman's armor is kept in it, and it holds the divine power of her gifts. */
+    public static final RegistryObject<com.danrod505.greenlantern.item.AmazonTiaraItem> AMAZON_TIARA = ITEMS.register("amazon_tiara",
+            () -> new com.danrod505.greenlantern.item.AmazonTiaraItem(new Item.Properties()
+                    .setId(ITEMS.key("amazon_tiara"))
+                    .stacksTo(1)
+                    .rarity(Rarity.EPIC)
+                    .fireResistant()));
+
+    /** The Amazon sword, called by the tiara (never crafted). */
+    public static final RegistryObject<com.danrod505.greenlantern.item.AmazonSwordItem> AMAZON_SWORD = ITEMS.register("amazon_sword",
+            () -> new com.danrod505.greenlantern.item.AmazonSwordItem(com.danrod505.greenlantern.item.AmazonSwordItem.properties()
+                    .setId(ITEMS.key("amazon_sword"))));
+
+    /** The Amazon shield, called by the tiara (never crafted): it blocks, and it can be thrown. */
+    public static final RegistryObject<com.danrod505.greenlantern.item.AmazonShieldItem> AMAZON_SHIELD = ITEMS.register("amazon_shield",
+            () -> new com.danrod505.greenlantern.item.AmazonShieldItem(com.danrod505.greenlantern.item.AmazonShieldItem.properties()
+                    .setId(ITEMS.key("amazon_shield"))));
+
+    public static final RegistryObject<SuitArmorItem> WONDER_WOMAN_HAIR = wonderWomanSuit("wonder_woman_hair", ArmorType.HELMET);
+    public static final RegistryObject<SuitArmorItem> WONDER_WOMAN_SUIT = wonderWomanSuit("wonder_woman_suit", ArmorType.CHESTPLATE);
+    public static final RegistryObject<SuitArmorItem> WONDER_WOMAN_LEGGINGS = wonderWomanSuit("wonder_woman_leggings", ArmorType.LEGGINGS);
+    public static final RegistryObject<SuitArmorItem> WONDER_WOMAN_BOOTS = wonderWomanSuit("wonder_woman_boots", ArmorType.BOOTS);
+
+    private static RegistryObject<SuitArmorItem> wonderWomanSuit(String name, ArmorType type) {
+        return ITEMS.register(name, () -> new SuitArmorItem(type, SuitArmorItem.properties(SuitArmorItem.WONDER_WOMAN_MATERIAL, type).setId(ITEMS.key(name))));
+    }
+
     private static RegistryObject<SuitArmorItem> aquamanSuit(String name, ArmorType type) {
         return ITEMS.register(name, () -> new SuitArmorItem(type, SuitArmorItem.properties(SuitArmorItem.AQUAMAN_MATERIAL, type).setId(ITEMS.key(name))));
     }

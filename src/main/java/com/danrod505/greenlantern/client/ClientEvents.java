@@ -90,7 +90,8 @@ public final class ClientEvents {
         if (player == null || mc.screen != null || !player.isShiftKeyDown()) return false;
         boolean powers = !FlashHelper.heldRing(player).isEmpty() || !AquamanHelper.heldEmblem(player).isEmpty()
                 || !BatmanHelper.heldBelt(player).isEmpty()
-                || !com.danrod505.greenlantern.superman.SupermanHelper.heldCrystal(player).isEmpty();
+                || !com.danrod505.greenlantern.superman.SupermanHelper.heldCrystal(player).isEmpty()
+                || !com.danrod505.greenlantern.wonderwoman.WonderWomanHelper.heldTiara(player).isEmpty();
         if (!powers && RingHelper.heldRing(player).isEmpty()) return false;
         double delta = event.getDeltaY();
         if (delta == 0) return false;

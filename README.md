@@ -3,7 +3,21 @@
 > *"No dia mais claro, na noite mais densa, o mal sucumbirá ante a minha presença!"*
 
 Mod de heróis do **Universo DC** para **Minecraft Java 1.21.11** com **Forge 61.2.0** (compilado com **Java 25**).
-Começou como o mod do Lanterna Verde e agora traz também **o Flash** (v1.7.0) **o Aquaman** (v1.8.0), **Atlântida** (v1.9.0) **o Kraken do Aquaman** (v1.10.0), **o Batman** (v1.11.0), **as criaturas de Atlântida** (v1.12.0) **o Fosso**, os inimigos do Aquaman (v1.13.0), e **o Superman** (v1.14.0). O id do mod continua `greenlantern`, então mundos e configurações antigas continuam funcionando.
+Começou como o mod do Lanterna Verde e agora traz também **o Flash** (v1.7.0) **o Aquaman** (v1.8.0), **Atlântida** (v1.9.0) **o Kraken do Aquaman** (v1.10.0), **o Batman** (v1.11.0), **as criaturas de Atlântida** (v1.12.0) **o Fosso**, os inimigos do Aquaman (v1.13.0), **o Superman** (v1.14.0) e **a Mulher Maravilha** (v1.15.0). O id do mod continua `greenlantern`, então mundos e configurações antigas continuam funcionando.
+
+## A Mulher Maravilha (novo na 1.15.0)
+
+* **Tiara de Themyscira:** o item da heroína. Clique direito (ou **G**) veste a armadura: corpete vermelho com a águia dourada, saia azul com estrelas brancas, botas vermelhas, os Braceletes da Submissão prateados, cabelo preto e a tiara com a estrela.
+* **A princesa amazona:** com a armadura ela fica mais forte, mais resistente, mais rápida e firme, alcança mais longe, pula mais alto e não toma dano de queda (mas menos que o Superman).
+* **Voo:** **dois toques no pulo**. É de graça, mas mais fraco que o do Lanterna Verde: acelera mais devagar e a velocidade máxima é menor, sem quebrar a barreira do som. Rastro dourado e vermelho e trilha sonora original própria.
+* **Poder divino:** a barra dourada da tiara. Volta sozinho com a armadura, e cada golpe de espada devolve um pouco.
+* **Menu radial (R, depois V):**
+  * **Laço da Verdade:** **capturar** (a criatura amarrada não foge nem luta), **puxar** (a criatura vem até você; numa parede, puxa você) e **girar** (gira a criatura laçada e a arremessa, ou o laço gira em volta dela varrendo tudo).
+  * **Braceletes:** **defesa** (bloqueia golpes de frente e rebate flechas, bolas de fogo e tridentes de volta para quem atirou) e **onda de choque** (arremessa tudo em volta e estilhaça vidro e gelo; fica maior depois de bloquear golpes).
+  * **Espada e Escudo:** a espada amazona corta os inimigos em volta do alvo; o escudo bloqueia e nunca quebra. Só existem nas mãos dela.
+  * **Arremessar Escudo** (ou **Shift + clique direito** com o escudo): voa girando, ricocheteia em até 3 inimigos e volta para o braço, como o tridente do Aquaman.
+  * **Jato Invisível:** um veículo de vidro que voa para onde ela olha (W/S, A/D, pulo sobe, **Ctrl** pós-combustão), com camuflagem no **clique esquerdo** (ela fica invisível e os monstros a perdem de vista). **Shift** desembarca.
+* **Sons e trilha originais**, sem samples; nova seção **Mulher Maravilha** no Guia dos Heróis; seção `wonderWoman` na configuração.
 
 ## O Superman (novo na 1.14.0)
 
@@ -198,6 +212,10 @@ Por direitos autorais, o mod não pode incluir músicas de terceiros, como a tri
 | No Batmóvel: **Ctrl** / botão esquerdo | Boost / mísseis |
 | **Dois toques no pulo** com o traje do Superman | Decolar / parar de voar |
 | **R** (segurar / tocar) com o traje do Superman | Menu radial de poderes / próximo poder |
+| **Dois toques no pulo** com a armadura da Mulher Maravilha | Decolar / parar de voar |
+| **R** (segurar / tocar) com a armadura da Mulher Maravilha | Menu radial de poderes / próximo poder |
+| **Shift + botão direito** com o escudo amazona | Arremessa o escudo (ele volta) |
+| No Jato Invisível: **Ctrl** / botão esquerdo / **Shift** | Pós-combustão / camuflagem / desembarcar |
 
 ### Receitas
 
@@ -247,6 +265,12 @@ Cristal Kryptoniano
  A  D  A
  G  S  G       A = fragmento de ametista, D = diamante, G = barra de ouro, S = girassol
  A  D  A
+```
+
+```
+Tiara de Themyscira
+ G  R  G
+ L  D  L       G = barra de ouro, R = corante vermelho, L = laço (rédea), D = diamante
 ```
 
 Também estão na aba criativa **Heróis do Universo DC** (inclui os anéis já carregados).
@@ -380,6 +404,8 @@ python tools/generate_batman_textures.py  # cinto, traje e ícones do Batman
 python tools/generate_batman_audio.py     # sons originais do Batman e do Batmóvel
 python tools/generate_superman_textures.py # cristal, traje, partículas e ícones do Superman
 python tools/generate_superman_audio.py    # sons originais do Superman e a trilha do voo
+python tools/generate_wonder_woman_textures.py # tiara, armadura, armas e ícones da Mulher Maravilha
+python tools/generate_wonder_woman_audio.py    # sons originais da Mulher Maravilha e a trilha do voo
 ```
 
 ## Licença

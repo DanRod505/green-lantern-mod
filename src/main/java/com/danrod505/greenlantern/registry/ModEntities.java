@@ -187,6 +187,25 @@ public final class ModEntities {
                     .noLootTable().sized(0.35F, 0.35F).clientTrackingRange(10).updateInterval(1).fireImmune().noSummon()
                     .build(ENTITIES.key("batmobile_missile")));
 
+    /** The loop of Wonder Woman's Lasso of Truth (the golden rope runs back to her hand). */
+    public static final RegistryObject<EntityType<com.danrod505.greenlantern.entity.LassoEntity>> LASSO = ENTITIES.register("lasso_of_truth",
+            () -> EntityType.Builder.<com.danrod505.greenlantern.entity.LassoEntity>of(com.danrod505.greenlantern.entity.LassoEntity::new, MobCategory.MISC)
+                    .noLootTable().sized(0.5F, 0.5F).clientTrackingRange(10).updateInterval(1).fireImmune().noSummon()
+                    .build(ENTITIES.key("lasso_of_truth")));
+
+    /** Wonder Woman's shield in flight (it ricochets between enemies and comes back). */
+    public static final RegistryObject<EntityType<com.danrod505.greenlantern.entity.AmazonShieldEntity>> AMAZON_SHIELD = ENTITIES.register("amazon_shield",
+            () -> EntityType.Builder.<com.danrod505.greenlantern.entity.AmazonShieldEntity>of(com.danrod505.greenlantern.entity.AmazonShieldEntity::new, MobCategory.MISC)
+                    .noLootTable().sized(0.8F, 0.3F).clientTrackingRange(10).updateInterval(1).fireImmune().noSummon()
+                    .build(ENTITIES.key("amazon_shield")));
+
+    /** Wonder Woman's Invisible Jet. */
+    public static final RegistryObject<EntityType<com.danrod505.greenlantern.entity.InvisibleJetEntity>> INVISIBLE_JET = ENTITIES.register("invisible_jet",
+            () -> EntityType.Builder.<com.danrod505.greenlantern.entity.InvisibleJetEntity>of(com.danrod505.greenlantern.entity.InvisibleJetEntity::new, MobCategory.MISC)
+                    .noLootTable().sized(com.danrod505.greenlantern.entity.InvisibleJetEntity.WIDTH, com.danrod505.greenlantern.entity.InvisibleJetEntity.HEIGHT)
+                    .clientTrackingRange(16).updateInterval(1).fireImmune().noSummon()
+                    .build(ENTITIES.key("invisible_jet")));
+
     /** Client-only trail renderer holder (never spawned on the server). */
     public static final RegistryObject<EntityType<FlightTrailEntity>> FLIGHT_TRAIL = ENTITIES.register("flight_trail",
             () -> EntityType.Builder.<FlightTrailEntity>of(FlightTrailEntity::new, MobCategory.MISC)

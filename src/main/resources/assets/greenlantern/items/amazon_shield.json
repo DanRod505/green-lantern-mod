@@ -1,0 +1,31 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "property": "minecraft:display_context",
+    "cases": [
+      {
+        "when": [
+          "gui",
+          "ground",
+          "fixed"
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "greenlantern:item/amazon_shield"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:condition",
+      "property": "minecraft:using_item",
+      "on_true": {
+        "type": "minecraft:model",
+        "model": "greenlantern:item/amazon_shield_blocking"
+      },
+      "on_false": {
+        "type": "minecraft:model",
+        "model": "greenlantern:item/amazon_shield_3d"
+      }
+    }
+  }
+}
