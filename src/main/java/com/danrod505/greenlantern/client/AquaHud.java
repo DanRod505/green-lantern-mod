@@ -3,9 +3,11 @@ package com.danrod505.greenlantern.client;
 import com.danrod505.greenlantern.aquaman.AquaPower;
 import com.danrod505.greenlantern.aquaman.AquamanHelper;
 import com.danrod505.greenlantern.aquaman.SeaForce;
+import com.danrod505.greenlantern.entity.KrakenEntity;
 import com.danrod505.greenlantern.flash.FlashHelper;
 import com.danrod505.greenlantern.ring.RingEnergy;
 import com.danrod505.greenlantern.ring.RingHelper;
+import java.util.List;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -88,6 +90,42 @@ public final class AquaHud {
         if (!suited) {
             graphics.drawString(mc.font, Component.translatable("hud.greenlantern.aquaman_suit_hint", KeyBindings.TOGGLE_UNIFORM.getTranslatedKeyMessage()),
                     x + 19, iconsY + 30, 0xFFA0A0A0, true);
+        } else {
+            renderKraken(graphics, mc, player, x + 19, iconsY + 32);
         }
+    }
+
+    /** The life of the Kraken Aquaman rides (or that waits for him nearby). */
+    private static void renderKraken(GuiGraphics graphics, Minecraft mc, Player player, int x, int y) {
+        KrakenEntity kraken = player.getVehicle() instanceof KrakenEntity ridden ? ridden : null;
+        if (kraken == null) {
+            List<KrakenEntity> near = player.level().getEntitiesOfClass(KrakenEntity.class, player.getBoundingBox().inflate(48),
+                    k -> k.isOwnedBy(player) && !k.isRemoved());
+            if (near.isEmpty()) return;
+            kraken = near.getFirst();
+        }
+        float max = KrakenEntity.maxHealth();
+        float fraction = Mth.clamp(kraken.getHealth() / max, 0.0F, 1.0F);
+        graphics.drawString(mc.font, Component.translatable("hud.greenlantern.kraken"), x, y + 1, 0xFFF2A0A0, true);
+        int barX = x + mc.font.width(Component.translatable("hud.greenlantern.kraken")) + 4;
+        int width = 82;
+        int border = 0xFF8A1C30;
+        graphics.fill(barX, y, barX + width + 2, y + 9, 0xC0180408);
+        graphics.fill(barX, y, barX + width + 2, y + 1, border);
+        graphics.fill(barX, y + 8, barX + width + 2, y + 9, border);
+        graphics.fill(barX, y, barX + 1, y + 9, border);
+        graphics.fill(barX + width + 1, y, barX + width + 2, y + 9, border);
+        int fill = Math.round(width * fraction);
+        boolean low = fraction < 0.25F;
+        int tick = player.tickCount;
+        for (int i = 0; i < fill; i++) {
+            float wave = 0.5F + 0.5F * Mth.sin((i + tick * 0.8F) * 0.35F);
+            int r = (int) (170 + 60 * wave);
+            int g = (int) (30 + 30 * wave);
+            int alpha = low ? (int) (170 + 85 * Mth.sin(tick * 0.5F)) : 255;
+            graphics.fill(barX + 1 + i, y + 1, barX + 2 + i, y + 8, Mth.clamp(alpha, 0, 255) << 24 | r << 16 | g << 8 | 0x40);
+        }
+        String text = Mth.ceil(kraken.getHealth()) + " / " + Mth.ceil(max);
+        graphics.drawString(mc.font, text, barX + width + 5, y + 1, low ? 0xFFFF5555 : 0xFFF2C0C0, true);
     }
 }

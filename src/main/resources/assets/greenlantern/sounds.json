@@ -559,5 +559,77 @@
         "name": "greenlantern:sea_call"
       }
     ]
+  },
+  "kraken_summon": {
+    "subtitle": "subtitles.greenlantern.kraken_summon",
+    "sounds": [
+      {
+        "name": "greenlantern:kraken_summon",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "kraken_roar": {
+    "subtitle": "subtitles.greenlantern.kraken_roar",
+    "sounds": [
+      {
+        "name": "greenlantern:kraken_roar",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "kraken_step": {
+    "subtitle": "subtitles.greenlantern.kraken_step",
+    "sounds": [
+      {
+        "name": "greenlantern:kraken_step",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "kraken_slam": {
+    "subtitle": "subtitles.greenlantern.kraken_slam",
+    "sounds": [
+      {
+        "name": "greenlantern:kraken_slam",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "kraken_jet": {
+    "subtitle": "subtitles.greenlantern.kraken_jet",
+    "sounds": [
+      {
+        "name": "greenlantern:kraken_jet",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "kraken_swim": {
+    "subtitle": "subtitles.greenlantern.kraken_swim",
+    "sounds": [
+      {
+        "name": "greenlantern:kraken_swim",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "kraken_hurt": {
+    "subtitle": "subtitles.greenlantern.kraken_hurt",
+    "sounds": [
+      {
+        "name": "greenlantern:kraken_hurt",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "kraken_death": {
+    "subtitle": "subtitles.greenlantern.kraken_death",
+    "sounds": [
+      {
+        "name": "greenlantern:kraken_death",
+        "attenuation_distance": 48
+      }
+    ]
   }
 }

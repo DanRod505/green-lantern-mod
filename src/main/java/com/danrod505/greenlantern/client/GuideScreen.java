@@ -65,6 +65,7 @@ public class GuideScreen extends Screen {
             new Chapter("flash_powers", () -> new ItemStack(Items.LIGHTNING_ROD)),
             new Chapter("aquaman", () -> new ItemStack(ModItems.AQUAMAN_EMBLEM.get())),
             new Chapter("aquaman_powers", () -> new ItemStack(Items.TRIDENT)),
+            new Chapter("kraken", () -> new ItemStack(Items.INK_SAC)),
             new Chapter("atlantis", () -> new ItemStack(ModItems.ATLANTIS_GATE.get())),
             new Chapter("controls", () -> new ItemStack(Items.LEVER)),
             new Chapter(RECIPES, () -> new ItemStack(Items.CRAFTING_TABLE)),

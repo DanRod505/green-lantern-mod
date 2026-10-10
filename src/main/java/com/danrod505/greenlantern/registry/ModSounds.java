@@ -82,6 +82,14 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> TRIDENT_SWING = register("trident_swing");
     public static final RegistryObject<SoundEvent> SHARK_SUMMON = register("shark_summon");
     public static final RegistryObject<SoundEvent> SHARK_BITE = register("shark_bite");
+    public static final RegistryObject<SoundEvent> KRAKEN_SUMMON = register("kraken_summon");
+    public static final RegistryObject<SoundEvent> KRAKEN_ROAR = register("kraken_roar");
+    public static final RegistryObject<SoundEvent> KRAKEN_STEP = register("kraken_step");
+    public static final RegistryObject<SoundEvent> KRAKEN_SLAM = register("kraken_slam");
+    public static final RegistryObject<SoundEvent> KRAKEN_JET = register("kraken_jet");
+    public static final RegistryObject<SoundEvent> KRAKEN_SWIM = register("kraken_swim");
+    public static final RegistryObject<SoundEvent> KRAKEN_HURT = register("kraken_hurt");
+    public static final RegistryObject<SoundEvent> KRAKEN_DEATH = register("kraken_death");
     public static final RegistryObject<SoundEvent> SEA_CALL = register("sea_call");
 
     private static RegistryObject<SoundEvent> register(String name) {

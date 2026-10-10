@@ -2,7 +2,7 @@
 """
 Textures of Aquaman (DC Universe expansion): the Atlantean Emblem, the suit (orange scale shirt,
 green leggings and gloves, gold belt), the Trident of Atlantis (icon and the 3D model's palette),
-the great white shark and the power icons. Shares helpers with generate_textures.py.
+the great white shark, the Kraken (skin, glowing eyes, water jet) and the power icons. Shares helpers with generate_textures.py.
 
 Usage:  pip install pillow numpy
         python tools/generate_aquaman_textures.py
@@ -342,11 +342,217 @@ def make_shark():
     save(img, "entity", "great_white_shark.png")
 
 
+# -------------------------------------------------------------------------------------- kraken
+
+KRAKEN_DARK = (58, 14, 30, 255)
+KRAKEN_SKIN = (112, 26, 46, 255)
+KRAKEN_MID = (150, 44, 60, 255)
+KRAKEN_LIGHT = (196, 92, 88, 255)
+KRAKEN_BELLY = (222, 150, 128, 255)
+KRAKEN_SPOT = (236, 196, 160, 255)
+SUCKER = (244, 206, 190, 255)
+SUCKER_RIM = (176, 92, 96, 255)
+SUCKER_HOLE = (96, 30, 44, 255)
+HOOK = (250, 244, 226, 255)
+EYE_GOLD = (250, 196, 40, 255)
+EYE_GLOW = (255, 236, 120, 255)
+EYE_RIM = (40, 8, 16, 255)
+
+
+def kraken_noise(x, y, seed=0.0):
+    """Cheap smooth mottling: a few sines, 0..1."""
+    v = (math.sin(x * 0.55 + seed) + math.sin(y * 0.47 + seed * 1.7) + math.sin((x + y) * 0.31 + seed * 0.3)
+         + math.sin((x - y) * 0.23 + seed * 2.1)) / 8.0 + 0.5
+    return max(0.0, min(1.0, v))
+
+
+def kraken_skin(img, x0, y0, w, h, shade=0.5, spots=True, seed=0.0, vertical=False):
+    """Mottled crimson skin with darker veins and pale spots; `shade` darkens (0) or lightens (1)."""
+    for y in range(h):
+        for x in range(w):
+            gx, gy = x0 + x, y0 + y
+            n = kraken_noise(gx, gy, seed)
+            t = n * 0.6 + shade * 0.5 - 0.1
+            if vertical:
+                t += (y / max(1, h - 1)) * 0.25 - 0.12
+            if t < 0.35:
+                c = lerp(KRAKEN_DARK, KRAKEN_SKIN, t / 0.35)
+            elif t < 0.7:
+                c = lerp(KRAKEN_SKIN, KRAKEN_MID, (t - 0.35) / 0.35)
+            else:
+                c = lerp(KRAKEN_MID, KRAKEN_LIGHT, min(1.0, (t - 0.7) / 0.3))
+            # Veins: thin dark ridges where the mottling crosses the middle.
+            if abs(kraken_noise(gx * 1.9, gy * 1.9, seed + 4.0) - 0.5) < 0.025:
+                c = lerp(c, KRAKEN_DARK, 0.6)
+            img.putpixel((gx, gy), jitter(c, 4))
+    if spots:
+        for _ in range(max(1, w * h // 90)):
+            sx, sy = x0 + random.randrange(w), y0 + random.randrange(h)
+            img.putpixel((sx, sy), jitter(KRAKEN_SPOT, 8))
+            if random.random() < 0.4 and sx + 1 < x0 + w:
+                img.putpixel((sx + 1, sy), jitter(lerp(KRAKEN_SPOT, KRAKEN_LIGHT, 0.5), 6))
+
+
+def kraken_box(img, u, v, w, h, d, seed=0.0, belly_bottom=True):
+    f = box_faces(u, v, w, h, d)
+    kraken_skin(img, *f["top"], shade=0.25, seed=seed)
+    if belly_bottom:
+        for (x0, y0, fw, fh) in (f["bottom"],):
+            for y in range(fh):
+                for x in range(fw):
+                    img.putpixel((x0 + x, y0 + y), jitter(lerp(KRAKEN_BELLY, KRAKEN_LIGHT, kraken_noise(x0 + x, y0 + y, seed) * 0.6), 5))
+    else:
+        kraken_skin(img, *f["bottom"], shade=0.4, seed=seed + 1)
+    for name in ("right", "front", "left", "back"):
+        kraken_skin(img, *f[name], shade=0.45, seed=seed + 2, vertical=True)
+    return f
+
+
+def sucker_column(img, x0, y0, w, h, big=False):
+    """Two rows of suckers down a face (the underside of an arm)."""
+    for y in range(h):
+        for x in range(w):
+            img.putpixel((x0 + x, y0 + y), jitter(lerp(KRAKEN_BELLY, KRAKEN_LIGHT, 0.25 + 0.2 * math.sin(y * 1.3)), 5))
+    cols = [w // 2] if w <= 3 else [w // 4, w - 1 - w // 4]
+    for row, y in enumerate(range(0, h, 2)):
+        for i, cx in enumerate(cols):
+            if (row + i) % 2 and len(cols) > 1:
+                continue
+            img.putpixel((x0 + cx, y0 + y), SUCKER_HOLE if big else SUCKER_RIM)
+            if cx + 1 < w and big:
+                img.putpixel((x0 + cx + 1, y0 + y), SUCKER_RIM)
+            if y + 1 < h:
+                img.putpixel((x0 + cx, y0 + y + 1), SUCKER)
+
+
+def eye_face(img, x0, y0, w, h, glow=False):
+    """A golden eye with a horizontal slit pupil (the eyes layer only keeps the bright parts)."""
+    cx, cy = (w - 1) / 2.0, (h - 1) / 2.0
+    for y in range(h):
+        for x in range(w):
+            r = math.hypot((x - cx) / (w / 2.0), (y - cy) / (h / 2.0))
+            if glow:
+                c = (0, 0, 0, 0) if r > 1.05 else lerp(EYE_GLOW, EYE_GOLD, min(1.0, r))
+                if abs(y - cy) < 0.6 and abs(x - cx) < w * 0.4:
+                    c = (0, 0, 0, 0)
+            else:
+                c = EYE_RIM if r > 0.95 else lerp(EYE_GLOW, EYE_GOLD, r)
+                if abs(y - cy) < 0.6 and abs(x - cx) < w * 0.4:
+                    c = (10, 4, 6, 255)
+            img.putpixel((x0 + x, y0 + y), c)
+
+
+def make_kraken():
+    img = blank(256, 128)
+    eyes = blank(256, 128)
+    # Head 16x14x16 at (0,0) and its lower part 14x3x14 at (64,0).
+    f = kraken_box(img, 0, 0, 16, 14, 16, seed=0.3)
+    # Brow ridges over the eyes and a darker band around the front.
+    fx, fy, fw, fh = f["front"]
+    for x in range(fw):
+        img.putpixel((fx + x, fy + 3), jitter(KRAKEN_DARK, 4))
+        img.putpixel((fx + x, fy + 4), jitter(lerp(KRAKEN_DARK, KRAKEN_SKIN, 0.5), 4))
+    kraken_box(img, 64, 0, 14, 3, 14, seed=1.1)
+    # Eyes 2x5x5 at (120,0) and (134,0): the eye on both 5x5 side faces.
+    for u in (120, 134):
+        f = box_faces(u, 0, 2, 5, 5)
+        for name in ("top", "bottom", "front", "back"):
+            fill_rect(img, *f[name], EYE_RIM, 3)
+        for name in ("right", "left"):
+            eye_face(img, *f[name])
+            eye_face(eyes, *f[name], glow=True)
+    # Siphon 5x5x5 at (148,0), its lip 7x7x1 at (168,0): dark opening on the front.
+    f = kraken_box(img, 148, 0, 5, 5, 5, seed=2.0)
+    f = kraken_box(img, 168, 0, 7, 7, 1, seed=2.5)
+    fx, fy, fw, fh = f["front"]
+    for y in range(fh):
+        for x in range(fw):
+            r = math.hypot(x - 3, y - 3)
+            if r < 2.2:
+                img.putpixel((fx + x, fy + y), lerp(SUCKER_HOLE, (20, 4, 10, 255), 1 - r / 2.2))
+            elif r < 3.2:
+                img.putpixel((fx + x, fy + y), jitter(KRAKEN_LIGHT, 5))
+    # Mantle: base 18x10x14 (0,30), mid 20x8x18 (0,56), top 16x6x14 (80,30), tip 10x5x9 (80,56), point 5x4x5 (120,56).
+    kraken_box(img, 0, 30, 18, 10, 14, seed=3.0, belly_bottom=False)
+    kraken_box(img, 0, 56, 20, 8, 18, seed=3.7, belly_bottom=False)
+    kraken_box(img, 80, 30, 16, 6, 14, seed=4.4, belly_bottom=False)
+    kraken_box(img, 80, 56, 10, 5, 9, seed=5.1, belly_bottom=False)
+    kraken_box(img, 120, 56, 5, 4, 5, seed=5.8, belly_bottom=False)
+    # Fins 9x1x12 at (140,30) and (140,44): thin, ragged trailing edge (cut out), veined.
+    for v in (30, 44):
+        f = box_faces(140, v, 9, 1, 12)
+        for name, (x0, y0, w, h) in f.items():
+            for y in range(h):
+                for x in range(w):
+                    t = x / max(1, w - 1) if name in ("top", "bottom") else 0.5
+                    c = lerp(KRAKEN_MID, KRAKEN_LIGHT, t * 0.7)
+                    if name in ("top", "bottom") and (y % 3 == 0):
+                        c = lerp(c, KRAKEN_DARK, 0.4)
+                    img.putpixel((x0 + x, y0 + y), jitter(c, 5))
+            if name in ("top", "bottom"):
+                # Ragged outer edge.
+                outer = w - 1 if v == 30 else 0
+                for y in range(h):
+                    if (y * 7) % 5 < 2:
+                        img.putpixel((x0 + outer, y0 + y), (0, 0, 0, 0))
+    # Arms: six segments sharing one strip at v=84; the -Z (front) face is the sucker side.
+    widths = (6, 5, 4, 3, 3, 2)
+    lengths = (6, 6, 6, 5, 5, 4)
+    us = (0, 24, 44, 60, 72, 84)
+    for j, (w, l, u) in enumerate(zip(widths, lengths, us)):
+        f = box_faces(u, 84, w, l, w)
+        kraken_skin(img, *f["top"], shade=0.3, seed=6.0 + j)
+        kraken_skin(img, *f["bottom"], shade=0.6, seed=6.5 + j, spots=False)
+        for name in ("right", "left", "back"):
+            kraken_skin(img, *f[name], shade=0.4 + j * 0.05, seed=7.0 + j)
+        sucker_column(img, *f["front"], big=w >= 4)
+        # A pale fringe along the edges of the sucker side.
+        for name in ("right", "left"):
+            x0, y0, fw, fh = f[name]
+            edge = 0 if name == "right" else fw - 1
+            for y in range(fh):
+                img.putpixel((x0 + edge, y0 + y), jitter(KRAKEN_BELLY, 6))
+    # Hunting tentacles: 4x5x4 (0,100), 3x5x3 (16,100), 2x5x2 (28,100) and the club 6x8x6 (36,100).
+    for (u, w, l) in ((0, 4, 5), (16, 3, 5), (28, 2, 5)):
+        f = box_faces(u, 100, w, l, w)
+        for name in ("top", "bottom", "right", "left", "back"):
+            kraken_skin(img, *f[name], shade=0.4, seed=9.0 + u)
+        sucker_column(img, *f["front"])
+    f = box_faces(36, 100, 6, 8, 6)
+    for name in ("top", "right", "left", "back"):
+        kraken_skin(img, *f[name], shade=0.5, seed=11.0)
+    sucker_column(img, *f["front"], big=True)
+    # Hooks around the club's suckers and on its tip.
+    fx, fy, fw, fh = f["front"]
+    for y in range(1, fh, 3):
+        img.putpixel((fx, fy + y), HOOK)
+        img.putpixel((fx + fw - 1, fy + y + 1 if y + 1 < fh else fy + y), HOOK)
+    bx, by, bw, bh = f["bottom"]
+    for y in range(bh):
+        for x in range(bw):
+            img.putpixel((bx + x, by + y), HOOK if (x + y) % 3 == 0 else jitter(KRAKEN_BELLY, 5))
+    save(img, "entity", "kraken.png")
+    save(eyes, "entity", "kraken_eyes.png")
+
+    # The water jet: soft streaks that tile along the stream (white, tinted when drawn).
+    jet = blank(16, 64)
+    for x in range(16):
+        edge = 1.0 - abs(x - 7.5) / 8.0
+        phase = random.uniform(0, 6.28)
+        freq = random.choice((1, 2, 3))
+        for y in range(64):
+            streak = 0.55 + 0.45 * math.sin(phase + y * 2 * math.pi * freq / 64)
+            a = int(255 * max(0.0, min(1.0, edge * 1.4)) * (0.35 + 0.65 * streak))
+            shade = int(200 + 55 * streak)
+            jet.putpixel((x, y), (shade, shade, 255, a))
+    save(jet, "entity", "kraken_jet.png")
+
+
 # --------------------------------------------------------------------------------------- gui
 
 def make_gui():
-    """Power icons (16x16 each): trident, shark, call of the sea, portal to Atlantis, then the emblem."""
-    img = blank(80, 16)
+    """Power icons (16x16 each): trident, shark, call of the sea, portal to Atlantis, Kraken, then the emblem."""
+    img = blank(96, 16)
     trident = [
         "..Z....Z....Z...",
         "..Y....Y....Y...",
@@ -419,9 +625,27 @@ def make_gui():
         ".....YYYYYY.....",
         "................",
     ]
-    for i, rows in enumerate((trident, shark, sea_call, portal, EMBLEM)):
+    kraken = [
+        "......RRRR......",
+        ".....RSSSRR.....",
+        "....RSSRRRRo....",
+        "....RSRRRRRo....",
+        "....RRRRRRoo....",
+        "...YoRRRRRoY....",
+        "...ZOooRRooZ....",
+        "....ooRRRRoo....",
+        "...oRoRooRoRo...",
+        "..oR.oR..Ro.Ro..",
+        "..R..oR..Ro..R..",
+        ".oR.oR....Ro.Ro.",
+        ".R..oR....Ro..R.",
+        ".R.oR......Ro.R.",
+        "..oR........Ro..",
+        "..R..........R..",
+    ]
+    for i, rows in enumerate((trident, shark, sea_call, portal, kraken, EMBLEM)):
         icon = from_map(rows, A)
-        if i < 4:
+        if i < 5:
             # Deep sea glow behind the icon so it reads on any background.
             glow = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
             mask = icon.split()[3].filter(ImageFilter.MaxFilter(3))
@@ -436,3 +660,4 @@ if __name__ == "__main__":
     make_armor()
     make_shark()
     make_gui()
+    make_kraken()

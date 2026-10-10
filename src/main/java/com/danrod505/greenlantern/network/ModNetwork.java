@@ -61,6 +61,10 @@ public final class ModNetwork {
                 .codec(SharkBitePacket.STREAM_CODEC)
                 .consumerMainThread(SharkBitePacket::handle)
                 .add();
+        CHANNEL.messageBuilder(KrakenAttackPacket.class, NetworkDirection.PLAY_TO_SERVER)
+                .codec(KrakenAttackPacket.STREAM_CODEC)
+                .consumerMainThread(KrakenAttackPacket::handle)
+                .add();
         CHANNEL.messageBuilder(SpeedSyncPacket.class, NetworkDirection.PLAY_TO_CLIENT)
                 .codec(SpeedSyncPacket.STREAM_CODEC)
                 .consumerMainThread(SpeedSyncPacket::handle)

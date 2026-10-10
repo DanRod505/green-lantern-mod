@@ -3,6 +3,7 @@ package com.danrod505.greenlantern.aquaman;
 import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.entity.AquaTridentEntity;
 import com.danrod505.greenlantern.entity.GreatWhiteSharkEntity;
+import com.danrod505.greenlantern.entity.KrakenEntity;
 import com.danrod505.greenlantern.registry.ModItems;
 import com.danrod505.greenlantern.registry.ModSounds;
 import java.util.Map;
@@ -25,7 +26,7 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * Server side of Aquaman: breathing underwater, the Power of the Seas, and the powers (the trident,
- * the great white shark and the call of the sea). Fast swimming itself is simulated by the client
+ * the great white shark, the call of the sea, the way to Atlantis and the Kraken). Fast swimming itself is simulated by the client
  * (see {@code client.aqua.SwimController}), like the Flash's running.
  */
 public final class AquamanServer {
@@ -95,6 +96,8 @@ public final class AquamanServer {
         removeTrident(player);
         GreatWhiteSharkEntity shark = GreatWhiteSharkEntity.find(player);
         if (shark != null) shark.swimAway();
+        KrakenEntity kraken = KrakenEntity.find(player);
+        if (kraken != null) kraken.retreat();
         SeaCall.release(player, false);
         MobEffectInstance conduit = player.getEffect(MobEffects.CONDUIT_POWER);
         if (conduit != null && conduit.getDuration() <= CONDUIT_TICKS && conduit.isAmbient()) {
@@ -134,6 +137,21 @@ public final class AquamanServer {
                 }
             }
             case ATLANTIS_PORTAL -> {}
+            case KRAKEN -> {
+                KrakenEntity kraken = KrakenEntity.find(player);
+                if (kraken != null && !kraken.isDying()) {
+                    if (player.getVehicle() == kraken) {
+                        kraken.retreat();
+                    } else if (!kraken.isVehicle() && player.distanceToSqr(kraken) < 64 * 64) {
+                        // Climb back onto its head, wherever it is.
+                        player.startRiding(kraken);
+                    } else {
+                        kraken.retreat();
+                    }
+                    return true;
+                }
+                if (kraken != null) return false;
+            }
         }
         if (player.getCooldowns().isOnCooldown(emblem)) return false;
         if (!player.isCreative() && !SeaForce.has(emblem, power.cost())) {
@@ -145,6 +163,7 @@ public final class AquamanServer {
             case SHARK -> summonShark(player);
             case SEA_CALL -> callTheSea(player);
             case ATLANTIS_PORTAL -> openAtlantisPortal(player);
+            case KRAKEN -> summonKraken(player);
         };
         if (used) {
             if (!player.isCreative()) SeaForce.tryConsume(emblem, power.cost());
@@ -246,6 +265,43 @@ public final class AquamanServer {
         level.sendParticles(ParticleTypes.BUBBLE_COLUMN_UP, player.getX(), player.getY(), player.getZ(), 60, 1.2, 0.6, 1.2, 0.2);
         level.sendParticles(ParticleTypes.SPLASH, player.getX(), player.getY() + 1.0, player.getZ(), 40, 1.2, 0.6, 1.2, 0.3);
         return true;
+    }
+
+    // ---- the Kraken ------------------------------------------------------------------------------------
+
+    /** The Kraken rises from the deep (or out of the ground) under Aquaman, who ends up on its head. */
+    private static boolean summonKraken(ServerPlayer player) {
+        int recovering = KrakenEntity.recoverySeconds(player);
+        if (recovering > 0) {
+            player.displayClientMessage(Component.translatable("message.greenlantern.kraken_recovering", recovering).withStyle(ChatFormatting.DARK_AQUA), true);
+            return false;
+        }
+        ServerLevel level = player.level();
+        boolean swimming = player.isInWater() && deepWater(level, player);
+        if (!KrakenEntity.fits(level, player, swimming)) {
+            player.displayClientMessage(Component.translatable("message.greenlantern.kraken_no_room").withStyle(ChatFormatting.DARK_AQUA), true);
+            return false;
+        }
+        if (player.isPassenger()) player.stopRiding();
+        KrakenEntity kraken = KrakenEntity.create(level, player, swimming);
+        level.addFreshEntity(kraken);
+        player.startRiding(kraken);
+        level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.KRAKEN_SUMMON.get(), SoundSource.PLAYERS, 3.0F, 1.0F);
+        level.sendParticles(swimming ? ParticleTypes.BUBBLE_COLUMN_UP : ParticleTypes.SPLASH, player.getX(), player.getY() + 0.5, player.getZ(),
+                120, 3.0, 0.8, 3.0, 0.3);
+        level.sendParticles(ParticleTypes.SQUID_INK, player.getX(), player.getY() + 2.0, player.getZ(), 40, 2.5, 1.5, 2.5, 0.05);
+        player.displayClientMessage(Component.translatable("message.greenlantern.kraken_summoned").withStyle(ChatFormatting.DARK_AQUA), true);
+        return true;
+    }
+
+    /** Enough water around the player for the Kraken to swim in (at least about six blocks). */
+    private static boolean deepWater(ServerLevel level, ServerPlayer player) {
+        net.minecraft.core.BlockPos feet = player.blockPosition();
+        int depth = 0;
+        for (int dy = -6; dy <= 6; dy++) {
+            if (level.getFluidState(feet.above(dy)).is(FluidTags.WATER)) depth++;
+        }
+        return depth >= 6;
     }
 
     // ---- the call of the sea ----------------------------------------------------------------------------

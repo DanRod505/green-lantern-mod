@@ -10,6 +10,7 @@ import com.danrod505.greenlantern.aquaman.SeaCall;
 import com.danrod505.greenlantern.aquaman.SeaForce;
 import com.danrod505.greenlantern.entity.AquaTridentEntity;
 import com.danrod505.greenlantern.entity.GreatWhiteSharkEntity;
+import com.danrod505.greenlantern.entity.KrakenEntity;
 import com.danrod505.greenlantern.item.AquaTridentItem;
 import com.danrod505.greenlantern.flight.FlightAction;
 import com.danrod505.greenlantern.flight.FlightFlags;
@@ -106,6 +107,8 @@ public final class ModGameTests {
         TESTS.register("aquaman_trident_throw_returns", () -> ModGameTests::aquamanTridentThrowReturns);
         TESTS.register("aquaman_shark_bite", () -> ModGameTests::aquamanSharkBite);
         TESTS.register("aquaman_sea_call", () -> ModGameTests::aquamanSeaCall);
+        TESTS.register("aquaman_kraken_call", () -> ModGameTests::aquamanKrakenCall);
+        TESTS.register("aquaman_kraken_fights_and_falls", () -> ModGameTests::aquamanKrakenFightsAndFalls);
         TESTS.register("respirator_breathes_with_any_suit", () -> ModGameTests::respiratorBreathesWithAnySuit);
         TESTS.register("respirator_refills_out_of_water", () -> ModGameTests::respiratorRefillsOutOfWater);
         TESTS.register("atlantis_build_and_travel", () -> ModGameTests::atlantisBuildAndTravel);
@@ -876,6 +879,104 @@ public final class ModGameTests {
                     AquamanServer.usePower(player, emblem, AquaPower.SHARK);
                     helper.assertTrue(shark.isRemoved(), "using the power again sends the shark away");
                     zombie.discard();
+                    remove(player);
+                })
+                .thenSucceed();
+    }
+
+    public static void aquamanKrakenCall(GameTestHelper helper) {
+        flood(helper, 6);
+        ServerPlayer player = player(helper, 7.5, 2, 7.5, 0, 0);
+        ItemStack emblem = giveEmblem(player, 1000);
+        AquamanSuit.summon(player);
+        AquaPower.select(emblem, AquaPower.KRAKEN);
+        helper.startSequence()
+                .thenExecuteFor(3, player::doTick) // notice the water
+                .thenExecute(() -> {
+                    helper.assertTrue(player.isInWater(), "the player should be in the water");
+                    use(player);
+                    KrakenEntity kraken = KrakenEntity.find(player);
+                    helper.assertTrue(kraken != null, "the Kraken should rise");
+                    helper.assertTrue(player.getVehicle() == kraken, "Aquaman should ride the Kraken");
+                    helper.assertTrue(kraken.isSwimmingMode(), "called in deep water, the Kraken swims");
+                    helper.assertTrue(kraken.getHealth() == KrakenEntity.maxHealth(), "the Kraken starts with full life");
+                    int stored = SeaForce.get(AquamanHelper.findEmblem(player)).stored();
+                    helper.assertTrue(stored <= 1000 - AquaPower.KRAKEN.cost(), "the Kraken should cost Power of the Seas, left " + stored);
+                })
+                .thenExecuteFor(5, player::doTick)
+                .thenExecute(() -> {
+                    KrakenEntity kraken = KrakenEntity.find(player);
+                    helper.assertTrue(kraken != null && player.getVehicle() == kraken, "still riding the Kraken");
+                    AquamanServer.usePower(player, AquamanHelper.findEmblem(player), AquaPower.KRAKEN);
+                    helper.assertTrue(kraken.isRemoved(), "using the power again sends the Kraken back to the deep");
+                    helper.assertTrue(player.getVehicle() == null, "Aquaman is off its head");
+                    remove(player);
+                })
+                .thenSucceed();
+    }
+
+    public static void aquamanKrakenFightsAndFalls(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        ServerPlayer player = player(helper, 7.5, 1, 2.5, 0, 0);
+        ItemStack emblem = giveEmblem(player, 1000);
+        AquamanSuit.summon(player);
+        KrakenEntity kraken = KrakenEntity.create(level, player, false);
+        level.addFreshEntity(kraken);
+        player.startRiding(kraken);
+        // The tentacle comes down about nine blocks in front of the Kraken (it faces south, +Z).
+        Zombie slamTarget = dummy(helper, 7.5, 1, 12.0);
+        float slamHealth = slamTarget.getHealth();
+        Zombie[] jetTarget = new Zombie[1];
+        float[] before = new float[2];
+        helper.startSequence()
+                .thenExecuteFor(2, player::doTick)
+                .thenExecute(() -> {
+                    helper.assertTrue(player.getVehicle() == kraken, "Aquaman should ride the Kraken");
+                    helper.assertTrue(player.getY() - kraken.getY() > 8.0, "Aquaman sits on top of its head, got " + (player.getY() - kraken.getY()));
+                    helper.assertFalse(kraken.isSwimmingMode(), "on dry land the Kraken walks");
+                    helper.assertTrue(kraken.tentacleSlam(), "the tentacle slam should start");
+                    helper.assertFalse(kraken.tentacleSlam(), "the tentacle needs a moment before the next slam");
+                })
+                .thenExecuteFor(KrakenEntity.SLAM_HIT + 2, player::doTick)
+                .thenExecute(() -> {
+                    helper.assertTrue(slamTarget.isDeadOrDying() || slamTarget.getHealth() < slamHealth, "the slam should crush the zombie");
+                    jetTarget[0] = dummy(helper, 3.5, 1, 12.5);
+                    before[0] = jetTarget[0].getHealth();
+                    lookAt(player, jetTarget[0]);
+                    kraken.setJetFiring(true);
+                })
+                .thenExecuteFor(12, player::doTick)
+                .thenExecute(() -> {
+                    helper.assertTrue(kraken.isJetting(), "the water jet should be firing");
+                    helper.assertTrue(jetTarget[0].isDeadOrDying() || jetTarget[0].getHealth() < before[0], "the water jet should batter the zombie");
+                    helper.assertTrue(SeaForce.get(emblem).stored() < 1000, "the jet drains Power of the Seas");
+                    kraken.setJetFiring(false);
+                })
+                // Past the newcomer's spawn protection, so hits reach the rider.
+                .thenExecuteFor(50, player::doTick)
+                .thenExecute(() -> {
+                    helper.assertFalse(kraken.isJetting(), "the jet stops when released");
+                    Zombie attacker = dummy(helper, 9.5, 1, 4.5);
+                    float riderHealth = player.getHealth();
+                    before[1] = kraken.getHealth();
+                    player.hurtServer(level, level.damageSources().mobAttack(attacker), 6.0F);
+                    helper.assertTrue(player.getHealth() == riderHealth, "the Kraken should take the blow aimed at its rider");
+                    helper.assertTrue(kraken.getHealth() < before[1], "the Kraken loses life instead, " + kraken.getHealth() + " / " + before[1]);
+                    attacker.discard();
+                })
+                .thenExecuteFor(12, player::doTick)
+                .thenExecute(() -> {
+                    kraken.hurtServer(level, level.damageSources().generic(), KrakenEntity.maxHealth() * 2);
+                    helper.assertTrue(kraken.isDying(), "out of life, the Kraken dies");
+                    helper.assertTrue(player.getVehicle() == null, "its rider falls off");
+                    helper.assertTrue(KrakenEntity.recoverySeconds(player) > 0, "a fallen Kraken needs time to recover");
+                })
+                .thenExecuteFor(KrakenEntity.DEATH_TICKS + 5, player::doTick)
+                .thenExecute(() -> {
+                    helper.assertTrue(kraken.isRemoved(), "the dead Kraken is gone after its death throes");
+                    AquaPower.select(emblem, AquaPower.KRAKEN);
+                    helper.assertFalse(AquamanServer.usePower(player, emblem, AquaPower.KRAKEN), "it cannot be called while recovering");
+                    KrakenEntity.clearRecovery(player);
                     remove(player);
                 })
                 .thenSucceed();

@@ -78,6 +78,7 @@ public final class ClientSetup {
         InputEvent.MouseScrollingEvent.BUS.addListener(ClientEvents::onMouseScroll);
         InputEvent.InteractionKeyMappingTriggered.BUS.addListener(MechaControls::onInteraction);
         InputEvent.InteractionKeyMappingTriggered.BUS.addListener(SharkControls::onInteraction);
+        InputEvent.InteractionKeyMappingTriggered.BUS.addListener(KrakenControls::onInteraction);
         ViewportEvent.ComputeCameraAngles.BUS.addListener(CameraShake::onCameraAngles);
     }
 
@@ -119,6 +120,7 @@ public final class ClientSetup {
         event.registerEntityRenderer(ModEntities.LANTERN_CORPSMAN.get(), com.danrod505.greenlantern.client.render.oa.LanternCorpsmanRenderer::new);
         event.registerEntityRenderer(ModEntities.AQUA_TRIDENT.get(), com.danrod505.greenlantern.client.render.aqua.AquaTridentRenderer::new);
         event.registerEntityRenderer(ModEntities.GREAT_WHITE_SHARK.get(), com.danrod505.greenlantern.client.render.aqua.SharkRenderer::new);
+        event.registerEntityRenderer(ModEntities.KRAKEN.get(), com.danrod505.greenlantern.client.render.aqua.KrakenRenderer::new);
         event.registerEntityRenderer(ModEntities.ATLANTIS_PORTAL.get(), com.danrod505.greenlantern.client.render.oa.OaPortalRenderer::new);
         event.registerEntityRenderer(ModEntities.ATLANTEAN.get(), com.danrod505.greenlantern.client.render.aqua.AtlanteanRenderer::new);
     }
@@ -138,6 +140,7 @@ public final class ClientSetup {
         event.registerLayerDefinition(AuraLayer.LAYER, AuraLayer::createLayer);
         event.registerLayerDefinition(com.danrod505.greenlantern.client.render.oa.OaNpcModel.LAYER, com.danrod505.greenlantern.client.render.oa.OaNpcModel::createLayer);
         event.registerLayerDefinition(com.danrod505.greenlantern.client.render.aqua.SharkModel.LAYER, com.danrod505.greenlantern.client.render.aqua.SharkModel::createLayer);
+        event.registerLayerDefinition(com.danrod505.greenlantern.client.render.aqua.KrakenModel.LAYER, com.danrod505.greenlantern.client.render.aqua.KrakenModel::createLayer);
     }
 
     private static void onAddLayers(EntityRenderersEvent.AddLayers event) {
