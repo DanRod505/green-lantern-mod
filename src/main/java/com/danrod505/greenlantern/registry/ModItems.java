@@ -59,6 +59,29 @@ public final class ModItems {
     public static final RegistryObject<SuitArmorItem> FLASH_LEGGINGS = flashSuit("flash_leggings", ArmorType.LEGGINGS);
     public static final RegistryObject<SuitArmorItem> FLASH_BOOTS = flashSuit("flash_boots", ArmorType.BOOTS);
 
+    // ---- Aquaman --------------------------------------------------------------------------------
+
+    /** The Atlantean Emblem: the armor of Atlantis lives inside it, and it stores the Power of the Seas. */
+    public static final RegistryObject<com.danrod505.greenlantern.item.AquamanEmblemItem> AQUAMAN_EMBLEM = ITEMS.register("aquaman_emblem",
+            () -> new com.danrod505.greenlantern.item.AquamanEmblemItem(new Item.Properties()
+                    .setId(ITEMS.key("aquaman_emblem"))
+                    .stacksTo(1)
+                    .rarity(Rarity.EPIC)
+                    .fireResistant()));
+
+    /** The trident of Atlantis, summoned by the emblem (never crafted). */
+    public static final RegistryObject<com.danrod505.greenlantern.item.AquaTridentItem> AQUAMAN_TRIDENT = ITEMS.register("aquaman_trident",
+            () -> new com.danrod505.greenlantern.item.AquaTridentItem(com.danrod505.greenlantern.item.AquaTridentItem.properties()
+                    .setId(ITEMS.key("aquaman_trident"))));
+
+    public static final RegistryObject<SuitArmorItem> AQUAMAN_SUIT = aquamanSuit("aquaman_suit", ArmorType.CHESTPLATE);
+    public static final RegistryObject<SuitArmorItem> AQUAMAN_LEGGINGS = aquamanSuit("aquaman_leggings", ArmorType.LEGGINGS);
+    public static final RegistryObject<SuitArmorItem> AQUAMAN_BOOTS = aquamanSuit("aquaman_boots", ArmorType.BOOTS);
+
+    private static RegistryObject<SuitArmorItem> aquamanSuit(String name, ArmorType type) {
+        return ITEMS.register(name, () -> new SuitArmorItem(type, SuitArmorItem.properties(SuitArmorItem.AQUAMAN_MATERIAL, type).setId(ITEMS.key(name))));
+    }
+
     private static RegistryObject<SuitArmorItem> suit(String name, ArmorType type) {
         return ITEMS.register(name, () -> new SuitArmorItem(type, SuitArmorItem.properties(type).setId(ITEMS.key(name))));
     }

@@ -89,6 +89,19 @@ public final class ModEntities {
                     .noLootTable().sized(0.5F, 0.5F).clientTrackingRange(10).updateInterval(1).fireImmune().noSummon()
                     .build(ENTITIES.key("speed_lightning")));
 
+    /** The trident of Atlantis in flight (it always comes back). */
+    public static final RegistryObject<EntityType<com.danrod505.greenlantern.entity.AquaTridentEntity>> AQUA_TRIDENT = ENTITIES.register("aquaman_trident",
+            () -> EntityType.Builder.<com.danrod505.greenlantern.entity.AquaTridentEntity>of(com.danrod505.greenlantern.entity.AquaTridentEntity::new, MobCategory.MISC)
+                    .noLootTable().sized(0.5F, 0.5F).clientTrackingRange(10).updateInterval(1).fireImmune().noSummon()
+                    .build(ENTITIES.key("aquaman_trident")));
+
+    /** Aquaman's great white shark: a fast mount underwater that bites his enemies. */
+    public static final RegistryObject<EntityType<com.danrod505.greenlantern.entity.GreatWhiteSharkEntity>> GREAT_WHITE_SHARK = ENTITIES.register("great_white_shark",
+            () -> EntityType.Builder.<com.danrod505.greenlantern.entity.GreatWhiteSharkEntity>of(com.danrod505.greenlantern.entity.GreatWhiteSharkEntity::new, MobCategory.MISC)
+                    .noLootTable().sized(com.danrod505.greenlantern.entity.GreatWhiteSharkEntity.WIDTH, com.danrod505.greenlantern.entity.GreatWhiteSharkEntity.HEIGHT)
+                    .clientTrackingRange(10).updateInterval(1).noSummon()
+                    .build(ENTITIES.key("great_white_shark")));
+
     /** Client-only trail renderer holder (never spawned on the server). */
     public static final RegistryObject<EntityType<FlightTrailEntity>> FLIGHT_TRAIL = ENTITIES.register("flight_trail",
             () -> EntityType.Builder.<FlightTrailEntity>of(FlightTrailEntity::new, MobCategory.MISC)

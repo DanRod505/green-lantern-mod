@@ -70,6 +70,20 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> SPEED_THEME_BASE = register("speed_theme_base");
     public static final RegistryObject<SoundEvent> SPEED_THEME_PEAK = register("speed_theme_peak");
 
+    // ---- Aquaman (all original, see tools/generate_aquaman_audio.py) ------------------------------
+    public static final RegistryObject<SoundEvent> AQUAMAN_SUIT_UP = register("aquaman_suit_up");
+    public static final RegistryObject<SoundEvent> AQUAMAN_SUIT_DOWN = register("aquaman_suit_down");
+    public static final RegistryObject<SoundEvent> SWIM_DASH = register("swim_dash");
+    public static final RegistryObject<SoundEvent> SWIM_LOOP = register("swim_loop");
+    public static final RegistryObject<SoundEvent> TRIDENT_SUMMON = register("trident_summon");
+    public static final RegistryObject<SoundEvent> TRIDENT_THROW = register("trident_throw");
+    public static final RegistryObject<SoundEvent> TRIDENT_HIT = register("trident_hit");
+    public static final RegistryObject<SoundEvent> TRIDENT_RETURN = register("trident_return");
+    public static final RegistryObject<SoundEvent> TRIDENT_SWING = register("trident_swing");
+    public static final RegistryObject<SoundEvent> SHARK_SUMMON = register("shark_summon");
+    public static final RegistryObject<SoundEvent> SHARK_BITE = register("shark_bite");
+    public static final RegistryObject<SoundEvent> SEA_CALL = register("sea_call");
+
     private static RegistryObject<SoundEvent> register(String name) {
         return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(GreenLantern.id(name)));
     }

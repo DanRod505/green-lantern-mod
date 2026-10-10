@@ -1,6 +1,7 @@
 package com.danrod505.greenlantern.client.flight;
 
 import com.danrod505.greenlantern.GreenLantern;
+import com.danrod505.greenlantern.client.aqua.SwimVisuals;
 import com.danrod505.greenlantern.client.render.HardLight;
 import com.danrod505.greenlantern.client.speed.SpeedVisuals;
 import com.danrod505.greenlantern.entity.FlightTrailEntity;
@@ -23,7 +24,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * Draws the energy trails of every flying Lantern as camera-facing ribbons: a wide soft glow and a
+ * Draws the energy trails of every flying Lantern (and the speedster and swimming trails) as camera-facing ribbons: a wide soft glow and a
  * bright core that taper and fade out with age. The geometry is attached to a client-only entity
  * that follows the camera, so trails are visible even when their owner is off screen.
  */
@@ -35,6 +36,8 @@ public class TrailRenderer extends EntityRenderer<FlightTrailEntity, TrailRender
     private static final int KIND_LANTERN_SUPERSONIC = 1;
     private static final int KIND_SPEED_BLUR = 2;
     private static final int KIND_SPEED_BOLT = 3;
+    private static final int KIND_AQUA_WAKE = 4;
+    private static final int KIND_AQUA_SPIRAL = 5;
     /** Floats per ribbon point: center xyz, side xyz, u, alpha. */
     private static final int STRIDE = 8;
     private static FlightTrailEntity holder;
@@ -110,6 +113,65 @@ public class TrailRenderer extends EntityRenderer<FlightTrailEntity, TrailRender
             state.ribbons.add(new Ribbon(data, points.size(), visual.supersonic() ? KIND_LANTERN_SUPERSONIC : KIND_LANTERN));
         }
         extractSpeedTrails(state, mc, level, cam, origin, now, partialTick);
+        extractSwimTrails(state, mc, level, cam, origin, now, partialTick);
+    }
+
+    /**
+     * Aquaman's water trail: a sea-green wake the width of the body, wrapped in two streams of
+     * bubbles that spiral around it.
+     */
+    private static void extractSwimTrails(State state, Minecraft mc, ClientLevel level, Vec3 cam, Vec3 origin, double now, float partialTick) {
+        for (SwimVisuals.Visual visual : SwimVisuals.all()) {
+            if (visual.trail.size() < 2) continue;
+            int life = visual.trailLife();
+            Entity owner = level.getEntity(visual.entityId);
+            boolean skipNear = owner == mc.player && mc.options.getCameraType().isFirstPerson();
+            List<Vec3> points = new ArrayList<>();
+            List<Float> ages = new ArrayList<>();
+            List<Long> times = new ArrayList<>();
+            if (owner != null && !skipNear && visual.swimming()) {
+                // Head of the trail: on the swimmer, at the height of the trail points.
+                points.add(owner.getPosition(partialTick).add(0, visual.trail.peekFirst().y() - owner.getY(), 0));
+                ages.add(0.0F);
+                times.add(visual.trail.peekFirst().time() + 1);
+            }
+            for (SwimVisuals.TrailPoint p : visual.trail) {
+                float age = (float) ((now - p.time()) / life);
+                if (age >= 1.0F) break;
+                Vec3 point = new Vec3(p.x(), p.y(), p.z());
+                if (skipNear && points.isEmpty() && point.distanceToSqr(cam) < 2.5 * 2.5) continue;
+                points.add(point);
+                ages.add(Math.max(0.0F, age));
+                times.add(p.time());
+            }
+            int n = points.size();
+            if (n < 2) continue;
+            List<float[]> attrs = new ArrayList<>();
+            for (int i = 0; i < n; i++) attrs.add(new float[] {0.8F, 1.0F - ages.get(i)});
+            float[] wake = build(points, attrs, cam, origin);
+            if (wake != null) state.ribbons.add(new Ribbon(wake, n, KIND_AQUA_WAKE));
+
+            // Two bubble streams twisting around the wake (the twist is fixed to the water, not the swimmer).
+            for (int strand = 0; strand < 2; strand++) {
+                List<Vec3> spiral = new ArrayList<>(n);
+                List<float[]> spiralAttrs = new ArrayList<>(n);
+                for (int i = 0; i < n; i++) {
+                    Vec3 p = points.get(i);
+                    Vec3 tangent = points.get(Math.min(n - 1, i + 1)).subtract(points.get(Math.max(0, i - 1)));
+                    if (tangent.lengthSqr() < 1.0E-6) tangent = new Vec3(0, 0, 1);
+                    tangent = tangent.normalize();
+                    Vec3 a = Math.abs(tangent.y) > 0.9 ? new Vec3(1, 0, 0) : new Vec3(0, 1, 0);
+                    Vec3 u = tangent.cross(a).normalize();
+                    Vec3 v = tangent.cross(u).normalize();
+                    double phase = times.get(i) * 0.9 + strand * Math.PI;
+                    double radius = i == 0 ? 0.0 : 0.35 + 0.35 * ages.get(i);
+                    spiral.add(p.add(u.scale(Math.cos(phase) * radius)).add(v.scale(Math.sin(phase) * radius)));
+                    spiralAttrs.add(new float[] {0.07F, 1.0F - ages.get(i)});
+                }
+                float[] data = build(spiral, spiralAttrs, cam, origin);
+                if (data != null) state.ribbons.add(new Ribbon(data, n, KIND_AQUA_SPIRAL));
+            }
+        }
     }
 
     /**
@@ -229,6 +291,12 @@ public class TrailRenderer extends EntityRenderer<FlightTrailEntity, TrailRender
                     } else if (ribbon.kind == KIND_SPEED_BOLT) {
                         emit(vc, pose, ribbon, 3.0F, 0.45F, 0xFFFFB800);
                         emit(vc, pose, ribbon, 1.0F, 1.0F, 0xFFFFF8C8);
+                    } else if (ribbon.kind == KIND_AQUA_WAKE) {
+                        emit(vc, pose, ribbon, 1.7F, 0.38F, 0xFF0F8C96);
+                        emit(vc, pose, ribbon, 0.8F, 0.7F, 0xFF5AE6DC);
+                    } else if (ribbon.kind == KIND_AQUA_SPIRAL) {
+                        emit(vc, pose, ribbon, 2.6F, 0.35F, 0xFF7FF0E6);
+                        emit(vc, pose, ribbon, 1.0F, 0.9F, 0xFFE8FFFC);
                     }
                 }
             });

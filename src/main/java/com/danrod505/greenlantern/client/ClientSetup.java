@@ -70,12 +70,14 @@ public final class ClientSetup {
         TickEvent.PlayerTickEvent.Post.BUS.addListener(ClientSetup::onPlayerTickPost);
         ComputeFovModifierEvent.BUS.addListener(FlightCamera::onFov);
         ComputeFovModifierEvent.BUS.addListener(SpeedCamera::onFov);
+        ComputeFovModifierEvent.BUS.addListener(com.danrod505.greenlantern.client.aqua.SwimCamera::onFov);
         ViewportEvent.ComputeCameraAngles.BUS.addListener(SpeedCamera::onAngles);
         SpeedRenderHandler.register();
         ViewportEvent.ComputeCameraAngles.BUS.addListener(FlightCamera::onAngles);
         FlightRenderHandler.register();
         InputEvent.MouseScrollingEvent.BUS.addListener(ClientEvents::onMouseScroll);
         InputEvent.InteractionKeyMappingTriggered.BUS.addListener(MechaControls::onInteraction);
+        InputEvent.InteractionKeyMappingTriggered.BUS.addListener(SharkControls::onInteraction);
         ViewportEvent.ComputeCameraAngles.BUS.addListener(CameraShake::onCameraAngles);
     }
 
@@ -115,6 +117,8 @@ public final class ClientSetup {
         event.registerEntityRenderer(ModEntities.OA_PORTAL.get(), com.danrod505.greenlantern.client.render.oa.OaPortalRenderer::new);
         event.registerEntityRenderer(ModEntities.OA_GUARDIAN.get(), com.danrod505.greenlantern.client.render.oa.OaGuardianRenderer::new);
         event.registerEntityRenderer(ModEntities.LANTERN_CORPSMAN.get(), com.danrod505.greenlantern.client.render.oa.LanternCorpsmanRenderer::new);
+        event.registerEntityRenderer(ModEntities.AQUA_TRIDENT.get(), com.danrod505.greenlantern.client.render.aqua.AquaTridentRenderer::new);
+        event.registerEntityRenderer(ModEntities.GREAT_WHITE_SHARK.get(), com.danrod505.greenlantern.client.render.aqua.SharkRenderer::new);
     }
 
     private static void onRegisterParticles(RegisterParticleProvidersEvent event) {
@@ -131,6 +135,7 @@ public final class ClientSetup {
     private static void onRegisterLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(AuraLayer.LAYER, AuraLayer::createLayer);
         event.registerLayerDefinition(com.danrod505.greenlantern.client.render.oa.OaNpcModel.LAYER, com.danrod505.greenlantern.client.render.oa.OaNpcModel::createLayer);
+        event.registerLayerDefinition(com.danrod505.greenlantern.client.render.aqua.SharkModel.LAYER, com.danrod505.greenlantern.client.render.aqua.SharkModel::createLayer);
     }
 
     private static void onAddLayers(EntityRenderersEvent.AddLayers event) {
@@ -148,12 +153,15 @@ public final class ClientSetup {
         FlightAudio.tick();
         SpeedVisuals.tick();
         SpeedAudio.tick();
+        com.danrod505.greenlantern.client.aqua.SwimVisuals.tick();
+        com.danrod505.greenlantern.client.aqua.SwimAudio.tick();
     }
 
     private static void onPlayerTickPre(TickEvent.PlayerTickEvent.Pre event) {
         if (event.player() instanceof LocalPlayer player && player == Minecraft.getInstance().player) {
             FlightController.preTick(player);
             SpeedController.preTick(player);
+            com.danrod505.greenlantern.client.aqua.SwimController.preTick(player);
         }
     }
 
@@ -161,6 +169,7 @@ public final class ClientSetup {
         if (event.player() instanceof LocalPlayer player && player == Minecraft.getInstance().player) {
             FlightController.postTick(player);
             SpeedController.postTick(player);
+            com.danrod505.greenlantern.client.aqua.SwimController.postTick(player);
         }
     }
 
@@ -169,5 +178,6 @@ public final class ClientSetup {
         event.getLayeredDraw().add(ForgeLayeredDraw.POST_SLEEP_STACK, GreenLantern.id("ring_hud"), RingHud::render);
         event.getLayeredDraw().add(ForgeLayeredDraw.POST_SLEEP_STACK, GreenLantern.id("speed_hud"), SpeedHud::render);
         event.getLayeredDraw().add(ForgeLayeredDraw.POST_SLEEP_STACK, GreenLantern.id("flash_hud"), FlashHud::render);
+        event.getLayeredDraw().add(ForgeLayeredDraw.POST_SLEEP_STACK, GreenLantern.id("aqua_hud"), AquaHud::render);
     }
 }

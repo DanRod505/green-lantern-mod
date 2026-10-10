@@ -3,7 +3,18 @@
 > *"No dia mais claro, na noite mais densa, o mal sucumbirá ante a minha presença!"*
 
 Mod de heróis do **Universo DC** para **Minecraft Java 1.21.11** com **Forge 61.2.0** (compilado com **Java 25**).
-Começou como o mod do Lanterna Verde e agora traz também **o Flash** (v1.7.0). O id do mod continua `greenlantern`, então mundos e configurações antigas continuam funcionando.
+Começou como o mod do Lanterna Verde e agora traz também **o Flash** (v1.7.0) e **o Aquaman** (v1.8.0). O id do mod continua `greenlantern`, então mundos e configurações antigas continuam funcionando.
+
+## O Aquaman (novo na 1.8.0)
+
+* **Emblema Atlante:** clique direito ou **G** para vestir o traje (camisa de escamas laranja, calças verdes e botas; o seu capacete continua). Um herói por vez.
+* **Filho do mar:** respira embaixo d'água, enxerga bem nas profundezas, fica mais resistente, bate mais forte, minera rápido na água e quedas comuns não machucam.
+* **Nado 3D:** dentro d'água você vai para onde olha, quase como voar (pulo sobe, agachar mergulha). Segurando correr, a velocidade sobe até um nado muito rápido, com rastro verde-mar e bolhas em espiral. Subindo rápido, você salta para fora da água como um golfinho.
+* **Poder dos Mares:** a energia dos poderes (barra de onda). Recarrega rápido na água, pela metade na chuva e devagar em terra.
+* **Menu radial de poderes** (segure **R**; **V** usa o poder):
+  * **Tridente de Atlântida:** aparece na mão, bate mais forte que espada de diamante e, segurando e soltando o botão direito, é arremessado e sempre volta para a mão.
+  * **Tubarão-branco:** um tubarão enorme surge na água e você monta nele. Ele nada para onde você olha, e o botão esquerdo morde. Ao descer, ele fica caçando monstros por perto.
+  * **Chamado Marinho:** peixes, lulas, golfinhos, tartarugas e axolotes por perto seguem você e atacam seus inimigos por 30 segundos. Se poucos responderem, golfinhos vêm das profundezas.
 
 ## O Flash (novo na 1.7.0)
 
@@ -113,7 +124,11 @@ Por direitos autorais, o mod não pode incluir músicas de terceiros, como a tri
 | **Correr (Ctrl)** com o traje do Flash | Começa a supercorrida (segure **W**; **S** derrapa; agachar desacelera) |
 | **Pulo** correndo | Super pulo (na parede: salta da parede) |
 | **R** (segurar / tocar) com o traje do Flash | Menu radial de poderes / próximo poder |
-| **V** | Usa o poder do Flash escolhido |
+| **V** | Usa o poder do herói escolhido (Flash ou Aquaman) |
+| Na água, com o traje do Aquaman | Nada para onde olha (**pulo** sobe, **agachar** desce, **correr** acelera) |
+| **R** (segurar / tocar) com o traje do Aquaman | Menu radial de poderes / próximo poder |
+| Botão direito (segurar e soltar) com o tridente | Arremessa o tridente (ele volta) |
+| Botão esquerdo montado no tubarão | Mordida |
 
 ### Receitas
 
@@ -133,6 +148,13 @@ Anel do Flash
  R  G  R
  G  P  G       R = redstone, G = barra de ouro, P = para-raios
  R  G  R
+```
+
+```
+Emblema Atlante
+ P  G  P
+ G  N  G       P = fragmento de prismarinho, G = barra de ouro, N = concha de náutilo
+ P  G  P
 ```
 
 Também estão na aba criativa **Heróis do Universo DC** (inclui os anéis já carregados).
@@ -260,6 +282,8 @@ python tools/generate_sounds.py
 python tools/generate_flight_audio.py   # sons do voo e a trilha original (duas camadas)
 python tools/generate_flash_textures.py # anel, traje, partículas e ícones do Flash
 python tools/generate_flash_audio.py    # sons do Flash e a trilha original da corrida
+python tools/generate_aquaman_textures.py # emblema, traje, tridente, tubarão e ícones do Aquaman
+python tools/generate_aquaman_audio.py    # sons originais do Aquaman
 ```
 
 ## Licença

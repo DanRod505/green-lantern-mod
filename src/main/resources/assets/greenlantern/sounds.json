@@ -462,5 +462,102 @@
         "stream": true
       }
     ]
+  },
+  "aquaman_suit_up": {
+    "subtitle": "subtitles.greenlantern.aquaman_suit_up",
+    "sounds": [
+      {
+        "name": "greenlantern:aquaman_suit_up"
+      }
+    ]
+  },
+  "aquaman_suit_down": {
+    "subtitle": "subtitles.greenlantern.aquaman_suit_down",
+    "sounds": [
+      {
+        "name": "greenlantern:aquaman_suit_down"
+      }
+    ]
+  },
+  "swim_dash": {
+    "subtitle": "subtitles.greenlantern.swim_dash",
+    "sounds": [
+      {
+        "name": "greenlantern:swim_dash"
+      }
+    ]
+  },
+  "swim_loop": {
+    "subtitle": "subtitles.greenlantern.swim_loop",
+    "sounds": [
+      {
+        "name": "greenlantern:swim_loop",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "trident_summon": {
+    "subtitle": "subtitles.greenlantern.trident_summon",
+    "sounds": [
+      {
+        "name": "greenlantern:trident_summon"
+      }
+    ]
+  },
+  "trident_throw": {
+    "subtitle": "subtitles.greenlantern.trident_throw",
+    "sounds": [
+      {
+        "name": "greenlantern:trident_throw"
+      }
+    ]
+  },
+  "trident_hit": {
+    "subtitle": "subtitles.greenlantern.trident_hit",
+    "sounds": [
+      {
+        "name": "greenlantern:trident_hit"
+      }
+    ]
+  },
+  "trident_return": {
+    "subtitle": "subtitles.greenlantern.trident_return",
+    "sounds": [
+      {
+        "name": "greenlantern:trident_return"
+      }
+    ]
+  },
+  "trident_swing": {
+    "subtitle": "subtitles.greenlantern.trident_swing",
+    "sounds": [
+      {
+        "name": "greenlantern:trident_swing"
+      }
+    ]
+  },
+  "shark_summon": {
+    "subtitle": "subtitles.greenlantern.shark_summon",
+    "sounds": [
+      {
+        "name": "greenlantern:shark_summon"
+      }
+    ]
+  },
+  "shark_bite": {
+    "subtitle": "subtitles.greenlantern.shark_bite",
+    "sounds": [
+      {
+        "name": "greenlantern:shark_bite"
+      }
+    ]
+  },
+  "sea_call": {
+    "subtitle": "subtitles.greenlantern.sea_call",
+    "sounds": [
+      {
+        "name": "greenlantern:sea_call"
+      }
+    ]
   }
 }

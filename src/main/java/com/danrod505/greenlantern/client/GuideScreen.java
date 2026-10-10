@@ -63,6 +63,8 @@ public class GuideScreen extends Screen {
             new Chapter("oa", () -> new ItemStack(Items.ENDER_EYE)),
             new Chapter("flash", () -> new ItemStack(ModItems.FLASH_RING.get())),
             new Chapter("flash_powers", () -> new ItemStack(Items.LIGHTNING_ROD)),
+            new Chapter("aquaman", () -> new ItemStack(ModItems.AQUAMAN_EMBLEM.get())),
+            new Chapter("aquaman_powers", () -> new ItemStack(Items.TRIDENT)),
             new Chapter("controls", () -> new ItemStack(Items.LEVER)),
             new Chapter(RECIPES, () -> new ItemStack(Items.CRAFTING_TABLE)),
             new Chapter("tips", () -> new ItemStack(Items.TORCH)));
@@ -80,6 +82,10 @@ public class GuideScreen extends Screen {
                     Items.REDSTONE, Items.GOLD_INGOT, Items.REDSTONE,
                     Items.GOLD_INGOT, Items.LIGHTNING_ROD, Items.GOLD_INGOT,
                     Items.REDSTONE, Items.GOLD_INGOT, Items.REDSTONE)),
+            new Recipe("aquaman_emblem", () -> new ItemStack(ModItems.AQUAMAN_EMBLEM.get()), () -> grid(
+                    Items.PRISMARINE_SHARD, Items.GOLD_INGOT, Items.PRISMARINE_SHARD,
+                    Items.GOLD_INGOT, Items.NAUTILUS_SHELL, Items.GOLD_INGOT,
+                    Items.PRISMARINE_SHARD, Items.GOLD_INGOT, Items.PRISMARINE_SHARD)),
             new Recipe("guide_book", () -> new ItemStack(ModItems.GUIDE_BOOK.get()), () -> grid(
                     Items.BOOK, Items.EMERALD, null,
                     null, null, null,

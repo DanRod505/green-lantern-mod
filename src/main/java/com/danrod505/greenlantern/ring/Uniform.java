@@ -55,9 +55,7 @@ public final class Uniform {
         }
 
         // Only one hero suit at a time.
-        if (com.danrod505.greenlantern.flash.FlashHelper.isSuited(player)) {
-            com.danrod505.greenlantern.flash.FlashSuit.dismiss(player, false);
-        }
+        com.danrod505.greenlantern.hero.Hero.dismissOthers(player, com.danrod505.greenlantern.hero.Hero.LANTERN);
         equipSuit(player,
                 ModItems.LANTERN_MASK.get().getDefaultInstance(),
                 ModItems.LANTERN_SUIT.get().getDefaultInstance(),
@@ -87,19 +85,26 @@ public final class Uniform {
 
     /**
      * Puts on a hero suit (head, chest, legs, feet pieces). Whatever armor the player wore is stashed
-     * in their persistent data and given back by {@link #removeSuit}.
+     * in their persistent data and given back by {@link #removeSuit}. An empty piece leaves that slot
+     * alone (Aquaman has no mask: the player keeps their own helmet).
      */
     public static void equipSuit(ServerPlayer player, ItemStack head, ItemStack chest, ItemStack legs, ItemStack feet) {
+        ItemStack[] pieces = {head, chest, legs, feet};
         List<ItemStack> stash = new ArrayList<>();
-        for (EquipmentSlot slot : SLOTS) {
-            ItemStack worn = player.getItemBySlot(slot);
-            stash.add(worn.getItem() instanceof SuitArmorItem ? ItemStack.EMPTY : worn.copy());
+        for (int i = 0; i < SLOTS.length; i++) {
+            ItemStack worn = player.getItemBySlot(SLOTS[i]);
+            boolean replaced = !pieces[i].isEmpty() || worn.getItem() instanceof SuitArmorItem;
+            stash.add(!replaced || worn.getItem() instanceof SuitArmorItem ? ItemStack.EMPTY : worn.copy());
         }
         writeStash(player, stash);
-        player.setItemSlot(EquipmentSlot.HEAD, createPiece(player, head));
-        player.setItemSlot(EquipmentSlot.CHEST, createPiece(player, chest));
-        player.setItemSlot(EquipmentSlot.LEGS, createPiece(player, legs));
-        player.setItemSlot(EquipmentSlot.FEET, createPiece(player, feet));
+        for (int i = 0; i < SLOTS.length; i++) {
+            ItemStack worn = player.getItemBySlot(SLOTS[i]);
+            if (!pieces[i].isEmpty()) {
+                player.setItemSlot(SLOTS[i], createPiece(player, pieces[i]));
+            } else if (worn.getItem() instanceof SuitArmorItem) {
+                player.setItemSlot(SLOTS[i], ItemStack.EMPTY);
+            }
+        }
     }
 
     /** Takes off any hero suit pieces and gives back the stashed armor. */
