@@ -27,6 +27,8 @@ public final class ModCreativeTabs {
                 output.accept(ModItems.AQUAMAN_EMBLEM.get());
                 output.accept(ModItems.ATLANTIS_GATE.get());
                 output.accept(ModItems.ATLANTEAN_RESPIRATOR.get());
+                output.accept(com.danrod505.greenlantern.item.UtilityBeltItem.charged(ModItems.UTILITY_BELT.get().getDefaultInstance()));
+                output.accept(ModItems.UTILITY_BELT.get());
             })
             .build());
 

@@ -31,6 +31,10 @@ public final class ModDataComponents {
     public static final RegistryObject<DataComponentType<RingEnergy>> SEA_FORCE = COMPONENTS.register("sea_force",
             () -> DataComponentType.<RingEnergy>builder().persistent(RingEnergy.CODEC).networkSynchronized(RingEnergy.STREAM_CODEC).build());
 
+    /** Charge of the Utility Belt's power cells (selected gadget: {@link #SELECTED_POWER}). */
+    public static final RegistryObject<DataComponentType<RingEnergy>> BAT_CHARGE = COMPONENTS.register("bat_charge",
+            () -> DataComponentType.<RingEnergy>builder().persistent(RingEnergy.CODEC).networkSynchronized(RingEnergy.STREAM_CODEC).build());
+
     /** Air left in an Atlantean Respirator, in ticks. */
     public static final RegistryObject<DataComponentType<Integer>> RESPIRATOR_AIR = COMPONENTS.register("respirator_air",
             () -> DataComponentType.<Integer>builder().persistent(com.mojang.serialization.Codec.INT).networkSynchronized(net.minecraft.network.codec.ByteBufCodecs.VAR_INT).build());

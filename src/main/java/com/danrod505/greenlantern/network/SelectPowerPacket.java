@@ -15,7 +15,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 
-/** Client -> server: pick a hero power (speedster or Aquaman) (from the power wheel) or step to the next / previous one. */
+/** Client -> server: pick a hero power (speedster, Aquaman or Batman) (from the power wheel) or step to the next / previous one. */
 public record SelectPowerPacket(int value, boolean relative) {
     public static final StreamCodec<RegistryFriendlyByteBuf, SelectPowerPacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT, (SelectPowerPacket p) -> p.value + 1,
@@ -28,6 +28,10 @@ public record SelectPowerPacket(int value, boolean relative) {
         if (player == null) return;
         if (Hero.context(player) == Hero.AQUAMAN) {
             AquamanServer.selectPower(player, packet.value, packet.relative);
+            return;
+        }
+        if (Hero.context(player) == Hero.BATMAN) {
+            com.danrod505.greenlantern.batman.BatmanServer.selectPower(player, packet.value, packet.relative);
             return;
         }
         ItemStack ring = FlashHelper.findRing(player);

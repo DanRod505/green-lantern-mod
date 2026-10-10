@@ -94,6 +94,25 @@ public final class ModItems {
                     .stacksTo(1)
                     .rarity(Rarity.UNCOMMON)));
 
+    // ---- Batman ---------------------------------------------------------------------------------
+
+    /** The Utility Belt: the batsuit is folded inside it, and its power cells run the gadgets. */
+    public static final RegistryObject<com.danrod505.greenlantern.item.UtilityBeltItem> UTILITY_BELT = ITEMS.register("utility_belt",
+            () -> new com.danrod505.greenlantern.item.UtilityBeltItem(new Item.Properties()
+                    .setId(ITEMS.key("utility_belt"))
+                    .stacksTo(1)
+                    .rarity(Rarity.EPIC)
+                    .fireResistant()));
+
+    public static final RegistryObject<SuitArmorItem> BATMAN_COWL = batmanSuit("batman_cowl", ArmorType.HELMET);
+    public static final RegistryObject<SuitArmorItem> BATMAN_SUIT = batmanSuit("batman_suit", ArmorType.CHESTPLATE);
+    public static final RegistryObject<SuitArmorItem> BATMAN_LEGGINGS = batmanSuit("batman_leggings", ArmorType.LEGGINGS);
+    public static final RegistryObject<SuitArmorItem> BATMAN_BOOTS = batmanSuit("batman_boots", ArmorType.BOOTS);
+
+    private static RegistryObject<SuitArmorItem> batmanSuit(String name, ArmorType type) {
+        return ITEMS.register(name, () -> new SuitArmorItem(type, SuitArmorItem.properties(SuitArmorItem.BATMAN_MATERIAL, type).setId(ITEMS.key(name))));
+    }
+
     private static RegistryObject<SuitArmorItem> aquamanSuit(String name, ArmorType type) {
         return ITEMS.register(name, () -> new SuitArmorItem(type, SuitArmorItem.properties(SuitArmorItem.AQUAMAN_MATERIAL, type).setId(ITEMS.key(name))));
     }

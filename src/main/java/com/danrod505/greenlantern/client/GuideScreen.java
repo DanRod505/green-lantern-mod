@@ -67,6 +67,8 @@ public class GuideScreen extends Screen {
             new Chapter("aquaman_powers", () -> new ItemStack(Items.TRIDENT)),
             new Chapter("kraken", () -> new ItemStack(Items.INK_SAC)),
             new Chapter("atlantis", () -> new ItemStack(ModItems.ATLANTIS_GATE.get())),
+            new Chapter("batman", () -> new ItemStack(ModItems.UTILITY_BELT.get())),
+            new Chapter("batman_powers", () -> new ItemStack(ModItems.BATMAN_COWL.get())),
             new Chapter("controls", () -> new ItemStack(Items.LEVER)),
             new Chapter(RECIPES, () -> new ItemStack(Items.CRAFTING_TABLE)),
             new Chapter("tips", () -> new ItemStack(Items.TORCH)));
@@ -96,6 +98,10 @@ public class GuideScreen extends Screen {
                     Items.PRISMARINE_SHARD, Items.GOLD_INGOT, Items.PRISMARINE_SHARD,
                     Items.KELP, Items.GLASS_BOTTLE, Items.KELP,
                     null, Items.PRISMARINE_SHARD, null)),
+            new Recipe("utility_belt", () -> new ItemStack(ModItems.UTILITY_BELT.get()), () -> grid(
+                    Items.LEATHER, Items.GOLD_INGOT, Items.LEATHER,
+                    Items.IRON_INGOT, Items.PHANTOM_MEMBRANE, Items.IRON_INGOT,
+                    Items.LEATHER, Items.GOLD_INGOT, Items.LEATHER)),
             new Recipe("guide_book", () -> new ItemStack(ModItems.GUIDE_BOOK.get()), () -> grid(
                     Items.BOOK, Items.EMERALD, null,
                     null, null, null,
@@ -143,7 +149,7 @@ public class GuideScreen extends Screen {
     @Override
     protected void init() {
         w = Math.min(340, width - 16);
-        h = Math.min(224, height - 16);
+        h = Math.min(250, height - 16);
         x0 = (width - w) / 2;
         y0 = (height - h) / 2;
         paginate();

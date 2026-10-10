@@ -49,6 +49,8 @@ public final class CommonEvents {
                 com.danrod505.greenlantern.flash.SpeedsterServer.remove(player);
                 if (AquamanHelper.isSuited(player)) AquamanSuit.dismiss(player, false);
                 AquamanServer.remove(player);
+                if (com.danrod505.greenlantern.batman.BatmanHelper.isSuited(player)) com.danrod505.greenlantern.batman.BatmanSuit.dismiss(player, false);
+                com.danrod505.greenlantern.batman.BatmanServer.remove(player);
             }
         });
     }
@@ -82,11 +84,17 @@ public final class CommonEvents {
             // The suit answers the emblem: no emblem, no suit.
             AquamanSuit.dismiss(player, true);
         }
+        if (com.danrod505.greenlantern.batman.BatmanHelper.isSuited(player)
+                && com.danrod505.greenlantern.batman.BatmanHelper.findBelt(player).isEmpty()) {
+            // The batsuit folds back into the belt: no belt, no suit.
+            com.danrod505.greenlantern.batman.BatmanSuit.dismiss(player, true);
+        }
         if (player.tickCount % 10 == 0) {
             Uniform.removeStrayPieces(player);
         }
         com.danrod505.greenlantern.flash.SpeedsterServer.tick(player);
         AquamanServer.tick(player);
+        com.danrod505.greenlantern.batman.BatmanServer.tick(player);
         com.danrod505.greenlantern.aquaman.Respirator.tick(player);
         if (player.tickCount % 5 == 0) {
             chargeFromCentralBattery(player);
@@ -141,6 +149,12 @@ public final class CommonEvents {
             kraken.shieldRider(rider, event.getSource(), event.getAmount());
             return true;
         }
+        // The Batmobile's own missiles never hurt its driver.
+        if (event.getEntity() instanceof ServerPlayer driver && driver.getVehicle() instanceof com.danrod505.greenlantern.entity.BatmobileEntity
+                && event.getSource().getDirectEntity() instanceof com.danrod505.greenlantern.entity.BatmobileMissileEntity missile
+                && missile.getOwner() == driver) {
+            return true;
+        }
         if (!(event.getEntity() instanceof ServerPlayer player) || !(player.getVehicle() instanceof MechaEntity mecha)) return false;
         if (event.getSource().is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY)) return false;
         mecha.absorbHit(player, event.getSource(), event.getAmount());
@@ -149,6 +163,11 @@ public final class CommonEvents {
 
     private static void onLivingHurt(LivingHurtEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        if (player.getVehicle() instanceof com.danrod505.greenlantern.entity.BatmobileEntity
+                && !event.getSource().is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+            // The Batmobile's armor takes most of the blow.
+            event.setAmount(event.getAmount() * (1.0F - GLConfig.BATMOBILE_DAMAGE_REDUCTION.get().floatValue()));
+        }
         BubbleConstructEntity bubble = BubbleConstructEntity.find(player);
         if (bubble != null && !event.getSource().is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY)) {
             float reduction = GLConfig.BUBBLE_DAMAGE_REDUCTION.get().floatValue();
@@ -165,6 +184,9 @@ public final class CommonEvents {
             // The ring cushions every landing; a speedster lands running; an Atlantean, built for the
             // crushing deep, shrugs off any ordinary fall.
             event.setDamageMultiplier(0.0F);
+        } else if (event.getEntity() instanceof ServerPlayer batman && com.danrod505.greenlantern.batman.BatmanHelper.isSuited(batman)) {
+            // The cape breaks a glide's landing; otherwise years of training soften the fall.
+            event.setDamageMultiplier(com.danrod505.greenlantern.batman.BatmanServer.safeLanding(batman) ? 0.0F : 0.5F);
         }
     }
 
@@ -178,6 +200,9 @@ public final class CommonEvents {
         }
         if (event.getEntity() instanceof ServerPlayer player && AquamanHelper.isSuited(player)) {
             AquamanSuit.dismiss(player, false);
+        }
+        if (event.getEntity() instanceof ServerPlayer player && com.danrod505.greenlantern.batman.BatmanHelper.isSuited(player)) {
+            com.danrod505.greenlantern.batman.BatmanSuit.dismiss(player, false);
         }
     }
 

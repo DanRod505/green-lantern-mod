@@ -3,7 +3,17 @@
 > *"No dia mais claro, na noite mais densa, o mal sucumbirá ante a minha presença!"*
 
 Mod de heróis do **Universo DC** para **Minecraft Java 1.21.11** com **Forge 61.2.0** (compilado com **Java 25**).
-Começou como o mod do Lanterna Verde e agora traz também **o Flash** (v1.7.0) **o Aquaman** (v1.8.0), **Atlântida** (v1.9.0) e **o Kraken do Aquaman** (v1.10.0). O id do mod continua `greenlantern`, então mundos e configurações antigas continuam funcionando.
+Começou como o mod do Lanterna Verde e agora traz também **o Flash** (v1.7.0) **o Aquaman** (v1.8.0), **Atlântida** (v1.9.0) **o Kraken do Aquaman** (v1.10.0) e **o Batman** (v1.11.0). O id do mod continua `greenlantern`, então mundos e configurações antigas continuam funcionando.
+
+## O Batman (novo na 1.11.0)
+
+* **Cinto de Utilidades:** o item do herói. Clique direito (ou **G**) veste o traje: capuz com orelhas e visão noturna, traje cinza com o morcego no peito, calças, botas e uma longa capa preta. A **Carga do Cinto** recarrega sozinha, mais rápido no escuro.
+* **Planar com a capa:** caindo de uma altura, **segure pulo** e a capa se abre como uma asa. Olhe para baixo para mergulhar e ganhar velocidade, para cima para trocar velocidade por altura. Planando, nada de dano de queda.
+* **Menu radial (R, depois V):**
+  * **Batarangue:** corta, deixa o alvo lento, ricocheteia nas paredes e volta.
+  * **Gancho:** até 48 blocos; o cabo puxa você até o alto ou até longe e te joga por cima da borda. Pulo solta no meio do caminho. Acertando uma criatura, puxa ela até você.
+  * **Enxame de Morcegos:** 16 morcegos voam em volta de você por 25 segundos, atacam e cegam os inimigos e param flechas.
+  * **Batmóvel:** um carro blindado com **boost** de jato (**Ctrl**) e **mísseis** teleguiados (**botão esquerdo**). Atropela os inimigos e protege quem está dentro.
 
 ## O Kraken (novo na 1.10.0)
 
@@ -146,6 +156,9 @@ Por direitos autorais, o mod não pode incluir músicas de terceiros, como a tri
 | **R** (segurar / tocar) com o traje do Aquaman | Menu radial de poderes / próximo poder |
 | Botão direito (segurar e soltar) com o tridente | Arremessa o tridente (ele volta) |
 | Botão esquerdo montado no tubarão | Mordida |
+| **Pulo** (segurar) caindo, com o traje do Batman | Planar com a capa |
+| **R** (segurar / tocar) com o traje do Batman | Menu radial de equipamentos / próximo equipamento |
+| No Batmóvel: **Ctrl** / botão esquerdo | Boost / mísseis |
 
 ### Receitas
 
@@ -181,6 +194,13 @@ Dispositivo de Atlântida     Respirador Atlante
  G  E  G                      .  S  .
 G = barra de ouro, C = cristais de prismarinho,     S = fragmento de prismarinho, G = barra de ouro,
 H = coração do mar, E = pérola do ender             K = alga, B = frasco de vidro
+```
+
+```
+Cinto de Utilidades
+ L  G  L
+ I  M  I       L = couro, G = barra de ouro, I = barra de ferro, M = membrana de phantom
+ L  G  L
 ```
 
 Também estão na aba criativa **Heróis do Universo DC** (inclui os anéis já carregados).
@@ -310,6 +330,8 @@ python tools/generate_flash_textures.py # anel, traje, partículas e ícones do 
 python tools/generate_flash_audio.py    # sons do Flash e a trilha original da corrida
 python tools/generate_aquaman_textures.py # emblema, traje, tridente, tubarão e ícones do Aquaman
 python tools/generate_aquaman_audio.py    # sons originais do Aquaman
+python tools/generate_batman_textures.py  # cinto, traje e ícones do Batman
+python tools/generate_batman_audio.py     # sons originais do Batman e do Batmóvel
 ```
 
 ## Licença

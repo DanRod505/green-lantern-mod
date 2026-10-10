@@ -1,6 +1,7 @@
 package com.danrod505.greenlantern.client;
 
 import com.danrod505.greenlantern.aquaman.AquamanHelper;
+import com.danrod505.greenlantern.batman.BatmanHelper;
 import com.danrod505.greenlantern.flash.FlashHelper;
 import com.danrod505.greenlantern.hero.Hero;
 import com.danrod505.greenlantern.network.CycleConstructPacket;
@@ -31,12 +32,13 @@ public final class ClientEvents {
         }
         while (KeyBindings.HERO_POWER.consumeClick()) {
             Hero hero = Hero.context(player);
-            if (mc.screen == null && (hero == Hero.FLASH || hero == Hero.AQUAMAN)) ModNetwork.sendToServer(new UsePowerPacket(-1));
+            if (mc.screen == null && hero.hasPowers()) ModNetwork.sendToServer(new UsePowerPacket(-1));
         }
         tickWheelKey(mc, player);
         MechaControls.tick(mc);
         SharkControls.tick(mc);
         KrakenControls.tick(mc);
+        BatmobileControls.tick(mc);
 
         if (mc.isPaused()) return;
         // Green aura trail behind every flying Lantern in view.
@@ -64,7 +66,7 @@ public final class ClientEvents {
         while (KeyBindings.CONSTRUCT_WHEEL.consumeClick()) {
         }
         Hero hero = Hero.context(player);
-        boolean powers = hero == Hero.FLASH || hero == Hero.AQUAMAN;
+        boolean powers = hero.hasPowers();
         if (mc.screen != null || hero == Hero.NONE) {
             wheelKeyTicks = 0;
             return;
@@ -81,12 +83,13 @@ public final class ClientEvents {
         }
     }
 
-    /** Sneak + mouse wheel cycles constructs (or powers) while holding the ring or emblem. */
+    /** Sneak + mouse wheel cycles constructs (or powers) while holding the ring, emblem or belt. */
     public static boolean onMouseScroll(InputEvent.MouseScrollingEvent event) {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         if (player == null || mc.screen != null || !player.isShiftKeyDown()) return false;
-        boolean powers = !FlashHelper.heldRing(player).isEmpty() || !AquamanHelper.heldEmblem(player).isEmpty();
+        boolean powers = !FlashHelper.heldRing(player).isEmpty() || !AquamanHelper.heldEmblem(player).isEmpty()
+                || !BatmanHelper.heldBelt(player).isEmpty();
         if (!powers && RingHelper.heldRing(player).isEmpty()) return false;
         double delta = event.getDeltaY();
         if (delta == 0) return false;

@@ -4,6 +4,9 @@ import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.aquaman.AquaPower;
 import com.danrod505.greenlantern.aquaman.AquamanHelper;
 import com.danrod505.greenlantern.aquaman.SeaForce;
+import com.danrod505.greenlantern.batman.BatCharge;
+import com.danrod505.greenlantern.batman.BatPower;
+import com.danrod505.greenlantern.batman.BatmanHelper;
 import com.danrod505.greenlantern.flash.FlashHelper;
 import com.danrod505.greenlantern.flash.SpeedForce;
 import com.danrod505.greenlantern.flash.SpeedsterPower;
@@ -32,7 +35,8 @@ import org.lwjgl.glfw.GLFW;
 
 /**
  * A hero's power wheel (same controls as the Lantern's construct wheel, in the hero's colours: Speed
- * Force red and gold for the Flash, sea teal and gold for Aquaman): hold the wheel key, point at a
+ * Force red and gold for the Flash, sea teal and gold for Aquaman, night black and
+ * utility-belt yellow for Batman): hold the wheel key, point at a
  * power and release the key (or click) to select it.
  */
 public class PowerWheelScreen extends Screen {
@@ -41,6 +45,8 @@ public class PowerWheelScreen extends Screen {
     public static final int ICONS_H = 16;
     public static final Identifier AQUA_ICONS = GreenLantern.id("textures/gui/aquaman_powers.png");
     public static final int AQUA_ICONS_W = 96;
+    public static final Identifier BAT_ICONS = GreenLantern.id("textures/gui/batman_powers.png");
+    public static final int BAT_ICONS_W = 80;
 
     /** Everything that differs between the heroes' wheels. */
     private record Powers(WheelTextures.Theme theme, Identifier icons, int iconsW, Function<Player, ItemStack> item,
@@ -58,6 +64,11 @@ public class PowerWheelScreen extends Screen {
                 i -> AquaPower.byIndex(i).displayName(), i -> AquaPower.byIndex(i).description(), i -> AquaPower.byIndex(i).cost(),
                 "wheel.greenlantern.sea_cost", "tooltip.greenlantern.sea_force", 0x66001014, 0xF2C94A, 0xA8F0E0, 0xD8F0EC,
                 0xA8C8C4, 0xF2D27A, 0xA8C4C0);
+        static final Powers BATMAN = new Powers(WheelTextures.Theme.BATMAN, BAT_ICONS, BAT_ICONS_W, BatmanHelper::findBelt, BatCharge::get,
+                belt -> BatPower.selected(belt).ordinal(), BatPower.count(),
+                i -> BatPower.byIndex(i).displayName(), i -> BatPower.byIndex(i).description(), i -> BatPower.byIndex(i).cost(),
+                "wheel.greenlantern.bat_cost", "tooltip.greenlantern.bat_charge", 0x88050506, 0xF2D03A, 0xE8D890, 0xE0E0E4,
+                0x9A9AA4, 0xF2D03A, 0xA8A8B0);
     }
 
     private final Powers powers;
@@ -74,7 +85,11 @@ public class PowerWheelScreen extends Screen {
 
     public PowerWheelScreen(Hero hero) {
         super(Component.translatable("wheel.greenlantern.powers"));
-        this.powers = hero == Hero.AQUAMAN ? Powers.AQUAMAN : Powers.FLASH;
+        this.powers = switch (hero) {
+            case AQUAMAN -> Powers.AQUAMAN;
+            case BATMAN -> Powers.BATMAN;
+            default -> Powers.FLASH;
+        };
         this.count = powers.count();
         this.pop = new float[count];
         ItemStack item = powers.item().apply(net.minecraft.client.Minecraft.getInstance().player);

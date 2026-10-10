@@ -24,7 +24,7 @@ public final class WheelTextures {
 
     /**
      * Colours of a hero's wheel: each hero has their own (green hard light for the Lantern, red and
-     * gold Speed Force for the Flash, teal and gold for Aquaman).
+     * gold Speed Force for the Flash, teal and gold for Aquaman, black, gray and yellow for Batman).
      */
     public record Theme(String name, int centerInner, int centerOuter, int centerRing, int border, int sliceInner, int sliceOuter,
                         int highlightInner, int highlightOuter, int highlightEdge, int highlightRim, int current) {
@@ -34,6 +34,8 @@ public final class WheelTextures {
                 0x6A1408, 0xC8301A, 0xFFD24A, 0xFFF0B0, 0xFFC830);
         public static final Theme AQUAMAN = new Theme("sea_wheel", 0x021216, 0x010608, 0xC8A02A, 0x1C6A6A, 0x020C10, 0x06222A,
                 0x0A4A52, 0x1AA8A0, 0xF2C94A, 0xFFF0B0, 0x3CE0D0);
+        public static final Theme BATMAN = new Theme("bat_wheel", 0x0C0C0E, 0x040405, 0xD8B020, 0x4A4A52, 0x08080A, 0x1A1A1F,
+                0x2A2A30, 0x55555E, 0xF2D03A, 0xFFF4B0, 0xF2D03A);
 
         public Identifier base() {
             return GreenLantern.id("dynamic/" + name + "_base");

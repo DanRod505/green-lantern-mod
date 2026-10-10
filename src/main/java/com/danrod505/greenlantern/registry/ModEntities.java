@@ -121,6 +121,37 @@ public final class ModEntities {
                     .noLootTable().sized(0.6F, 1.95F).clientTrackingRange(10).updateInterval(2)
                     .build(ENTITIES.key("atlantean")));
 
+    /** Batman's batarang in flight (it curves back to the belt). */
+    public static final RegistryObject<EntityType<com.danrod505.greenlantern.entity.BatarangEntity>> BATARANG = ENTITIES.register("batarang",
+            () -> EntityType.Builder.<com.danrod505.greenlantern.entity.BatarangEntity>of(com.danrod505.greenlantern.entity.BatarangEntity::new, MobCategory.MISC)
+                    .noLootTable().sized(0.4F, 0.15F).clientTrackingRange(8).updateInterval(1).fireImmune().noSummon()
+                    .build(ENTITIES.key("batarang")));
+
+    /** The hook of Batman's grapnel gun, with its cable. */
+    public static final RegistryObject<EntityType<com.danrod505.greenlantern.entity.GrappleHookEntity>> GRAPPLE_HOOK = ENTITIES.register("grapple_hook",
+            () -> EntityType.Builder.<com.danrod505.greenlantern.entity.GrappleHookEntity>of(com.danrod505.greenlantern.entity.GrappleHookEntity::new, MobCategory.MISC)
+                    .noLootTable().sized(0.3F, 0.3F).clientTrackingRange(10).updateInterval(1).fireImmune().noSummon()
+                    .build(ENTITIES.key("grapple_hook")));
+
+    /** One of the bats of Batman's swarm. */
+    public static final RegistryObject<EntityType<com.danrod505.greenlantern.entity.BatDefenderEntity>> BAT_DEFENDER = ENTITIES.register("bat_defender",
+            () -> EntityType.Builder.<com.danrod505.greenlantern.entity.BatDefenderEntity>of(com.danrod505.greenlantern.entity.BatDefenderEntity::new, MobCategory.MISC)
+                    .noLootTable().sized(0.5F, 0.5F).clientTrackingRange(8).updateInterval(1).noSummon()
+                    .build(ENTITIES.key("bat_defender")));
+
+    /** The Batmobile: Batman's armored car, with a jet booster and missile launchers. */
+    public static final RegistryObject<EntityType<com.danrod505.greenlantern.entity.BatmobileEntity>> BATMOBILE = ENTITIES.register("batmobile",
+            () -> EntityType.Builder.<com.danrod505.greenlantern.entity.BatmobileEntity>of(com.danrod505.greenlantern.entity.BatmobileEntity::new, MobCategory.MISC)
+                    .noLootTable().sized(com.danrod505.greenlantern.entity.BatmobileEntity.WIDTH, com.danrod505.greenlantern.entity.BatmobileEntity.HEIGHT)
+                    .clientTrackingRange(12).updateInterval(1).fireImmune().noSummon()
+                    .build(ENTITIES.key("batmobile")));
+
+    /** Missile of the Batmobile's launchers. */
+    public static final RegistryObject<EntityType<com.danrod505.greenlantern.entity.BatmobileMissileEntity>> BATMOBILE_MISSILE = ENTITIES.register("batmobile_missile",
+            () -> EntityType.Builder.<com.danrod505.greenlantern.entity.BatmobileMissileEntity>of(com.danrod505.greenlantern.entity.BatmobileMissileEntity::new, MobCategory.MISC)
+                    .noLootTable().sized(0.35F, 0.35F).clientTrackingRange(10).updateInterval(1).fireImmune().noSummon()
+                    .build(ENTITIES.key("batmobile_missile")));
+
     /** Client-only trail renderer holder (never spawned on the server). */
     public static final RegistryObject<EntityType<FlightTrailEntity>> FLIGHT_TRAIL = ENTITIES.register("flight_trail",
             () -> EntityType.Builder.<FlightTrailEntity>of(FlightTrailEntity::new, MobCategory.MISC)
