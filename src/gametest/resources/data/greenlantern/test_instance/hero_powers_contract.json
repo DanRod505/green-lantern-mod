@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:function",
+  "function": "greenlantern:hero_powers_contract",
+  "environment": "minecraft:default",
+  "structure": "greenlantern:arena",
+  "max_ticks": 3000,
+  "required": true
+}
