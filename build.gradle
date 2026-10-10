@@ -18,6 +18,51 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(java_toolchain_version a
 // Include generated resources
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
+// Texts and sounds of each hero live with the hero: src/main/heroes/<part>/lang/<locale>.json and
+// src/main/heroes/<part>/sounds.json ("common" holds what every hero shares). Minecraft reads a single
+// lang file per language and a single sounds.json, so they are merged here, and a key defined in two
+// parts stops the build.
+def heroResources = tasks.register('mergeHeroResources') {
+    group = 'build'
+    description = 'Merges the per-hero lang files and sounds.json into the mod assets.'
+    def partsDir = layout.projectDirectory.dir('src/main/heroes')
+    def outDir = layout.buildDirectory.dir('generated/heroResources')
+    def modId = mod_id
+    inputs.dir(partsDir)
+    outputs.dir(outDir)
+    doLast {
+        def assets = new File(outDir.get().asFile, "assets/${modId}")
+        assets.deleteDir()
+        def json = new groovy.json.JsonGenerator.Options().disableUnicodeEscaping().build()
+        def parts = partsDir.asFile.listFiles().findAll { it.isDirectory() }.sort { it.name }
+        def merge = { String path ->
+            def merged = new LinkedHashMap<String, Object>()
+            def owner = [:]
+            parts.each { part ->
+                def file = new File(part, path)
+                if (!file.isFile()) return
+                new groovy.json.JsonSlurper().parse(file, 'UTF-8').each { key, value ->
+                    if (merged.containsKey(key)) {
+                        throw new GradleException("${path}: '${key}' is in both ${owner[key]} and ${part.name}")
+                    }
+                    merged[key] = value
+                    owner[key] = part.name
+                }
+            }
+            return merged
+        }
+        def write = { String path, Map map ->
+            def file = new File(assets, path)
+            file.parentFile.mkdirs()
+            file.setText('{\n' + map.collect { k, v -> '  ' + json.toJson(k) + ': ' + json.toJson(v) }.join(',\n') + '\n}\n', 'UTF-8')
+        }
+        def locales = parts.collectMany { part -> (new File(part, 'lang').listFiles() ?: []).collect { it.name } }.unique().sort()
+        locales.each { locale -> write("lang/${locale}", merge("lang/${locale}")) }
+        write('sounds.json', merge('sounds.json'))
+    }
+}
+sourceSets.main.resources.srcDir(heroResources)
+
 minecraft {
     mappings channel: 'official', version: minecraft_version
 
