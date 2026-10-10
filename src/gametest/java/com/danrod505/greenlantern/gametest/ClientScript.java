@@ -1315,7 +1315,7 @@ public final class ClientScript {
             Vec3 eye = sp.getEyePosition().add(0, -0.4, 0);
             Vec3 from = shooter != null ? shooter.getEyePosition() : eye.add(sp.getLookAngle().scale(10));
             for (int i = 0; i < count; i++) {
-                var arrow = new net.minecraft.world.entity.projectile.arrow.Arrow(level, from.x + (i - count / 2.0) * 0.4, from.y, from.z, new ItemStack(Items.ARROW), null);
+                var arrow = new net.minecraft.world.entity.projectile.arrow.Arrow(level, from.x + (i - count / 2.0) * 0.4, from.y, from.z, new ItemStack(net.minecraft.world.item.Items.ARROW), null);
                 if (shooter != null) arrow.setOwner(shooter);
                 Vec3 to = eye.subtract(arrow.position());
                 arrow.shoot(to.x, to.y, to.z, 1.6F, 0.0F);
