@@ -70,6 +70,7 @@ public final class ModGameTests {
         TESTS.register("hammer", () -> ModGameTests::hammer);
         TESTS.register("drill", () -> ModGameTests::drill);
         TESTS.register("mecha", () -> ModGameTests::mecha);
+        TESTS.register("oa_portal", () -> ModGameTests::oaPortal);
         TESTS.register("guide_given_on_first_join", () -> ModGameTests::guideGivenOnFirstJoin);
         TESTS.register("lantern_charges_ring", () -> ModGameTests::lanternChargesRing);
         TESTS.register("data_loaded", () -> ModGameTests::dataLoaded);
@@ -337,6 +338,79 @@ public final class ModGameTests {
         player.setYRot(yaw);
         player.setXRot(pitch);
         player.setYHeadRot(yaw);
+    }
+
+    public static void oaPortal(GameTestHelper helper) {
+        ServerPlayer player = player(helper, 7.5, 1, 3.5, 0, 0);
+        ItemStack ring = giveRing(player, 3000);
+        Uniform.summon(player);
+        select(player, ConstructRegistry.PORTAL);
+        use(player);
+        List<com.danrod505.greenlantern.entity.OaPortalEntity> portals = around(player, com.danrod505.greenlantern.entity.OaPortalEntity.class, 6.0);
+        helper.assertTrue(portals.size() == 1, "the construct should open one portal, found " + portals.size());
+        helper.assertTrue(RingEnergy.get(player.getMainHandItem()).stored() <= 3000 - ConstructRegistry.PORTAL.activationCost(), "the portal should cost energy");
+        var portal = portals.getFirst();
+        if (com.danrod505.greenlantern.oa.Oa.level(player.level().getServer()) == null) {
+            // The game test server doesn't load datapack dimensions: check the city builder here instead
+            // (travelling through the portal is covered by the scripted client run, GL_CLIENT_SCRIPT=oa).
+            ServerLevel level = player.level();
+            com.danrod505.greenlantern.oa.OaCity.ensureBuilt(level);
+            helper.assertTrue(com.danrod505.greenlantern.oa.OaCity.isBuilt(level), "the city of Oa should be built");
+            helper.assertTrue(level.getBlockState(new BlockPos(0, com.danrod505.greenlantern.oa.OaCity.BATTERY_TOP + 6, 0)).is(Blocks.BEACON), "the Central Power Battery should shine a beacon");
+            AABB city = new AABB(-60, 0, -60, 60, 200, 60);
+            int guardians = level.getEntitiesOfClass(com.danrod505.greenlantern.entity.OaGuardianEntity.class, city).size();
+            int lanterns = level.getEntitiesOfClass(com.danrod505.greenlantern.entity.LanternCorpsmanEntity.class, city).size();
+            helper.assertTrue(guardians == com.danrod505.greenlantern.oa.OaCity.PILLARS, "a Guardian should stand on every pillar, found " + guardians);
+            helper.assertTrue(lanterns >= 10, "Lanterns should live on Oa, found " + lanterns);
+            remove(player);
+            helper.succeed();
+            return;
+        }
+        helper.assertTrue(portal.distanceTo(player) > 2.0, "the portal should open in front of the player");
+        ServerLevel home = player.level();
+        Vec3 start = portal.position();
+        helper.startSequence()
+                .thenIdle(com.danrod505.greenlantern.entity.OaPortalEntity.OPEN_TICKS + 2)
+                .thenExecute(() -> {
+                    player.teleportTo(portal.getX(), portal.getY(), portal.getZ());
+                    helper.assertTrue(portal.insideOpening(player), "the player should stand in the portal; portal=" + portal.position() + " player=" + player.position());
+                })
+                .thenIdle(3)
+                .thenExecute(() -> {
+                    helper.assertTrue(com.danrod505.greenlantern.oa.Oa.is(player.level()), "walking through the portal should take the player to Oa, level=" + player.level().dimension()
+                            + " portalAge=" + portal.tickCount + " removed=" + portal.isRemoved());
+                    ServerLevel oa = player.level();
+                    helper.assertTrue(com.danrod505.greenlantern.oa.OaCity.isBuilt(oa), "the city of Oa should be built");
+                    helper.assertTrue(oa.getBlockState(new BlockPos(0, com.danrod505.greenlantern.oa.OaCity.BATTERY_TOP + 6, 0)).is(Blocks.BEACON), "the Central Power Battery should shine a beacon");
+                    AABB city = new AABB(-60, 0, -60, 60, 200, 60);
+                    int guardians = oa.getEntitiesOfClass(com.danrod505.greenlantern.entity.OaGuardianEntity.class, city).size();
+                    int lanterns = oa.getEntitiesOfClass(com.danrod505.greenlantern.entity.LanternCorpsmanEntity.class, city).size();
+                    helper.assertTrue(guardians == com.danrod505.greenlantern.oa.OaCity.PILLARS, "a Guardian should stand on every pillar, found " + guardians);
+                    helper.assertTrue(lanterns >= 10, "Lanterns should live on Oa, found " + lanterns);
+                    // The Central Power Battery recharges rings nearby.
+                    player.teleportTo(oa, 0.5 + 15, com.danrod505.greenlantern.oa.Oa.GROUND_Y, 0.5, java.util.Set.of(), 0, 0, false);
+                    RingEnergy.set(RingHelper.findRing(player), 100);
+                })
+                .thenExecuteFor(20, player::doTick)
+                .thenExecute(() -> {
+                    helper.assertTrue(RingEnergy.get(RingHelper.findRing(player)).stored() > 100, "the Central Power Battery should recharge the ring");
+                    // On Oa the construct opens the way home.
+                    use(player);
+                })
+                .thenIdle(com.danrod505.greenlantern.entity.OaPortalEntity.OPEN_TICKS + 2)
+                .thenExecute(() -> {
+                    List<com.danrod505.greenlantern.entity.OaPortalEntity> back = around(player, com.danrod505.greenlantern.entity.OaPortalEntity.class, 6.0);
+                    helper.assertTrue(back.size() == 1 && back.getFirst().leadsHome(), "a portal home should open on Oa");
+                    var exit = back.getFirst();
+                    player.teleportTo(exit.getX(), exit.getY(), exit.getZ());
+                })
+                .thenIdle(3)
+                .thenExecute(() -> {
+                    helper.assertTrue(player.level() == home, "the portal home should return the player to their world");
+                    helper.assertTrue(player.position().distanceTo(start) < 2.0, "the player should be back where they stepped into the portal, distance=" + player.position().distanceTo(start));
+                    remove(player);
+                })
+                .thenSucceed();
     }
 
     public static void mecha(GameTestHelper helper) {

@@ -7,8 +7,11 @@ import com.danrod505.greenlantern.entity.EnergyBoltEntity;
 import com.danrod505.greenlantern.entity.FlightTrailEntity;
 import com.danrod505.greenlantern.entity.GunConstructEntity;
 import com.danrod505.greenlantern.entity.HammerConstructEntity;
+import com.danrod505.greenlantern.entity.LanternCorpsmanEntity;
 import com.danrod505.greenlantern.entity.MechaEntity;
 import com.danrod505.greenlantern.entity.MechaMissileEntity;
+import com.danrod505.greenlantern.entity.OaGuardianEntity;
+import com.danrod505.greenlantern.entity.OaPortalEntity;
 import com.danrod505.greenlantern.entity.SawConstructEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
@@ -58,6 +61,21 @@ public final class ModEntities {
             () -> EntityType.Builder.<MechaMissileEntity>of(MechaMissileEntity::new, MobCategory.MISC)
                     .noLootTable().sized(0.4F, 0.4F).clientTrackingRange(10).updateInterval(1).fireImmune().noSummon()
                     .build(ENTITIES.key("mecha_missile")));
+
+    public static final RegistryObject<EntityType<OaPortalEntity>> OA_PORTAL = ENTITIES.register("oa_portal",
+            () -> EntityType.Builder.<OaPortalEntity>of(OaPortalEntity::new, MobCategory.MISC)
+                    .noLootTable().sized(3.0F, 4.0F).clientTrackingRange(10).updateInterval(20).fireImmune().noSummon()
+                    .build(ENTITIES.key("oa_portal")));
+
+    public static final RegistryObject<EntityType<OaGuardianEntity>> OA_GUARDIAN = ENTITIES.register("oa_guardian",
+            () -> EntityType.Builder.<OaGuardianEntity>of(OaGuardianEntity::new, MobCategory.MISC)
+                    .noLootTable().sized(0.6F, 1.5F).clientTrackingRange(10).fireImmune()
+                    .build(ENTITIES.key("oa_guardian")));
+
+    public static final RegistryObject<EntityType<LanternCorpsmanEntity>> LANTERN_CORPSMAN = ENTITIES.register("lantern_corpsman",
+            () -> EntityType.Builder.<LanternCorpsmanEntity>of(LanternCorpsmanEntity::new, MobCategory.MISC)
+                    .noLootTable().sized(0.6F, 1.95F).clientTrackingRange(12).updateInterval(2).fireImmune()
+                    .build(ENTITIES.key("lantern_corpsman")));
 
     /** Client-only trail renderer holder (never spawned on the server). */
     public static final RegistryObject<EntityType<FlightTrailEntity>> FLIGHT_TRAIL = ENTITIES.register("flight_trail",

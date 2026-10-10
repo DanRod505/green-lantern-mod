@@ -281,5 +281,39 @@
         "attenuation_distance": 64
       }
     ]
+  },
+  "portal_open": {
+    "subtitle": "subtitles.greenlantern.portal_open",
+    "sounds": [
+      {
+        "name": "greenlantern:portal_open",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "portal_hum": {
+    "subtitle": "subtitles.greenlantern.portal_hum",
+    "sounds": [
+      {
+        "name": "greenlantern:portal_hum",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "portal_travel": {
+    "subtitle": "subtitles.greenlantern.portal_travel",
+    "sounds": [
+      {
+        "name": "greenlantern:portal_travel"
+      }
+    ]
+  },
+  "music.oa": {
+    "sounds": [
+      {
+        "name": "greenlantern:music/oa",
+        "stream": true
+      }
+    ]
   }
 }

@@ -16,6 +16,22 @@ Mod do Lanterna Verde para **Minecraft Java 1.21.11** com **Forge 61.2.0** (comp
 
 ![Roda de construtos](docs/screenshots/construct_wheel.jpg)
 
+### Oa, o planeta da Tropa
+
+Uma dimensão própria com noite eterna sob um céu estrelado verde e uma música ambiente original.
+
+| | |
+| --- | --- |
+| ![Portal para Oa](docs/screenshots/oa_01_portal.jpg) | ![Chegada em Oa](docs/screenshots/oa_02_arrival.jpg) |
+| ![A cidade de Oa vista do alto](docs/screenshots/oa_03_city.jpg) | ![Bateria Central de Energia](docs/screenshots/oa_04_battery.jpg) |
+| ![Guardião no seu pilar](docs/screenshots/oa_05_guardian.jpg) | ![Lanternas na praça](docs/screenshots/oa_06_lanterns.jpg) |
+
+* **Bateria Central de Energia:** uma lanterna gigante de 36 blocos no centro da grande praça, com um feixe verde que sobe ao céu. Perto dela o anel recarrega sozinho.
+* **Guardiões do Universo:** oito Guardiões flutuam sobre pilares em volta da Bateria. Clique neles para ouvir sua sabedoria; eles também enchem o seu anel.
+* **Outros Lanternas:** Lanternas de oito espécies diferentes andam pela praça e patrulham o céu voando em volta da Bateria. Clique para conversar.
+* **Cidade:** praça escura com anéis de luz verde e oito avenidas, torres de pedra escura e quartzo com janelas verdes e anéis de luz flutuantes, cristais verdes nas planícies e um tablado de chegada.
+* Sem monstros. A cidade é construída na primeira visita e é a mesma em todo mundo.
+
 ### Voo de poder
 
 | | |
@@ -45,6 +61,7 @@ Mod do Lanterna Verde para **Minecraft Java 1.21.11** com **Forge 61.2.0** (comp
 | 5 | **Martelo Gigante** | Clique direito | Um martelo gigante surge no ponto para onde você olha, golpeia o chão e solta uma onda de choque que causa dano e arremessa tudo em volta (com tremor de câmera). |
 | 6 | **Broca Gigante** | Clique para invocar/dispensar | Veículo de escavação: você senta numa cabine sobre esteiras com uma broca gigante na frente que aponta para onde você olha. **W** perfura nessa direção (olhando para a frente cava túneis retos com o chão plano, para baixo cava poços, para cima perfura o teto), **S** ré, **A/D** desliza, **pulo** salta e **agachar** sai. Minera pedra, terra, areia, cascalho e todos os minérios (obsidiana demora mais, rocha-matriz nunca), manda os itens direto para o inventário e solta a experiência dos minérios. Encostada na rocha, se segura nas paredes. A ponta giratória fere criaturas. |
 | 7 | **Mecha Gigante** | Clique para invocar, **agachar** sai | Armadura de luz sólida com **10 blocos de altura**: você pilota sentado na cabine do peito e fica **protegido de todo dano** (o mecha absorve golpes, flechas e explosões gastando energia do anel; também não deixa você se afogar nem pegar fogo). **W/S** anda, **A/D** passo lateral, **Ctrl** corre; o tronco gira para a mira e as pernas acompanham devagar, com passos que tremem a câmera. **Segure pulo** para os propulsores esquentarem e o mecha decolar; no ar **W** voa para onde você olha, **Ctrl** liga o pós-combustor e soltar o pulo faz pairar. Aterrissagem forte solta onda de choque. **Segure o clique direito**: dois raios laser saem dos canhões dos punhos (ferem e incendeiam). **Clique esquerdo**: rajada de 6 mísseis teleguiados dos ombros. |
+| 8 | **Portal para Oa** | Clique direito | Abre um oval de luz sólida à sua frente: atravesse para ir ao planeta **Oa**, o lar da Tropa. Em Oa, o mesmo construto abre o caminho de volta para onde você estava. O portal fica aberto 20 segundos para os amigos irem junto. |
 
 ### Voo de poder
 
@@ -109,7 +126,7 @@ Preferências visuais e de som ficam em `config/greenlantern-client.toml`: ligar
 
 ### Opção A — CurseForge App, importando o perfil pronto (mais fácil)
 
-O build gera `greenlantern-1.21.11-1.5.0-curseforge-profile.zip`, um perfil do CurseForge que já configura o **Minecraft 1.21.11 + Forge 61.2.0** e já traz o mod dentro.
+O build gera `greenlantern-1.21.11-1.6.0-curseforge-profile.zip`, um perfil do CurseForge que já configura o **Minecraft 1.21.11 + Forge 61.2.0** e já traz o mod dentro.
 
 1. Abra o **CurseForge App** → **Minecraft** → **Create Custom Profile**.
 2. Clique em **Import** (canto superior da janela) e escolha o arquivo `...-curseforge-profile.zip`.
@@ -120,7 +137,7 @@ O build gera `greenlantern-1.21.11-1.5.0-curseforge-profile.zip`, um perfil do C
 1. Abra o **CurseForge App** → **Minecraft** → **Create Custom Profile**.
 2. Em *Game Version* escolha **1.21.11**, em *Modloader* escolha **Forge** e selecione a versão **61.2.0** (ou mais recente da série 61.x). Clique em **Create**.
 3. No perfil criado, clique nos **três pontinhos (⋮)** → **Open Folder**. Entre na pasta `mods` (crie se não existir).
-4. Copie o arquivo `greenlantern-1.21.11-1.5.0.jar` para dentro de `mods`.
+4. Copie o arquivo `greenlantern-1.21.11-1.6.0.jar` para dentro de `mods`.
 5. Volte ao CurseForge e clique em **Play**. O mod aparece na lista *Mods* do menu principal do jogo.
 
 > Não é preciso instalar Java separadamente: o CurseForge e o launcher oficial usam o Java que vem com o Minecraft 1.21.11. O jar foi compilado com o JDK 25, mas gera bytecode Java 21, então roda tanto no Java 21 do launcher quanto no Java 25.
@@ -160,7 +177,7 @@ Instale o servidor Forge 1.21.11-61.2.0 (*Install server* no mesmo instalador) e
 
 ```bash
 # Windows: use gradlew.bat no lugar de ./gradlew
-./gradlew build                          # gera build/libs/greenlantern-1.21.11-1.5.0.jar
+./gradlew build                          # gera build/libs/greenlantern-1.21.11-1.6.0.jar
                                          # e build/distributions/...-curseforge-profile.zip
 ./gradlew runClient                      # abre o Minecraft com o mod (ambiente de desenvolvimento)
 ./gradlew runServer                      # servidor de desenvolvimento

@@ -96,6 +96,9 @@ public final class ClientSetup {
         event.registerEntityRenderer(ModEntities.MECHA.get(), MechaRenderer::new);
         event.registerEntityRenderer(ModEntities.MECHA_MISSILE.get(), MechaMissileRenderer::new);
         event.registerEntityRenderer(ModEntities.FLIGHT_TRAIL.get(), TrailRenderer::new);
+        event.registerEntityRenderer(ModEntities.OA_PORTAL.get(), com.danrod505.greenlantern.client.render.oa.OaPortalRenderer::new);
+        event.registerEntityRenderer(ModEntities.OA_GUARDIAN.get(), com.danrod505.greenlantern.client.render.oa.OaGuardianRenderer::new);
+        event.registerEntityRenderer(ModEntities.LANTERN_CORPSMAN.get(), com.danrod505.greenlantern.client.render.oa.LanternCorpsmanRenderer::new);
     }
 
     private static void onRegisterParticles(RegisterParticleProvidersEvent event) {
@@ -108,6 +111,7 @@ public final class ClientSetup {
 
     private static void onRegisterLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(AuraLayer.LAYER, AuraLayer::createLayer);
+        event.registerLayerDefinition(com.danrod505.greenlantern.client.render.oa.OaNpcModel.LAYER, com.danrod505.greenlantern.client.render.oa.OaNpcModel::createLayer);
     }
 
     private static void onAddLayers(EntityRenderersEvent.AddLayers event) {

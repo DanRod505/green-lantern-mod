@@ -841,10 +841,28 @@ def make_gui():
             "....KLLK.KLLK...",
             "....KKKK.KKKK...",
         ],
+        "portal": [
+            ".....KKKKKK.....",
+            "...KKLWWWWLKK...",
+            "..KLWGgggggWLK..",
+            ".KLWgDDggDDgWLK.",
+            ".KWgDgLLLLgDgWK.",
+            "KLWgDLGWWGLDgWLK",
+            "KLWgLGWHHWGLgWLK",
+            "KLWgLWHHHHWLgWLK",
+            "KLWgLGWHHWGLgWLK",
+            "KLWgDLGWWGLDgWLK",
+            ".KWgDgLLLLgDgWK.",
+            ".KLWgDDggDDgWLK.",
+            "..KLWGgggggWLK..",
+            "...KKLWWWWLKK...",
+            ".....KKKKKK.....",
+            "................",
+        ],
     }
     # Icons are at 16 * iconIndex; slot 5 (x=80) holds the selection frame, so the drill uses slot 6.
-    strip = blank(128, 16)
-    for i, key in enumerate(["blast", "gun", "bubble", "saw", "hammer", None, "drill", "mecha"]):
+    strip = blank(256, 16)
+    for i, key in enumerate(["blast", "gun", "bubble", "saw", "hammer", None, "drill", "mecha", "portal"]):
         if key is None:
             continue
         ic = from_map(icons[key])
