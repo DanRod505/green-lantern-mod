@@ -4,8 +4,6 @@ import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.network.FlightSyncPacket;
 import com.danrod505.greenlantern.network.ModNetwork;
-import com.danrod505.greenlantern.registry.ModDamageTypes;
-import com.danrod505.greenlantern.registry.ModParticles;
 import com.danrod505.greenlantern.registry.ModSounds;
 import java.util.Map;
 import java.util.UUID;
@@ -85,8 +83,7 @@ public final class ServerFlightTracker {
 
     public static void onAction(ServerPlayer player, FlightAction action) {
         if (!FlightProfile.canPowerFly(player)) return;
-        boolean superman = FlightProfile.isSuperman(player);
-        boolean amazon = FlightProfile.isWonderWoman(player);
+        FlightStyle style = FlightStyle.of(player);
         ServerLevel level = player.level();
         State state = get(player);
         long now = level.getGameTime();
@@ -95,16 +92,16 @@ public final class ServerFlightTracker {
 
         switch (action) {
             case TAKEOFF -> {
-                playOthers(player, ModSounds.FLIGHT_TAKEOFF.get(), 1.0F, superman ? 0.8F : 1.0F);
-                level.sendParticles(amazon ? ModParticles.AMAZON_SHOCKWAVE.get() : superman ? ModParticles.SUPER_SHOCKWAVE.get() : ModParticles.SHOCKWAVE.get(), pos.x, pos.y + 0.1, pos.z, 1, 0, 0, 0, 0);
-                level.sendParticles(amazon ? ModParticles.AMAZON_SPARK.get() : superman ? ModParticles.SOLAR_GLOW.get() : ModParticles.GLOW.get(), pos.x, pos.y + 0.2, pos.z, 30, 0.6, 0.1, 0.6, 0.08);
-                dust(level, pos, superman ? 2.6 : 1.8, superman ? 26 : 16);
+                playOthers(player, ModSounds.FLIGHT_TAKEOFF.get(), 1.0F, style.takeoffPitch());
+                level.sendParticles(style.shockwave().get(), pos.x, pos.y + 0.1, pos.z, 1, 0, 0, 0, 0);
+                level.sendParticles(style.glow().get(), pos.x, pos.y + 0.2, pos.z, 30, 0.6, 0.1, 0.6, 0.08);
+                dust(level, pos, style.dustRadius(), style.dustCount());
             }
             case SONIC_BOOM -> {
                 // Requires actually being near the sound barrier; at most one boom every 2 seconds.
                 if (recent < GLConfig.SOUND_BARRIER_SPEED.get() * 0.85 || now - state.lastBoom < 40) return;
                 state.lastBoom = now;
-                playOthers(player, superman ? ModSounds.SUPER_BOOM.get() : ModSounds.SONIC_BOOM.get(), 4.0F, 0.95F + level.random.nextFloat() * 0.1F);
+                playOthers(player, style.boom().get(), 4.0F, 0.95F + level.random.nextFloat() * 0.1F);
             }
             case ROLL_LEFT, ROLL_RIGHT -> playOthers(player, ModSounds.FLIGHT_ROLL.get(), 0.9F, 1.0F);
             case AIR_BRAKE -> playOthers(player, ModSounds.FLIGHT_WHOOSH.get(), 1.0F, 0.7F);
@@ -115,13 +112,13 @@ public final class ServerFlightTracker {
                 }
                 GreenLantern.LOGGER.debug("Hero landing of {} at speed {}", player.getName().getString(), recent);
                 FlightProfile profile = FlightProfile.of(player);
-                heroLanding(player, level, Mth.clamp(recent / (float) profile.max(), 0.3F, 1.0F), (float) profile.landingPower(), superman, amazon);
+                heroLanding(player, level, Mth.clamp(recent / (float) profile.max(), 0.3F, 1.0F), (float) profile.landingPower(), style);
             }
         }
         ModNetwork.sendToTracking(player, new FlightSyncPacket(player.getId(), state.speed, (byte) state.flags, action.ordinal()));
     }
 
-    private static void heroLanding(ServerPlayer player, ServerLevel level, float power, float multiplier, boolean superman, boolean amazon) {
+    private static void heroLanding(ServerPlayer player, ServerLevel level, float power, float multiplier, FlightStyle style) {
         Vec3 center = player.position();
         double radius = GLConfig.HERO_LANDING_RADIUS.get() * (0.6 + 0.4 * power) * Math.max(1.0F, (float) Math.sqrt(multiplier));
         float damage = GLConfig.HERO_LANDING_DAMAGE.get().floatValue() * (0.5F + 0.5F * power) * multiplier;
@@ -130,15 +127,15 @@ public final class ServerFlightTracker {
             double dist = Math.sqrt(target.distanceToSqr(center.x, target.getY(), center.z));
             if (dist > radius) continue;
             float falloff = (float) (1.0 - 0.6 * dist / radius);
-            target.hurtServer(level, amazon ? ModDamageTypes.amazon(level, player, player) : superman ? ModDamageTypes.superPunch(level, player) : ModDamageTypes.hardLight(level, player, player), damage * falloff);
+            target.hurtServer(level, style.landingDamage().apply(level, player), damage * falloff);
             Vec3 away = new Vec3(target.getX() - center.x, 0, target.getZ() - center.z);
             away = away.lengthSqr() < 1.0E-4 ? Vec3.ZERO : away.normalize().scale(1.1 * falloff);
             target.push(away.x, 0.45 * falloff + 0.15, away.z);
             target.hurtMarked = true;
         }
         playOthers(player, ModSounds.HERO_LANDING.get(), 1.6F, 1.0F);
-        level.sendParticles(amazon ? ModParticles.AMAZON_SHOCKWAVE.get() : superman ? ModParticles.SUPER_SHOCKWAVE.get() : ModParticles.SHOCKWAVE.get(), center.x, center.y + 0.1, center.z, 1, 0, 0, 0, 0);
-        level.sendParticles(amazon ? ModParticles.AMAZON_SPARK.get() : superman ? ModParticles.SOLAR_GLOW.get() : ModParticles.SPARK.get(), center.x, center.y + 0.3, center.z, 50, radius * 0.3, 0.2, radius * 0.3, 0.3);
+        level.sendParticles(style.shockwave().get(), center.x, center.y + 0.1, center.z, 1, 0, 0, 0, 0);
+        level.sendParticles(style.spark().get(), center.x, center.y + 0.3, center.z, 50, radius * 0.3, 0.2, radius * 0.3, 0.3);
         level.sendParticles(ParticleTypes.EXPLOSION, center.x, center.y + 0.3, center.z, 1, 0, 0, 0, 0);
         dust(level, center, radius, 36);
     }

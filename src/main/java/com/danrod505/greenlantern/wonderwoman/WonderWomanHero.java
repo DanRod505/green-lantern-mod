@@ -5,6 +5,7 @@ import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
 import com.danrod505.greenlantern.client.wonderwoman.WonderWomanClient;
 import com.danrod505.greenlantern.flight.FlightProfile;
+import com.danrod505.greenlantern.flight.FlightStyle;
 import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.HeroEnergy;
 import com.danrod505.greenlantern.hero.HeroPowers;
@@ -12,6 +13,7 @@ import com.danrod505.greenlantern.hero.SuitModifier;
 import com.danrod505.greenlantern.hero.SuitSet;
 import com.danrod505.greenlantern.hero.WheelStyle;
 import com.danrod505.greenlantern.hero.WheelTheme;
+import com.danrod505.greenlantern.registry.ModDamageTypes;
 import com.danrod505.greenlantern.registry.ModDataComponents;
 import com.danrod505.greenlantern.registry.ModItems;
 import com.danrod505.greenlantern.registry.ModParticles;
@@ -20,6 +22,7 @@ import com.danrod505.greenlantern.ring.FlightHandler;
 import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
@@ -48,6 +51,13 @@ public final class WonderWomanHero extends HeroDefinition {
                     0x7A0E1C, 0xC8102E, 0xFFD24A, 0xFFF4C8, 0x2E5BD8),
             GreenLantern.id("textures/gui/wonder_woman_powers.png"), 144, "wheel.greenlantern.divine_cost", "tooltip.greenlantern.divine_power",
             0x661A0408, 0xFFD24A, 0xFFE6A0, 0xFFE8E0, 0xD8B0A8, 0xFFD24A, 0xD0B0A8);
+
+    /** A golden, crimson-edged trail; her peak theme joins near her top speed (she never breaks the sound barrier by default). */
+    public static final FlightStyle FLIGHT_STYLE = new FlightStyle(FlightStyle.Look.AMAZON, 1.0F, ModSounds.SONIC_BOOM, ModParticles.AMAZON_SHOCKWAVE,
+            ModParticles.AMAZON_SPARK, ModParticles.AMAZON_SPARK, ModParticles.SUPER_RING, ModParticles.SONIC_RING, () -> ParticleTypes.CLOUD, 1.8, 16,
+            (level, player) -> ModDamageTypes.amazon(level, player, player), 0.16, 0.25, 1.6, 
+            new FlightStyle.Hud(0xFFF4D8, 0xFFD98A, 0xF2B71C, 0xC8102E, 0xFFFFD36B, 0xFFFFD36B, 1.6F, 0xFFE8A21C, 0xFFE8A21C, 0xFFE0FFE6),
+            ModSounds.WONDER_WOMAN_THEME_BASE, ModSounds.WONDER_WOMAN_THEME_PEAK, true);
 
     public static final WonderWomanHero INSTANCE = new WonderWomanHero();
 
@@ -115,6 +125,12 @@ public final class WonderWomanHero extends HeroDefinition {
         // The flight accelerates at (barrier - cruise) / seconds: scaled so top speed comes after toMax seconds.
         double seconds = max < barrier ? toMax * (barrier - cruise) / (max - cruise) : toMax;
         return new FlightProfile(cruise, barrier, max, seconds, 1.4, 0.8);
+    }
+
+    /** She flies by a gift of the gods: free, as long as she carries the tiara (see {@link HeroDefinition#canFly}). */
+    @Override
+    public FlightStyle flightStyle() {
+        return FLIGHT_STYLE;
     }
 
     @Override

@@ -3,12 +3,11 @@ package com.danrod505.greenlantern.flight;
 import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.HeroRegistry;
-import com.danrod505.greenlantern.superman.SupermanHelper;
-import com.danrod505.greenlantern.wonderwoman.WonderWomanHelper;
 import net.minecraft.world.entity.player.Player;
 
 /**
- * How a hero power-flies (each hero with power flight gives its own: see {@code HeroDefinition#flightProfile}). The Green Lantern, Superman and Wonder Woman share the same power flight
+ * How fast a hero power-flies (each hero with power flight gives its own: see {@code HeroDefinition#flightProfile}; the
+ * looks and handling are in {@link FlightStyle}). The Green Lantern, Superman and Wonder Woman share the same power flight
  * (hold forward to keep accelerating, break the sound barrier, barrel rolls, hero landings);
  * Superman's is much faster and stronger, Wonder Woman's is slower than the Lantern's (by default
  * she never reaches the sound barrier).
@@ -24,14 +23,6 @@ public record FlightProfile(double cruise, double barrier, double max, double se
     /** Whether the player power-flies right now (wears the suit of a hero with a flight profile). */
     public static boolean canPowerFly(Player player) {
         return HeroRegistry.suited(player).map(HeroDefinition::flightProfile).isPresent();
-    }
-
-    public static boolean isWonderWoman(Player player) {
-        return WonderWomanHelper.isSuited(player);
-    }
-
-    public static boolean isSuperman(Player player) {
-        return SupermanHelper.isSuited(player);
     }
 
     /** The suited hero's flight profile (the Lantern's when none). */

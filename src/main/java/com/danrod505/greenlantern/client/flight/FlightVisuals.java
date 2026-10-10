@@ -4,10 +4,11 @@ import com.danrod505.greenlantern.GLClientConfig;
 import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.flight.FlightAction;
 import com.danrod505.greenlantern.flight.FlightFlags;
+import com.danrod505.greenlantern.flight.FlightProfile;
+import com.danrod505.greenlantern.flight.FlightStyle;
 import com.danrod505.greenlantern.network.FlightSyncPacket;
 import com.danrod505.greenlantern.registry.ModParticles;
 import com.danrod505.greenlantern.registry.ModSounds;
-import com.danrod505.greenlantern.flight.FlightProfile;
 import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -46,10 +47,8 @@ public final class FlightVisuals {
         public int rollTick;
         public int brakeTicks;
         public int heroLanding;
-        /** Superman (white vapor trail, blue and red glow) rather than a Lantern (green hard light). */
-        public boolean superman;
-        /** Wonder Woman (a golden, crimson-edged trail and sparks of divine light). */
-        public boolean amazon;
+        /** Whose trail, aura and particles (a Lantern's green hard light, Superman's white vapor, Wonder Woman's gold). */
+        public FlightStyle.Look look = FlightStyle.Look.LANTERN;
         /** Flying right now (power flight or hovering). */
         public boolean flying;
         /** Smoothed 0-1 version of {@link #flying} (the cape billows in and out). */
@@ -166,8 +165,7 @@ public final class FlightVisuals {
         Vec3 delta = visual.lastPos == null ? Vec3.ZERO : pos.subtract(visual.lastPos);
         visual.lastPos = pos;
         boolean suited = FlightProfile.canPowerFly(player);
-        visual.superman = FlightProfile.isSuperman(player);
-        visual.amazon = FlightProfile.isWonderWoman(player);
+        visual.look = FlightStyle.of(player).look();
 
         float targetSpeed;
         int flags;
@@ -214,7 +212,7 @@ public final class FlightVisuals {
             visual.rollDir = 0;
         }
 
-        float auraTarget = flying && !visual.superman && !visual.amazon ? 0.45F + 0.55F * Mth.clamp(visual.speed / GLConfig.SOUND_BARRIER_SPEED.get().floatValue(), 0, 1) : 0.0F;
+        float auraTarget = flying && visual.look == FlightStyle.Look.LANTERN ? 0.45F + 0.55F * Mth.clamp(visual.speed / GLConfig.SOUND_BARRIER_SPEED.get().floatValue(), 0, 1) : 0.0F;
         visual.aura += (auraTarget - visual.aura) * 0.15F;
 
         // Trail.
@@ -285,11 +283,11 @@ public final class FlightVisuals {
         RandomSource random = player.getRandom();
         Vec3 c = player.position().add(0, player.getBbHeight() * 0.5, 0);
         float speed = visual.speed;
-        if (visual.superman) {
+        if (visual.look == FlightStyle.Look.SUPERMAN) {
             spawnSupermanParticles(level, player, visual, delta, c, random);
             return;
         }
-        if (visual.amazon) {
+        if (visual.look == FlightStyle.Look.AMAZON) {
             spawnAmazonParticles(level, visual, delta, c, random);
             return;
         }

@@ -2,9 +2,9 @@ package com.danrod505.greenlantern.ring;
 
 import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.flight.ServerFlightTracker;
+import com.danrod505.greenlantern.hero.HeroDefinition;
+import com.danrod505.greenlantern.hero.HeroRegistry;
 import com.danrod505.greenlantern.registry.ModSounds;
-import com.danrod505.greenlantern.superman.SupermanHelper;
-import com.danrod505.greenlantern.superman.SupermanHero;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -12,8 +12,9 @@ import net.minecraft.world.entity.player.Abilities;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * Power flight of the Green Lantern (ring-powered), Superman (solar-powered) and Wonder Woman (a gift of the gods, free). While suited up the
- * player can fly like in creative mode (double tap jump), at the cost of a little energy per second.
+ * Power flight of the heroes with a flight profile (the Green Lantern's ring, Superman's solar energy, Wonder Woman's gift of the gods).
+ * While suited up the player can fly like in creative mode (double tap jump); each hero says when it may fly and what a second of flight
+ * costs ({@link HeroDefinition#canFly}, {@link HeroDefinition#payFlight}).
  */
 public final class FlightHandler {
     private static final float VANILLA_FLY_SPEED = 0.05F;
@@ -22,16 +23,10 @@ public final class FlightHandler {
 
     /** Called every server tick for every player. */
     public static void tick(ServerPlayer player) {
-        boolean superman = SupermanHelper.isSuited(player);
-        boolean amazon = com.danrod505.greenlantern.wonderwoman.WonderWomanHelper.isSuited(player);
-        if (amazon) {
-            tickWonderWoman(player);
-            return;
-        }
-        boolean suited = superman || RingHelper.isSuited(player);
-        // The Lantern's ring or Superman's crystal pays for the flight.
-        ItemStack source = !suited ? ItemStack.EMPTY : superman ? SupermanHelper.findCrystal(player) : RingHelper.findRing(player);
-        boolean canFly = suited && !source.isEmpty() && (energy(source, superman) > 0 || (superman && player.isCreative()));
+        HeroDefinition hero = flyingHero(player);
+        // The hero's item (ring, crystal, tiara...) powers the flight.
+        ItemStack item = hero == null ? ItemStack.EMPTY : hero.findItem(player);
+        boolean canFly = hero != null && hero.canFly(player, item);
         Abilities abilities = player.getAbilities();
 
         if (canFly) {
@@ -41,22 +36,10 @@ public final class FlightHandler {
                 abilities.setFlyingSpeed(speed);
                 player.onUpdateAbilities();
             }
-            if (abilities.flying && !player.isCreative() && !player.isSpectator()) {
+            if (abilities.flying && !player.isCreative() && !player.isSpectator() && player.tickCount % 20 == 0) {
                 // Faster power flight costs more: base cost at cruise, up to x supersonicCostMultiplier at top speed.
                 float multiplier = 1.0F + (GLConfig.SUPERSONIC_COST_MULTIPLIER.get().floatValue() - 1.0F) * ServerFlightTracker.speedFraction(player);
-                int base = superman ? GLConfig.SUPERMAN_FLIGHT_COST_PER_SECOND.get() : GLConfig.FLIGHT_COST_PER_SECOND.get();
-                int cost = Math.round(base * multiplier);
-                if (player.tickCount % 20 == 0 && cost > 0) {
-                    if (superman) {
-                        SupermanHero.SOLAR_ENERGY.drain(source, cost);
-                    } else {
-                        RingEnergy.tryConsume(source, cost);
-                    }
-                    if (energy(source, superman) <= 0) {
-                        player.displayClientMessage(Component.translatable(superman ? "message.greenlantern.no_solar" : "message.greenlantern.no_energy"), true);
-                        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.LOW_ENERGY.get(), SoundSource.PLAYERS, 0.8F, 1.0F);
-                    }
-                }
+                hero.payFlight(player, item, multiplier);
             }
         } else if (com.danrod505.greenlantern.flash.SpeedsterServer.isPhasing(player)) {
             // A phasing speedster hovers inside walls: keep the server's flight check happy.
@@ -69,22 +52,15 @@ public final class FlightHandler {
         }
     }
 
-    /** Wonder Woman flies by her own divine gift: no cost, as long as she wears the armor and carries the tiara. */
-    private static void tickWonderWoman(ServerPlayer player) {
-        Abilities abilities = player.getAbilities();
-        boolean canFly = !com.danrod505.greenlantern.wonderwoman.WonderWomanHelper.findTiara(player).isEmpty();
-        float speed = GLConfig.FLIGHT_SPEED.get().floatValue();
-        if (canFly && (!abilities.mayfly || abilities.getFlyingSpeed() != speed)) {
-            abilities.mayfly = true;
-            abilities.setFlyingSpeed(speed);
-            player.onUpdateAbilities();
-        } else if (!canFly && abilities.mayfly && !player.isCreative() && !player.isSpectator()) {
-            refreshAbilities(player);
-        }
+    /** The suited hero, if it power-flies. */
+    private static HeroDefinition flyingHero(ServerPlayer player) {
+        return HeroRegistry.suited(player).filter(hero -> hero.flightProfile() != null).orElse(null);
     }
 
-    private static int energy(ItemStack source, boolean superman) {
-        return superman ? SupermanHero.SOLAR_ENERGY.get(source).stored() : RingEnergy.get(source).stored();
+    /** Tells the flyer the energy ran out (shared by the heroes whose flight costs energy). */
+    public static void outOfEnergy(ServerPlayer player, String messageKey) {
+        player.displayClientMessage(Component.translatable(messageKey), true);
+        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.LOW_ENERGY.get(), SoundSource.PLAYERS, 0.8F, 1.0F);
     }
 
     /** Restores the abilities granted by the current game mode, then re-applies ring flight if allowed. */
@@ -93,26 +69,11 @@ public final class FlightHandler {
         boolean wasFlying = abilities.flying;
         player.gameMode().updatePlayerAbilities(abilities);
         abilities.setFlyingSpeed(VANILLA_FLY_SPEED);
-        if (com.danrod505.greenlantern.wonderwoman.WonderWomanHelper.isSuited(player)) {
-            if (!com.danrod505.greenlantern.wonderwoman.WonderWomanHelper.findTiara(player).isEmpty()) {
-                abilities.mayfly = true;
-                abilities.flying = wasFlying;
-                abilities.setFlyingSpeed(GLConfig.FLIGHT_SPEED.get().floatValue());
-            }
-        } else if (SupermanHelper.isSuited(player)) {
-            ItemStack crystal = SupermanHelper.findCrystal(player);
-            if (!crystal.isEmpty() && (SupermanHero.SOLAR_ENERGY.get(crystal).stored() > 0 || player.isCreative())) {
-                abilities.mayfly = true;
-                abilities.flying = wasFlying;
-                abilities.setFlyingSpeed(GLConfig.FLIGHT_SPEED.get().floatValue());
-            }
-        } else if (RingHelper.isSuited(player)) {
-            ItemStack ring = RingHelper.findRing(player);
-            if (!ring.isEmpty() && RingEnergy.get(ring).stored() > 0) {
-                abilities.mayfly = true;
-                abilities.flying = wasFlying;
-                abilities.setFlyingSpeed(GLConfig.FLIGHT_SPEED.get().floatValue());
-            }
+        HeroDefinition hero = flyingHero(player);
+        if (hero != null && hero.canFly(player, hero.findItem(player))) {
+            abilities.mayfly = true;
+            abilities.flying = wasFlying;
+            abilities.setFlyingSpeed(GLConfig.FLIGHT_SPEED.get().floatValue());
         }
         player.onUpdateAbilities();
     }

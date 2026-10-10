@@ -2,6 +2,7 @@ package com.danrod505.greenlantern.hero;
 
 import com.danrod505.greenlantern.client.HeroClient;
 import com.danrod505.greenlantern.flight.FlightProfile;
+import com.danrod505.greenlantern.flight.FlightStyle;
 import com.danrod505.greenlantern.ring.FlightHandler;
 import com.danrod505.greenlantern.ring.Uniform;
 import java.util.function.Predicate;
@@ -159,6 +160,22 @@ public abstract class HeroDefinition {
     public FlightProfile flightProfile() {
         return null;
     }
+
+    /** How the hero's power flight looks, sounds and handles (null: the Lantern's). */
+    public FlightStyle flightStyle() {
+        return null;
+    }
+
+    /** Whether the suited hero may power-fly right now, given the item found by {@link #findItem}. */
+    public boolean canFly(Player player, ItemStack item) {
+        return !item.isEmpty();
+    }
+
+    /**
+     * Pays one second of power flight from the hero's item ({@code multiplier} grows with the speed,
+     * up to the supersonic cost). Free by default.
+     */
+    public void payFlight(ServerPlayer player, ItemStack item, float multiplier) {}
 
     // ---- Server hooks (called every tick / on events for every player) ----------------------------
 
