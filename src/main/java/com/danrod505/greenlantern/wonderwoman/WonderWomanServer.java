@@ -31,6 +31,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -38,6 +39,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
@@ -262,12 +265,27 @@ public final class WonderWomanServer {
         Vec3 right = new Vec3(-look.z, 0, look.x);
         if (right.lengthSqr() > 1.0E-4) right = right.normalize();
         Vec3 from = player.getEyePosition().add(look.scale(0.6)).add(right.scale(0.35)).add(0, -0.3, 0);
-        LassoEntity lasso = LassoEntity.create(level, player, mode, from, look.scale(LassoEntity.THROW_SPEED).add(player.getDeltaMovement()));
+        // It leaves from her hand, but flies to whatever is under the crosshair.
+        Vec3 dir = aimPoint(player, GLConfig.LASSO_RANGE.get()).subtract(from).normalize();
+        LassoEntity lasso = LassoEntity.create(level, player, mode, from, dir.scale(LassoEntity.THROW_SPEED).add(player.getDeltaMovement()));
         level.addFreshEntity(lasso);
         player.swing(InteractionHand.MAIN_HAND, true);
         level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.LASSO_THROW.get(), SoundSource.PLAYERS, 1.0F, 0.9F + player.getRandom().nextFloat() * 0.2F);
         sendEvent(player, AmazonFlags.EVENT_LASSO_THROW);
         return true;
+    }
+
+    /** What she is looking at (a creature's middle, or the block under the crosshair), up to {@code range} blocks. */
+    private static Vec3 aimPoint(ServerPlayer player, double range) {
+        Vec3 eye = player.getEyePosition();
+        Vec3 look = player.getLookAngle();
+        HitResult block = player.pick(range, 1.0F, false);
+        double reach = block.getType() == HitResult.Type.MISS ? range : block.getLocation().distanceTo(eye);
+        Vec3 end = eye.add(look.scale(reach));
+        EntityHitResult entity = ProjectileUtil.getEntityHitResult(player, eye, end, player.getBoundingBox().expandTowards(look.scale(reach)).inflate(1.0),
+                e -> e instanceof LivingEntity && e.isAlive() && !e.isSpectator() && !(e instanceof ConstructEntity) && !player.isPassengerOfSameVehicle(e),
+                reach * reach);
+        return entity != null ? entity.getEntity().getBoundingBox().getCenter() : end;
     }
 
     /** Pull: a creature already caught is yanked to her feet; otherwise the lasso is thrown to pull. */
@@ -672,7 +690,8 @@ public final class WonderWomanServer {
         ServerLevel level = player.level();
         Vec3 look = player.getLookAngle();
         Vec3 from = player.getEyePosition().add(look.scale(0.7)).add(0, -0.35, 0);
-        AmazonShieldEntity shield = AmazonShieldEntity.create(level, player, from, look.scale(AmazonShieldEntity.THROW_SPEED));
+        Vec3 dir = aimPoint(player, 48.0).subtract(from).normalize();
+        AmazonShieldEntity shield = AmazonShieldEntity.create(level, player, from, dir.scale(AmazonShieldEntity.THROW_SPEED));
         level.addFreshEntity(shield);
         player.swing(InteractionHand.OFF_HAND, true);
         level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.SHIELD_THROW.get(), SoundSource.PLAYERS, 1.1F, 0.95F + player.getRandom().nextFloat() * 0.1F);

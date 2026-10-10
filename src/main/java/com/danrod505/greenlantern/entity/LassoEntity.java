@@ -169,7 +169,8 @@ public class LassoEntity extends Projectile {
     }
 
     private void tickFlight(@Nullable Entity owner) {
-        Vec3 motion = getDeltaMovement().add(0, -0.02, 0);
+        // A light droop: it is aimed at the target, so it barely falls.
+        Vec3 motion = getDeltaMovement().add(0, -0.004, 0);
         setDeltaMovement(motion);
         if (!level().isClientSide()) {
             HitResult hit = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);

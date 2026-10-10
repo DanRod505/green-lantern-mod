@@ -1300,7 +1300,8 @@ public final class ClientScript {
                 var mob = EntityType.HUSK.create(level, EntitySpawnReason.COMMAND);
                 double a = i * Math.PI * 2 / count;
                 mob.snapTo(wwBase.getX() + dx + Math.cos(a) * spread, wwBase.getY(), wwBase.getZ() + dz + Math.sin(a) * spread, 180, 0);
-                mob.setNoAi(true);
+                // Rooted in place, but not frozen: the lasso, the shockwave and the shield can still throw them around.
+                mob.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.SLOWNESS, 100000, 9, false, false));
                 mob.setPersistenceRequired();
                 level.addFreshEntity(mob);
             }
@@ -1379,18 +1380,22 @@ public final class ClientScript {
         step(4, () -> shot("ww01_hud"));
         // Lasso of Truth: capture a husk, then swing it around and hurl it.
         step(10, () -> {
-            wwTp(0.5, 0, 2.5, 0, 10);
-            wwMobs(0.5, 9.5, 1, 0);
+            wwTp(0.5, 0, 2.5, 16, 6);
+            wwMobs(-1.5, 9.5, 1, 0);
         });
         step(10, () -> wwPower(com.danrod505.greenlantern.wonderwoman.AmazonPower.LASSO_CAPTURE));
+        step(1, () -> look(50, 10));
         step(2, () -> shot("ww02_lasso_throw"));
-        step(16, () -> shot("ww02b_lasso_caught"));
+        step(14, () -> shot("ww02b_lasso_caught"));
         step(1, () -> camera(CameraType.THIRD_PERSON_FRONT));
         step(4, () -> shot("ww02c_lasso_caught_front"));
         step(1, () -> camera(CameraType.THIRD_PERSON_BACK));
         step(2, () -> wwPower(com.danrod505.greenlantern.wonderwoman.AmazonPower.LASSO_PULL));
         step(4, () -> shot("ww03_lasso_pull"));
-        step(16, () -> wwPower(com.danrod505.greenlantern.wonderwoman.AmazonPower.LASSO_SPIN));
+        step(16, () -> {
+            look(30, 15);
+            wwPower(com.danrod505.greenlantern.wonderwoman.AmazonPower.LASSO_SPIN);
+        });
         step(8, () -> shot("ww04_lasso_swing"));
         step(8, () -> shot("ww04b_lasso_swing"));
         step(20, () -> shot("ww04c_lasso_hurl"));
@@ -1465,9 +1470,9 @@ public final class ClientScript {
         });
         // The shield thrown: it bounces between the husks and comes back.
         step(10, () -> {
-            wwMobs(0.5, 70.5, 1, 0);
-            wwMobs(-3.5, 74.5, 1, 0);
-            wwMobs(4.5, 73.5, 1, 0);
+            wwMobs(0.5, 67.5, 1, 0);
+            wwMobs(-3.5, 70.5, 1, 0);
+            wwMobs(3.5, 69.5, 1, 0);
             look(0, 4);
         });
         step(10, () -> wwPower(com.danrod505.greenlantern.wonderwoman.AmazonPower.SHIELD_THROW));
