@@ -92,12 +92,51 @@ public class SharkModel extends EntityModel<SharkRenderState> {
         body.yRot = -Mth.sin(phase) * 0.05F * swim;
         head.yRot = -Mth.sin(phase + 0.4F) * 0.06F * swim;
         jaw.xRot = state.jaw * 0.75F + 0.05F;
+        head.xRot = 0.0F;
+        body.xRot = 0.0F;
+        body.zRot = 0.0F;
         float flap = Mth.sin(phase * 0.5F) * 0.08F;
         leftFin.zRot = 0.5F + flap;
         rightFin.zRot = -0.5F - flap;
-        if (state.outOfWater) {
+        if (state.lunge >= 0.0F) lunge(state.lunge, state.jaw);
+        if (state.outOfWater && state.lunge < 0.0F) {
             // Thrashing about on dry land.
             body.zRot = Mth.sin(state.ageInTicks * 0.9F) * 0.25F;
+        }
+    }
+
+    /**
+     * The lunge (p = 0-1 over the whole attack): the head rears up with the jaws gaping and the tail
+     * coils for the push; the jaws slam shut at the snap and the head thrashes the prey from side to
+     * side while the body rolls with it.
+     */
+    private void lunge(float p, float open) {
+        float windup = (float) com.danrod505.greenlantern.entity.GreatWhiteSharkEntity.LUNGE_WINDUP
+                / com.danrod505.greenlantern.entity.GreatWhiteSharkEntity.LUNGE_TICKS;
+        float snap = (float) com.danrod505.greenlantern.entity.GreatWhiteSharkEntity.LUNGE_SNAP
+                / com.danrod505.greenlantern.entity.GreatWhiteSharkEntity.LUNGE_TICKS;
+        // Jaws: up to ~65 degrees wide, with the snout lifting away from them.
+        jaw.xRot = 0.05F + open * 1.05F;
+        head.xRot = -open * 0.32F;
+        if (p < snap) {
+            // Rearing up and coiling the tail for the push.
+            float r = Mth.clamp(p / windup, 0.0F, 1.0F);
+            body.xRot = -0.12F * r;
+            tail.yRot += Mth.sin(r * Mth.PI) * 0.35F;
+            tailEnd.yRot -= Mth.sin(r * Mth.PI) * 0.5F;
+            leftFin.zRot = 0.5F - 0.45F * r;
+            rightFin.zRot = -0.5F + 0.45F * r;
+        } else {
+            // Thrashing: a fast shake that dies down.
+            float t = (p - snap) / (1.0F - snap);
+            float decay = 1.0F - t;
+            float shake = Mth.sin(t * Mth.PI * 5.0F) * decay;
+            head.yRot = shake * 0.42F;
+            body.yRot = -shake * 0.12F;
+            body.zRot = shake * 0.18F;
+            tail.yRot = -shake * 0.3F;
+            tailEnd.yRot = -shake * 0.45F;
+            body.xRot = 0.08F * decay;
         }
     }
 }

@@ -39,7 +39,9 @@ import org.jspecify.annotations.Nullable;
  * <ul>
  *     <li>Underwater it swims where the rider looks: W speeds up, S slows down, A/D drift to the
  *     sides, jump rises and sprint is a burst of speed. At speed it can leap out of the water.</li>
- *     <li>Left click (attack) while riding: the shark bites whatever is in front of its jaws.</li>
+ *     <li>Left click (attack) while riding: the shark lunges. It pulls its head back and opens its
+ *     jaws wide, shoots forward and snaps them shut on whatever is in front of it, then shakes its
+ *     prey from side to side.</li>
  *     <li>Sneak to climb off: then it stays close to Aquaman and hunts the monsters around him (and
  *     whoever hurt him). Right click it to climb back on.</li>
  * </ul>
@@ -54,6 +56,10 @@ public class GreatWhiteSharkEntity extends ConstructEntity {
     public static final double MOUTH = 2.3;
     private static final int MAX_DRY_TICKS = 100;
     private static final int MAX_UNRIDDEN_TICKS = 20 * 120;
+    /** The lunge: ticks of the wind-up (jaws opening, head back), when the jaws snap, and the total. */
+    public static final int LUNGE_WINDUP = 5;
+    public static final int LUNGE_SNAP = 8;
+    public static final int LUNGE_TICKS = 18;
 
     private static final EntityDataAccessor<Integer> DATA_BITE = SynchedEntityData.defineId(GreatWhiteSharkEntity.class, EntityDataSerializers.INT);
 
@@ -62,6 +68,8 @@ public class GreatWhiteSharkEntity extends ConstructEntity {
     // Server: hunting.
     private @Nullable LivingEntity target;
     private int biteCooldown;
+    /** Ticks since the current lunge began (-1: not lunging). Runs on the server and on every client. */
+    private int lungeTick = -1;
     private int dryTicks;
     private int unriddenTicks;
     private double aiSpeed;
@@ -77,6 +85,7 @@ public class GreatWhiteSharkEntity extends ConstructEntity {
     public float jaw;
     public float jawO;
     private int lastBite;
+    private boolean biteSynced;
 
     public GreatWhiteSharkEntity(EntityType<?> type, Level level) {
         super(type, level);
@@ -218,6 +227,7 @@ public class GreatWhiteSharkEntity extends ConstructEntity {
         } else {
             serverTick((ServerLevel) level());
         }
+        if (lungeTick >= 0 && ++lungeTick >= LUNGE_TICKS) lungeTick = -1;
     }
 
     /** Swimming with a rider: follow the rider's view (runs on the rider's client). */
@@ -249,6 +259,11 @@ public class GreatWhiteSharkEntity extends ConstructEntity {
         Vec3 side = new Vec3(-dir.z, 0, dir.x);
         if (side.lengthSqr() > 1.0E-4) side = side.normalize();
         Vec3 wish = dir.scale(speed).add(side.scale(strafe * -0.35)).add(0, rise ? 0.3 : 0.0, 0);
+        double lunge = lungeSpeed();
+        if (lunge != 0.0) {
+            setDeltaMovement(motion.lerp(dir.scale(Math.max(speed, 0.0) + lunge), 0.6));
+            return;
+        }
         setDeltaMovement(motion.lerp(wish, 0.35));
     }
 
@@ -282,11 +297,11 @@ public class GreatWhiteSharkEntity extends ConstructEntity {
             setXRot(Mth.approach(getXRot(), Mth.clamp(pitchGoal, -60.0F, 60.0F), 5.0F));
         }
         aiSpeed = Mth.lerp(0.08, aiSpeed, want);
-        setDeltaMovement(motion.lerp(facing().scale(aiSpeed), 0.3));
+        double lunge = lungeSpeed();
+        setDeltaMovement(motion.lerp(facing().scale(aiSpeed + lunge), lunge != 0.0 ? 0.6 : 0.3));
 
-        if (target != null && biteCooldown == 0 && target.getBoundingBox().inflate(0.8).contains(mouth())) {
-            bite();
-        } else if (target != null && biteCooldown == 0 && target.distanceToSqr(mouth()) < 2.2 * 2.2) {
+        // Lunge from a few blocks away: the burst carries the jaws onto the prey.
+        if (target != null && biteCooldown == 0 && target.distanceToSqr(mouth()) < 4.5 * 4.5) {
             bite();
         }
     }
@@ -311,6 +326,7 @@ public class GreatWhiteSharkEntity extends ConstructEntity {
 
     private void serverTick(ServerLevel level) {
         if (biteCooldown > 0) biteCooldown--;
+        if (lungeTick >= 0 && lungeTick == LUNGE_SNAP) snap(level);
         dryTicks = isInWater() ? 0 : dryTicks + 1;
         unriddenTicks = isVehicle() ? 0 : unriddenTicks + 1;
         if (dryTicks > MAX_DRY_TICKS || unriddenTicks > MAX_UNRIDDEN_TICKS) {
@@ -324,30 +340,59 @@ public class GreatWhiteSharkEntity extends ConstructEntity {
 
     // ---- biting -----------------------------------------------------------------------------------------
 
-    /** Snaps the jaws: hurts the closest creature in front of them. Returns whether something was bitten. */
+    /**
+     * Starts a lunge: the shark draws back with its jaws wide open, shoots forward and snaps them shut
+     * a moment later ({@link #LUNGE_SNAP} ticks). Returns whether a lunge started.
+     */
     public boolean bite() {
-        if (!(level() instanceof ServerLevel level) || biteCooldown > 0) return false;
-        biteCooldown = 12;
+        if (!(level() instanceof ServerLevel level) || biteCooldown > 0 || lungeTick >= 0) return false;
+        biteCooldown = LUNGE_TICKS + 2;
+        lungeTick = 0;
         entityData.set(DATA_BITE, entityData.get(DATA_BITE) + 1);
         Vec3 mouth = mouth();
+        level.playSound(null, mouth.x, mouth.y, mouth.z, ModSounds.SHARK_LUNGE.get(), SoundSource.NEUTRAL, 1.1F, 0.95F + random.nextFloat() * 0.1F);
+        return true;
+    }
+
+    /** Whether the shark is in the middle of a lunge. */
+    public boolean isLunging() {
+        return lungeTick >= 0;
+    }
+
+    /**
+     * Extra forward speed of the lunge this tick: a short pull back during the wind-up, then a burst
+     * that peaks as the jaws snap and dies down while the prey is shaken.
+     */
+    private double lungeSpeed() {
+        if (lungeTick < 0) return 0.0;
+        if (lungeTick < LUNGE_WINDUP) return -0.12;
+        if (lungeTick <= LUNGE_SNAP + 1) return 1.5;
+        return Math.max(0.0, 1.5 - (lungeTick - LUNGE_SNAP - 1) * 0.35);
+    }
+
+    /** The jaws snap shut: hurts the closest creature in front of them and shakes it. */
+    private void snap(ServerLevel level) {
+        Vec3 mouth = mouth();
         Player owner = getOwner();
-        List<LivingEntity> prey = level.getEntitiesOfClass(LivingEntity.class, new AABB(mouth, mouth).inflate(1.7),
+        List<LivingEntity> prey = level.getEntitiesOfClass(LivingEntity.class, new AABB(mouth, mouth).inflate(2.0),
                 e -> e.isAlive() && e != owner && !hasPassenger(e) && !(e instanceof Player p && (p.isCreative() || p.isSpectator()))
                         && (owner == null || !SeaCall.isCalledBy(e, owner)));
         prey.sort(Comparator.comparingDouble(e -> e.distanceToSqr(mouth)));
-        level.playSound(null, mouth.x, mouth.y, mouth.z, ModSounds.SHARK_BITE.get(), SoundSource.NEUTRAL, 1.2F, 0.9F + random.nextFloat() * 0.2F);
-        level.sendParticles(ParticleTypes.BUBBLE_POP, mouth.x, mouth.y, mouth.z, 12, 0.3, 0.3, 0.3, 0.1);
-        if (prey.isEmpty()) return false;
+        level.playSound(null, mouth.x, mouth.y, mouth.z, ModSounds.SHARK_BITE.get(), SoundSource.NEUTRAL, 1.4F, 0.85F + random.nextFloat() * 0.2F);
+        level.sendParticles(ParticleTypes.BUBBLE_POP, mouth.x, mouth.y, mouth.z, 24, 0.4, 0.4, 0.4, 0.15);
+        level.sendParticles(ParticleTypes.BUBBLE, mouth.x, mouth.y, mouth.z, 20, 0.5, 0.3, 0.5, 0.25);
+        if (prey.isEmpty()) return;
         LivingEntity victim = prey.getFirst();
         DamageSource source = ModDamageTypes.sharkBite(level, this, owner);
         if (victim.hurtServer(level, source, GLConfig.SHARK_BITE_DAMAGE.get().floatValue())) {
-            // Shaken like a rag doll.
+            // Caught in the jaws and thrown aside.
             Vec3 push = facing();
-            victim.push(push.x * 0.6 + (random.nextDouble() - 0.5) * 0.4, 0.3, push.z * 0.6 + (random.nextDouble() - 0.5) * 0.4);
+            victim.push(push.x * 0.9 + (random.nextDouble() - 0.5) * 0.6, 0.35, push.z * 0.9 + (random.nextDouble() - 0.5) * 0.6);
             victim.hurtMarked = true;
-            level.sendParticles(ParticleTypes.CRIT, victim.getX(), victim.getY() + victim.getBbHeight() * 0.5, victim.getZ(), 14, 0.3, 0.3, 0.3, 0.3);
+            Vec3 at = victim.position().add(0, victim.getBbHeight() * 0.5, 0);
+            level.sendParticles(ParticleTypes.CRIT, at.x, at.y, at.z, 24, 0.4, 0.4, 0.4, 0.4);
+            level.sendParticles(ParticleTypes.DAMAGE_INDICATOR, at.x, at.y, at.z, 6, 0.3, 0.3, 0.3, 0.2);
         }
-        return true;
     }
 
     // ---- client -----------------------------------------------------------------------------------------
@@ -362,11 +407,23 @@ public class GreatWhiteSharkEntity extends ConstructEntity {
         swimAmount = Mth.approach(swimAmount, target, 0.05F);
         tailPhase += water ? (float) (0.18 + moved * 0.45) : 0.6F;
         int bite = entityData.get(DATA_BITE);
+        if (!biteSynced) {
+            // Joining with an old counter: don't replay a bite that happened before we saw the shark.
+            biteSynced = true;
+            lastBite = bite;
+        }
         if (bite != lastBite) {
             lastBite = bite;
-            jaw = 1.0F;
-        } else {
-            jaw = Math.max(0.0F, jaw - 0.12F);
+            lungeTick = 0;
+        }
+        jaw = lungeJaw(lungeTick);
+        if (lungeTick == LUNGE_SNAP) {
+            Vec3 mouth = mouth();
+            for (int i = 0; i < 16; i++) {
+                level().addParticle(ParticleTypes.BUBBLE, mouth.x + random.nextGaussian() * 0.4, mouth.y + random.nextGaussian() * 0.4,
+                        mouth.z + random.nextGaussian() * 0.4, random.nextGaussian() * 0.1, 0.1, random.nextGaussian() * 0.1);
+            }
+            if (getControllingPassenger() != null && isLocalInstanceAuthoritative()) SidedHooks.cameraShake.shake(0.35F, 7);
         }
         if (water && moved > 0.3) {
             Vec3 back = position().add(0, HEIGHT * 0.5, 0).subtract(facing().scale(2.4));
@@ -379,5 +436,19 @@ public class GreatWhiteSharkEntity extends ConstructEntity {
 
     public float jaw(float partialTick) {
         return Mth.lerp(partialTick, jawO, jaw);
+    }
+
+    /** How wide the jaws are open during the lunge (0 closed, 1 wide open). */
+    private static float lungeJaw(int tick) {
+        if (tick < 0) return 0.0F;
+        if (tick < LUNGE_WINDUP) return Math.min(1.0F, (tick + 1) / (float) LUNGE_WINDUP);
+        if (tick < LUNGE_SNAP) return 1.0F;
+        if (tick == LUNGE_SNAP) return 0.15F;
+        return 0.0F;
+    }
+
+    /** 0-1 progress of the lunge, or -1 (for the renderer). */
+    public float lungeProgress(float partialTick) {
+        return lungeTick < 0 ? -1.0F : Math.min(1.0F, (lungeTick + partialTick) / LUNGE_TICKS);
     }
 }

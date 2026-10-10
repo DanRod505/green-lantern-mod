@@ -19,7 +19,9 @@ import net.minecraft.world.phys.Vec3;
  * you look, in all three dimensions.
  * <ul>
  *     <li>W / S / A / D move along / against / across the view; jump rises, sneak dives.</li>
- *     <li>Hold sprint and the speed keeps building up to the top speed (a dash bursts at the start).</li>
+ *     <li>Hold sprint and the speed builds up gradually from the normal swim to the top speed (an
+ *     eased curve: a gentle start, a strong middle and a smooth arrival); let go and it eases back
+ *     down just as smoothly instead of snapping to the normal speed.</li>
  *     <li>Burst out of the surface at speed and you leap out of the water like a dolphin.</li>
  * </ul>
  * Like the Flash's running, the movement is simulated on the client (the velocity is set before
@@ -29,7 +31,8 @@ public final class SwimController {
     private static boolean swimming;
     private static boolean sprinting;
     private static Vec3 velocity = Vec3.ZERO;
-    private static double sprintSpeed;
+    /** 0-1: how far the swim has built up from the normal speed towards the top speed. */
+    private static double boost;
     private static Vec3 prevPos = Vec3.ZERO;
     private static int leapCooldown;
 
@@ -50,6 +53,16 @@ public final class SwimController {
     /** 0-1, relative to the configured top (sprint) speed. */
     public static float speedFraction() {
         return (float) Mth.clamp(speed() / Math.max(0.1, GLConfig.SWIM_SPRINT_SPEED.get()), 0.0, 1.0);
+    }
+
+    /** 0-1: how far the sprint has built up (eased), for the music and the camera. */
+    public static float boost() {
+        return swimming ? (float) ease(boost) : 0.0F;
+    }
+
+    /** Smoothstep: slow to leave the normal swim, slow to settle at the top speed. */
+    private static double ease(double x) {
+        return x * x * (3.0 - 2.0 * x);
     }
 
     public static Vec3 velocity() {
@@ -79,25 +92,28 @@ public final class SwimController {
         double s = (input.right() ? 1 : 0) - (input.left() ? 1 : 0);
         double u = (input.jump() ? 1 : 0) - (input.shift() ? 1 : 0);
 
-        boolean wantSprint = f > 0 && (input.sprint() || player.isSprinting() || sprinting);
+        // The sprint key starts it; it lasts while swimming forward (the swim pose sets the vanilla
+        // sprint flag, so that flag can't be used to tell whether the key was pressed).
+        boolean wantSprint = f > 0 && (input.sprint() || sprinting);
         double base = GLConfig.SWIM_SPEED.get();
         double top = Math.max(base, GLConfig.SWIM_SPRINT_SPEED.get());
+        double rampTicks = GLConfig.SWIM_SECONDS_TO_TOP_SPEED.get() * 20.0;
         if (wantSprint) {
             if (!sprinting) dash(player);
             sprinting = true;
-            double accel = (top - base) / (GLConfig.SWIM_SECONDS_TO_TOP_SPEED.get() * 20.0);
-            sprintSpeed = Math.min(top, Math.max(sprintSpeed, base) + accel);
+            boost = Math.min(1.0, boost + 1.0 / rampTicks);
         } else {
             sprinting = false;
-            sprintSpeed = Math.max(0, sprintSpeed - 0.15);
+            // Easing off takes a little less than building up, but never snaps.
+            boost = Math.max(0.0, boost - 1.6 / rampTicks);
         }
-        double speed = sprinting ? sprintSpeed : base;
+        double speed = base + (top - base) * ease(boost);
 
         Vec3 wish = look.scale(f).add(side.scale(s * 0.75)).add(0, u * 0.8, 0);
         if (wish.lengthSqr() > 1.0) wish = wish.normalize();
         wish = wish.scale(speed);
         // Responsive, with a little glide: quick to answer, slower to stop at speed.
-        double response = wish.lengthSqr() > 1.0E-4 ? (sprinting ? 0.22 : 0.3) : 0.12;
+        double response = wish.lengthSqr() > 1.0E-4 ? Mth.lerp(ease(boost), 0.3, 0.18) : 0.12;
         velocity = velocity.lerp(wish, response);
         if (velocity.lengthSqr() < 1.0E-5) velocity = Vec3.ZERO;
 
@@ -114,12 +130,13 @@ public final class SwimController {
     public static void postTick(LocalPlayer player) {
         if (!swimming) return;
         if (player.horizontalCollision || player.verticalCollision) {
+            double hit = velocity.length();
             Vec3 moved = player.position().subtract(prevPos);
             if (player.horizontalCollision) velocity = new Vec3(moved.x, velocity.y, moved.z);
             if (player.verticalCollision) velocity = new Vec3(velocity.x, moved.y, velocity.z);
-            if (player.horizontalCollision && sprintSpeed > 1.2) {
-                CameraShake.start((float) Math.min(0.6, sprintSpeed / 5.0), 8);
-                sprintSpeed *= 0.5;
+            if (player.horizontalCollision && boost > 0.5) {
+                CameraShake.start((float) Math.min(0.6, hit / 5.0), 8);
+                boost *= 0.5;
             }
         }
         // Moving fast underwater uses the vanilla swimming pose (lying flat, arms forward).
@@ -130,14 +147,15 @@ public final class SwimController {
     private static void stop(LocalPlayer player) {
         swimming = false;
         sprinting = false;
-        sprintSpeed = 0;
+        boost = 0;
         // Leaving the water keeps the momentum (that's the leap), once.
         velocity = Vec3.ZERO;
     }
 
+    /** The first kick of the sprint: a swirl of bubbles (the speed itself builds up gradually). */
     private static void dash(LocalPlayer player) {
-        play(ModSounds.SWIM_DASH.get(), 0.9F, 1.0F);
-        CameraShake.start(0.15F, 5);
+        play(ModSounds.SWIM_DASH.get(), 0.6F, 1.0F);
+        CameraShake.start(0.06F, 4);
         Level level = player.level();
         var random = player.getRandom();
         for (int i = 0; i < 20; i++) {

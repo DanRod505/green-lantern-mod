@@ -2,7 +2,9 @@ package com.danrod505.greenlantern.atlantis;
 
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.entity.AtlanteanEntity;
+import com.danrod505.greenlantern.registry.ModEntities;
 import java.util.List;
+import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -16,22 +18,27 @@ import net.minecraft.world.phys.AABB;
 
 /**
  * The people and the sea life of Atlantis. The Atlanteans move in the first time someone comes
- * close to the finished city; schools of fish, dolphins, turtles and squid are kept around the city
+ * close to the finished city; schools of fish, dolphins, turtles and squid, and the creatures found
+ * only in Atlantis (giant manta rays, giant seahorses and Atlantean dolphins), are kept around the city
  * while players are near.
  */
 public final class AtlantisLife {
     /** How many of each creature the city keeps around. */
-    private record Kind(EntityType<? extends Mob> type, int count) {}
+    private record Kind(Supplier<? extends EntityType<? extends Mob>> type, int count) {}
 
     private static final List<Kind> SEA_LIFE = List.of(
-            new Kind(EntityType.TROPICAL_FISH, 36),
-            new Kind(EntityType.COD, 10),
-            new Kind(EntityType.SALMON, 6),
-            new Kind(EntityType.PUFFERFISH, 3),
-            new Kind(EntityType.GLOW_SQUID, 8),
-            new Kind(EntityType.SQUID, 4),
-            new Kind(EntityType.DOLPHIN, 5),
-            new Kind(EntityType.TURTLE, 4));
+            new Kind(() -> EntityType.TROPICAL_FISH, 36),
+            new Kind(() -> EntityType.COD, 10),
+            new Kind(() -> EntityType.SALMON, 6),
+            new Kind(() -> EntityType.PUFFERFISH, 3),
+            new Kind(() -> EntityType.GLOW_SQUID, 8),
+            new Kind(() -> EntityType.SQUID, 4),
+            new Kind(() -> EntityType.DOLPHIN, 3),
+            new Kind(() -> EntityType.TURTLE, 4),
+            // Found only in Atlantis.
+            new Kind(ModEntities.MANTA_RAY, 3),
+            new Kind(ModEntities.GIANT_SEAHORSE, 6),
+            new Kind(ModEntities.ATLANTEAN_DOLPHIN, 6));
 
     public static final int CITIZENS = 16;
 
@@ -89,11 +96,12 @@ public final class AtlantisLife {
         AABB city = new AABB(site.x() - Atlantis.RADIUS - 8, site.floor() - 2, site.z() - Atlantis.RADIUS - 8,
                 site.x() + Atlantis.RADIUS + 8, site.waterTop() + 1, site.z() + Atlantis.RADIUS + 8);
         for (Kind kind : SEA_LIFE) {
-            int present = level.getEntitiesOfClass(Mob.class, city, mob -> mob.getType() == kind.type()).size();
+            EntityType<? extends Mob> type = kind.type().get();
+            int present = level.getEntitiesOfClass(Mob.class, city, mob -> mob.getType() == type).size();
             for (int i = present; i < kind.count(); i++) {
                 BlockPos pos = waterSpot(level, site, random, 6, Atlantis.RADIUS - 2, 1, 22);
                 if (pos == null) continue;
-                Mob mob = kind.type().create(level, EntitySpawnReason.NATURAL);
+                Mob mob = type.create(level, EntitySpawnReason.NATURAL);
                 if (mob == null) continue;
                 mob.snapTo(pos.getX() + 0.5, pos.getY() + 0.2, pos.getZ() + 0.5, random.nextFloat() * 360.0F, 0.0F);
                 mob.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.NATURAL, null);

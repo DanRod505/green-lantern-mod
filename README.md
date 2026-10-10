@@ -3,7 +3,19 @@
 > *"No dia mais claro, na noite mais densa, o mal sucumbirá ante a minha presença!"*
 
 Mod de heróis do **Universo DC** para **Minecraft Java 1.21.11** com **Forge 61.2.0** (compilado com **Java 25**).
-Começou como o mod do Lanterna Verde e agora traz também **o Flash** (v1.7.0) **o Aquaman** (v1.8.0), **Atlântida** (v1.9.0) **o Kraken do Aquaman** (v1.10.0) e **o Batman** (v1.11.0). O id do mod continua `greenlantern`, então mundos e configurações antigas continuam funcionando.
+Começou como o mod do Lanterna Verde e agora traz também **o Flash** (v1.7.0) **o Aquaman** (v1.8.0), **Atlântida** (v1.9.0) **o Kraken do Aquaman** (v1.10.0), **o Batman** (v1.11.0) e **as criaturas de Atlântida** (v1.12.0). O id do mod continua `greenlantern`, então mundos e configurações antigas continuam funcionando.
+
+## Mares de Atlântida (novo na 1.12.0)
+
+* **Trilha sonora do nado:** o Aquaman ganhou um tema original (harpa, cordas e tambores das marés) que começa quando o nado engrena. Conforme a velocidade sobe, trompas e coro entram aos poucos com o tema de Atlântida. Também toca montado no tubarão e nas criaturas de Atlântida.
+* **Nado acelerado gradual:** segurando correr, o nado sai do ritmo normal e vai ganhando velocidade numa curva suave (começo leve, meio forte, chegada suave) até a velocidade máxima, em ~3,5 s. Soltando, desacelera aos poucos em vez de voltar de uma vez para o nado normal.
+* **Investida e mordida do tubarão:** o botão esquerdo agora é um bote: o tubarão recua, ergue o focinho e escancara a boca, dispara para a frente e fecha a mandíbula na presa, sacudindo a cabeça de um lado para o outro (a tela treme). Sozinho, ele também dá o bote nos monstros.
+* **Criaturas de Atlântida** (só nascem em Atlântida, ou pelo ovo). Qualquer jogador pode montar (clique direito), com ou sem traje; montado, você respira embaixo d'água:
+  * **Arraia-Manta Gigante:** 8 blocos de asa a asa, bate as asas em onda; sai voando do mar e plana sobre a água. Três cores.
+  * **Cavalo-Marinho Gigante:** ágil, nada em pé com a cauda enrolada e dá um coice de cauda ao acelerar. 8 cores × 3 padrões (liso, pintado, listrado).
+  * **Golfinhos Atlantes:** os mais rápidos, coloridos, com marcas que brilham no escuro e rastro de luz; saltam alto para fora da água. Seis cores.
+  * **Ovos:** um ovo para cada criatura (aba criativa). Use na água ou num bloco.
+* **Guia dos Heróis:** o Manual da Tropa virou o **Guia dos Heróis**, dividido em seções (Início, Lanterna Verde, Flash, Aquaman, Atlântida, Batman) com subseções dentro de cada uma, receitas e controles por herói.
 
 ## O Batman (novo na 1.11.0)
 
@@ -97,7 +109,7 @@ Uma dimensão própria com noite eterna sob um céu estrelado verde e uma músic
 | **Anel de Poder** | Um anel recém-fabricado vem **descarregado**: carregue-o na Bateria de Poder antes de usar. Veste o uniforme dos Lanternas Verdes, dá voo e cria construtos de luz sólida. Tem **energia finita** (barra no slot, tooltip e HUD). |
 | **Bateria de Poder (lanterna)** | Bloco 3D animado que recarrega o anel. Clique com o anel na mão e fique perto: a energia flui da lanterna para o anel enquanto o juramento aparece na tela. |
 | **Uniforme** | Máscara, uniforme, calças e botas de luz sólida (proteção equivalente a diamante). Guardam a armadura que você usava e a devolvem ao remover o uniforme. Não podem ser tirados nem dropados. |
-| **Manual da Tropa** | Livro guia para quem usa o mod pela primeira vez: todo jogador ganha um ao entrar num mundo pela primeira vez (também sai da receita livro + esmeralda e está na aba criativa). Clique direito para abrir: capítulos sobre o anel, a bateria, o uniforme, o voo, cada construto, os controles, as receitas (com a grade de fabricação) e dicas. |
+| **Guia dos Heróis** | Livro guia (antigo Manual da Tropa) para quem usa o mod pela primeira vez: todo jogador ganha um ao entrar num mundo pela primeira vez (também sai da receita livro + esmeralda e está na aba criativa). Clique direito para abrir: seções para cada herói e para Atlântida, com subseções sobre cada poder, os controles, as receitas (com a grade de fabricação) e dicas. |
 | **Voo de poder** | Com o uniforme: dois toques no pulo para decolar (com explosão de energia no chão). Segure **para frente** e a velocidade vai **aumentando sem parar** até **quebrar a barreira do som** (estrondo sônico, anéis de vapor, flash na tela) e passar de Mach 1. Ver detalhes em *Voo de poder* abaixo. |
 
 ### Construtos
@@ -171,7 +183,7 @@ D = diamante, E = esmeralda      I = barra de ferro, G = vidro tingido de lima,
                                  L = lanterna, B = bloco de esmeralda
 ```
 
-**Manual da Tropa:** livro + esmeralda (sem forma).
+**Guia dos Heróis:** livro + esmeralda (sem forma).
 
 ```
 Anel do Flash
@@ -287,7 +299,7 @@ O **CI do GitHub** (`.github/workflows/build.yml`) compila o mod, roda os testes
 * disparo de energia, metralhadora, bolha (empurrão, absorção de dano, consumo, desligar), serra (montar, cortar folhas, ferir, sumir ao desmontar), broca (minerar minério e pedra, manter o chão plano, itens no inventário, ferir, sumir ao desmontar), martelo (onda de choque, sem ferir o dono);
 * a lanterna recarrega o anel até encher;
 * receitas e tipo de dano carregados;
-* o Manual da Tropa é dado ao jogador novo.
+* o Guia dos Heróis é dado ao jogador novo.
 
 Esses testes só entram no build com `-Pgametests`, então nunca vão para o jar distribuído.
 
@@ -305,9 +317,9 @@ src/main/java/com/danrod505/greenlantern/
 ├── construct/               # API de construtos + os 7 construtos (impl/)
 ├── entity/                  # entidades dos construtos e projéteis
 ├── block/                   # Bateria de Poder (bloco + block entity de recarga)
-├── item/                    # Anel de Poder, peças do uniforme e Manual da Tropa
+├── item/                    # Anel de Poder, peças do uniforme, Guia dos Heróis e ovos
 ├── network/                 # pacotes cliente → servidor (teclas)
-└── client/                  # renderizadores, partículas, HUD, roda de construtos, manual, teclas, tremor de câmera
+└── client/                  # renderizadores, partículas, HUD, roda de construtos, guia, teclas, tremor de câmera
     └── flight/              # física do voo, pose de herói, aura, rastro, câmera, HUD de Mach, vento e trilha
 tools/                       # scripts Python que geram TODAS as texturas e sons
 ```

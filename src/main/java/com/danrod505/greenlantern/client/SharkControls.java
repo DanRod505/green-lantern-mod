@@ -8,8 +8,8 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraftforge.client.event.InputEvent;
 
 /**
- * Riding the great white shark: the attack key (left click) makes the shark bite instead of
- * swinging the hand; holding it keeps biting. Use (right click) is left alone, so the trident can
+ * Riding the great white shark: the attack key (left click) makes the shark lunge and bite instead
+ * of swinging the hand; holding it keeps lunging. Use (right click) is left alone, so the trident can
  * still be thrown from the shark's back.
  */
 public final class SharkControls {
@@ -24,7 +24,7 @@ public final class SharkControls {
 
     public static void tick(Minecraft mc) {
         if (riding(mc) && mc.screen == null && mc.options.keyAttack.isDown()) {
-            if (++holdTicks % 12 == 0) ModNetwork.sendToServer(new SharkBitePacket());
+            if (++holdTicks % (GreatWhiteSharkEntity.LUNGE_TICKS + 2) == 0) ModNetwork.sendToServer(new SharkBitePacket());
         } else {
             holdTicks = 0;
         }
