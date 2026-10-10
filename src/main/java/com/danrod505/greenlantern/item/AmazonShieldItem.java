@@ -18,7 +18,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
@@ -38,7 +37,7 @@ import org.jspecify.annotations.Nullable;
  *     always comes back to her arm, like Aquaman's trident to his hand.</li>
  * </ul>
  */
-public class AmazonShieldItem extends Item {
+public class AmazonShieldItem extends net.minecraft.world.item.ShieldItem {
     public AmazonShieldItem(Properties properties) {
         super(properties);
     }
