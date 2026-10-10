@@ -22,25 +22,54 @@ public final class WheelTextures {
     private static final float GAP_PIXELS = 2.2F;
     private static final int SAMPLES = 2;
 
-    public static final Identifier BASE = GreenLantern.id("dynamic/wheel_base");
-    public static final Identifier HIGHLIGHT = GreenLantern.id("dynamic/wheel_highlight");
-    public static final Identifier CURRENT = GreenLantern.id("dynamic/wheel_current");
+    /**
+     * Colours of a hero's wheel: each hero has their own (green hard light for the Lantern, red and
+     * gold Speed Force for the Flash).
+     */
+    public record Theme(String name, int centerInner, int centerOuter, int centerRing, int border, int sliceInner, int sliceOuter,
+                        int highlightInner, int highlightOuter, int highlightEdge, int highlightRim, int current) {
+        public static final Theme LANTERN = new Theme("wheel", 0x07120A, 0x030604, 0x2A8A44, 0x2E6A3E, 0x060D08, 0x0F2216,
+                0x0F4A20, 0x2FA84E, 0x7CFF96, 0xC8FFD2, 0x3CE064);
+        public static final Theme FLASH = new Theme("speed_wheel", 0x160604, 0x080202, 0xC8902A, 0x8A2A1C, 0x120504, 0x2A0A06,
+                0x6A1408, 0xC8301A, 0xFFD24A, 0xFFF0B0, 0xFFC830);
 
-    private static int generatedFor = -1;
+        public Identifier base() {
+            return GreenLantern.id("dynamic/" + name + "_base");
+        }
+
+        public Identifier highlight() {
+            return GreenLantern.id("dynamic/" + name + "_highlight");
+        }
+
+        public Identifier currentLayer() {
+            return GreenLantern.id("dynamic/" + name + "_current");
+        }
+    }
+
+    public static final Identifier BASE = Theme.LANTERN.base();
+    public static final Identifier HIGHLIGHT = Theme.LANTERN.highlight();
+    public static final Identifier CURRENT = Theme.LANTERN.currentLayer();
+
+    private static final java.util.Map<String, Integer> GENERATED = new java.util.HashMap<>();
 
     private WheelTextures() {}
 
     public static void ensure(int slices) {
-        if (generatedFor == slices) return;
-        generatedFor = slices;
-        register(BASE, slices, Layer.BASE);
-        register(HIGHLIGHT, slices, Layer.HIGHLIGHT);
-        register(CURRENT, slices, Layer.CURRENT);
+        ensure(Theme.LANTERN, slices);
+    }
+
+    public static void ensure(Theme theme, int slices) {
+        Integer done = GENERATED.get(theme.name());
+        if (done != null && done == slices) return;
+        GENERATED.put(theme.name(), slices);
+        register(theme.base(), slices, Layer.BASE, theme);
+        register(theme.highlight(), slices, Layer.HIGHLIGHT, theme);
+        register(theme.currentLayer(), slices, Layer.CURRENT, theme);
     }
 
     private enum Layer { BASE, HIGHLIGHT, CURRENT }
 
-    private static void register(Identifier id, int slices, Layer layer) {
+    private static void register(Identifier id, int slices, Layer layer, Theme theme) {
         NativeImage image = new NativeImage(SIZE, SIZE, true);
         float half = SIZE / 2.0F;
         float pixelsPerUnit = half / EXTENT;
@@ -51,7 +80,7 @@ public final class WheelTextures {
                     for (int sx = 0; sx < SAMPLES; sx++) {
                         float px = (x + (sx + 0.5F) / SAMPLES - half) / pixelsPerUnit;
                         float py = (y + (sy + 0.5F) / SAMPLES - half) / pixelsPerUnit;
-                        int c = sample(px, py, slices, layer, pixelsPerUnit);
+                        int c = sample(px, py, slices, layer, pixelsPerUnit, theme);
                         float ca = (c >>> 24) / 255.0F;
                         a += ca;
                         r += ((c >> 16) & 0xFF) * ca;
@@ -71,7 +100,7 @@ public final class WheelTextures {
     }
 
     /** Colour (ARGB) of the wheel at normalized position (x, y). */
-    private static int sample(float x, float y, int slices, Layer layer, float pixelsPerUnit) {
+    private static int sample(float x, float y, int slices, Layer layer, float pixelsPerUnit, Theme theme) {
         float radius = Mth.sqrt(x * x + y * y);
         // Angle from straight up, clockwise, in [-180, 180).
         float angle = (float) Math.toDegrees(Math.atan2(y, x)) + 90.0F;
@@ -85,25 +114,25 @@ public final class WheelTextures {
             case BASE -> {
                 if (radius < INNER - 0.035F) {
                     float t = radius / INNER;
-                    return argb(0.82F, mix(0x07120A, 0x030604, t));
+                    return argb(0.82F, mix(theme.centerInner(), theme.centerOuter(), t));
                 }
-                if (radius < INNER - 0.015F) return argb(0.95F, 0x2A8A44);
+                if (radius < INNER - 0.015F) return argb(0.95F, theme.centerRing());
                 if (radius < INNER || radius > 1.0F || edgeDistance < GAP_PIXELS) return 0;
-                if (radius > 0.975F) return argb(0.75F, 0x2E6A3E);
-                if (radius < INNER + 0.012F) return argb(0.6F, 0x2E6A3E);
+                if (radius > 0.975F) return argb(0.75F, theme.border());
+                if (radius < INNER + 0.012F) return argb(0.6F, theme.border());
                 float t = (radius - INNER) / (1.0F - INNER);
-                return argb(0.72F + 0.1F * t, mix(0x060D08, 0x0F2216, t));
+                return argb(0.72F + 0.1F * t, mix(theme.sliceInner(), theme.sliceOuter(), t));
             }
             case HIGHLIGHT -> {
                 if (index != 0 || radius < INNER || radius > 1.0F || edgeDistance < GAP_PIXELS) return 0;
                 float t = (radius - INNER) / (1.0F - INNER);
-                if (radius > 0.965F) return argb(1.0F, 0xC8FFD2);
-                if (edgeDistance < GAP_PIXELS + 1.5F) return argb(0.9F, 0x7CFF96);
-                return argb(0.78F + 0.15F * t, mix(0x0F4A20, 0x2FA84E, t * t));
+                if (radius > 0.965F) return argb(1.0F, theme.highlightRim());
+                if (edgeDistance < GAP_PIXELS + 1.5F) return argb(0.9F, theme.highlightEdge());
+                return argb(0.78F + 0.15F * t, mix(theme.highlightInner(), theme.highlightOuter(), t * t));
             }
             case CURRENT -> {
                 if (index != 0 || radius < 0.95F || radius > 1.0F || edgeDistance < GAP_PIXELS) return 0;
-                return argb(1.0F, 0x3CE064);
+                return argb(1.0F, theme.current());
             }
         }
         return 0;

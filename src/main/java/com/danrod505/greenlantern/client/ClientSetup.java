@@ -23,6 +23,15 @@ import com.danrod505.greenlantern.client.flight.FlightRenderHandler;
 import com.danrod505.greenlantern.client.flight.FlightVisuals;
 import com.danrod505.greenlantern.client.flight.TrailRenderer;
 import com.danrod505.greenlantern.client.particle.SonicRingParticle;
+import com.danrod505.greenlantern.client.particle.SpeedParticle;
+import com.danrod505.greenlantern.client.render.speed.SpeedLightningRenderer;
+import com.danrod505.greenlantern.client.render.speed.TornadoRenderer;
+import com.danrod505.greenlantern.client.speed.SpeedAudio;
+import com.danrod505.greenlantern.client.speed.SpeedCamera;
+import com.danrod505.greenlantern.client.speed.SpeedController;
+import com.danrod505.greenlantern.client.speed.SpeedHud;
+import com.danrod505.greenlantern.client.speed.SpeedRenderHandler;
+import com.danrod505.greenlantern.client.speed.SpeedVisuals;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -60,6 +69,9 @@ public final class ClientSetup {
         TickEvent.PlayerTickEvent.Pre.BUS.addListener(ClientSetup::onPlayerTickPre);
         TickEvent.PlayerTickEvent.Post.BUS.addListener(ClientSetup::onPlayerTickPost);
         ComputeFovModifierEvent.BUS.addListener(FlightCamera::onFov);
+        ComputeFovModifierEvent.BUS.addListener(SpeedCamera::onFov);
+        ViewportEvent.ComputeCameraAngles.BUS.addListener(SpeedCamera::onAngles);
+        SpeedRenderHandler.register();
         ViewportEvent.ComputeCameraAngles.BUS.addListener(FlightCamera::onAngles);
         FlightRenderHandler.register();
         InputEvent.MouseScrollingEvent.BUS.addListener(ClientEvents::onMouseScroll);
@@ -79,11 +91,13 @@ public final class ClientSetup {
         SidedHooks.cameraShake = CameraShake::start;
         SidedHooks.openGuide = () -> Minecraft.getInstance().setScreen(new GuideScreen());
         SidedHooks.flightSync = FlightVisuals::onSync;
+        SidedHooks.speedSync = SpeedVisuals::onSync;
     }
 
     private static void onRegisterKeys(RegisterKeyMappingsEvent event) {
         event.register(KeyBindings.TOGGLE_UNIFORM);
         event.register(KeyBindings.CONSTRUCT_WHEEL);
+        event.register(KeyBindings.HERO_POWER);
     }
 
     private static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
@@ -96,6 +110,8 @@ public final class ClientSetup {
         event.registerEntityRenderer(ModEntities.MECHA.get(), MechaRenderer::new);
         event.registerEntityRenderer(ModEntities.MECHA_MISSILE.get(), MechaMissileRenderer::new);
         event.registerEntityRenderer(ModEntities.FLIGHT_TRAIL.get(), TrailRenderer::new);
+        event.registerEntityRenderer(ModEntities.SPEED_TORNADO.get(), TornadoRenderer::new);
+        event.registerEntityRenderer(ModEntities.SPEED_LIGHTNING.get(), SpeedLightningRenderer::new);
         event.registerEntityRenderer(ModEntities.OA_PORTAL.get(), com.danrod505.greenlantern.client.render.oa.OaPortalRenderer::new);
         event.registerEntityRenderer(ModEntities.OA_GUARDIAN.get(), com.danrod505.greenlantern.client.render.oa.OaGuardianRenderer::new);
         event.registerEntityRenderer(ModEntities.LANTERN_CORPSMAN.get(), com.danrod505.greenlantern.client.render.oa.LanternCorpsmanRenderer::new);
@@ -107,6 +123,9 @@ public final class ClientSetup {
         event.registerSpriteSet(ModParticles.SHOCKWAVE.get(), ShockwaveParticle.Provider::new);
         event.registerSpriteSet(ModParticles.SONIC_RING.get(), SonicRingParticle.Provider::new);
         event.registerSpriteSet(ModParticles.STREAK.get(), LanternParticle.StreakProvider::new);
+        event.registerSpriteSet(ModParticles.SPEED_SPARK.get(), SpeedParticle.SparkProvider::new);
+        event.registerSpriteSet(ModParticles.SPEED_STREAK.get(), SpeedParticle.StreakProvider::new);
+        event.registerSpriteSet(ModParticles.SPEED_RING.get(), SonicRingParticle.SpeedProvider::new);
     }
 
     private static void onRegisterLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
@@ -127,22 +146,28 @@ public final class ClientSetup {
         FlightVisuals.tick();
         TrailRenderer.tickHolder();
         FlightAudio.tick();
+        SpeedVisuals.tick();
+        SpeedAudio.tick();
     }
 
     private static void onPlayerTickPre(TickEvent.PlayerTickEvent.Pre event) {
         if (event.player() instanceof LocalPlayer player && player == Minecraft.getInstance().player) {
             FlightController.preTick(player);
+            SpeedController.preTick(player);
         }
     }
 
     private static void onPlayerTickPost(TickEvent.PlayerTickEvent.Post event) {
         if (event.player() instanceof LocalPlayer player && player == Minecraft.getInstance().player) {
             FlightController.postTick(player);
+            SpeedController.postTick(player);
         }
     }
 
     private static void onAddGuiLayers(AddGuiOverlayLayersEvent event) {
         event.getLayeredDraw().add(ForgeLayeredDraw.POST_SLEEP_STACK, GreenLantern.id("flight_hud"), FlightHud::render);
         event.getLayeredDraw().add(ForgeLayeredDraw.POST_SLEEP_STACK, GreenLantern.id("ring_hud"), RingHud::render);
+        event.getLayeredDraw().add(ForgeLayeredDraw.POST_SLEEP_STACK, GreenLantern.id("speed_hud"), SpeedHud::render);
+        event.getLayeredDraw().add(ForgeLayeredDraw.POST_SLEEP_STACK, GreenLantern.id("flash_hud"), FlashHud::render);
     }
 }

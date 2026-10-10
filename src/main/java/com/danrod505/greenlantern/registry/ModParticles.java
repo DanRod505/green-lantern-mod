@@ -22,5 +22,12 @@ public final class ModParticles {
     /** Long, fast streak of light shed by a flying Lantern. */
     public static final RegistryObject<SimpleParticleType> STREAK = PARTICLES.register("lantern_streak", () -> new SimpleParticleType(true));
 
+    /** Crackling yellow spark of Speed Force lightning. */
+    public static final RegistryObject<SimpleParticleType> SPEED_SPARK = PARTICLES.register("speed_spark", () -> new SimpleParticleType(true));
+    /** Short red-orange streak left behind by a speedster. */
+    public static final RegistryObject<SimpleParticleType> SPEED_STREAK = PARTICLES.register("speed_streak", () -> new SimpleParticleType(true));
+    /** Golden ring perpendicular to a direction: the speedster's sound barrier blast. */
+    public static final RegistryObject<SimpleParticleType> SPEED_RING = PARTICLES.register("speed_ring", () -> new SimpleParticleType(true));
+
     private ModParticles() {}
 }

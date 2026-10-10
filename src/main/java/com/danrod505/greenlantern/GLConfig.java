@@ -66,6 +66,28 @@ public final class GLConfig {
     public static final ForgeConfigSpec.DoubleValue MECHA_LANDING_DAMAGE;
     public static final ForgeConfigSpec.BooleanValue MECHA_TRAMPLES_LEAVES;
 
+    // ---- The Flash -----------------------------------------------------------------------------
+    public static final ForgeConfigSpec.IntValue SPEED_FORCE_CAPACITY;
+    public static final ForgeConfigSpec.IntValue SPEED_FORCE_REGEN;
+    public static final ForgeConfigSpec.IntValue SPEED_FORCE_RUN_CHARGE;
+    public static final ForgeConfigSpec.DoubleValue RUN_START_SPEED;
+    public static final ForgeConfigSpec.DoubleValue RUN_SOUND_BARRIER_SPEED;
+    public static final ForgeConfigSpec.DoubleValue RUN_MAX_SPEED;
+    public static final ForgeConfigSpec.DoubleValue RUN_SECONDS_TO_SOUND_BARRIER;
+    public static final ForgeConfigSpec.DoubleValue RUN_HUNGER;
+    public static final ForgeConfigSpec.DoubleValue SUPER_JUMP_POWER;
+    public static final ForgeConfigSpec.IntValue TORNADO_COST;
+    public static final ForgeConfigSpec.IntValue TORNADO_COST_PER_SECOND;
+    public static final ForgeConfigSpec.DoubleValue TORNADO_DAMAGE;
+    public static final ForgeConfigSpec.DoubleValue TORNADO_SECONDS;
+    public static final ForgeConfigSpec.DoubleValue TORNADO_RADIUS;
+    public static final ForgeConfigSpec.IntValue PHASE_COST;
+    public static final ForgeConfigSpec.IntValue PHASE_COST_PER_SECOND;
+    public static final ForgeConfigSpec.DoubleValue PHASE_MAX_SECONDS;
+    public static final ForgeConfigSpec.IntValue LIGHTNING_COST;
+    public static final ForgeConfigSpec.DoubleValue LIGHTNING_DAMAGE;
+    public static final ForgeConfigSpec.IntValue LIGHTNING_CHAIN;
+
     public static final ForgeConfigSpec SPEC;
 
     static {
@@ -139,6 +161,29 @@ public final class GLConfig {
         MECHA_MISSILES_BREAK_BLOCKS = BUILDER.comment("Whether missile explosions break blocks.").define("mechaMissilesBreakBlocks", false);
         MECHA_LANDING_DAMAGE = BUILDER.comment("Damage of the shockwave when the mecha lands hard.").defineInRange("mechaLandingDamage", 12.0, 0.0, 1000.0);
         MECHA_TRAMPLES_LEAVES = BUILDER.comment("Whether the mecha bursts through leaves in its way.").define("mechaTramplesLeaves", true);
+        BUILDER.pop();
+
+        BUILDER.comment("The Flash: super speed, the Speed Force and the speedster powers.").push("flash");
+        SPEED_FORCE_CAPACITY = BUILDER.comment("Maximum Speed Force stored in the Flash ring.").defineInRange("speedForceCapacity", 1000, 100, 1_000_000);
+        SPEED_FORCE_REGEN = BUILDER.comment("Speed Force regained per second while wearing the suit.").defineInRange("speedForceRegen", 4, 0, 100_000);
+        SPEED_FORCE_RUN_CHARGE = BUILDER.comment("Extra Speed Force gained per second while running at top speed (running charges the ring).").defineInRange("speedForceRunCharge", 30, 0, 100_000);
+        RUN_START_SPEED = BUILDER.comment("Speed (blocks/tick) when a super speed run starts (vanilla sprinting is about 0.28).").defineInRange("runStartSpeed", 0.6, 0.2, 5.0);
+        RUN_SOUND_BARRIER_SPEED = BUILDER.comment("Running speed (blocks/tick) of the sound barrier: crossing it triggers the speedster boom.").defineInRange("runSoundBarrierSpeed", 2.4, 0.5, 9.0);
+        RUN_MAX_SPEED = BUILDER.comment("Top running speed (blocks/tick). Keep it below 9 so servers don't reject the movement.").defineInRange("runMaxSpeed", 4.2, 0.5, 9.0);
+        RUN_SECONDS_TO_SOUND_BARRIER = BUILDER.comment("Seconds of running (holding forward) needed to reach the sound barrier.").defineInRange("runSecondsToSoundBarrier", 4.0, 0.5, 60.0);
+        RUN_HUNGER = BUILDER.comment("Food exhaustion per second while running at top speed (a speedster's metabolism; vanilla sprinting would be far more).").defineInRange("runHunger", 0.12, 0.0, 40.0);
+        SUPER_JUMP_POWER = BUILDER.comment("Multiplier of the super jump height (jumping while running).").defineInRange("superJumpPower", 1.0, 0.1, 3.0);
+        TORNADO_COST = BUILDER.comment("Speed Force cost to start the tornado.").defineInRange("tornadoCost", 120, 0, 100_000);
+        TORNADO_COST_PER_SECOND = BUILDER.comment("Speed Force drained per second while the tornado spins.").defineInRange("tornadoCostPerSecond", 12, 0, 100_000);
+        TORNADO_DAMAGE = BUILDER.comment("Damage dealt by the tornado twice per second to everything caught in it.").defineInRange("tornadoDamage", 2.5, 0.0, 1000.0);
+        TORNADO_SECONDS = BUILDER.comment("How long the tornado lasts (seconds).").defineInRange("tornadoSeconds", 8.0, 1.0, 120.0);
+        TORNADO_RADIUS = BUILDER.comment("Radius (blocks) of the area the tornado pulls in.").defineInRange("tornadoRadius", 7.0, 2.0, 24.0);
+        PHASE_COST = BUILDER.comment("Speed Force cost to start vibrating your molecules.").defineInRange("phaseCost", 50, 0, 100_000);
+        PHASE_COST_PER_SECOND = BUILDER.comment("Speed Force drained per second while phasing through solid matter.").defineInRange("phaseCostPerSecond", 12, 0, 100_000);
+        PHASE_MAX_SECONDS = BUILDER.comment("Longest a phase can last (seconds).").defineInRange("phaseMaxSeconds", 10.0, 1.0, 120.0);
+        LIGHTNING_COST = BUILDER.comment("Speed Force cost of a lightning bolt.").defineInRange("lightningCost", 60, 0, 100_000);
+        LIGHTNING_DAMAGE = BUILDER.comment("Damage of a lightning bolt thrown standing still (up to 75% more when thrown at top speed).").defineInRange("lightningDamage", 12.0, 0.0, 1000.0);
+        LIGHTNING_CHAIN = BUILDER.comment("How many extra creatures the lightning arcs to after the first hit.").defineInRange("lightningChain", 2, 0, 16);
         BUILDER.pop();
 
         SPEC = BUILDER.build();

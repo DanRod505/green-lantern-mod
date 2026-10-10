@@ -8,7 +8,7 @@ import net.minecraftforge.network.SimpleChannel;
 
 /** Network channel of the mod. Bump {@link #PROTOCOL} whenever a packet format changes. */
 public final class ModNetwork {
-    public static final int PROTOCOL = 4;
+    public static final int PROTOCOL = 5;
 
     public static final SimpleChannel CHANNEL = ChannelBuilder.named(GreenLantern.id("main"))
             .networkProtocolVersion(PROTOCOL)
@@ -41,6 +41,26 @@ public final class ModNetwork {
                 .codec(MechaWeaponPacket.STREAM_CODEC)
                 .consumerMainThread(MechaWeaponPacket::handle)
                 .add();
+        CHANNEL.messageBuilder(SpeedStatePacket.class, NetworkDirection.PLAY_TO_SERVER)
+                .codec(SpeedStatePacket.STREAM_CODEC)
+                .consumerMainThread(SpeedStatePacket::handle)
+                .add();
+        CHANNEL.messageBuilder(SpeedActionPacket.class, NetworkDirection.PLAY_TO_SERVER)
+                .codec(SpeedActionPacket.STREAM_CODEC)
+                .consumerMainThread(SpeedActionPacket::handle)
+                .add();
+        CHANNEL.messageBuilder(UsePowerPacket.class, NetworkDirection.PLAY_TO_SERVER)
+                .codec(UsePowerPacket.STREAM_CODEC)
+                .consumerMainThread(UsePowerPacket::handle)
+                .add();
+        CHANNEL.messageBuilder(SelectPowerPacket.class, NetworkDirection.PLAY_TO_SERVER)
+                .codec(SelectPowerPacket.STREAM_CODEC)
+                .consumerMainThread(SelectPowerPacket::handle)
+                .add();
+        CHANNEL.messageBuilder(SpeedSyncPacket.class, NetworkDirection.PLAY_TO_CLIENT)
+                .codec(SpeedSyncPacket.STREAM_CODEC)
+                .consumerMainThread(SpeedSyncPacket::handle)
+                .add();
         CHANNEL.messageBuilder(FlightSyncPacket.class, NetworkDirection.PLAY_TO_CLIENT)
                 .codec(FlightSyncPacket.STREAM_CODEC)
                 .consumerMainThread(FlightSyncPacket::handle)
@@ -50,6 +70,11 @@ public final class ModNetwork {
     /** Sends a packet to every player tracking (seeing) the given entity, excluding the entity itself. */
     public static void sendToTracking(net.minecraft.world.entity.Entity entity, Object packet) {
         CHANNEL.send(packet, PacketDistributor.TRACKING_ENTITY.with(entity));
+    }
+
+    /** Sends a packet to every player tracking the given entity and, if it is a player, to that player too. */
+    public static void sendToTrackingAndSelf(net.minecraft.world.entity.Entity entity, Object packet) {
+        CHANNEL.send(packet, PacketDistributor.TRACKING_ENTITY_AND_SELF.with(entity));
     }
 
     public static void sendToServer(Object packet) {

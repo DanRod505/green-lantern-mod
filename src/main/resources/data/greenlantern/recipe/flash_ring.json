@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "RGR",
+    "GLG",
+    "RGR"
+  ],
+  "key": {
+    "R": "minecraft:redstone",
+    "G": "minecraft:gold_ingot",
+    "L": "minecraft:lightning_rod"
+  },
+  "result": {
+    "id": "greenlantern:flash_ring",
+    "count": 1
+  }
+}

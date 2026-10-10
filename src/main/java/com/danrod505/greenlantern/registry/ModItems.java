@@ -1,6 +1,7 @@
 package com.danrod505.greenlantern.registry;
 
 import com.danrod505.greenlantern.GreenLantern;
+import com.danrod505.greenlantern.item.FlashRingItem;
 import com.danrod505.greenlantern.item.GuideBookItem;
 import com.danrod505.greenlantern.item.PowerRingItem;
 import com.danrod505.greenlantern.item.SuitArmorItem;
@@ -44,8 +45,26 @@ public final class ModItems {
     public static final RegistryObject<SuitArmorItem> LANTERN_LEGGINGS = suit("lantern_leggings", ArmorType.LEGGINGS);
     public static final RegistryObject<SuitArmorItem> LANTERN_BOOTS = suit("lantern_boots", ArmorType.BOOTS);
 
+    // ---- The Flash ------------------------------------------------------------------------------
+
+    /** The Flash ring: the suit lives compressed inside it, and it stores the Speed Force. */
+    public static final RegistryObject<FlashRingItem> FLASH_RING = ITEMS.register("flash_ring", () -> new FlashRingItem(new Item.Properties()
+            .setId(ITEMS.key("flash_ring"))
+            .stacksTo(1)
+            .rarity(Rarity.EPIC)
+            .fireResistant()));
+
+    public static final RegistryObject<SuitArmorItem> FLASH_MASK = flashSuit("flash_mask", ArmorType.HELMET);
+    public static final RegistryObject<SuitArmorItem> FLASH_SUIT = flashSuit("flash_suit", ArmorType.CHESTPLATE);
+    public static final RegistryObject<SuitArmorItem> FLASH_LEGGINGS = flashSuit("flash_leggings", ArmorType.LEGGINGS);
+    public static final RegistryObject<SuitArmorItem> FLASH_BOOTS = flashSuit("flash_boots", ArmorType.BOOTS);
+
     private static RegistryObject<SuitArmorItem> suit(String name, ArmorType type) {
         return ITEMS.register(name, () -> new SuitArmorItem(type, SuitArmorItem.properties(type).setId(ITEMS.key(name))));
+    }
+
+    private static RegistryObject<SuitArmorItem> flashSuit(String name, ArmorType type) {
+        return ITEMS.register(name, () -> new SuitArmorItem(type, SuitArmorItem.properties(SuitArmorItem.FLASH_MATERIAL, type).setId(ITEMS.key(name))));
     }
 
     private ModItems() {}

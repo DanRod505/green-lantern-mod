@@ -54,17 +54,15 @@ public final class Uniform {
             return false;
         }
 
-        List<ItemStack> stash = new ArrayList<>();
-        for (EquipmentSlot slot : SLOTS) {
-            ItemStack worn = player.getItemBySlot(slot);
-            stash.add(worn.getItem() instanceof SuitArmorItem ? ItemStack.EMPTY : worn.copy());
+        // Only one hero suit at a time.
+        if (com.danrod505.greenlantern.flash.FlashHelper.isSuited(player)) {
+            com.danrod505.greenlantern.flash.FlashSuit.dismiss(player, false);
         }
-        writeStash(player, stash);
-
-        player.setItemSlot(EquipmentSlot.HEAD, createPiece(player, ModItems.LANTERN_MASK.get().getDefaultInstance()));
-        player.setItemSlot(EquipmentSlot.CHEST, createPiece(player, ModItems.LANTERN_SUIT.get().getDefaultInstance()));
-        player.setItemSlot(EquipmentSlot.LEGS, createPiece(player, ModItems.LANTERN_LEGGINGS.get().getDefaultInstance()));
-        player.setItemSlot(EquipmentSlot.FEET, createPiece(player, ModItems.LANTERN_BOOTS.get().getDefaultInstance()));
+        equipSuit(player,
+                ModItems.LANTERN_MASK.get().getDefaultInstance(),
+                ModItems.LANTERN_SUIT.get().getDefaultInstance(),
+                ModItems.LANTERN_LEGGINGS.get().getDefaultInstance(),
+                ModItems.LANTERN_BOOTS.get().getDefaultInstance());
 
         ServerLevel level = player.level();
         level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.RING_ACTIVATE.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
@@ -75,6 +73,37 @@ public final class Uniform {
     }
 
     public static void dismiss(ServerPlayer player, boolean effects) {
+        removeSuit(player);
+        FlightHandler.refreshAbilities(player);
+
+        if (effects) {
+            ServerLevel level = player.level();
+            level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.RING_DEACTIVATE.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
+            level.sendParticles(ModParticles.GLOW.get(), player.getX(), player.getY() + 1.0, player.getZ(), 25, 0.4, 0.9, 0.4, 0.01);
+        }
+    }
+
+    // ---- shared by every hero suit -----------------------------------------------------------------
+
+    /**
+     * Puts on a hero suit (head, chest, legs, feet pieces). Whatever armor the player wore is stashed
+     * in their persistent data and given back by {@link #removeSuit}.
+     */
+    public static void equipSuit(ServerPlayer player, ItemStack head, ItemStack chest, ItemStack legs, ItemStack feet) {
+        List<ItemStack> stash = new ArrayList<>();
+        for (EquipmentSlot slot : SLOTS) {
+            ItemStack worn = player.getItemBySlot(slot);
+            stash.add(worn.getItem() instanceof SuitArmorItem ? ItemStack.EMPTY : worn.copy());
+        }
+        writeStash(player, stash);
+        player.setItemSlot(EquipmentSlot.HEAD, createPiece(player, head));
+        player.setItemSlot(EquipmentSlot.CHEST, createPiece(player, chest));
+        player.setItemSlot(EquipmentSlot.LEGS, createPiece(player, legs));
+        player.setItemSlot(EquipmentSlot.FEET, createPiece(player, feet));
+    }
+
+    /** Takes off any hero suit pieces and gives back the stashed armor. */
+    public static void removeSuit(ServerPlayer player) {
         for (EquipmentSlot slot : SLOTS) {
             if (player.getItemBySlot(slot).getItem() instanceof SuitArmorItem) {
                 player.setItemSlot(slot, ItemStack.EMPTY);
@@ -92,13 +121,6 @@ public final class Uniform {
         }
         player.getPersistentData().remove(STASH_KEY);
         removeStrayPieces(player);
-        FlightHandler.refreshAbilities(player);
-
-        if (effects) {
-            ServerLevel level = player.level();
-            level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.RING_DEACTIVATE.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
-            level.sendParticles(ModParticles.GLOW.get(), player.getX(), player.getY() + 1.0, player.getZ(), 25, 0.4, 0.9, 0.4, 0.01);
-        }
     }
 
     /** Uniform pieces only exist while worn: remove any that ended up elsewhere in the inventory. */

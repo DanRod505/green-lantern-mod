@@ -21,6 +21,10 @@ public class SonicRingParticle extends SingleQuadParticle {
     private final float maxSize;
 
     protected SonicRingParticle(ClientLevel level, double x, double y, double z, double dx, double dy, double dz, SpriteSet sprites) {
+        this(level, x, y, z, dx, dy, dz, sprites, 0.75F, 1.0F, 0.8F);
+    }
+
+    protected SonicRingParticle(ClientLevel level, double x, double y, double z, double dx, double dy, double dz, SpriteSet sprites, float r, float g, float b) {
         super(level, x, y, z, 0, 0, 0, sprites.first());
         double len = Math.sqrt(dx * dx + dy * dy + dz * dz);
         float nx = len > 1.0E-4 ? (float) (dx / len) : 0.0F;
@@ -40,7 +44,7 @@ public class SonicRingParticle extends SingleQuadParticle {
         this.hasPhysics = false;
         this.quadSize = 0.4F;
         this.alpha = boom ? 0.95F : 0.45F;
-        setColor(0.75F, 1.0F, 0.8F);
+        setColor(r, g, b);
     }
 
     @Override
@@ -78,6 +82,20 @@ public class SonicRingParticle extends SingleQuadParticle {
         @Override
         public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xd, double yd, double zd, RandomSource random) {
             return new SonicRingParticle(level, x, y, z, xd, yd, zd, sprites);
+        }
+    }
+
+    /** The Flash's version: a golden ring of lightning-charged air. */
+    public static class SpeedProvider implements ParticleProvider<SimpleParticleType> {
+        private final SpriteSet sprites;
+
+        public SpeedProvider(SpriteSet sprites) {
+            this.sprites = sprites;
+        }
+
+        @Override
+        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xd, double yd, double zd, RandomSource random) {
+            return new SonicRingParticle(level, x, y, z, xd, yd, zd, sprites, 1.0F, 0.82F, 0.35F);
         }
     }
 }

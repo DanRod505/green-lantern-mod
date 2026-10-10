@@ -17,5 +17,11 @@ public final class ModDamageTypes {
         return new DamageSource(level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(HARD_LIGHT), direct, attacker);
     }
 
+    public static final ResourceKey<DamageType> SPEED_FORCE = ResourceKey.create(Registries.DAMAGE_TYPE, GreenLantern.id("speed_force"));
+
+    public static DamageSource speedForce(Level level, @Nullable Entity direct, @Nullable Entity attacker) {
+        return new DamageSource(level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(SPEED_FORCE), direct, attacker);
+    }
+
     private ModDamageTypes() {}
 }

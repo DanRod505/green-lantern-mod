@@ -77,6 +77,18 @@ public final class ModEntities {
                     .noLootTable().sized(0.6F, 1.95F).clientTrackingRange(12).updateInterval(2).fireImmune()
                     .build(ENTITIES.key("lantern_corpsman")));
 
+    /** The Flash's vortex: pulls, lifts and batters everything around its center. */
+    public static final RegistryObject<EntityType<com.danrod505.greenlantern.entity.SpeedTornadoEntity>> SPEED_TORNADO = ENTITIES.register("speed_tornado",
+            () -> EntityType.Builder.<com.danrod505.greenlantern.entity.SpeedTornadoEntity>of(com.danrod505.greenlantern.entity.SpeedTornadoEntity::new, MobCategory.MISC)
+                    .noLootTable().sized(6.0F, 11.0F).clientTrackingRange(10).updateInterval(2).fireImmune().noSummon()
+                    .build(ENTITIES.key("speed_tornado")));
+
+    /** Bolt of Speed Force lightning thrown by the Flash. */
+    public static final RegistryObject<EntityType<com.danrod505.greenlantern.entity.SpeedLightningEntity>> SPEED_LIGHTNING = ENTITIES.register("speed_lightning",
+            () -> EntityType.Builder.<com.danrod505.greenlantern.entity.SpeedLightningEntity>of(com.danrod505.greenlantern.entity.SpeedLightningEntity::new, MobCategory.MISC)
+                    .noLootTable().sized(0.5F, 0.5F).clientTrackingRange(10).updateInterval(1).fireImmune().noSummon()
+                    .build(ENTITIES.key("speed_lightning")));
+
     /** Client-only trail renderer holder (never spawned on the server). */
     public static final RegistryObject<EntityType<FlightTrailEntity>> FLIGHT_TRAIL = ENTITIES.register("flight_trail",
             () -> EntityType.Builder.<FlightTrailEntity>of(FlightTrailEntity::new, MobCategory.MISC)

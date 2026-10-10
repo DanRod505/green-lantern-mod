@@ -1,8 +1,20 @@
-# Green Lantern Corps — mod para Minecraft Java 1.21.11 (Forge)
+# DC Universe Heroes — mod para Minecraft Java 1.21.11 (Forge)
 
 > *"No dia mais claro, na noite mais densa, o mal sucumbirá ante a minha presença!"*
 
-Mod do Lanterna Verde para **Minecraft Java 1.21.11** com **Forge 61.2.0** (compilado com **Java 25**).
+Mod de heróis do **Universo DC** para **Minecraft Java 1.21.11** com **Forge 61.2.0** (compilado com **Java 25**).
+Começou como o mod do Lanterna Verde e agora traz também **o Flash** (v1.7.0). O id do mod continua `greenlantern`, então mundos e configurações antigas continuam funcionando.
+
+## O Flash (novo na 1.7.0)
+
+* **Anel do Flash:** guarda o traje, como o do Barry Allen. Clique direito ou **G** para vestir (capuz, traje, calças e botas). Um herói por vez: vestir o Flash tira o uniforme do Lanterna e vice-versa.
+* **Supercorrida progressiva:** com o traje, corra (sprint) e segure **W**. A velocidade não para de subir: rompe a barreira do som em ~4 segundos (com estrondo, anel dourado e flash na tela) e continua acelerando. Rastro de raios amarelos e borrão vermelho, câmera com FOV esticado, linhas de velocidade, velocímetro em km/h e trilha sonora original que explode na barreira do som.
+* **Corre sobre a água**, **corre na vertical** subindo paredes (pulo = salta da parede, continue para passar por cima) e **super pulo** quando pula correndo (quanto mais rápido, mais alto). Sem dano de queda.
+* **Força de Aceleração:** a energia dos poderes (barra amarela). Recarrega devagar com o traje e bem mais rápido correndo.
+* **Menu radial de poderes** (segure **R**; **V** usa o poder):
+  * **Tornado:** o Flash corre em círculos e cria um vórtice que puxa, levanta, gira e machuca as criaturas, e arremessa todas no final.
+  * **Vibração Molecular:** atravessa blocos e ataques. Você não cai (pulo/agachar sobe/desce) e, ao terminar, é sempre levado ao lugar livre mais próximo com chão firme: nada de sufocar na parede ou cair infinitamente.
+  * **Raio da Força de Aceleração:** um raio que salta para mais dois inimigos; correndo rápido ele acerta até 75% mais forte.
 
 ## Capturas (tiradas automaticamente no jogo)
 
@@ -84,7 +96,7 @@ Uma dimensão própria com noite eterna sob um céu estrelado verde e uma músic
 
 Por direitos autorais, o mod não pode incluir músicas de terceiros, como a trilha da série *Lanterns*. Mas você pode trocar a trilha do voo por qualquer música **para uso pessoal**: o build gera `greenlantern-custom-flight-music-resourcepack.zip` (fonte em `extras/custom-flight-music-pack/`). Coloque sua música convertida para `.ogg` como `assets/greenlantern/sounds/music/custom_flight_theme.ogg` dentro do zip, ponha o zip em `resourcepacks/` e ative-o em *Opções → Pacotes de Recursos*. Instruções completas no `LEIA-ME.txt` do pacote.
 
-### Controles (configuráveis em *Opções → Controles → Atalhos → Lanterna Verde*)
+### Controles (configuráveis em *Opções → Controles → Atalhos → Universo DC*)
 
 | Tecla | Ação |
 | --- | --- |
@@ -98,6 +110,10 @@ Por direitos autorais, o mod não pode incluir músicas de terceiros, como a tri
 | **A A** ou **D D** voando rápido | Barrel roll |
 | **S** voando rápido | Freio aéreo |
 | Clique direito na **Bateria de Poder** com o anel | Começa ou interrompe a recarga |
+| **Correr (Ctrl)** com o traje do Flash | Começa a supercorrida (segure **W**; **S** derrapa; agachar desacelera) |
+| **Pulo** correndo | Super pulo (na parede: salta da parede) |
+| **R** (segurar / tocar) com o traje do Flash | Menu radial de poderes / próximo poder |
+| **V** | Usa o poder do Flash escolhido |
 
 ### Receitas
 
@@ -112,7 +128,14 @@ D = diamante, E = esmeralda      I = barra de ferro, G = vidro tingido de lima,
 
 **Manual da Tropa:** livro + esmeralda (sem forma).
 
-Também estão na aba criativa **Tropa dos Lanternas Verdes** (inclui um anel já carregado).
+```
+Anel do Flash
+ R  G  R
+ G  P  G       R = redstone, G = barra de ouro, P = para-raios
+ R  G  R
+```
+
+Também estão na aba criativa **Heróis do Universo DC** (inclui os anéis já carregados).
 
 ### Configuração
 
@@ -235,6 +258,8 @@ pip install pillow numpy scipy soundfile
 python tools/generate_textures.py
 python tools/generate_sounds.py
 python tools/generate_flight_audio.py   # sons do voo e a trilha original (duas camadas)
+python tools/generate_flash_textures.py # anel, traje, partículas e ícones do Flash
+python tools/generate_flash_audio.py    # sons do Flash e a trilha original da corrida
 ```
 
 ## Licença

@@ -44,7 +44,7 @@ public final class FlightAudio {
     /** Short description of the music state (for logs and debugging). */
     public static String describeMusic() {
         if (base == null) return "silent";
-        return String.format("base=%.2f peak=%.2f", base.getVolume(), peak == null ? 0F : peak.getVolume());
+        return String.format("base=%.2f peak=%.2f", base.level(), peak == null ? 0F : peak.level());
     }
 
     private static void tickWind(Minecraft mc) {
@@ -156,15 +156,15 @@ public final class FlightAudio {
     }
 
     /** A piece of the flight theme, faded in and out smoothly; stops itself once faded out. */
-    static final class ThemeSound extends AbstractTickableSoundInstance {
-        float target;
+    public static final class ThemeSound extends AbstractTickableSoundInstance {
+        public float target;
         float fadeIn;
         float fadeOut;
         /** Silent layers that must stay in sync (the peak layer) keep playing at volume 0. */
-        boolean stopWhenSilent = true;
+        public boolean stopWhenSilent = true;
         private int age;
 
-        ThemeSound(SoundEvent event, float fadeIn, float fadeOut) {
+        public ThemeSound(SoundEvent event, float fadeIn, float fadeOut) {
             super(event, SoundSource.MUSIC, RandomSource.create());
             this.fadeIn = fadeIn;
             this.fadeOut = fadeOut;
@@ -178,6 +178,11 @@ public final class FlightAudio {
         @Override
         public boolean canStartSilent() {
             return true;
+        }
+
+        /** Current fade level (getVolume() needs a resolved sound, which is missing without an audio device). */
+        public float level() {
+            return volume;
         }
 
         @Override

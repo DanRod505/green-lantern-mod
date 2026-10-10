@@ -33,11 +33,16 @@ public final class CommonEvents {
         LivingFallEvent.BUS.addListener(CommonEvents::onLivingFall);
         LivingDeathEvent.BUS.addListener(CommonEvents::onLivingDeath);
         EntityJoinLevelEvent.BUS.addListener(CommonEvents::onEntityJoin);
+        net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent.BUS.addListener(CommonEvents::onLivingTick);
         net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent.BUS.addListener(event -> {
             if (event.getEntity() instanceof ServerPlayer player) giveGuideOnFirstJoin(player);
         });
         net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent.BUS.addListener(event -> {
-            if (event.getEntity() instanceof ServerPlayer player) com.danrod505.greenlantern.flight.ServerFlightTracker.remove(player);
+            if (event.getEntity() instanceof ServerPlayer player) {
+                com.danrod505.greenlantern.flight.ServerFlightTracker.remove(player);
+                com.danrod505.greenlantern.flash.SpeedsterServer.endPhase(player, false);
+                com.danrod505.greenlantern.flash.SpeedsterServer.remove(player);
+            }
         });
     }
 
@@ -61,9 +66,15 @@ public final class CommonEvents {
                 player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.LOW_ENERGY.get(), SoundSource.PLAYERS, 0.6F, 1.0F);
             }
         }
+        if (com.danrod505.greenlantern.flash.FlashHelper.isSuited(player)
+                && com.danrod505.greenlantern.flash.FlashHelper.findRing(player).isEmpty()) {
+            // The suit lives in the ring: no ring, no suit.
+            com.danrod505.greenlantern.flash.FlashSuit.dismiss(player, true);
+        }
         if (player.tickCount % 10 == 0) {
             Uniform.removeStrayPieces(player);
         }
+        com.danrod505.greenlantern.flash.SpeedsterServer.tick(player);
         if (player.tickCount % 5 == 0) {
             chargeFromCentralBattery(player);
         }
@@ -93,8 +104,22 @@ public final class CommonEvents {
         }
     }
 
+    /** Phasing players ignore block collisions (both logical sides). Never cancels the tick. */
+    private static boolean onLivingTick(net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent event) {
+        if (event.getEntity() instanceof net.minecraft.world.entity.player.Player player) {
+            com.danrod505.greenlantern.flash.PhaseState.apply(player);
+        }
+        return false;
+    }
+
     /** The mecha shields its pilot from every hit (paid for with ring energy). Returns true to cancel the attack. */
     private static boolean onLivingAttack(LivingAttackEvent event) {
+        // Attacks pass right through a phasing speedster.
+        if (event.getEntity() instanceof ServerPlayer phasing && com.danrod505.greenlantern.flash.SpeedsterServer.isPhasing(phasing)
+                && !event.getSource().is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY)
+                && !event.getSource().is(net.minecraft.tags.DamageTypeTags.IS_FIRE)) {
+            return true;
+        }
         if (!(event.getEntity() instanceof ServerPlayer player) || !(player.getVehicle() instanceof MechaEntity mecha)) return false;
         if (event.getSource().is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY)) return false;
         mecha.absorbHit(player, event.getSource(), event.getAmount());
@@ -113,8 +138,9 @@ public final class CommonEvents {
     }
 
     private static void onLivingFall(LivingFallEvent event) {
-        if (event.getEntity() instanceof net.minecraft.world.entity.player.Player player && RingHelper.isSuited(player)) {
-            // The ring cushions every landing.
+        if (event.getEntity() instanceof net.minecraft.world.entity.player.Player player
+                && (RingHelper.isSuited(player) || com.danrod505.greenlantern.flash.FlashHelper.isSuited(player))) {
+            // The ring cushions every landing; a speedster lands running.
             event.setDamageMultiplier(0.0F);
         }
     }
@@ -123,6 +149,9 @@ public final class CommonEvents {
         if (event.getEntity() instanceof ServerPlayer player && RingHelper.isSuited(player)) {
             // Give back the stashed armor before the inventory is dropped.
             Uniform.dismiss(player, false);
+        }
+        if (event.getEntity() instanceof ServerPlayer player && com.danrod505.greenlantern.flash.FlashHelper.isSuited(player)) {
+            com.danrod505.greenlantern.flash.FlashSuit.dismiss(player, false);
         }
     }
 
