@@ -119,6 +119,20 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> ATLANTEAN_DOLPHIN_LEAP = register("atlantean_dolphin_leap");
     public static final RegistryObject<SoundEvent> ATLANTEAN_MOUNT_SADDLE = register("atlantean_mount_saddle");
 
+    // ---- Superman (all original, see tools/generate_superman_audio.py) -----------------------------
+    public static final RegistryObject<SoundEvent> SUPERMAN_SUIT_UP = register("superman_suit_up");
+    public static final RegistryObject<SoundEvent> SUPERMAN_SUIT_DOWN = register("superman_suit_down");
+    public static final RegistryObject<SoundEvent> HEAT_VISION = register("heat_vision");
+    public static final RegistryObject<SoundEvent> HEAT_VISION_END = register("heat_vision_end");
+    public static final RegistryObject<SoundEvent> SUPER_PUNCH = register("super_punch");
+    public static final RegistryObject<SoundEvent> SUPER_BREATH = register("super_breath");
+    public static final RegistryObject<SoundEvent> XRAY_ON = register("xray_on");
+    public static final RegistryObject<SoundEvent> XRAY_OFF = register("xray_off");
+    public static final RegistryObject<SoundEvent> SOLAR_CHARGED = register("solar_charged");
+    public static final RegistryObject<SoundEvent> SUPER_BOOM = register("super_boom");
+    public static final RegistryObject<SoundEvent> SUPERMAN_THEME_BASE = register("superman_theme_base");
+    public static final RegistryObject<SoundEvent> SUPERMAN_THEME_PEAK = register("superman_theme_peak");
+
     // ---- The Trench (all original, see tools/generate_trench_audio.py) ----------------------------
     public static final RegistryObject<SoundEvent> TRENCH_IDLE = register("trench_idle");
     public static final RegistryObject<SoundEvent> TRENCH_SCREECH = register("trench_screech");

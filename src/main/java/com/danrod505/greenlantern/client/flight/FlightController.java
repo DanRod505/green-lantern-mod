@@ -4,15 +4,16 @@ import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.client.CameraShake;
 import com.danrod505.greenlantern.flight.FlightAction;
 import com.danrod505.greenlantern.flight.FlightFlags;
+import com.danrod505.greenlantern.flight.FlightProfile;
 import com.danrod505.greenlantern.network.FlightActionPacket;
 import com.danrod505.greenlantern.network.FlightStatePacket;
 import com.danrod505.greenlantern.network.ModNetwork;
 import com.danrod505.greenlantern.registry.ModParticles;
 import com.danrod505.greenlantern.registry.ModSounds;
-import com.danrod505.greenlantern.ring.RingHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Abilities;
@@ -57,6 +58,9 @@ public final class FlightController {
     private static float bankO;
     private static float boomPunch;
     private static int boomFlash;
+    /** The flight of the hero flying right now (Lantern or Superman), refreshed every tick. */
+    private static FlightProfile profile;
+    private static boolean superman;
 
     private FlightController() {}
 
@@ -72,12 +76,21 @@ public final class FlightController {
 
     /** 0-1, relative to the configured top speed. */
     public static float speedFraction() {
-        return power ? (float) Mth.clamp(speed / GLConfig.MAX_FLIGHT_SPEED.get(), 0.0, 1.0) : 0.0F;
+        return power ? (float) Mth.clamp(speed / profile().max(), 0.0, 1.0) : 0.0F;
     }
 
     /** Speed in Mach (1.0 = sound barrier). */
     public static float mach() {
         return (float) (speed() / GLConfig.SOUND_BARRIER_SPEED.get());
+    }
+
+    /** Whether the local flyer is Superman (his own trail, colours and theme). */
+    public static boolean isSuperman() {
+        return superman;
+    }
+
+    private static FlightProfile profile() {
+        return profile != null ? profile : FlightProfile.lantern();
     }
 
     public static boolean isSupersonic() {
@@ -123,7 +136,9 @@ public final class FlightController {
         if (boomFlash > 0) boomFlash--;
 
         Abilities abilities = player.getAbilities();
-        boolean flying = abilities.flying && RingHelper.isSuited(player) && !player.isPassenger() && !player.isSpectator();
+        boolean flying = abilities.flying && FlightProfile.canPowerFly(player) && !player.isPassenger() && !player.isSpectator();
+        superman = FlightProfile.isSuperman(player);
+        profile = FlightProfile.of(player);
         if (!flying) {
             if (power) endPower(player);
             wasFlying = false;
@@ -138,10 +153,11 @@ public final class FlightController {
         wasFlying = true;
 
         Input input = player.input.keyPresses;
-        double cruise = GLConfig.CRUISE_SPEED.get();
-        double barrier = GLConfig.SOUND_BARRIER_SPEED.get();
-        double max = Math.max(barrier, GLConfig.MAX_FLIGHT_SPEED.get());
-        double accel = Math.max(0.001, (barrier - cruise) / (GLConfig.SECONDS_TO_SOUND_BARRIER.get() * 20.0));
+        FlightProfile profile = profile();
+        double cruise = profile.cruise();
+        double barrier = profile.barrier();
+        double max = profile.max();
+        double accel = Math.max(0.001, (barrier - cruise) / (profile.seconds() * 20.0));
         Vec3 velocity = player.getDeltaMovement();
 
         if (input.forward() && !input.backward()) {
@@ -150,7 +166,7 @@ public final class FlightController {
                 speed = Math.max(velocity.length(), cruise * 0.8);
                 if (savedFlyingSpeed < 0) savedFlyingSpeed = abilities.getFlyingSpeed();
             }
-            double boost = input.sprint() || player.isSprinting() ? 1.6 : 1.0;
+            double boost = input.sprint() || player.isSprinting() ? profile.sprintBoost() : 1.0;
             // Keeps accelerating past Mach 1, just more slowly.
             double soft = speed < barrier ? 1.0 : Mth.clamp(1.0 - 0.7 * (speed - barrier) / Math.max(0.01, max - barrier), 0.3, 1.0);
             speed = Math.min(max, speed + accel * boost * soft);
@@ -183,11 +199,13 @@ public final class FlightController {
         Vec3 look = player.getLookAngle();
         Vec3 dir = velocity.lengthSqr() > 0.0025 ? velocity.normalize() : look;
         double fraction = speed / max;
-        double turn = Mth.lerp(fraction, 0.45, 0.13);
+        // Superman turns on a dime even at top speed.
+        double turn = Mth.lerp(fraction, 0.45, superman ? 0.2 : 0.13);
         Vec3 newDir = dir.lerp(look, turn).normalize();
         Vec3 v = newDir.scale(speed);
-        if (input.jump()) v = v.add(0, 0.2, 0);
-        if (input.shift()) v = v.add(0, -0.2, 0);
+        double lift = superman ? 0.35 : 0.2;
+        if (input.jump()) v = v.add(0, lift, 0);
+        if (input.shift()) v = v.add(0, -lift, 0);
 
         // Barrel roll: double tap left/right.
         boolean left = input.left();
@@ -240,8 +258,8 @@ public final class FlightController {
             heroLanding(player);
             return;
         }
-        if (player.horizontalCollision && speed > 1.6) {
-            // Crashed into a wall: the ring protects you, but you lose your momentum.
+        if (player.horizontalCollision && speed > (superman ? 2.6 : 1.6)) {
+            // Crashed into a wall: the ring (or Kryptonian toughness) protects you, but you lose your momentum.
             CameraShake.start((float) Math.min(1.0, speed / 3.0), 12);
             play(ModSounds.BLAST_IMPACT.get(), 0.8F, 0.7F);
             speed *= 0.25;
@@ -253,7 +271,7 @@ public final class FlightController {
     private static void takeoff(LocalPlayer player) {
         takeoffBoost = 4;
         CameraShake.start(0.35F, 10);
-        play(ModSounds.FLIGHT_TAKEOFF.get(), 1.0F, 1.0F);
+        play(ModSounds.FLIGHT_TAKEOFF.get(), 1.0F, superman ? 0.8F : 1.0F);
         ModNetwork.sendToServer(new FlightActionPacket(FlightAction.TAKEOFF));
     }
 
@@ -261,7 +279,7 @@ public final class FlightController {
         CameraShake.start(0.9F, 20);
         boomPunch = 0.35F;
         boomFlash = 6;
-        play(ModSounds.SONIC_BOOM.get(), 1.0F, 1.0F);
+        play(superman ? ModSounds.SUPER_BOOM.get() : ModSounds.SONIC_BOOM.get(), 1.0F, 1.0F);
         spawnSonicRings(player, dir);
         ModNetwork.sendToServer(new FlightActionPacket(FlightAction.SONIC_BOOM));
     }
@@ -269,17 +287,20 @@ public final class FlightController {
     /** Vapor cone rings left behind when a Lantern breaks the sound barrier (also used for other players). */
     public static void spawnSonicRings(net.minecraft.world.entity.player.Player player, Vec3 dir) {
         var level = player.level();
+        boolean kryptonian = FlightProfile.isSuperman(player);
+        var ring = kryptonian ? ModParticles.SUPER_RING.get() : ModParticles.SONIC_RING.get();
+        var glow = kryptonian ? ModParticles.SOLAR_GLOW.get() : ModParticles.GLOW.get();
         Vec3 c = player.position().add(0, player.getBbHeight() * 0.5, 0);
         for (int i = 0; i < 4; i++) {
             Vec3 p = c.subtract(dir.scale(0.8 + i * 1.6));
-            level.addParticle(ModParticles.SONIC_RING.get(), p.x, p.y, p.z, dir.x, dir.y, dir.z);
+            level.addParticle(ring, p.x, p.y, p.z, dir.x, dir.y, dir.z);
         }
         for (int i = 0; i < 30; i++) {
             double a = player.getRandom().nextDouble() * Math.PI * 2;
             Vec3 side = rightVector(dir, player.getYRot());
             Vec3 up = side.cross(dir).normalize();
             Vec3 off = side.scale(Math.cos(a) * 1.4).add(up.scale(Math.sin(a) * 1.4));
-            level.addParticle(ModParticles.GLOW.get(), c.x + off.x, c.y + off.y, c.z + off.z, off.x * 0.15 - dir.x * 0.3, off.y * 0.15 - dir.y * 0.3, off.z * 0.15 - dir.z * 0.3);
+            level.addParticle(glow, c.x + off.x, c.y + off.y, c.z + off.z, off.x * 0.15 - dir.x * 0.3, off.y * 0.15 - dir.y * 0.3, off.z * 0.15 - dir.z * 0.3);
         }
     }
 
@@ -311,17 +332,18 @@ public final class FlightController {
     public static void spawnLandingBurst(net.minecraft.world.entity.player.Player player) {
         var level = player.level();
         var random = player.getRandom();
-        level.addParticle(ModParticles.SHOCKWAVE.get(), player.getX(), player.getY() + 0.1, player.getZ(), 0, 0, 0);
-        level.addParticle(ModParticles.SONIC_RING.get(), player.getX(), player.getY() + 0.15, player.getZ(), 0, 1, 0);
+        boolean kryptonian = FlightProfile.isSuperman(player);
+        level.addParticle(kryptonian ? ModParticles.SUPER_SHOCKWAVE.get() : ModParticles.SHOCKWAVE.get(), player.getX(), player.getY() + 0.1, player.getZ(), 0, 0, 0);
+        level.addParticle(kryptonian ? ModParticles.SUPER_RING.get() : ModParticles.SONIC_RING.get(), player.getX(), player.getY() + 0.15, player.getZ(), 0, 1, 0);
         for (int i = 0; i < 40; i++) {
             double a = random.nextDouble() * Math.PI * 2;
             double r = 0.3 + random.nextDouble() * 0.6;
-            level.addParticle(ModParticles.SPARK.get(), player.getX() + Math.cos(a) * r, player.getY() + 0.2, player.getZ() + Math.sin(a) * r,
+            level.addParticle(kryptonian ? ModParticles.SOLAR_GLOW.get() : ModParticles.SPARK.get(), player.getX() + Math.cos(a) * r, player.getY() + 0.2, player.getZ() + Math.sin(a) * r,
                     Math.cos(a) * 0.6, 0.1 + random.nextDouble() * 0.3, Math.sin(a) * 0.6);
         }
         for (int i = 0; i < 16; i++) {
             double a = random.nextDouble() * Math.PI * 2;
-            level.addParticle(ModParticles.GLOW.get(), player.getX() + Math.cos(a), player.getY() + 0.3, player.getZ() + Math.sin(a),
+            level.addParticle(kryptonian ? ParticleTypes.CLOUD : ModParticles.GLOW.get(), player.getX() + Math.cos(a), player.getY() + 0.3, player.getZ() + Math.sin(a),
                     Math.cos(a) * 0.25, 0.05, Math.sin(a) * 0.25);
         }
     }

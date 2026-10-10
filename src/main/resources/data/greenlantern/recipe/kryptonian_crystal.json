@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "ADA",
+    "GSG",
+    "ADA"
+  ],
+  "key": {
+    "A": "minecraft:amethyst_shard",
+    "D": "minecraft:diamond",
+    "G": "minecraft:gold_ingot",
+    "S": "minecraft:sunflower"
+  },
+  "result": {
+    "id": "greenlantern:kryptonian_crystal",
+    "count": 1
+  }
+}

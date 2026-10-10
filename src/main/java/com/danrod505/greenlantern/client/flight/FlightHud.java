@@ -29,7 +29,7 @@ public final class FlightHud {
         int flash = FlightController.boomFlash();
         if (flash > 0) {
             int a = (int) (150 * flash / 6.0F);
-            graphics.fill(0, 0, w, h, a << 24 | 0xD8FFE0);
+            graphics.fill(0, 0, w, h, a << 24 | (FlightController.isSuperman() ? 0xF0F4FF : 0xD8FFE0));
         }
         machMeter(graphics, mc, w, h, mach, supersonic);
     }
@@ -46,7 +46,7 @@ public final class FlightHud {
             float start = radius * (0.45F + 0.35F * RANDOM.nextFloat() * (1.1F - intensity));
             float length = radius * (0.15F + 0.35F * RANDOM.nextFloat()) * (0.5F + intensity);
             int alpha = (int) ((40 + 90 * RANDOM.nextFloat()) * intensity);
-            int color = alpha << 24 | (RANDOM.nextFloat() < 0.3F ? 0x9BFFB0 : 0xFFFFFF);
+            int color = alpha << 24 | (RANDOM.nextFloat() < 0.3F ? (FlightController.isSuperman() ? 0x9BC0FF : 0x9BFFB0) : 0xFFFFFF);
             float thickness = 0.6F + 1.2F * RANDOM.nextFloat() * intensity;
             graphics.pose().pushMatrix();
             graphics.pose().translate(cx, cy);
@@ -64,7 +64,8 @@ public final class FlightHud {
         int depth = Math.max(8, h / 6);
         for (int i = 0; i < steps; i++) {
             int a = (int) (70 * pulse * (1.0F - (float) i / steps));
-            int color = a << 24 | 0x2CFF5A;
+            // Superman's edges alternate blue and red; the Lantern's glow green.
+            int color = a << 24 | (FlightController.isSuperman() ? (i % 2 == 0 ? 0x2E6BFF : 0xE8303A) : 0x2CFF5A);
             int d = depth * i / steps;
             int d2 = depth * (i + 1) / steps;
             graphics.fill(0, d, w, d2, color);
@@ -79,21 +80,22 @@ public final class FlightHud {
         int x = (w - barW) / 2;
         int y = h - 62;
         String text = String.format("MACH %.2f", mach);
-        int color = supersonic ? 0xFFB6FFC6 : 0xFF6CFF86;
+        boolean superman = FlightController.isSuperman();
+        int color = superman ? (supersonic ? 0xFFFFE070 : 0xFF8FB4FF) : (supersonic ? 0xFFB6FFC6 : 0xFF6CFF86);
         graphics.pose().pushMatrix();
         graphics.pose().translate(w / 2.0F, y - 12);
         graphics.pose().scale(1.5F, 1.5F);
         graphics.drawCenteredString(mc.font, Component.literal(text), 0, 0, color);
         graphics.pose().popMatrix();
-        // Bar from Mach 0 to Mach 1.6 with the sound barrier marked.
-        float max = 1.6F;
+        // Bar from Mach 0 to Mach 1.6 (3 for Superman) with the sound barrier marked.
+        float max = superman ? 3.0F : 1.6F;
         graphics.fill(x - 1, y - 1, x + barW + 1, y + 5, 0x90000000);
         int fill = (int) (barW * Mth.clamp(mach / max, 0, 1));
-        graphics.fill(x, y, x + fill, y + 4, supersonic ? 0xFFC8FFD2 : 0xFF2EE65A);
+        graphics.fill(x, y, x + fill, y + 4, superman ? (supersonic ? 0xFFFFD040 : 0xFF2E6BFF) : (supersonic ? 0xFFC8FFD2 : 0xFF2EE65A));
         int mark = x + (int) (barW / max);
         graphics.fill(mark, y - 3, mark + 1, y + 7, 0xFFFFFFFF);
         if (supersonic) {
-            graphics.drawCenteredString(mc.font, Component.translatable("hud.greenlantern.supersonic"), w / 2, y + 8, 0xFFE0FFE6);
+            graphics.drawCenteredString(mc.font, Component.translatable("hud.greenlantern.supersonic"), w / 2, y + 8, superman ? 0xFFFFF0C0 : 0xFFE0FFE6);
         }
     }
 }

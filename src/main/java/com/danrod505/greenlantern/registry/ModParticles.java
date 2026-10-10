@@ -29,5 +29,16 @@ public final class ModParticles {
     /** Golden ring perpendicular to a direction: the speedster's sound barrier blast. */
     public static final RegistryObject<SimpleParticleType> SPEED_RING = PARTICLES.register("speed_ring", () -> new SimpleParticleType(true));
 
+    /** Red-hot spark of heat vision. */
+    public static final RegistryObject<SimpleParticleType> HEAT_SPARK = PARTICLES.register("heat_spark", () -> new SimpleParticleType(true));
+    /** Golden-white mote of sunlight soaked up by Superman. */
+    public static final RegistryObject<SimpleParticleType> SOLAR_GLOW = PARTICLES.register("solar_glow", () -> new SimpleParticleType(false));
+    /** Icy puff of super breath (velocity parameters: where it blows). */
+    public static final RegistryObject<SimpleParticleType> FROST_BREATH = PARTICLES.register("frost_breath", () -> new SimpleParticleType(true));
+    /** White ring perpendicular to a direction: Superman's sound barrier vapor cone. */
+    public static final RegistryObject<SimpleParticleType> SUPER_RING = PARTICLES.register("super_ring", () -> new SimpleParticleType(true));
+    /** Big white ring on the ground: the super punch and Superman's landing. */
+    public static final RegistryObject<SimpleParticleType> SUPER_SHOCKWAVE = PARTICLES.register("super_shockwave", () -> new SimpleParticleType(true));
+
     private ModParticles() {}
 }

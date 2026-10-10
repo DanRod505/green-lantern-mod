@@ -134,6 +134,25 @@ public final class ModItems {
         return ITEMS.register(name, () -> new SuitArmorItem(type, SuitArmorItem.properties(SuitArmorItem.BATMAN_MATERIAL, type).setId(ITEMS.key(name))));
     }
 
+    // ---- Superman -------------------------------------------------------------------------------
+
+    /** The Kryptonian Crystal: Superman's suit is kept in it, and it stores the sunlight his cells absorb. */
+    public static final RegistryObject<com.danrod505.greenlantern.item.KryptonianCrystalItem> KRYPTONIAN_CRYSTAL = ITEMS.register("kryptonian_crystal",
+            () -> new com.danrod505.greenlantern.item.KryptonianCrystalItem(new Item.Properties()
+                    .setId(ITEMS.key("kryptonian_crystal"))
+                    .stacksTo(1)
+                    .rarity(Rarity.EPIC)
+                    .fireResistant()));
+
+    public static final RegistryObject<SuitArmorItem> SUPERMAN_HAIR = supermanSuit("superman_hair", ArmorType.HELMET);
+    public static final RegistryObject<SuitArmorItem> SUPERMAN_SUIT = supermanSuit("superman_suit", ArmorType.CHESTPLATE);
+    public static final RegistryObject<SuitArmorItem> SUPERMAN_LEGGINGS = supermanSuit("superman_leggings", ArmorType.LEGGINGS);
+    public static final RegistryObject<SuitArmorItem> SUPERMAN_BOOTS = supermanSuit("superman_boots", ArmorType.BOOTS);
+
+    private static RegistryObject<SuitArmorItem> supermanSuit(String name, ArmorType type) {
+        return ITEMS.register(name, () -> new SuitArmorItem(type, SuitArmorItem.properties(SuitArmorItem.SUPERMAN_MATERIAL, type).setId(ITEMS.key(name))));
+    }
+
     private static RegistryObject<SuitArmorItem> aquamanSuit(String name, ArmorType type) {
         return ITEMS.register(name, () -> new SuitArmorItem(type, SuitArmorItem.properties(SuitArmorItem.AQUAMAN_MATERIAL, type).setId(ITEMS.key(name))));
     }

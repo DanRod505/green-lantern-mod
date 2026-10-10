@@ -36,7 +36,7 @@ import org.lwjgl.glfw.GLFW;
 /**
  * A hero's power wheel (same controls as the Lantern's construct wheel, in the hero's colours: Speed
  * Force red and gold for the Flash, sea teal and gold for Aquaman, night black and
- * utility-belt yellow for Batman): hold the wheel key, point at a
+ * utility-belt yellow for Batman, Kryptonian blue, red and gold for Superman): hold the wheel key, point at a
  * power and release the key (or click) to select it.
  */
 public class PowerWheelScreen extends Screen {
@@ -47,6 +47,8 @@ public class PowerWheelScreen extends Screen {
     public static final int AQUA_ICONS_W = 96;
     public static final Identifier BAT_ICONS = GreenLantern.id("textures/gui/batman_powers.png");
     public static final int BAT_ICONS_W = 80;
+    public static final Identifier SUPER_ICONS = GreenLantern.id("textures/gui/superman_powers.png");
+    public static final int SUPER_ICONS_W = 80;
 
     /** Everything that differs between the heroes' wheels. */
     private record Powers(WheelTextures.Theme theme, Identifier icons, int iconsW, Function<Player, ItemStack> item,
@@ -69,6 +71,14 @@ public class PowerWheelScreen extends Screen {
                 i -> BatPower.byIndex(i).displayName(), i -> BatPower.byIndex(i).description(), i -> BatPower.byIndex(i).cost(),
                 "wheel.greenlantern.bat_cost", "tooltip.greenlantern.bat_charge", 0x88050506, 0xF2D03A, 0xE8D890, 0xE0E0E4,
                 0x9A9AA4, 0xF2D03A, 0xA8A8B0);
+        static final Powers SUPERMAN = new Powers(WheelTextures.Theme.SUPERMAN, SUPER_ICONS, SUPER_ICONS_W,
+                com.danrod505.greenlantern.superman.SupermanHelper::findCrystal, com.danrod505.greenlantern.superman.SolarEnergy::get,
+                crystal -> com.danrod505.greenlantern.superman.SuperPower.selected(crystal).ordinal(), com.danrod505.greenlantern.superman.SuperPower.count(),
+                i -> com.danrod505.greenlantern.superman.SuperPower.byIndex(i).displayName(),
+                i -> com.danrod505.greenlantern.superman.SuperPower.byIndex(i).description(),
+                i -> com.danrod505.greenlantern.superman.SuperPower.byIndex(i).cost(),
+                "wheel.greenlantern.solar_cost", "tooltip.greenlantern.solar_energy", 0x66020A24, 0xFFD84A, 0xFFE8A0, 0xE6ECFF,
+                0xA8B4D8, 0xFFD84A, 0xA8B4D0);
     }
 
     private final Powers powers;
@@ -88,6 +98,7 @@ public class PowerWheelScreen extends Screen {
         this.powers = switch (hero) {
             case AQUAMAN -> Powers.AQUAMAN;
             case BATMAN -> Powers.BATMAN;
+            case SUPERMAN -> Powers.SUPERMAN;
             default -> Powers.FLASH;
         };
         this.count = powers.count();

@@ -30,6 +30,7 @@ public class SuitArmorItem extends Item {
     public static final ResourceKey<EquipmentAsset> FLASH_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, GreenLantern.id("flash"));
     public static final ResourceKey<EquipmentAsset> AQUAMAN_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, GreenLantern.id("aquaman"));
     public static final ResourceKey<EquipmentAsset> BATMAN_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, GreenLantern.id("batman"));
+    public static final ResourceKey<EquipmentAsset> SUPERMAN_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, GreenLantern.id("superman"));
 
     public static final ArmorMaterial MATERIAL = new ArmorMaterial(
             1000,
@@ -73,6 +74,17 @@ public class SuitArmorItem extends Item {
             0.1F,
             ItemTags.REPAIRS_LEATHER_ARMOR,
             BATMAN_ASSET);
+
+    /** Superman's suit: Kryptonian weave, tougher than netherite (the Man of Steel himself is tougher still). */
+    public static final ArmorMaterial SUPERMAN_MATERIAL = new ArmorMaterial(
+            1000,
+            Map.of(ArmorType.HELMET, 4, ArmorType.CHESTPLATE, 9, ArmorType.LEGGINGS, 7, ArmorType.BOOTS, 4, ArmorType.BODY, 9),
+            1,
+            SoundEvents.ARMOR_EQUIP_NETHERITE,
+            4.0F,
+            0.2F,
+            ItemTags.REPAIRS_NETHERITE_ARMOR,
+            SUPERMAN_ASSET);
 
     private final ArmorType type;
 

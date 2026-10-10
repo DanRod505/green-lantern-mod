@@ -34,6 +34,8 @@ public final class ModCreativeTabs {
                 output.accept(ModItems.TRENCH_BRUTE_EGG.get());
                 output.accept(com.danrod505.greenlantern.item.UtilityBeltItem.charged(ModItems.UTILITY_BELT.get().getDefaultInstance()));
                 output.accept(ModItems.UTILITY_BELT.get());
+                output.accept(com.danrod505.greenlantern.item.KryptonianCrystalItem.charged(ModItems.KRYPTONIAN_CRYSTAL.get().getDefaultInstance()));
+                output.accept(ModItems.KRYPTONIAN_CRYSTAL.get());
             })
             .build());
 

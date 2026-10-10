@@ -27,6 +27,8 @@ public final class FlightAudio {
     private static int fastTicks;
     private static int idleTicks;
     private static int supersonicMemory;
+    /** Whether the theme playing is Superman's (each power flyer has their own). */
+    private static boolean themeSuperman;
 
     private FlightAudio() {}
 
@@ -75,12 +77,18 @@ public final class FlightAudio {
         }
         supersonicMemory = FlightController.isSupersonic() ? 80 : Math.max(0, supersonicMemory - 1);
         boolean playing = base != null && !base.isStopped();
+        if (playing && fast && themeSuperman != FlightController.isSuperman()) {
+            // Another hero took to the skies: their own theme starts.
+            stopMusic(mc);
+            playing = false;
+        }
         boolean wantBase = GLClientConfig.FLIGHT_MUSIC.get() && (fastTicks > 15 || (playing && idleTicks < 100));
         boolean wantPeak = wantBase && supersonicMemory > 0;
 
         if (wantBase && !playing) {
-            base = new ThemeSound(ModSounds.FLIGHT_THEME_BASE.get(), 0.025F, 0.012F);
-            peak = new ThemeSound(ModSounds.FLIGHT_THEME_PEAK.get(), 0.09F, 0.012F);
+            themeSuperman = FlightController.isSuperman();
+            base = new ThemeSound(themeSuperman ? ModSounds.SUPERMAN_THEME_BASE.get() : ModSounds.FLIGHT_THEME_BASE.get(), 0.025F, 0.012F);
+            peak = new ThemeSound(themeSuperman ? ModSounds.SUPERMAN_THEME_PEAK.get() : ModSounds.FLIGHT_THEME_PEAK.get(), 0.09F, 0.012F);
             // The peak layer stays in sync by playing silently until it is needed.
             peak.stopWhenSilent = false;
             mc.getSoundManager().play(base);

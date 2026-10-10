@@ -7,7 +7,7 @@ import com.danrod505.greenlantern.flight.FlightFlags;
 import com.danrod505.greenlantern.network.FlightSyncPacket;
 import com.danrod505.greenlantern.registry.ModParticles;
 import com.danrod505.greenlantern.registry.ModSounds;
-import com.danrod505.greenlantern.ring.RingHelper;
+import com.danrod505.greenlantern.flight.FlightProfile;
 import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -46,6 +46,12 @@ public final class FlightVisuals {
         public int rollTick;
         public int brakeTicks;
         public int heroLanding;
+        /** Superman (white vapor trail, blue and red glow) rather than a Lantern (green hard light). */
+        public boolean superman;
+        /** Flying right now (power flight or hovering). */
+        public boolean flying;
+        /** Smoothed 0-1 version of {@link #flying} (the cape billows in and out). */
+        public float hover;
         public final ArrayDeque<TrailPoint> trail = new ArrayDeque<>();
         float syncedSpeed;
         int syncedFlags;
@@ -157,7 +163,8 @@ public final class FlightVisuals {
         Vec3 pos = player.position();
         Vec3 delta = visual.lastPos == null ? Vec3.ZERO : pos.subtract(visual.lastPos);
         visual.lastPos = pos;
-        boolean suited = RingHelper.isSuited(player);
+        boolean suited = FlightProfile.canPowerFly(player);
+        visual.superman = FlightProfile.isSuperman(player);
 
         float targetSpeed;
         int flags;
@@ -174,6 +181,8 @@ public final class FlightVisuals {
             flying = suited && (FlightFlags.has(flags, FlightFlags.POWER) || (!player.onGround() && delta.lengthSqr() > 0.01 && !player.isFallFlying()));
         }
         visual.flags = flags;
+        visual.flying = flying;
+        visual.hover += ((flying ? 1.0F : 0.0F) - visual.hover) * 0.12F;
         visual.speed += (targetSpeed - visual.speed) * 0.35F;
 
         Vec3 moveDir = isLocal ? player.getDeltaMovement() : delta;
@@ -202,7 +211,7 @@ public final class FlightVisuals {
             visual.rollDir = 0;
         }
 
-        float auraTarget = flying ? 0.45F + 0.55F * Mth.clamp(visual.speed / GLConfig.SOUND_BARRIER_SPEED.get().floatValue(), 0, 1) : 0.0F;
+        float auraTarget = flying && !visual.superman ? 0.45F + 0.55F * Mth.clamp(visual.speed / GLConfig.SOUND_BARRIER_SPEED.get().floatValue(), 0, 1) : 0.0F;
         visual.aura += (auraTarget - visual.aura) * 0.15F;
 
         // Trail.
@@ -218,6 +227,33 @@ public final class FlightVisuals {
         if (flying) spawnParticles(level, player, visual, delta);
     }
 
+    /** Superman leaves no hard light behind: puffs of vapor at speed and the cone of the sound barrier. */
+    private static void spawnSupermanParticles(ClientLevel level, Player player, Visual visual, Vec3 delta, Vec3 c, RandomSource random) {
+        float speed = visual.speed;
+        if (player.tickCount % 6 == 0 && speed < 0.6F) {
+            level.addParticle(ModParticles.SOLAR_GLOW.get(), c.x + (random.nextDouble() - 0.5) * 0.8, c.y + (random.nextDouble() - 0.5) * 1.4,
+                    c.z + (random.nextDouble() - 0.5) * 0.8, 0, 0.01, 0);
+        }
+        if (speed < 1.0F) return;
+        int steps = Mth.clamp((int) (delta.length() * 1.5), 1, 10);
+        for (int i = 0; i < steps; i++) {
+            Vec3 p = c.subtract(delta.scale((double) i / steps));
+            if (random.nextFloat() < 0.5F) {
+                Vec3 back = visual.dir.scale(-0.05 * speed);
+                level.addParticle(net.minecraft.core.particles.ParticleTypes.CLOUD, p.x + random.nextGaussian() * 0.2, p.y + random.nextGaussian() * 0.2,
+                        p.z + random.nextGaussian() * 0.2, back.x, back.y, back.z);
+            }
+        }
+        if (visual.supersonic() && random.nextFloat() < 0.45F) {
+            level.addParticle(ModParticles.SUPER_RING.get(), c.x - visual.dir.x * 1.4, c.y - visual.dir.y * 1.4, c.z - visual.dir.z * 1.4,
+                    visual.dir.x * 0.4, visual.dir.y * 0.4, visual.dir.z * 0.4);
+        }
+        Minecraft mc = Minecraft.getInstance();
+        if (player != mc.player && visual.supersonic() && mc.player != null && mc.player.distanceToSqr(player) < 144 && player.tickCount % 20 == 0) {
+            level.playLocalSound(player.getX(), player.getY(), player.getZ(), ModSounds.FLIGHT_WHOOSH.get(), SoundSource.PLAYERS, 1.2F, 0.9F, false);
+        }
+    }
+
     private static void pruneTrail(Visual visual, int life) {
         while (visual.trail.size() > TRAIL_POINTS) visual.trail.removeLast();
         while (!visual.trail.isEmpty() && gameTime - visual.trail.peekLast().time() > life) visual.trail.removeLast();
@@ -227,6 +263,10 @@ public final class FlightVisuals {
         RandomSource random = player.getRandom();
         Vec3 c = player.position().add(0, player.getBbHeight() * 0.5, 0);
         float speed = visual.speed;
+        if (visual.superman) {
+            spawnSupermanParticles(level, player, visual, delta, c, random);
+            return;
+        }
         // Aura motes around the body.
         int motes = speed > 0.3F ? 2 : (player.tickCount % 3 == 0 ? 1 : 0);
         for (int i = 0; i < motes; i++) {

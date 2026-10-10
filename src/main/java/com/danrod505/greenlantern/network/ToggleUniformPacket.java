@@ -23,11 +23,13 @@ public record ToggleUniformPacket() {
                 case FLASH -> FlashSuit.dismiss(player, true);
                 case AQUAMAN -> AquamanSuit.dismiss(player, true);
                 case BATMAN -> com.danrod505.greenlantern.batman.BatmanSuit.dismiss(player, true);
+                case SUPERMAN -> com.danrod505.greenlantern.superman.SupermanSuit.dismiss(player, true);
                 case NONE -> {
                     switch (Hero.context(player)) {
                         case FLASH -> FlashSuit.summon(player);
                         case AQUAMAN -> AquamanSuit.summon(player);
                         case BATMAN -> com.danrod505.greenlantern.batman.BatmanSuit.summon(player);
+                        case SUPERMAN -> com.danrod505.greenlantern.superman.SupermanSuit.summon(player);
                         default -> Uniform.summon(player);
                     }
                 }

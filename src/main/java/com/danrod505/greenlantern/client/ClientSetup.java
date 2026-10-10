@@ -97,6 +97,7 @@ public final class ClientSetup {
         SidedHooks.openGuide = () -> Minecraft.getInstance().setScreen(new GuideScreen());
         SidedHooks.flightSync = FlightVisuals::onSync;
         SidedHooks.speedSync = SpeedVisuals::onSync;
+        SidedHooks.supermanSync = com.danrod505.greenlantern.client.superman.SupermanVisuals::onSync;
     }
 
     private static void onRegisterKeys(RegisterKeyMappingsEvent event) {
@@ -146,6 +147,11 @@ public final class ClientSetup {
         event.registerSpriteSet(ModParticles.SPEED_SPARK.get(), SpeedParticle.SparkProvider::new);
         event.registerSpriteSet(ModParticles.SPEED_STREAK.get(), SpeedParticle.StreakProvider::new);
         event.registerSpriteSet(ModParticles.SPEED_RING.get(), SonicRingParticle.SpeedProvider::new);
+        event.registerSpriteSet(ModParticles.HEAT_SPARK.get(), com.danrod505.greenlantern.client.particle.SuperParticle.HeatProvider::new);
+        event.registerSpriteSet(ModParticles.SOLAR_GLOW.get(), com.danrod505.greenlantern.client.particle.SuperParticle.SolarProvider::new);
+        event.registerSpriteSet(ModParticles.FROST_BREATH.get(), com.danrod505.greenlantern.client.particle.SuperParticle.FrostProvider::new);
+        event.registerSpriteSet(ModParticles.SUPER_RING.get(), SonicRingParticle.SupermanProvider::new);
+        event.registerSpriteSet(ModParticles.SUPER_SHOCKWAVE.get(), ShockwaveParticle.SupermanProvider::new);
     }
 
     private static void onRegisterLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
@@ -167,6 +173,7 @@ public final class ClientSetup {
                 renderer.addLayer(new AuraLayer(renderer, new HumanoidModel<>(event.getEntityModels().bakeLayer(AuraLayer.LAYER))));
                 renderer.addLayer(new com.danrod505.greenlantern.client.render.aqua.RespiratorLayer(renderer));
                 renderer.addLayer(new com.danrod505.greenlantern.client.render.batman.BatmanLayer(renderer));
+                renderer.addLayer(new com.danrod505.greenlantern.client.superman.SupermanLayer(renderer));
             }
         }
     }
@@ -181,6 +188,7 @@ public final class ClientSetup {
         com.danrod505.greenlantern.client.aqua.SwimAudio.tick();
         com.danrod505.greenlantern.client.batman.BatmanVisuals.tick();
         com.danrod505.greenlantern.client.batman.BatmanAudio.tick();
+        com.danrod505.greenlantern.client.superman.SupermanVisuals.tick();
     }
 
     private static void onPlayerTickPre(TickEvent.PlayerTickEvent.Pre event) {
@@ -210,6 +218,7 @@ public final class ClientSetup {
         event.getLayeredDraw().add(ForgeLayeredDraw.POST_SLEEP_STACK, GreenLantern.id("flash_hud"), FlashHud::render);
         event.getLayeredDraw().add(ForgeLayeredDraw.POST_SLEEP_STACK, GreenLantern.id("aqua_hud"), AquaHud::render);
         event.getLayeredDraw().add(ForgeLayeredDraw.POST_SLEEP_STACK, GreenLantern.id("bat_hud"), BatHud::render);
+        event.getLayeredDraw().add(ForgeLayeredDraw.POST_SLEEP_STACK, GreenLantern.id("superman_hud"), SupermanHud::render);
         event.getLayeredDraw().add(ForgeLayeredDraw.POST_SLEEP_STACK, GreenLantern.id("respirator_hud"), RespiratorHud::render);
     }
 }
