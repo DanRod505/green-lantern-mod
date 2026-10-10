@@ -3,9 +3,9 @@ package com.danrod505.greenlantern.item;
 import com.danrod505.greenlantern.construct.Construct;
 import com.danrod505.greenlantern.construct.ConstructRegistry;
 import com.danrod505.greenlantern.registry.ModSounds;
+import com.danrod505.greenlantern.ring.LanternHero;
 import com.danrod505.greenlantern.ring.RingEnergy;
 import com.danrod505.greenlantern.ring.RingHelper;
-import com.danrod505.greenlantern.ring.Uniform;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -50,7 +50,7 @@ public class PowerRingItem extends Item {
 
         if (!RingHelper.isSuited(player)) {
             if (player instanceof ServerPlayer serverPlayer) {
-                Uniform.summon(serverPlayer);
+                LanternHero.INSTANCE.summonSuit(serverPlayer);
             }
             return InteractionResult.SUCCESS;
         }

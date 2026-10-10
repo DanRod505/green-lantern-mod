@@ -145,7 +145,7 @@ public final class SpeedsterServer {
 
     public static void tick(ServerPlayer player) {
         boolean suited = FlashHelper.isSuited(player);
-        if (player.tickCount % 20 == 0) FlashSuit.updateModifiers(player, suited);
+        if (player.tickCount % 20 == 0) FlashHero.INSTANCE.updateSuitModifiers(player, suited);
         State state = STATES.get(player.getUUID());
         if (!suited) {
             if (state != null && state.phaseTicks >= 0) endPhase(player, true);

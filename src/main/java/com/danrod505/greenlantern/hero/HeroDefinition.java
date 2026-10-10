@@ -2,15 +2,19 @@ package com.danrod505.greenlantern.hero;
 
 import com.danrod505.greenlantern.client.HeroClient;
 import com.danrod505.greenlantern.flight.FlightProfile;
+import com.danrod505.greenlantern.ring.FlightHandler;
+import com.danrod505.greenlantern.ring.Uniform;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -23,17 +27,17 @@ import net.minecraft.world.item.ItemStack;
 public abstract class HeroDefinition {
     private final String id;
     private final Predicate<ItemStack> activator;
-    private final Supplier<? extends Item> suitChest;
+    private final SuitSet suit;
 
     /**
      * @param id        short id, e.g. {@code "wonder_woman"}
      * @param activator whether a stack is this hero's item (it calls the suit and holds the energy)
-     * @param suitChest the chest piece of the suit: wearing it is what "suited" means
+     * @param suit      the suit; wearing its chest piece is what "suited" means
      */
-    protected HeroDefinition(String id, Predicate<ItemStack> activator, Supplier<? extends Item> suitChest) {
+    protected HeroDefinition(String id, Predicate<ItemStack> activator, SuitSet suit) {
         this.id = id;
         this.activator = activator;
-        this.suitChest = suitChest;
+        this.suit = suit;
     }
 
     public final String id() {
@@ -67,14 +71,71 @@ public abstract class HeroDefinition {
 
     /** Whether the player wears this hero's suit. */
     public boolean isSuited(Player player) {
-        return player.getItemBySlot(EquipmentSlot.CHEST).is(suitChest.get());
+        return player.getItemBySlot(EquipmentSlot.CHEST).is(suit.chest().get());
+    }
+
+    public final SuitSet suit() {
+        return suit;
     }
 
     /** Puts the suit on (taking off any other hero's first); false if the hero's item is missing. */
-    public abstract boolean summonSuit(ServerPlayer player);
+    public final boolean summonSuit(ServerPlayer player) {
+        if (isSuited(player)) return true;
+        ItemStack item = findItem(player);
+        if (item.isEmpty()) {
+            player.displayClientMessage(Component.translatable(suit.missingItemKey()), true);
+            return false;
+        }
+        if (!canSuitUp(player, item)) return false;
+        // Only one hero suit at a time.
+        HeroRegistry.dismissOthers(player, this);
+        Uniform.equipSuit(player, SuitSet.piece(suit.head()), SuitSet.piece(suit.chest()), SuitSet.piece(suit.legs()), SuitSet.piece(suit.feet()));
+        updateSuitModifiers(player, true);
+        onSuitEquipped(player);
+        ServerLevel level = player.level();
+        level.playSound(null, player.getX(), player.getY(), player.getZ(), suit.upSound().get(), SoundSource.PLAYERS, 1.0F, 1.0F);
+        suitUpEffects(level, player);
+        return true;
+    }
 
-    /** Takes the suit off, with sound and particles if {@code effects}. */
-    public abstract void dismissSuit(ServerPlayer player, boolean effects);
+    /** Takes the suit off (giving back the armor worn before), with sound and particles if {@code effects}. */
+    public final void dismissSuit(ServerPlayer player, boolean effects) {
+        onSuitRemoving(player);
+        Uniform.removeSuit(player);
+        updateSuitModifiers(player, false);
+        FlightHandler.refreshAbilities(player);
+        if (effects) {
+            ServerLevel level = player.level();
+            level.playSound(null, player.getX(), player.getY(), player.getZ(), suit.downSound().get(), SoundSource.PLAYERS, 1.0F, 1.0F);
+            suitDownEffects(level, player);
+        }
+    }
+
+    /** Adds (suited) or removes the suit's bonuses. */
+    public final void updateSuitModifiers(ServerPlayer player, boolean suited) {
+        for (SuitModifier modifier : suit.modifiers()) modifier.apply(player, suited);
+    }
+
+    /** Last check before suiting up, with the hero's item in hand (the Lantern needs energy in the ring). */
+    protected boolean canSuitUp(ServerPlayer player, ItemStack item) {
+        return true;
+    }
+
+    /** Right after the pieces and bonuses are on, before the suit up sound. */
+    protected void onSuitEquipped(ServerPlayer player) {
+    }
+
+    /** Particles (and client events) after the suit up sound. */
+    protected void suitUpEffects(ServerLevel level, ServerPlayer player) {
+    }
+
+    /** Before the suit comes off: put away what the hero's powers left in the world. */
+    protected void onSuitRemoving(ServerPlayer player) {
+    }
+
+    /** Particles after the suit down sound (only when taken off with effects). */
+    protected void suitDownEffects(ServerLevel level, ServerPlayer player) {
+    }
 
     /** The power wheel, or null for a hero without one (the Lantern picks constructs instead). */
     public HeroPowers<?> powers() {

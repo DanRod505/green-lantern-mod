@@ -5,7 +5,6 @@ import com.danrod505.greenlantern.wonderwoman.AmazonPower;
 import com.danrod505.greenlantern.wonderwoman.WonderWomanHelper;
 import com.danrod505.greenlantern.wonderwoman.WonderWomanHero;
 import com.danrod505.greenlantern.wonderwoman.WonderWomanServer;
-import com.danrod505.greenlantern.wonderwoman.WonderWomanSuit;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -43,7 +42,7 @@ public class AmazonTiaraItem extends Item {
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack tiara = player.getItemInHand(hand);
         if (!WonderWomanHelper.isSuited(player)) {
-            if (player instanceof ServerPlayer serverPlayer) WonderWomanSuit.summon(serverPlayer);
+            if (player instanceof ServerPlayer serverPlayer) WonderWomanHero.INSTANCE.summonSuit(serverPlayer);
             return InteractionResult.SUCCESS;
         }
         if (player instanceof ServerPlayer serverPlayer) {

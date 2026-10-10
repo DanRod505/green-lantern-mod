@@ -2,7 +2,6 @@ package com.danrod505.greenlantern.item;
 
 import com.danrod505.greenlantern.flash.FlashHelper;
 import com.danrod505.greenlantern.flash.FlashHero;
-import com.danrod505.greenlantern.flash.FlashSuit;
 import com.danrod505.greenlantern.flash.SpeedsterPower;
 import com.danrod505.greenlantern.flash.SpeedsterServer;
 import com.danrod505.greenlantern.ring.RingEnergy;
@@ -43,7 +42,7 @@ public class FlashRingItem extends Item {
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack ring = player.getItemInHand(hand);
         if (!FlashHelper.isSuited(player)) {
-            if (player instanceof ServerPlayer serverPlayer) FlashSuit.summon(serverPlayer);
+            if (player instanceof ServerPlayer serverPlayer) FlashHero.INSTANCE.summonSuit(serverPlayer);
             return InteractionResult.SUCCESS;
         }
         if (player instanceof ServerPlayer serverPlayer) {

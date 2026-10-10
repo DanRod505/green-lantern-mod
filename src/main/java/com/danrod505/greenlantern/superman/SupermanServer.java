@@ -127,7 +127,7 @@ public final class SupermanServer {
 
     public static void tick(ServerPlayer player) {
         boolean suited = SupermanHelper.isSuited(player);
-        if (player.tickCount % 20 == 0) SupermanSuit.updateModifiers(player, suited);
+        if (player.tickCount % 20 == 0) SupermanHero.INSTANCE.updateSuitModifiers(player, suited);
         if (!suited) {
             if (STATES.containsKey(player.getUUID())) remove(player);
             return;

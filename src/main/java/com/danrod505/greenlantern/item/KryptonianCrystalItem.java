@@ -5,7 +5,6 @@ import com.danrod505.greenlantern.superman.SuperPower;
 import com.danrod505.greenlantern.superman.SupermanHelper;
 import com.danrod505.greenlantern.superman.SupermanHero;
 import com.danrod505.greenlantern.superman.SupermanServer;
-import com.danrod505.greenlantern.superman.SupermanSuit;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -42,7 +41,7 @@ public class KryptonianCrystalItem extends Item {
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack crystal = player.getItemInHand(hand);
         if (!SupermanHelper.isSuited(player)) {
-            if (player instanceof ServerPlayer serverPlayer) SupermanSuit.summon(serverPlayer);
+            if (player instanceof ServerPlayer serverPlayer) SupermanHero.INSTANCE.summonSuit(serverPlayer);
             return InteractionResult.SUCCESS;
         }
         if (player instanceof ServerPlayer serverPlayer) {

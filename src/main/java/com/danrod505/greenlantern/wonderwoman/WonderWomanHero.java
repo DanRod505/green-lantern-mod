@@ -8,19 +8,33 @@ import com.danrod505.greenlantern.flight.FlightProfile;
 import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.HeroEnergy;
 import com.danrod505.greenlantern.hero.HeroPowers;
+import com.danrod505.greenlantern.hero.SuitModifier;
+import com.danrod505.greenlantern.hero.SuitSet;
 import com.danrod505.greenlantern.hero.WheelStyle;
 import com.danrod505.greenlantern.hero.WheelTheme;
 import com.danrod505.greenlantern.registry.ModDataComponents;
 import com.danrod505.greenlantern.registry.ModItems;
+import com.danrod505.greenlantern.registry.ModParticles;
+import com.danrod505.greenlantern.registry.ModSounds;
+import com.danrod505.greenlantern.ring.FlightHandler;
+import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-/** Wonder Woman: the Tiara of Themyscira calls her armor and keeps the gift of the gods. */
+/**
+ * Wonder Woman: the Tiara of Themyscira keeps the gift of the gods and calls her armor: the red
+ * bodice with the golden eagle, the blue skirt with white stars, the red and white boots, the silver
+ * Bracelets of Submission (and the black hair crowned by the tiara). While it is worn the Amazon
+ * princess is stronger, tougher, quicker and steadier than any mortal, though not as mighty as the
+ * Man of Steel.
+ */
 public final class WonderWomanHero extends HeroDefinition {
     /**
      * The gift of the gods, kept in the Tiara of Themyscira: it pays for Wonder Woman's powers. It
@@ -41,7 +55,17 @@ public final class WonderWomanHero extends HeroDefinition {
             0.85F, 0.06F, WonderWomanServer::usePower, WHEEL);
 
     private WonderWomanHero() {
-        super("wonder_woman", WonderWomanHelper::isTiara, ModItems.WONDER_WOMAN_SUIT);
+        super("wonder_woman", WonderWomanHelper::isTiara, new SuitSet(ModItems.WONDER_WOMAN_HAIR, ModItems.WONDER_WOMAN_SUIT, ModItems.WONDER_WOMAN_LEGGINGS,
+                ModItems.WONDER_WOMAN_BOOTS, "message.greenlantern.no_tiara", ModSounds.WONDER_WOMAN_SUIT_UP, ModSounds.WONDER_WOMAN_SUIT_DOWN, List.of(
+                        SuitModifier.add(Attributes.ATTACK_DAMAGE, "wonder_woman_strength", 7.0),
+                        SuitModifier.add(Attributes.MAX_HEALTH, "wonder_woman_health", 16.0),
+                        SuitModifier.multiply(Attributes.MOVEMENT_SPEED, "wonder_woman_speed", 0.25),
+                        SuitModifier.multiply(Attributes.ATTACK_SPEED, "wonder_woman_attack_speed", 0.3),
+                        SuitModifier.add(Attributes.KNOCKBACK_RESISTANCE, "wonder_woman_steady", 0.8),
+                        SuitModifier.add(Attributes.STEP_HEIGHT, "wonder_woman_step", 0.5),
+                        SuitModifier.add(Attributes.JUMP_STRENGTH, "wonder_woman_jump", 0.2),
+                        SuitModifier.add(Attributes.ENTITY_INTERACTION_RANGE, "wonder_woman_reach", 1.0),
+                        SuitModifier.add(Attributes.OXYGEN_BONUS, "wonder_woman_breath", 4.0))));
     }
 
     @Override
@@ -50,13 +74,30 @@ public final class WonderWomanHero extends HeroDefinition {
     }
 
     @Override
-    public boolean summonSuit(ServerPlayer player) {
-        return WonderWomanSuit.summon(player);
+    protected void onSuitEquipped(ServerPlayer player) {
+        FlightHandler.refreshAbilities(player);
     }
 
     @Override
-    public void dismissSuit(ServerPlayer player, boolean effects) {
-        WonderWomanSuit.dismiss(player, effects);
+    protected void suitUpEffects(ServerLevel level, ServerPlayer player) {
+        burst(level, player, 50);
+        WonderWomanServer.sendEvent(player, AmazonFlags.EVENT_SUIT_UP);
+    }
+
+    @Override
+    protected void onSuitRemoving(ServerPlayer player) {
+        WonderWomanServer.onSuitRemoved(player);
+    }
+
+    @Override
+    protected void suitDownEffects(ServerLevel level, ServerPlayer player) {
+        burst(level, player, 20);
+    }
+
+    /** A burst of golden sparks, like a flash of lightning from Olympus. */
+    private static void burst(ServerLevel level, ServerPlayer player, int count) {
+        level.sendParticles(ModParticles.AMAZON_SPARK.get(), player.getX(), player.getY() + 1.0, player.getZ(), count, 0.45, 0.9, 0.45, 0.08);
+        level.sendParticles(ModParticles.AMAZON_SHOCKWAVE.get(), player.getX(), player.getY() + 0.1, player.getZ(), 1, 0, 0, 0, 0);
     }
 
     @Override
@@ -83,7 +124,7 @@ public final class WonderWomanHero extends HeroDefinition {
 
     @Override
     public void onLogout(ServerPlayer player) {
-        if (isSuited(player)) WonderWomanSuit.dismiss(player, false);
+        if (isSuited(player)) dismissSuit(player, false);
         WonderWomanServer.remove(player);
     }
 

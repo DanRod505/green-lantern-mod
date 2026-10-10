@@ -55,7 +55,7 @@ public final class AquamanServer {
 
     public static void tick(ServerPlayer player) {
         boolean suited = AquamanHelper.isSuited(player);
-        if (player.tickCount % 20 == 0) AquamanSuit.updateModifiers(player, suited);
+        if (player.tickCount % 20 == 0) AquamanHero.INSTANCE.updateSuitModifiers(player, suited);
         SeaCall.tick(player);
         if (!suited) {
             STATES.remove(player.getUUID());

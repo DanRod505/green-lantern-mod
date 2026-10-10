@@ -59,7 +59,7 @@ public final class BatmanServer {
 
     public static void tick(ServerPlayer player) {
         boolean suited = BatmanHelper.isSuited(player);
-        if (player.tickCount % 20 == 0) BatmanSuit.updateModifiers(player, suited);
+        if (player.tickCount % 20 == 0) BatmanHero.INSTANCE.updateSuitModifiers(player, suited);
         if (!suited) {
             STATES.remove(player.getUUID());
             return;

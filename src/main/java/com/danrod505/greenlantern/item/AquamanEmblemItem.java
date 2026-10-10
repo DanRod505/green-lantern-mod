@@ -4,7 +4,6 @@ import com.danrod505.greenlantern.aquaman.AquaPower;
 import com.danrod505.greenlantern.aquaman.AquamanHelper;
 import com.danrod505.greenlantern.aquaman.AquamanHero;
 import com.danrod505.greenlantern.aquaman.AquamanServer;
-import com.danrod505.greenlantern.aquaman.AquamanSuit;
 import com.danrod505.greenlantern.ring.RingEnergy;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
@@ -43,7 +42,7 @@ public class AquamanEmblemItem extends Item {
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack emblem = player.getItemInHand(hand);
         if (!AquamanHelper.isSuited(player)) {
-            if (player instanceof ServerPlayer serverPlayer) AquamanSuit.summon(serverPlayer);
+            if (player instanceof ServerPlayer serverPlayer) AquamanHero.INSTANCE.summonSuit(serverPlayer);
             return InteractionResult.SUCCESS;
         }
         if (player instanceof ServerPlayer serverPlayer) {

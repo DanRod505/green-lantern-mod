@@ -6,13 +6,11 @@ import com.danrod505.greenlantern.aquaman.AquaPower;
 import com.danrod505.greenlantern.aquaman.AquamanHelper;
 import com.danrod505.greenlantern.aquaman.AquamanHero;
 import com.danrod505.greenlantern.aquaman.AquamanServer;
-import com.danrod505.greenlantern.aquaman.AquamanSuit;
 import com.danrod505.greenlantern.aquaman.SeaCall;
 import com.danrod505.greenlantern.batman.BatPower;
 import com.danrod505.greenlantern.batman.BatmanHelper;
 import com.danrod505.greenlantern.batman.BatmanHero;
 import com.danrod505.greenlantern.batman.BatmanServer;
-import com.danrod505.greenlantern.batman.BatmanSuit;
 import com.danrod505.greenlantern.block.PowerBatteryBlockEntity;
 import com.danrod505.greenlantern.construct.Construct;
 import com.danrod505.greenlantern.construct.ConstructRegistry;
@@ -40,7 +38,6 @@ import com.danrod505.greenlantern.entity.TrenchCocoonEntity;
 import com.danrod505.greenlantern.entity.TrenchCreatureEntity;
 import com.danrod505.greenlantern.flash.FlashHelper;
 import com.danrod505.greenlantern.flash.FlashHero;
-import com.danrod505.greenlantern.flash.FlashSuit;
 import com.danrod505.greenlantern.flash.SafeSpot;
 import com.danrod505.greenlantern.flash.SpeedFlags;
 import com.danrod505.greenlantern.flash.SpeedsterPower;
@@ -54,14 +51,13 @@ import com.danrod505.greenlantern.item.PowerRingItem;
 import com.danrod505.greenlantern.registry.ModBlocks;
 import com.danrod505.greenlantern.registry.ModDamageTypes;
 import com.danrod505.greenlantern.registry.ModItems;
+import com.danrod505.greenlantern.ring.LanternHero;
 import com.danrod505.greenlantern.ring.RingEnergy;
 import com.danrod505.greenlantern.ring.RingHelper;
-import com.danrod505.greenlantern.ring.Uniform;
 import com.danrod505.greenlantern.superman.SuperPower;
 import com.danrod505.greenlantern.superman.SupermanHelper;
 import com.danrod505.greenlantern.superman.SupermanHero;
 import com.danrod505.greenlantern.superman.SupermanServer;
-import com.danrod505.greenlantern.superman.SupermanSuit;
 import com.danrod505.greenlantern.trench.Trench;
 import com.danrod505.greenlantern.trench.TrenchBuilder;
 import com.danrod505.greenlantern.trench.TrenchLife;
@@ -70,7 +66,6 @@ import com.danrod505.greenlantern.wonderwoman.AmazonPower;
 import com.danrod505.greenlantern.wonderwoman.WonderWomanHelper;
 import com.danrod505.greenlantern.wonderwoman.WonderWomanHero;
 import com.danrod505.greenlantern.wonderwoman.WonderWomanServer;
-import com.danrod505.greenlantern.wonderwoman.WonderWomanSuit;
 import com.mojang.authlib.GameProfile;
 import io.netty.channel.embedded.EmbeddedChannel;
 import java.util.List;
@@ -242,7 +237,7 @@ public final class ModGameTests {
         helper.assertTrue(player.getItemBySlot(EquipmentSlot.FEET).is(ModItems.LANTERN_BOOTS.get()), "boots should be worn");
         helper.assertTrue(player.getAbilities().mayfly, "suited player should be able to fly");
 
-        Uniform.dismiss(player, false);
+        LanternHero.INSTANCE.dismissSuit(player, false);
         helper.assertFalse(RingHelper.isSuited(player), "uniform should be dismissed");
         helper.assertTrue(player.getItemBySlot(EquipmentSlot.HEAD).is(Items.IRON_HELMET), "iron helmet should be restored");
         helper.assertFalse(player.getAbilities().mayfly, "survival player should not fly without the uniform");
@@ -253,7 +248,7 @@ public final class ModGameTests {
     public static void flightDrainsEnergy(GameTestHelper helper) {
         ServerPlayer player = player(helper, 7.5, 3, 7.5, 0, 0);
         ItemStack ring = giveRing(player, 1000);
-        Uniform.summon(player);
+        LanternHero.INSTANCE.summonSuit(player);
         player.getAbilities().flying = true;
         helper.startSequence()
                 .thenExecuteFor(61, player::doTick)
@@ -268,7 +263,7 @@ public final class ModGameTests {
     public static void powerOutDismissesUniform(GameTestHelper helper) {
         ServerPlayer player = player(helper, 7.5, 1, 7.5, 0, 0);
         ItemStack ring = giveRing(player, 1000);
-        Uniform.summon(player);
+        LanternHero.INSTANCE.summonSuit(player);
         RingEnergy.set(ring, 0);
         helper.startSequence()
                 .thenExecuteFor(3, player::doTick)
@@ -283,7 +278,7 @@ public final class ModGameTests {
         // Player looks south (+Z) at a zombie 6 blocks away.
         ServerPlayer player = player(helper, 7.5, 1, 2.5, 0, 0);
         ItemStack ring = giveRing(player, 1000);
-        Uniform.summon(player);
+        LanternHero.INSTANCE.summonSuit(player);
         select(player, ConstructRegistry.ENERGY_BLAST);
         Zombie zombie = dummy(helper, 7.5, 1, 8.5);
         float health = zombie.getHealth();
@@ -300,7 +295,7 @@ public final class ModGameTests {
     public static void minigun(GameTestHelper helper) {
         ServerPlayer player = player(helper, 7.5, 1, 2.5, 0, 0);
         ItemStack ring = giveRing(player, 1000);
-        Uniform.summon(player);
+        LanternHero.INSTANCE.summonSuit(player);
         select(player, ConstructRegistry.MINIGUN);
         Zombie zombie = dummy(helper, 7.5, 1, 9.5);
         float health = zombie.getHealth();
@@ -325,7 +320,7 @@ public final class ModGameTests {
     public static void bubble(GameTestHelper helper) {
         ServerPlayer player = player(helper, 7.5, 1, 7.5, 0, 0);
         ItemStack ring = giveRing(player, 1000);
-        Uniform.summon(player);
+        LanternHero.INSTANCE.summonSuit(player);
         select(player, ConstructRegistry.BUBBLE);
         use(player);
         helper.assertTrue(BubbleConstructEntity.find(player) != null, "bubble should be raised");
@@ -357,7 +352,7 @@ public final class ModGameTests {
     public static void saw(GameTestHelper helper) {
         ServerPlayer player = player(helper, 7.5, 1, 3.5, 0, 0);
         ItemStack ring = giveRing(player, 1000);
-        Uniform.summon(player);
+        LanternHero.INSTANCE.summonSuit(player);
         select(player, ConstructRegistry.SAW);
         use(player);
         helper.assertTrue(player.getVehicle() instanceof SawConstructEntity, "player should ride the saw");
@@ -386,7 +381,7 @@ public final class ModGameTests {
     public static void drill(GameTestHelper helper) {
         ServerPlayer player = player(helper, 7.5, 1, 3.5, 0, 0);
         ItemStack ring = giveRing(player, 1000);
-        Uniform.summon(player);
+        LanternHero.INSTANCE.summonSuit(player);
         select(player, ConstructRegistry.DRILL);
         use(player);
         helper.assertTrue(player.getVehicle() instanceof DrillConstructEntity, "player should ride the drill");
@@ -434,7 +429,7 @@ public final class ModGameTests {
     public static void oaPortal(GameTestHelper helper) {
         ServerPlayer player = player(helper, 7.5, 1, 3.5, 0, 0);
         ItemStack ring = giveRing(player, 3000);
-        Uniform.summon(player);
+        LanternHero.INSTANCE.summonSuit(player);
         select(player, ConstructRegistry.PORTAL);
         use(player);
         List<com.danrod505.greenlantern.entity.OaPortalEntity> portals = around(player, com.danrod505.greenlantern.entity.OaPortalEntity.class, 6.0);
@@ -507,7 +502,7 @@ public final class ModGameTests {
     public static void mecha(GameTestHelper helper) {
         ServerPlayer player = player(helper, 7.5, 1, 2.5, 0, 0);
         ItemStack ring = giveRing(player, 3000);
-        Uniform.summon(player);
+        LanternHero.INSTANCE.summonSuit(player);
         select(player, ConstructRegistry.MECHA);
         use(player);
         if (!(player.getVehicle() instanceof MechaEntity)) {
@@ -574,7 +569,7 @@ public final class ModGameTests {
         // Look down at the floor 4 blocks ahead where two zombies stand.
         ServerPlayer player = player(helper, 7.5, 1, 2.5, 0, 35);
         ItemStack ring = giveRing(player, 1000);
-        Uniform.summon(player);
+        LanternHero.INSTANCE.summonSuit(player);
         select(player, ConstructRegistry.HAMMER);
         Zombie a = dummy(helper, 7.5, 1, 6.5);
         Zombie b = dummy(helper, 9.5, 1, 7.5);
@@ -617,7 +612,7 @@ public final class ModGameTests {
     public static void sonicBoomRequiresSpeed(GameTestHelper helper) {
         ServerPlayer player = player(helper, 7.5, 3, 7.5, 0, 0);
         giveRing(player, 1000);
-        Uniform.summon(player);
+        LanternHero.INSTANCE.summonSuit(player);
         player.getAbilities().flying = true;
         var state = ServerFlightTracker.get(player);
         long before = state.lastBoom();
@@ -637,7 +632,7 @@ public final class ModGameTests {
     public static void heroLandingShockwave(GameTestHelper helper) {
         ServerPlayer player = player(helper, 7.5, 1, 7.5, 0, 0);
         giveRing(player, 1000);
-        Uniform.summon(player);
+        LanternHero.INSTANCE.summonSuit(player);
         player.getAbilities().flying = true;
         Zombie near = dummy(helper, 9.5, 1, 7.5);
         Zombie far = dummy(helper, 14.5, 1, 14.5);
@@ -660,8 +655,8 @@ public final class ModGameTests {
         ServerPlayer fast = player(helper, 10.5, 3, 7.5, 0, 0);
         ItemStack slowRing = giveRing(slow, 1000);
         ItemStack fastRing = giveRing(fast, 1000);
-        Uniform.summon(slow);
-        Uniform.summon(fast);
+        LanternHero.INSTANCE.summonSuit(slow);
+        LanternHero.INSTANCE.summonSuit(fast);
         slow.getAbilities().flying = true;
         fast.getAbilities().flying = true;
         helper.startSequence()
@@ -710,7 +705,7 @@ public final class ModGameTests {
         ItemStack lanternRing = new ItemStack(ModItems.POWER_RING.get());
         RingEnergy.set(lanternRing, 1000);
         player.getInventory().add(lanternRing);
-        Uniform.summon(player);
+        LanternHero.INSTANCE.summonSuit(player);
         helper.assertTrue(RingHelper.isSuited(player), "lantern uniform should be on");
         giveFlashRing(player, 0);
         use(player); // not suited as the Flash: right click summons the suit
@@ -719,7 +714,7 @@ public final class ModGameTests {
         helper.assertTrue(player.getItemBySlot(EquipmentSlot.HEAD).is(ModItems.FLASH_MASK.get()), "cowl should be worn");
         helper.assertTrue(player.getItemBySlot(EquipmentSlot.FEET).is(ModItems.FLASH_BOOTS.get()), "boots should be worn");
         helper.assertTrue(player.getAttributeValue(Attributes.STEP_HEIGHT) > 1.0, "the suit should let the Flash run up steps");
-        FlashSuit.dismiss(player, false);
+        FlashHero.INSTANCE.dismissSuit(player, false);
         helper.assertFalse(FlashHelper.isSuited(player), "flash suit should be dismissed");
         helper.assertTrue(player.getItemBySlot(EquipmentSlot.HEAD).is(Items.IRON_HELMET), "iron helmet should be restored");
         helper.assertTrue(player.getAttributeValue(Attributes.STEP_HEIGHT) < 1.0, "step height back to normal");
@@ -730,7 +725,7 @@ public final class ModGameTests {
     public static void flashSpeedForceCharges(GameTestHelper helper) {
         ServerPlayer player = player(helper, 7.5, 1, 7.5, 0, 0);
         ItemStack ring = giveFlashRing(player, 0);
-        FlashSuit.summon(player);
+        FlashHero.INSTANCE.summonSuit(player);
         helper.startSequence()
                 .thenExecuteFor(41, player::doTick)
                 .thenExecute(() -> {
@@ -754,7 +749,7 @@ public final class ModGameTests {
     public static void flashLightning(GameTestHelper helper) {
         ServerPlayer player = player(helper, 7.5, 1, 2.5, 0, 0);
         ItemStack ring = giveFlashRing(player, 1000);
-        FlashSuit.summon(player);
+        FlashHero.INSTANCE.summonSuit(player);
         SpeedsterPower.POWERS.select(ring, SpeedsterPower.LIGHTNING);
         Zombie zombie = dummy(helper, 7.5, 1, 9.5);
         float health = zombie.getHealth();
@@ -770,7 +765,7 @@ public final class ModGameTests {
     public static void flashTornado(GameTestHelper helper) {
         ServerPlayer player = player(helper, 7.5, 1, 4.5, 0, 0);
         ItemStack ring = giveFlashRing(player, 1000);
-        FlashSuit.summon(player);
+        FlashHero.INSTANCE.summonSuit(player);
         SpeedsterPower.POWERS.select(ring, SpeedsterPower.TORNADO);
         Zombie zombie = dummy(helper, 8.5, 1, 7.5);
         float health = zombie.getHealth();
@@ -794,7 +789,7 @@ public final class ModGameTests {
     public static void flashPhaseSafeExit(GameTestHelper helper) {
         ServerPlayer player = player(helper, 7.5, 1, 7.5, 0, 0);
         ItemStack ring = giveFlashRing(player, 1000);
-        FlashSuit.summon(player);
+        FlashHero.INSTANCE.summonSuit(player);
         SpeedsterPower.POWERS.select(ring, SpeedsterPower.PHASE);
         use(player);
         helper.assertTrue(SpeedsterServer.isPhasing(player), "should be phasing");
@@ -847,7 +842,7 @@ public final class ModGameTests {
         // The Flash first, then Aquaman replaces him (one hero at a time).
         ItemStack ring = new ItemStack(ModItems.FLASH_RING.get());
         player.getInventory().add(ring);
-        FlashSuit.summon(player);
+        FlashHero.INSTANCE.summonSuit(player);
         helper.assertTrue(FlashHelper.isSuited(player), "flash suit should be on");
         giveEmblem(player, 0);
         use(player); // not suited as Aquaman: right click summons the suit
@@ -856,7 +851,7 @@ public final class ModGameTests {
         helper.assertTrue(player.getItemBySlot(EquipmentSlot.HEAD).is(Items.IRON_HELMET), "Aquaman has no mask: the helmet stays on");
         helper.assertTrue(player.getItemBySlot(EquipmentSlot.LEGS).is(ModItems.AQUAMAN_LEGGINGS.get()), "leggings should be worn");
         helper.assertTrue(player.getAttributeValue(Attributes.WATER_MOVEMENT_EFFICIENCY) >= 1.0, "the suit should make swimming easy");
-        AquamanSuit.dismiss(player, false);
+        AquamanHero.INSTANCE.dismissSuit(player, false);
         helper.assertFalse(AquamanHelper.isSuited(player), "aquaman suit should be dismissed");
         helper.assertTrue(player.getItemBySlot(EquipmentSlot.HEAD).is(Items.IRON_HELMET), "iron helmet still on");
         helper.assertTrue(player.getItemBySlot(EquipmentSlot.CHEST).is(Items.IRON_CHESTPLATE), "iron chestplate should be restored");
@@ -869,7 +864,7 @@ public final class ModGameTests {
         flood(helper, 5);
         ServerPlayer player = player(helper, 7.5, 2, 7.5, 0, 0);
         ItemStack emblem = giveEmblem(player, 0);
-        AquamanSuit.summon(player);
+        AquamanHero.INSTANCE.summonSuit(player);
         player.setAirSupply(0);
         helper.startSequence()
                 .thenExecuteFor(41, player::doTick)
@@ -886,7 +881,7 @@ public final class ModGameTests {
     public static void aquamanTridentThrowReturns(GameTestHelper helper) {
         ServerPlayer player = player(helper, 7.5, 1, 2.5, 0, 0);
         ItemStack emblem = giveEmblem(player, 1000);
-        AquamanSuit.summon(player);
+        AquamanHero.INSTANCE.summonSuit(player);
         AquaPower.POWERS.select(emblem, AquaPower.TRIDENT);
         Zombie zombie = dummy(helper, 7.5, 1, 7.5);
         float health = zombie.getHealth();
@@ -916,7 +911,7 @@ public final class ModGameTests {
         flood(helper, 6);
         ServerPlayer player = player(helper, 7.5, 2, 3.5, 0, 0);
         ItemStack emblem = giveEmblem(player, 1000);
-        AquamanSuit.summon(player);
+        AquamanHero.INSTANCE.summonSuit(player);
         AquaPower.POWERS.select(emblem, AquaPower.SHARK);
         helper.startSequence()
                 .thenExecuteFor(3, player::doTick) // notice the water
@@ -1002,7 +997,7 @@ public final class ModGameTests {
         flood(helper, 6);
         ServerPlayer player = player(helper, 7.5, 2, 7.5, 0, 0);
         ItemStack emblem = giveEmblem(player, 1000);
-        AquamanSuit.summon(player);
+        AquamanHero.INSTANCE.summonSuit(player);
         AquaPower.POWERS.select(emblem, AquaPower.KRAKEN);
         helper.startSequence()
                 .thenExecuteFor(3, player::doTick) // notice the water
@@ -1033,7 +1028,7 @@ public final class ModGameTests {
         ServerLevel level = helper.getLevel();
         ServerPlayer player = player(helper, 7.5, 1, 2.5, 0, 0);
         ItemStack emblem = giveEmblem(player, 1000);
-        AquamanSuit.summon(player);
+        AquamanHero.INSTANCE.summonSuit(player);
         KrakenEntity kraken = KrakenEntity.create(level, player, false);
         level.addFreshEntity(kraken);
         player.startRiding(kraken);
@@ -1100,7 +1095,7 @@ public final class ModGameTests {
         flood(helper, 6);
         ServerPlayer player = player(helper, 7.5, 2, 3.5, 0, 0);
         ItemStack emblem = giveEmblem(player, 1000);
-        AquamanSuit.summon(player);
+        AquamanHero.INSTANCE.summonSuit(player);
         AquaPower.POWERS.select(emblem, AquaPower.SEA_CALL);
         helper.spawn(EntityType.COD, new Vec3(5.5, 3, 4.5));
         helper.spawn(EntityType.SQUID, new Vec3(9.5, 3, 4.5));
@@ -1132,7 +1127,7 @@ public final class ModGameTests {
         flood(helper, 5);
         ServerPlayer player = player(helper, 7.5, 2, 7.5, 0, 0);
         giveRing(player, 3000);
-        Uniform.summon(player); // the Lantern mask holds the helmet slot: the respirator works anyway
+        LanternHero.INSTANCE.summonSuit(player); // the Lantern mask holds the helmet slot: the respirator works anyway
         player.getInventory().setItem(20, new ItemStack(ModItems.ATLANTEAN_RESPIRATOR.get()));
         player.setAirSupply(0);
         helper.startSequence()
@@ -1218,7 +1213,7 @@ public final class ModGameTests {
         com.danrod505.greenlantern.atlantis.Atlantis.setSiteForTesting(server, null, false);
         ServerPlayer player = player(helper, 7.5, 1, 3.5, 0, 0);
         ItemStack emblem = giveEmblem(player, 1000);
-        AquamanSuit.summon(player);
+        AquamanHero.INSTANCE.summonSuit(player);
         boolean used = AquamanServer.usePower(player, emblem, AquaPower.ATLANTIS_PORTAL);
         helper.assertFalse(used, "no Atlantis in this world: no portal");
         helper.assertTrue(AquamanHero.SEA_FORCE.get(emblem).stored() == 1000, "a failed portal costs nothing");
@@ -1260,7 +1255,7 @@ public final class ModGameTests {
         player.setItemSlot(EquipmentSlot.CHEST, new ItemStack(Items.IRON_CHESTPLATE));
         // Aquaman first, then Batman replaces him (one hero at a time).
         player.getInventory().add(new ItemStack(ModItems.AQUAMAN_EMBLEM.get()));
-        AquamanSuit.summon(player);
+        AquamanHero.INSTANCE.summonSuit(player);
         helper.assertTrue(AquamanHelper.isSuited(player), "aquaman suit should be on");
         giveBelt(player, 0);
         use(player); // not suited as Batman: right click summons the suit
@@ -1269,7 +1264,7 @@ public final class ModGameTests {
         helper.assertTrue(BatmanHelper.hasCowl(player), "the cowl replaces the helmet");
         helper.assertTrue(player.getItemBySlot(EquipmentSlot.LEGS).is(ModItems.BATMAN_LEGGINGS.get()), "leggings should be worn");
         helper.assertTrue(player.getItemBySlot(EquipmentSlot.FEET).is(ModItems.BATMAN_BOOTS.get()), "boots should be worn");
-        BatmanSuit.dismiss(player, false);
+        BatmanHero.INSTANCE.dismissSuit(player, false);
         helper.assertFalse(BatmanHelper.isSuited(player), "batman suit should be dismissed");
         helper.assertTrue(player.getItemBySlot(EquipmentSlot.HEAD).is(Items.IRON_HELMET), "iron helmet should be restored");
         helper.assertTrue(player.getItemBySlot(EquipmentSlot.CHEST).is(Items.IRON_CHESTPLATE), "iron chestplate should be restored");
@@ -1280,7 +1275,7 @@ public final class ModGameTests {
     public static void batmanBeltRecharges(GameTestHelper helper) {
         ServerPlayer player = player(helper, 7.5, 1, 7.5, 0, 0);
         ItemStack belt = giveBelt(player, 0);
-        BatmanSuit.summon(player);
+        BatmanHero.INSTANCE.summonSuit(player);
         helper.startSequence()
                 .thenExecuteFor(41, player::doTick)
                 .thenExecute(() -> {
@@ -1298,7 +1293,7 @@ public final class ModGameTests {
     public static void batmanBatarangReturns(GameTestHelper helper) {
         ServerPlayer player = player(helper, 7.5, 1, 2.5, 0, 0);
         ItemStack belt = giveBelt(player, 1000);
-        BatmanSuit.summon(player);
+        BatmanHero.INSTANCE.summonSuit(player);
         BatPower.POWERS.select(belt, BatPower.BATARANG);
         Zombie zombie = dummy(helper, 7.5, 1, 7.5);
         float health = zombie.getHealth();
@@ -1322,7 +1317,7 @@ public final class ModGameTests {
             for (int y = 1; y <= 5; y++) helper.setBlock(new BlockPos(x, y, 11), Blocks.STONE);
         }
         ItemStack belt = giveBelt(player, 1000);
-        BatmanSuit.summon(player);
+        BatmanHero.INSTANCE.summonSuit(player);
         BatPower.POWERS.select(belt, BatPower.GRAPPLE);
         use(player);
         helper.assertTrue(GrappleHookEntity.find(player) != null, "the hook should be fired");
@@ -1344,7 +1339,7 @@ public final class ModGameTests {
     public static void batmanBatSwarm(GameTestHelper helper) {
         ServerPlayer player = player(helper, 7.5, 1, 7.5, 0, 0);
         ItemStack belt = giveBelt(player, 1000);
-        BatmanSuit.summon(player);
+        BatmanHero.INSTANCE.summonSuit(player);
         BatPower.POWERS.select(belt, BatPower.BAT_SWARM);
         Zombie zombie = dummy(helper, 7.5, 1, 11.5);
         float health = zombie.getHealth();
@@ -1368,7 +1363,7 @@ public final class ModGameTests {
     public static void batmanBatmobile(GameTestHelper helper) {
         ServerPlayer player = player(helper, 7.5, 1, 3.5, 0, 0);
         ItemStack belt = giveBelt(player, 1000);
-        BatmanSuit.summon(player);
+        BatmanHero.INSTANCE.summonSuit(player);
         BatPower.POWERS.select(belt, BatPower.BATMOBILE);
         Zombie zombie = dummy(helper, 7.5, 1, 12.5);
         float health = zombie.getHealth();
@@ -1415,7 +1410,7 @@ public final class ModGameTests {
         player.setItemSlot(EquipmentSlot.CHEST, new ItemStack(Items.IRON_CHESTPLATE));
         // Batman first, then Superman replaces him (one hero at a time).
         player.getInventory().add(new ItemStack(ModItems.UTILITY_BELT.get()));
-        BatmanSuit.summon(player);
+        BatmanHero.INSTANCE.summonSuit(player);
         helper.assertTrue(BatmanHelper.isSuited(player), "batman suit should be on");
         giveCrystal(player, 1000);
         use(player); // not suited as Superman: right click summons the suit
@@ -1425,9 +1420,9 @@ public final class ModGameTests {
         helper.assertTrue(player.getItemBySlot(EquipmentSlot.LEGS).is(ModItems.SUPERMAN_LEGGINGS.get()), "leggings should be worn");
         helper.assertTrue(player.getItemBySlot(EquipmentSlot.FEET).is(ModItems.SUPERMAN_BOOTS.get()), "boots should be worn");
         helper.assertTrue(player.getAbilities().mayfly, "Superman can fly");
-        SupermanSuit.updateModifiers(player, true);
+        SupermanHero.INSTANCE.updateSuitModifiers(player, true);
         helper.assertTrue(player.getMaxHealth() > 20.0F, "the suit should give extra health");
-        SupermanSuit.dismiss(player, false);
+        SupermanHero.INSTANCE.dismissSuit(player, false);
         helper.assertFalse(SupermanHelper.isSuited(player), "superman suit should be dismissed");
         helper.assertTrue(player.getItemBySlot(EquipmentSlot.HEAD).is(Items.IRON_HELMET), "iron helmet should be restored");
         helper.assertTrue(player.getItemBySlot(EquipmentSlot.CHEST).is(Items.IRON_CHESTPLATE), "iron chestplate should be restored");
@@ -1439,7 +1434,7 @@ public final class ModGameTests {
     public static void supermanSolarRecharge(GameTestHelper helper) {
         ServerPlayer player = player(helper, 7.5, 1, 7.5, 0, 0);
         ItemStack crystal = giveCrystal(player, 0);
-        SupermanSuit.summon(player);
+        SupermanHero.INSTANCE.summonSuit(player);
         // The cells only charge in direct sunlight: make sure it is daytime.
         if (SupermanServer.sunlight(player) <= 0.0F) helper.getLevel().setDayTime(6000);
         helper.assertTrue(SupermanServer.sunlight(player) > 0.0F, "the arena should be under the open sky in daylight");
@@ -1457,7 +1452,7 @@ public final class ModGameTests {
     public static void supermanHeatVision(GameTestHelper helper) {
         ServerPlayer player = player(helper, 7.5, 1, 2.5, 0, 0);
         ItemStack crystal = giveCrystal(player, 3000);
-        SupermanSuit.summon(player);
+        SupermanHero.INSTANCE.summonSuit(player);
         SuperPower.POWERS.select(crystal, SuperPower.HEAT_VISION);
         net.minecraft.world.entity.animal.pig.Pig pig = dummyPig(helper, 7.5, 1, 7.5);
         float health = pig.getHealth();
@@ -1479,7 +1474,7 @@ public final class ModGameTests {
     public static void supermanSuperPunchArea(GameTestHelper helper) {
         ServerPlayer player = player(helper, 7.5, 1, 4.5, 0, 0);
         ItemStack crystal = giveCrystal(player, 3000);
-        SupermanSuit.summon(player);
+        SupermanHero.INSTANCE.summonSuit(player);
         SuperPower.POWERS.select(crystal, SuperPower.SUPER_PUNCH);
         // One pig right in front and two more off to the sides: the blast hits them all.
         net.minecraft.world.entity.animal.pig.Pig front = dummyPig(helper, 7.5, 1, 6.5);
@@ -1498,7 +1493,7 @@ public final class ModGameTests {
     public static void supermanSuperBreath(GameTestHelper helper) {
         ServerPlayer player = player(helper, 7.5, 1, 2.5, 0, 0);
         ItemStack crystal = giveCrystal(player, 3000);
-        SupermanSuit.summon(player);
+        SupermanHero.INSTANCE.summonSuit(player);
         SuperPower.POWERS.select(crystal, SuperPower.SUPER_BREATH);
         net.minecraft.world.entity.animal.pig.Pig pig = dummyPig(helper, 7.5, 1, 6.5);
         float health = pig.getHealth();
@@ -1519,7 +1514,7 @@ public final class ModGameTests {
     public static void supermanXrayToggle(GameTestHelper helper) {
         ServerPlayer player = player(helper, 7.5, 1, 7.5, 0, 0);
         ItemStack crystal = giveCrystal(player, 3000);
-        SupermanSuit.summon(player);
+        SupermanHero.INSTANCE.summonSuit(player);
         SuperPower.POWERS.select(crystal, SuperPower.XRAY_VISION);
         use(player);
         helper.assertTrue(SupermanServer.isXray(player), "X-ray vision should be on");
@@ -1528,7 +1523,7 @@ public final class ModGameTests {
                 .thenExecute(() -> {
                     SupermanServer.usePower(player, crystal, SuperPower.XRAY_VISION);
                     helper.assertFalse(SupermanServer.isXray(player), "using it again turns X-ray vision off");
-                    SupermanSuit.dismiss(player, false);
+                    SupermanHero.INSTANCE.dismissSuit(player, false);
                     helper.assertFalse(SupermanServer.isXray(player), "taking the suit off ends every power");
                     remove(player);
                 })
@@ -1549,7 +1544,7 @@ public final class ModGameTests {
         player.setItemSlot(EquipmentSlot.HEAD, new ItemStack(Items.IRON_HELMET));
         // Superman first, then Wonder Woman replaces him (one hero at a time).
         player.getInventory().add(new ItemStack(ModItems.KRYPTONIAN_CRYSTAL.get()));
-        SupermanSuit.summon(player);
+        SupermanHero.INSTANCE.summonSuit(player);
         helper.assertTrue(SupermanHelper.isSuited(player), "superman suit should be on");
         giveTiara(player, 1000);
         use(player); // not suited as Wonder Woman: right click summons the armor
@@ -1564,9 +1559,9 @@ public final class ModGameTests {
         helper.assertTrue(amazon.max() < lantern.max(), "her top speed should be below the Lantern's");
         helper.assertTrue(amazon.max() < amazon.barrier(), "she should stay below the sound barrier");
         helper.assertTrue(FlightProfile.of(player) == amazon || FlightProfile.of(player).max() == amazon.max(), "her own flight profile is used");
-        WonderWomanSuit.updateModifiers(player, true);
+        WonderWomanHero.INSTANCE.updateSuitModifiers(player, true);
         helper.assertTrue(player.getMaxHealth() > 20.0F, "the armor should give extra health");
-        WonderWomanSuit.dismiss(player, false);
+        WonderWomanHero.INSTANCE.dismissSuit(player, false);
         helper.assertFalse(WonderWomanHelper.isSuited(player), "the armor should be dismissed");
         helper.assertTrue(player.getItemBySlot(EquipmentSlot.HEAD).is(Items.IRON_HELMET), "iron helmet should be restored");
         helper.assertFalse(player.getAbilities().mayfly, "survival player should not fly without the armor");
@@ -1577,7 +1572,7 @@ public final class ModGameTests {
     public static void wonderWomanLassoCapture(GameTestHelper helper) {
         ServerPlayer player = player(helper, 7.5, 1, 3.5, 0, 0);
         ItemStack tiara = giveTiara(player, 1000);
-        WonderWomanSuit.summon(player);
+        WonderWomanHero.INSTANCE.summonSuit(player);
         AmazonPower.POWERS.select(tiara, AmazonPower.LASSO_CAPTURE);
         net.minecraft.world.entity.animal.pig.Pig pig = dummyPig(helper, 7.5, 1, 7.5);
         // The loop leaves from her right hand, a little below the eyes: aim it at the middle of the pig.
@@ -1611,7 +1606,7 @@ public final class ModGameTests {
     public static void wonderWomanBracelets(GameTestHelper helper) {
         ServerPlayer player = player(helper, 7.5, 1, 7.5, 0, 0);
         ItemStack tiara = giveTiara(player, 1000);
-        WonderWomanSuit.summon(player);
+        WonderWomanHero.INSTANCE.summonSuit(player);
         net.minecraft.world.entity.animal.pig.Pig front = dummyPig(helper, 7.5, 1, 9.5);
         net.minecraft.world.entity.animal.pig.Pig behind = dummyPig(helper, 7.5, 1, 5.0);
         helper.assertTrue(WonderWomanServer.usePower(player, tiara, AmazonPower.BRACELET_GUARD), "the bracelets should be raised");
@@ -1638,7 +1633,7 @@ public final class ModGameTests {
     public static void wonderWomanShieldReturns(GameTestHelper helper) {
         ServerPlayer player = player(helper, 7.5, 1, 7.5, 0, 0);
         ItemStack tiara = giveTiara(player, 1000);
-        WonderWomanSuit.summon(player);
+        WonderWomanHero.INSTANCE.summonSuit(player);
         player.getInventory().setSelectedSlot(1);
         helper.assertTrue(WonderWomanServer.usePower(player, tiara, AmazonPower.SWORD_AND_SHIELD), "the weapons should come");
         helper.assertTrue(player.getMainHandItem().is(ModItems.AMAZON_SWORD.get()), "the sword should be in her hand");
@@ -1655,7 +1650,7 @@ public final class ModGameTests {
                 .thenExecute(() -> {
                     helper.assertTrue(AmazonShieldEntity.find(player) == null, "the shield should be back");
                     helper.assertTrue(WonderWomanHelper.shieldSlot(player) >= 0, "the shield should be on her arm again");
-                    WonderWomanSuit.dismiss(player, false);
+                    WonderWomanHero.INSTANCE.dismissSuit(player, false);
                     helper.assertTrue(WonderWomanHelper.swordSlot(player) < 0 && WonderWomanHelper.shieldSlot(player) < 0, "the weapons go away with the armor");
                     remove(player);
                 })
@@ -1665,7 +1660,7 @@ public final class ModGameTests {
     public static void wonderWomanInvisibleJet(GameTestHelper helper) {
         ServerPlayer player = player(helper, 7.5, 1, 7.5, 0, 0);
         ItemStack tiara = giveTiara(player, 1000);
-        WonderWomanSuit.summon(player);
+        WonderWomanHero.INSTANCE.summonSuit(player);
         helper.assertTrue(WonderWomanServer.usePower(player, tiara, AmazonPower.INVISIBLE_JET), "the jet should come");
         helper.assertTrue(player.getVehicle() instanceof InvisibleJetEntity, "she should be aboard the jet");
         InvisibleJetEntity jet = (InvisibleJetEntity) player.getVehicle();

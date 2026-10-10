@@ -4,7 +4,6 @@ import com.danrod505.greenlantern.batman.BatPower;
 import com.danrod505.greenlantern.batman.BatmanHelper;
 import com.danrod505.greenlantern.batman.BatmanHero;
 import com.danrod505.greenlantern.batman.BatmanServer;
-import com.danrod505.greenlantern.batman.BatmanSuit;
 import com.danrod505.greenlantern.ring.RingEnergy;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
@@ -42,7 +41,7 @@ public class UtilityBeltItem extends Item {
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack belt = player.getItemInHand(hand);
         if (!BatmanHelper.isSuited(player)) {
-            if (player instanceof ServerPlayer serverPlayer) BatmanSuit.summon(serverPlayer);
+            if (player instanceof ServerPlayer serverPlayer) BatmanHero.INSTANCE.summonSuit(serverPlayer);
             return InteractionResult.SUCCESS;
         }
         if (player instanceof ServerPlayer serverPlayer) {

@@ -122,7 +122,7 @@ public final class WonderWomanServer {
 
     public static void tick(ServerPlayer player) {
         boolean suited = WonderWomanHelper.isSuited(player);
-        if (player.tickCount % 20 == 0) WonderWomanSuit.updateModifiers(player, suited);
+        if (player.tickCount % 20 == 0) WonderWomanHero.INSTANCE.updateSuitModifiers(player, suited);
         if (!suited) {
             if (STATES.containsKey(player.getUUID())) remove(player);
             return;

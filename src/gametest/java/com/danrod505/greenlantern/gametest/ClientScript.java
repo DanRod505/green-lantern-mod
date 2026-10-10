@@ -1,13 +1,18 @@
 package com.danrod505.greenlantern.gametest;
 
+import com.danrod505.greenlantern.aquaman.AquamanHero;
+import com.danrod505.greenlantern.batman.BatmanHero;
 import com.danrod505.greenlantern.block.PowerBatteryBlockEntity;
 import com.danrod505.greenlantern.construct.Construct;
 import com.danrod505.greenlantern.construct.ConstructRegistry;
+import com.danrod505.greenlantern.flash.FlashHero;
 import com.danrod505.greenlantern.item.PowerRingItem;
 import com.danrod505.greenlantern.registry.ModBlocks;
 import com.danrod505.greenlantern.registry.ModItems;
+import com.danrod505.greenlantern.ring.LanternHero;
 import com.danrod505.greenlantern.ring.RingEnergy;
-import com.danrod505.greenlantern.ring.Uniform;
+import com.danrod505.greenlantern.superman.SupermanHero;
+import com.danrod505.greenlantern.wonderwoman.WonderWomanHero;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.CameraType;
@@ -154,7 +159,7 @@ public final class ClientScript {
             server(sp -> {
                 sp.setGameMode(GameType.SURVIVAL);
                 sp.setItemInHand(InteractionHand.MAIN_HAND, PowerRingItem.charged(new ItemStack(ModItems.POWER_RING.get())));
-                Uniform.summon(sp);
+                LanternHero.INSTANCE.summonSuit(sp);
             });
             look(0, 5);
             camera(CameraType.THIRD_PERSON_BACK);
@@ -210,7 +215,7 @@ public final class ClientScript {
                         }
                     }
                 }
-                Uniform.summon(sp);
+                LanternHero.INSTANCE.summonSuit(sp);
             });
             look(0, 5);
         });
@@ -406,7 +411,7 @@ public final class ClientScript {
                         for (int z = -3; z <= 3; z++) level.setBlockAndUpdate(base.offset(x, y, z), stone);
                     }
                 }
-                com.danrod505.greenlantern.flash.FlashSuit.summon(sp);
+                FlashHero.INSTANCE.summonSuit(sp);
             });
             look(0, 5);
         });
@@ -603,7 +608,7 @@ public final class ClientScript {
                         for (int y = 0; y < h; y++) level.setBlock(base.offset(side * 12, y, z), corals.get((z / 9 + y) % 4), 2);
                     }
                 }
-                com.danrod505.greenlantern.aquaman.AquamanSuit.summon(sp);
+                AquamanHero.INSTANCE.summonSuit(sp);
             });
             look(0, 5);
         });
@@ -836,7 +841,7 @@ public final class ClientScript {
                         level.setBlock(base.offset(side * 9, 3, z), light, 2);
                     }
                 }
-                com.danrod505.greenlantern.batman.BatmanSuit.summon(sp);
+                BatmanHero.INSTANCE.summonSuit(sp);
             });
             look(0, 5);
         });
@@ -1105,7 +1110,7 @@ public final class ClientScript {
                         }
                     }
                 }
-                com.danrod505.greenlantern.superman.SupermanSuit.summon(sp);
+                SupermanHero.INSTANCE.summonSuit(sp);
             });
             look(0, 5);
         });
@@ -1355,7 +1360,7 @@ public final class ClientScript {
                         }
                     }
                 }
-                com.danrod505.greenlantern.wonderwoman.WonderWomanSuit.summon(sp);
+                WonderWomanHero.INSTANCE.summonSuit(sp);
             });
             look(0, 5);
         });
@@ -1704,7 +1709,7 @@ public final class ClientScript {
                         }
                     }
                 }
-                com.danrod505.greenlantern.aquaman.AquamanSuit.summon(sp);
+                AquamanHero.INSTANCE.summonSuit(sp);
             });
             look(0, 10);
         });
@@ -1880,7 +1885,7 @@ public final class ClientScript {
             server(sp -> {
                 sp.setGameMode(GameType.SURVIVAL);
                 sp.getInventory().setItem(9, PowerRingItem.charged(new ItemStack(ModItems.POWER_RING.get())));
-                Uniform.summon(sp);
+                LanternHero.INSTANCE.summonSuit(sp);
                 sp.getInventory().setItem(10, new ItemStack(ModItems.ATLANTEAN_RESPIRATOR.get()));
                 sp.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.ATLANTIS_GATE.get()));
                 atlantis = com.danrod505.greenlantern.atlantis.Atlantis.site(sp.level().getServer());
@@ -1968,7 +1973,7 @@ public final class ClientScript {
                 sp.getAbilities().flying = false;
                 sp.onUpdateAbilities();
                 sp.getInventory().setItem(11, com.danrod505.greenlantern.item.AquamanEmblemItem.charged(new ItemStack(ModItems.AQUAMAN_EMBLEM.get())));
-                com.danrod505.greenlantern.aquaman.AquamanSuit.summon(sp);
+                AquamanHero.INSTANCE.summonSuit(sp);
             });
             atTp(0, 0, 40, 180, 6);
         });
@@ -2327,7 +2332,7 @@ public final class ClientScript {
                 sp.getInventory().setItem(3, new ItemStack(ModItems.ATLANTEAN_DOLPHIN_EGG.get(), 4));
                 sp.getInventory().setItem(4, new ItemStack(ModItems.GUIDE_BOOK.get()));
                 buildSea(sp);
-                com.danrod505.greenlantern.aquaman.AquamanSuit.summon(sp);
+                AquamanHero.INSTANCE.summonSuit(sp);
             });
             look(0, 5);
         });
@@ -2557,7 +2562,7 @@ public final class ClientScript {
             server(sp -> {
                 sp.setGameMode(GameType.SURVIVAL);
                 sp.setItemInHand(InteractionHand.MAIN_HAND, PowerRingItem.charged(new ItemStack(ModItems.POWER_RING.get())));
-                Uniform.summon(sp);
+                LanternHero.INSTANCE.summonSuit(sp);
                 ServerLevel level = sp.level();
                 BlockPos base = sp.blockPosition();
                 for (int i = -1; i <= 1; i++) {
@@ -2671,7 +2676,7 @@ public final class ClientScript {
             server(sp -> {
                 sp.setGameMode(GameType.SURVIVAL);
                 sp.setItemInHand(InteractionHand.MAIN_HAND, PowerRingItem.charged(new ItemStack(ModItems.POWER_RING.get())));
-                Uniform.summon(sp);
+                LanternHero.INSTANCE.summonSuit(sp);
                 ConstructRegistry.select(sp.getMainHandItem(), ConstructRegistry.PORTAL);
             });
             look(0, 8);
@@ -2873,7 +2878,7 @@ public final class ClientScript {
         step(5, () -> server(sp -> {
             sp.getAbilities().flying = false;
             sp.onUpdateAbilities();
-            Uniform.dismiss(sp, true);
+            LanternHero.INSTANCE.dismissSuit(sp, true);
             sp.teleportTo(lanternPos.getX() - 1.0, lanternPos.getY(), lanternPos.getZ() - 1.0);
             RingEnergy.set(sp.getMainHandItem(), 250);
         }));

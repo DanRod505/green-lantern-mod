@@ -7,17 +7,29 @@ import com.danrod505.greenlantern.client.aqua.AquamanClient;
 import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.HeroEnergy;
 import com.danrod505.greenlantern.hero.HeroPowers;
+import com.danrod505.greenlantern.hero.SuitModifier;
+import com.danrod505.greenlantern.hero.SuitSet;
 import com.danrod505.greenlantern.hero.WheelStyle;
 import com.danrod505.greenlantern.hero.WheelTheme;
 import com.danrod505.greenlantern.registry.ModDataComponents;
 import com.danrod505.greenlantern.registry.ModItems;
+import com.danrod505.greenlantern.registry.ModSounds;
+import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-/** Aquaman: the Atlantean Emblem calls the scale armor and holds the Power of the Seas. */
+/**
+ * Aquaman: the Atlantean Emblem holds the Power of the Seas and the armor of Atlantis: the golden
+ * scale shirt, the green scaled leggings and boots (Aquaman wears no mask, so the player's own helmet
+ * stays on). While it is worn Aquaman breathes underwater, sees clearly in the deep, mines at full
+ * speed underwater and hits harder.
+ */
 public final class AquamanHero extends HeroDefinition {
     /**
      * Power of the Seas stored in the Atlantean Emblem. It refills quickly while Aquaman is in water
@@ -38,7 +50,12 @@ public final class AquamanHero extends HeroDefinition {
             0.8F, 0.08F, AquamanServer::usePower, WHEEL);
 
     private AquamanHero() {
-        super("aquaman", AquamanHelper::isEmblem, ModItems.AQUAMAN_SUIT);
+        super("aquaman", AquamanHelper::isEmblem, new SuitSet(null, ModItems.AQUAMAN_SUIT, ModItems.AQUAMAN_LEGGINGS, ModItems.AQUAMAN_BOOTS,
+                "message.greenlantern.no_emblem", ModSounds.AQUAMAN_SUIT_UP, ModSounds.AQUAMAN_SUIT_DOWN, List.of(
+                        SuitModifier.add(Attributes.WATER_MOVEMENT_EFFICIENCY, "aquaman_water", 1.0),
+                        SuitModifier.add(Attributes.SUBMERGED_MINING_SPEED, "aquaman_mining", 4.0),
+                        SuitModifier.add(Attributes.ATTACK_DAMAGE, "aquaman_strength", 2.0),
+                        SuitModifier.add(Attributes.KNOCKBACK_RESISTANCE, "aquaman_knockback", 0.4))));
     }
 
     @Override
@@ -47,13 +64,30 @@ public final class AquamanHero extends HeroDefinition {
     }
 
     @Override
-    public boolean summonSuit(ServerPlayer player) {
-        return AquamanSuit.summon(player);
+    protected void onSuitEquipped(ServerPlayer player) {
+        player.setAirSupply(player.getMaxAirSupply());
     }
 
     @Override
-    public void dismissSuit(ServerPlayer player, boolean effects) {
-        AquamanSuit.dismiss(player, effects);
+    protected void suitUpEffects(ServerLevel level, ServerPlayer player) {
+        splash(level, player, 50);
+    }
+
+    @Override
+    protected void onSuitRemoving(ServerPlayer player) {
+        AquamanServer.onSuitRemoved(player);
+    }
+
+    @Override
+    protected void suitDownEffects(ServerLevel level, ServerPlayer player) {
+        splash(level, player, 25);
+    }
+
+    /** A spray of water and bubbles all over the body. */
+    private static void splash(ServerLevel level, ServerPlayer player, int count) {
+        level.sendParticles(ParticleTypes.SPLASH, player.getX(), player.getY() + 1.0, player.getZ(), count, 0.4, 0.9, 0.4, 0.3);
+        level.sendParticles(ParticleTypes.BUBBLE_POP, player.getX(), player.getY() + 1.0, player.getZ(), count / 2, 0.4, 0.9, 0.4, 0.05);
+        level.sendParticles(ParticleTypes.DOLPHIN, player.getX(), player.getY() + 1.0, player.getZ(), count / 2, 0.5, 0.9, 0.5, 0.05);
     }
 
     @Override
@@ -68,7 +102,7 @@ public final class AquamanHero extends HeroDefinition {
 
     @Override
     public void onLogout(ServerPlayer player) {
-        if (isSuited(player)) AquamanSuit.dismiss(player, false);
+        if (isSuited(player)) dismissSuit(player, false);
         AquamanServer.remove(player);
     }
 

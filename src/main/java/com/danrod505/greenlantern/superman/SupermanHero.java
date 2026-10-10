@@ -8,18 +8,31 @@ import com.danrod505.greenlantern.flight.FlightProfile;
 import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.HeroEnergy;
 import com.danrod505.greenlantern.hero.HeroPowers;
+import com.danrod505.greenlantern.hero.SuitModifier;
+import com.danrod505.greenlantern.hero.SuitSet;
 import com.danrod505.greenlantern.hero.WheelStyle;
 import com.danrod505.greenlantern.hero.WheelTheme;
 import com.danrod505.greenlantern.registry.ModDataComponents;
 import com.danrod505.greenlantern.registry.ModItems;
+import com.danrod505.greenlantern.registry.ModParticles;
+import com.danrod505.greenlantern.registry.ModSounds;
+import com.danrod505.greenlantern.ring.FlightHandler;
+import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 
-/** Superman: the Kryptonian Crystal holds the suit and the solar energy his cells soak up. */
+/**
+ * Superman: the Kryptonian Crystal holds the solar energy his cells soak up and the suit: the blue
+ * suit with the S on the chest and the red cape, the red trunks with the yellow belt, the red boots
+ * (and the curl of black hair). While it is worn the Man of Steel is far stronger, tougher, faster
+ * and can't be pushed around.
+ */
 public final class SupermanHero extends HeroDefinition {
     /**
      * Solar energy of Superman, kept in the Kryptonian Crystal. His cells soak up the light of the
@@ -40,7 +53,20 @@ public final class SupermanHero extends HeroDefinition {
             0.9F, 0.08F, SupermanServer::usePower, WHEEL);
 
     private SupermanHero() {
-        super("superman", SupermanHelper::isCrystal, ModItems.SUPERMAN_SUIT);
+        super("superman", SupermanHelper::isCrystal, new SuitSet(ModItems.SUPERMAN_HAIR, ModItems.SUPERMAN_SUIT, ModItems.SUPERMAN_LEGGINGS, ModItems.SUPERMAN_BOOTS,
+                "message.greenlantern.no_crystal", ModSounds.SUPERMAN_SUIT_UP, ModSounds.SUPERMAN_SUIT_DOWN, List.of(
+                        SuitModifier.add(Attributes.ATTACK_DAMAGE, "superman_strength", 10.0),
+                        SuitModifier.add(Attributes.ATTACK_KNOCKBACK, "superman_punch_knockback", 2.0),
+                        SuitModifier.add(Attributes.MAX_HEALTH, "superman_health", 20.0),
+                        SuitModifier.multiply(Attributes.MOVEMENT_SPEED, "superman_speed", 0.35),
+                        SuitModifier.add(Attributes.KNOCKBACK_RESISTANCE, "superman_steady", 1.0),
+                        SuitModifier.add(Attributes.EXPLOSION_KNOCKBACK_RESISTANCE, "superman_blast_proof", 1.0),
+                        SuitModifier.add(Attributes.STEP_HEIGHT, "superman_step", 0.65),
+                        SuitModifier.add(Attributes.JUMP_STRENGTH, "superman_jump", 0.25),
+                        SuitModifier.multiply(Attributes.BLOCK_BREAK_SPEED, "superman_mining", 1.5),
+                        SuitModifier.add(Attributes.ENTITY_INTERACTION_RANGE, "superman_reach", 1.5),
+                        SuitModifier.add(Attributes.BLOCK_INTERACTION_RANGE, "superman_block_reach", 1.5),
+                        SuitModifier.add(Attributes.OXYGEN_BONUS, "superman_breath", 8.0))));
     }
 
     @Override
@@ -49,13 +75,30 @@ public final class SupermanHero extends HeroDefinition {
     }
 
     @Override
-    public boolean summonSuit(ServerPlayer player) {
-        return SupermanSuit.summon(player);
+    protected void onSuitEquipped(ServerPlayer player) {
+        FlightHandler.refreshAbilities(player);
     }
 
     @Override
-    public void dismissSuit(ServerPlayer player, boolean effects) {
-        SupermanSuit.dismiss(player, effects);
+    protected void suitUpEffects(ServerLevel level, ServerPlayer player) {
+        sunburst(level, player, 50);
+        SupermanServer.sendEvent(player, SuperFlags.EVENT_SUIT_UP);
+    }
+
+    @Override
+    protected void onSuitRemoving(ServerPlayer player) {
+        SupermanServer.onSuitRemoved(player);
+    }
+
+    @Override
+    protected void suitDownEffects(ServerLevel level, ServerPlayer player) {
+        sunburst(level, player, 20);
+    }
+
+    /** A burst of golden sunlight and blue sparks all over the body. */
+    private static void sunburst(ServerLevel level, ServerPlayer player, int count) {
+        level.sendParticles(ModParticles.SOLAR_GLOW.get(), player.getX(), player.getY() + 1.0, player.getZ(), count, 0.45, 0.9, 0.45, 0.05);
+        level.sendParticles(ModParticles.SUPER_RING.get(), player.getX(), player.getY() + 1.0, player.getZ(), 0, 0.0, 1.0, 0.0, 1.0);
     }
 
     @Override
@@ -78,7 +121,7 @@ public final class SupermanHero extends HeroDefinition {
 
     @Override
     public void onLogout(ServerPlayer player) {
-        if (isSuited(player)) SupermanSuit.dismiss(player, false);
+        if (isSuited(player)) dismissSuit(player, false);
         SupermanServer.remove(player);
     }
 
