@@ -11,6 +11,7 @@ import com.danrod505.greenlantern.hero.SuitModifier;
 import com.danrod505.greenlantern.hero.SuitSet;
 import com.danrod505.greenlantern.hero.WheelStyle;
 import com.danrod505.greenlantern.hero.WheelTheme;
+import com.danrod505.greenlantern.item.FlashRingItem;
 import com.danrod505.greenlantern.registry.ModDataComponents;
 import com.danrod505.greenlantern.registry.ModItems;
 import com.danrod505.greenlantern.registry.ModParticles;
@@ -22,6 +23,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
 
 /**
  * The Flash: the ring holds the suit and the Speed Force (it refills on its own, much faster while
@@ -49,6 +51,12 @@ public final class FlashHero extends HeroDefinition {
                 "message.greenlantern.no_flash_ring", ModSounds.FLASH_SUIT_UP, ModSounds.FLASH_SUIT_DOWN, List.of(
                         SuitModifier.multiply(Attributes.MOVEMENT_SPEED, "flash_speed", 0.35),
                         SuitModifier.add(Attributes.STEP_HEIGHT, "flash_step", 0.65))));
+    }
+
+    @Override
+    public void creativeTabItems(CreativeModeTab.Output output) {
+        output.accept(FlashRingItem.charged(ModItems.FLASH_RING.get().getDefaultInstance()));
+        output.accept(ModItems.FLASH_RING.get());
     }
 
     @Override

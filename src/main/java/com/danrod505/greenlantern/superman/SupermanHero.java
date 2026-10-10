@@ -13,6 +13,7 @@ import com.danrod505.greenlantern.hero.SuitModifier;
 import com.danrod505.greenlantern.hero.SuitSet;
 import com.danrod505.greenlantern.hero.WheelStyle;
 import com.danrod505.greenlantern.hero.WheelTheme;
+import com.danrod505.greenlantern.item.KryptonianCrystalItem;
 import com.danrod505.greenlantern.registry.ModDamageTypes;
 import com.danrod505.greenlantern.registry.ModDataComponents;
 import com.danrod505.greenlantern.registry.ModItems;
@@ -29,6 +30,7 @@ import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -78,6 +80,12 @@ public final class SupermanHero extends HeroDefinition {
                         SuitModifier.add(Attributes.ENTITY_INTERACTION_RANGE, "superman_reach", 1.5),
                         SuitModifier.add(Attributes.BLOCK_INTERACTION_RANGE, "superman_block_reach", 1.5),
                         SuitModifier.add(Attributes.OXYGEN_BONUS, "superman_breath", 8.0))));
+    }
+
+    @Override
+    public void creativeTabItems(CreativeModeTab.Output output) {
+        output.accept(KryptonianCrystalItem.charged(ModItems.KRYPTONIAN_CRYSTAL.get().getDefaultInstance()));
+        output.accept(ModItems.KRYPTONIAN_CRYSTAL.get());
     }
 
     @Override

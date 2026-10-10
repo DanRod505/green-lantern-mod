@@ -1,6 +1,8 @@
 package com.danrod505.greenlantern;
 
 import com.danrod505.greenlantern.construct.ConstructRegistry;
+import com.danrod505.greenlantern.hero.HeroDefinition;
+import com.danrod505.greenlantern.hero.HeroRegistry;
 import com.danrod505.greenlantern.network.ModNetwork;
 import com.danrod505.greenlantern.registry.ModBlockEntities;
 import com.danrod505.greenlantern.registry.ModBlocks;
@@ -43,6 +45,8 @@ public final class GreenLantern {
         ModBlockEntities.BLOCK_ENTITIES.register(modBus);
         ModEntities.ENTITIES.register(modBus);
         ModCreativeTabs.TABS.register(modBus);
+        // Each hero registers its own content (the first heroes still keep theirs in the registries above).
+        for (HeroDefinition hero : HeroRegistry.all()) hero.register(context);
 
         context.registerConfig(ModConfig.Type.COMMON, GLConfig.SPEC);
         context.registerConfig(ModConfig.Type.CLIENT, GLClientConfig.SPEC);

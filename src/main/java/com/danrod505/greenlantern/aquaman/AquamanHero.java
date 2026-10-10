@@ -11,6 +11,7 @@ import com.danrod505.greenlantern.hero.SuitModifier;
 import com.danrod505.greenlantern.hero.SuitSet;
 import com.danrod505.greenlantern.hero.WheelStyle;
 import com.danrod505.greenlantern.hero.WheelTheme;
+import com.danrod505.greenlantern.item.AquamanEmblemItem;
 import com.danrod505.greenlantern.registry.ModDataComponents;
 import com.danrod505.greenlantern.registry.ModItems;
 import com.danrod505.greenlantern.registry.ModSounds;
@@ -22,6 +23,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -56,6 +58,20 @@ public final class AquamanHero extends HeroDefinition {
                         SuitModifier.add(Attributes.SUBMERGED_MINING_SPEED, "aquaman_mining", 4.0),
                         SuitModifier.add(Attributes.ATTACK_DAMAGE, "aquaman_strength", 2.0),
                         SuitModifier.add(Attributes.KNOCKBACK_RESISTANCE, "aquaman_knockback", 0.4))));
+    }
+
+    /** The emblem, then Atlantis and the Trench (the gate, the respirator and the eggs of their creatures). */
+    @Override
+    public void creativeTabItems(CreativeModeTab.Output output) {
+        output.accept(AquamanEmblemItem.charged(ModItems.AQUAMAN_EMBLEM.get().getDefaultInstance()));
+        output.accept(ModItems.AQUAMAN_EMBLEM.get());
+        output.accept(ModItems.ATLANTIS_GATE.get());
+        output.accept(ModItems.ATLANTEAN_RESPIRATOR.get());
+        output.accept(ModItems.MANTA_RAY_EGG.get());
+        output.accept(ModItems.GIANT_SEAHORSE_EGG.get());
+        output.accept(ModItems.ATLANTEAN_DOLPHIN_EGG.get());
+        output.accept(ModItems.TRENCH_CREATURE_EGG.get());
+        output.accept(ModItems.TRENCH_BRUTE_EGG.get());
     }
 
     @Override

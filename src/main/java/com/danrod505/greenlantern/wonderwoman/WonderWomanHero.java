@@ -13,6 +13,7 @@ import com.danrod505.greenlantern.hero.SuitModifier;
 import com.danrod505.greenlantern.hero.SuitSet;
 import com.danrod505.greenlantern.hero.WheelStyle;
 import com.danrod505.greenlantern.hero.WheelTheme;
+import com.danrod505.greenlantern.item.AmazonTiaraItem;
 import com.danrod505.greenlantern.registry.ModDamageTypes;
 import com.danrod505.greenlantern.registry.ModDataComponents;
 import com.danrod505.greenlantern.registry.ModItems;
@@ -29,6 +30,7 @@ import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -76,6 +78,12 @@ public final class WonderWomanHero extends HeroDefinition {
                         SuitModifier.add(Attributes.JUMP_STRENGTH, "wonder_woman_jump", 0.2),
                         SuitModifier.add(Attributes.ENTITY_INTERACTION_RANGE, "wonder_woman_reach", 1.0),
                         SuitModifier.add(Attributes.OXYGEN_BONUS, "wonder_woman_breath", 4.0))));
+    }
+
+    @Override
+    public void creativeTabItems(CreativeModeTab.Output output) {
+        output.accept(AmazonTiaraItem.charged(ModItems.AMAZON_TIARA.get().getDefaultInstance()));
+        output.accept(ModItems.AMAZON_TIARA.get());
     }
 
     @Override

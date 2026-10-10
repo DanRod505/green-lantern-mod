@@ -8,6 +8,7 @@ import com.danrod505.greenlantern.flight.FlightStyle;
 import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.SuitSet;
 import com.danrod505.greenlantern.hero.WheelTheme;
+import com.danrod505.greenlantern.item.PowerRingItem;
 import com.danrod505.greenlantern.registry.ModDamageTypes;
 import com.danrod505.greenlantern.registry.ModItems;
 import com.danrod505.greenlantern.registry.ModParticles;
@@ -20,6 +21,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -43,6 +45,14 @@ public final class LanternHero extends HeroDefinition {
     private LanternHero() {
         super("lantern", RingHelper::isRing, new SuitSet(ModItems.LANTERN_MASK, ModItems.LANTERN_SUIT, ModItems.LANTERN_LEGGINGS, ModItems.LANTERN_BOOTS,
                 "message.greenlantern.no_ring", ModSounds.RING_ACTIVATE, ModSounds.RING_DEACTIVATE, List.of()));
+    }
+
+    @Override
+    public void creativeTabItems(CreativeModeTab.Output output) {
+        output.accept(PowerRingItem.charged(ModItems.POWER_RING.get().getDefaultInstance()));
+        output.accept(ModItems.POWER_RING.get());
+        output.accept(ModItems.POWER_BATTERY.get());
+        output.accept(ModItems.GUIDE_BOOK.get());
     }
 
     @Override

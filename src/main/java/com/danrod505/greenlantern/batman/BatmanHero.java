@@ -11,6 +11,7 @@ import com.danrod505.greenlantern.hero.SuitModifier;
 import com.danrod505.greenlantern.hero.SuitSet;
 import com.danrod505.greenlantern.hero.WheelStyle;
 import com.danrod505.greenlantern.hero.WheelTheme;
+import com.danrod505.greenlantern.item.UtilityBeltItem;
 import com.danrod505.greenlantern.registry.ModDataComponents;
 import com.danrod505.greenlantern.registry.ModItems;
 import com.danrod505.greenlantern.registry.ModSounds;
@@ -22,6 +23,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
 
 /**
  * Batman: the Utility Belt holds the charge of the gadgets and the batsuit: the cowl with its ears,
@@ -54,6 +56,12 @@ public final class BatmanHero extends HeroDefinition {
                         SuitModifier.add(Attributes.ATTACK_DAMAGE, "batman_strength", 3.0),
                         SuitModifier.add(Attributes.KNOCKBACK_RESISTANCE, "batman_knockback", 0.3),
                         SuitModifier.multiply(Attributes.MOVEMENT_SPEED, "batman_speed", 0.1))));
+    }
+
+    @Override
+    public void creativeTabItems(CreativeModeTab.Output output) {
+        output.accept(UtilityBeltItem.charged(ModItems.UTILITY_BELT.get().getDefaultInstance()));
+        output.accept(ModItems.UTILITY_BELT.get());
     }
 
     @Override

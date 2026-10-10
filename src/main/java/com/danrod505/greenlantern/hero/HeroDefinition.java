@@ -16,7 +16,10 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.network.SimpleChannel;
 
 /**
  * One hero of the mod, described in one place: the item that calls the suit (ring, emblem, belt,
@@ -137,6 +140,21 @@ public abstract class HeroDefinition {
     /** Particles after the suit down sound (only when taken off with effects). */
     protected void suitDownEffects(ServerLevel level, ServerPlayer player) {
     }
+
+    // ---- Content (called once while the mod loads, in hero order) ---------------------------------
+
+    /**
+     * Registers the hero's own content: its DeferredRegisters (items, sounds, entities...), listeners
+     * on the mod bus ({@code context.getModBusGroup()}) and, if it has settings, its own config file
+     * ({@code context.registerConfig}). The first heroes still keep theirs in the shared registries.
+     */
+    public void register(FMLJavaModLoadingContext context) {}
+
+    /** Registers the hero's own packets, after the shared ones (so the shared packet ids never move). */
+    public void registerPackets(SimpleChannel channel) {}
+
+    /** Adds the hero's items to the mod's creative tab, in hero order. */
+    public void creativeTabItems(CreativeModeTab.Output output) {}
 
     /** The power wheel, or null for a hero without one (the Lantern picks constructs instead). */
     public HeroPowers<?> powers() {
