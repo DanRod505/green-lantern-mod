@@ -318,7 +318,7 @@ Preferências visuais e de som ficam em `config/greenlantern-client.toml`: ligar
 
 ### Opção A — CurseForge App, importando o perfil pronto (mais fácil)
 
-O build gera `greenlantern-1.21.11-1.6.0-curseforge-profile.zip`, um perfil do CurseForge que já configura o **Minecraft 1.21.11 + Forge 61.2.0** e já traz o mod dentro.
+Baixe o `greenlantern-1.21.11-<versão>-curseforge-profile.zip` da [última versão](https://github.com/DanRod505/green-lantern-mod/releases/latest) (não precisa de login). É um perfil do CurseForge que já configura o **Minecraft 1.21.11 + Forge 61.2.0** e já traz o mod dentro.
 
 1. Abra o **CurseForge App** → **Minecraft** → **Create Custom Profile**.
 2. Clique em **Import** (canto superior da janela) e escolha o arquivo `...-curseforge-profile.zip`.
@@ -329,7 +329,7 @@ O build gera `greenlantern-1.21.11-1.6.0-curseforge-profile.zip`, um perfil do C
 1. Abra o **CurseForge App** → **Minecraft** → **Create Custom Profile**.
 2. Em *Game Version* escolha **1.21.11**, em *Modloader* escolha **Forge** e selecione a versão **61.2.0** (ou mais recente da série 61.x). Clique em **Create**.
 3. No perfil criado, clique nos **três pontinhos (⋮)** → **Open Folder**. Entre na pasta `mods` (crie se não existir).
-4. Copie o arquivo `greenlantern-1.21.11-1.6.0.jar` para dentro de `mods`.
+4. Copie o arquivo `greenlantern-1.21.11-<versão>.jar` da [última versão](https://github.com/DanRod505/green-lantern-mod/releases/latest) para dentro de `mods`.
 5. Volte ao CurseForge e clique em **Play**. O mod aparece na lista *Mods* do menu principal do jogo.
 
 > Não é preciso instalar Java separadamente: o CurseForge e o launcher oficial usam o Java que vem com o Minecraft 1.21.11. O jar foi compilado com o JDK 25, mas gera bytecode Java 21, então roda tanto no Java 21 do launcher quanto no Java 25.

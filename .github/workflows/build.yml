@@ -1,7 +1,9 @@
 name: Build
 
+# Pushes to main and pull requests (a push to a branch with a PR used to run everything twice).
 on:
   push:
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
@@ -10,6 +12,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # The Release workflow publishes every mod_version once, so a PR that changes the mod after its
+      # version was released has to raise it; and every hero with a sheet must be in the mod description
+      # and the README (tools/release.py check).
+      - name: Version and release notes
+        if: github.event_name == 'pull_request'
+        env:
+          BASE: ${{ github.base_ref }}
+        run: |
+          python3 tools/release.py check
+          v=$(python3 tools/release.py version)
+          if git rev-parse -q --verify "refs/tags/v$v" >/dev/null; then
+            changed=$(git diff --name-only "origin/$BASE...HEAD" -- src/main gradle.properties build.gradle curseforge extras)
+            if [ -n "$changed" ]; then
+              echo "::error::v$v was already released and this PR changes the mod. Raise the version: python3 tools/release.py bump minor (new hero) or patch (anything else)."
+              exit 1
+            fi
+          fi
 
       - name: Set up JDK 25
         uses: actions/setup-java@v4

@@ -26,6 +26,7 @@ Cria, já compilando e passando nos testes de contrato:
 | Texturas provisórias nas cores da ficha, receita e conquista | `src/main/resources/` |
 | Gametests e roteiro de prints | `src/gametest/.../heroes/` e `.../scripts/` |
 | Uma linha em `HeroRegistry`, `ModGameTests`, `ClientScripts` e `.github/screenshot-scripts.txt` | |
+| Próxima versão menor, uma frase na descrição do mod e a seção do herói no README | `gradle.properties`, `README.md` |
 
 Cada poder começa com um efeito provisório que gasta energia e avisa "ainda não foi construído". A thread troca cada um pelo poder de verdade em `<Classe>Server.usePower`, faz os sons e texturas originais (os geradores em `tools/` mostram como) e escreve um gametest por poder.
 
@@ -45,6 +46,14 @@ Em `HeroContractTests`, rodando para cada herói de `HeroRegistry`:
 ```
 
 Os prints rodam no workflow Screenshots quando a branch bate com uma linha de `.github/screenshot-scripts.txt` (o gerador já adiciona `claude/<id-com-hifens>-`), ou à mão com qualquer roteiro. Além dos prints, o workflow gera uma folha de contato com todos eles. O job "Kit de herói" do Build gera o herói de [`tools/hero_kit/heroi_teste.md`](../../tools/hero_kit/heroi_teste.md) a cada push para garantir que o gerador continua funcionando.
+
+## 5. Versão e lançamento
+
+O gerador já sobe a versão menor (`mod_version`), põe o herói na descrição do mod e começa a seção dele no README, com os poderes da ficha. A thread completa essa seção com o que o herói faz de verdade: ela vira as notas da Release.
+
+Quando o PR entra na `main`, o workflow Release publica a versão no GitHub (tag `v<versão>`) com o .jar, o perfil do CurseForge e o pacote de música. Os arquivos de uma Release baixam sem login e não expiram; o link para entregar é `https://github.com/DanRod505/green-lantern-mod/releases/latest`.
+
+O Build confere em todo PR (`python3 tools/release.py check`) que cada herói com ficha está na descrição do mod e no README, e que um PR que muda o mod depois de a versão ter sido lançada sobe a versão: `python3 tools/release.py bump minor` para herói novo, `bump patch` para o resto.
 
 ## Definição de pronto
 
