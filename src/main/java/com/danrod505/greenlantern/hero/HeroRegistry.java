@@ -5,6 +5,7 @@ import com.danrod505.greenlantern.batman.BatmanHero;
 import com.danrod505.greenlantern.cyborg.CyborgHero;
 import com.danrod505.greenlantern.flash.FlashHero;
 import com.danrod505.greenlantern.ring.LanternHero;
+import com.danrod505.greenlantern.supergirl.SupergirlHero;
 import com.danrod505.greenlantern.superman.SupermanHero;
 import com.danrod505.greenlantern.wonderwoman.WonderWomanHero;
 import java.util.List;
@@ -25,7 +26,8 @@ public final class HeroRegistry {
             BatmanHero.INSTANCE,
             SupermanHero.INSTANCE,
             WonderWomanHero.INSTANCE,
-            CyborgHero.INSTANCE);
+            CyborgHero.INSTANCE,
+            SupergirlHero.INSTANCE);
 
     private HeroRegistry() {}
 

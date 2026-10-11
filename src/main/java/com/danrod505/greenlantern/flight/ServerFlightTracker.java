@@ -115,6 +115,7 @@ public final class ServerFlightTracker {
                 heroLanding(player, level, Mth.clamp(recent / (float) profile.max(), 0.3F, 1.0F), (float) profile.landingPower(), style);
             }
         }
+        com.danrod505.greenlantern.hero.HeroRegistry.suited(player).ifPresent(hero -> hero.onFlightAction(player, action));
         ModNetwork.sendToTracking(player, new FlightSyncPacket(player.getId(), state.speed, (byte) state.flags, action.ordinal()));
     }
 

@@ -7,6 +7,7 @@ import com.danrod505.greenlantern.gametest.heroes.CyborgTests;
 import com.danrod505.greenlantern.gametest.heroes.FlashTests;
 import com.danrod505.greenlantern.gametest.heroes.LanternTests;
 import com.danrod505.greenlantern.gametest.heroes.SharedTests;
+import com.danrod505.greenlantern.gametest.heroes.SupergirlTests;
 import com.danrod505.greenlantern.gametest.heroes.SupermanTests;
 import com.danrod505.greenlantern.gametest.heroes.TrenchTests;
 import com.danrod505.greenlantern.gametest.heroes.WonderWomanTests;
@@ -37,6 +38,7 @@ public final class ModGameTests {
         WonderWomanTests.register(TESTS);
         TrenchTests.register(TESTS);
         CyborgTests.register(TESTS);
+        SupergirlTests.register(TESTS);
         // tools/new_hero.py adds new heroes above this line
     }
 
