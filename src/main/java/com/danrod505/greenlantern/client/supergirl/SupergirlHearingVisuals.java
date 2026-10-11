@@ -44,6 +44,8 @@ public final class SupergirlHearingVisuals implements WorldLayer {
     private List<LivingEntity> heard = List.of();
     private final List<Heard> frame = new ArrayList<>();
     private float time;
+    /** The camera's left and up directions this frame, so the ripples face her eyes through any wall. */
+    private float lx, ly, lz, ux, uy, uz;
 
     /** Whether the local player has Super Hearing on. */
     static boolean localHearing(Player player) {
@@ -79,6 +81,13 @@ public final class SupergirlHearingVisuals implements WorldLayer {
         frame.clear();
         time = level.getGameTime() + partialTick;
         if (fade <= 0.0F) return;
+        var camera = mc.gameRenderer.getMainCamera();
+        lx = camera.leftVector().x();
+        ly = camera.leftVector().y();
+        lz = camera.leftVector().z();
+        ux = camera.upVector().x();
+        uy = camera.upVector().y();
+        uz = camera.upVector().z();
         for (LivingEntity e : heard) {
             if (e.isRemoved()) continue;
             Vec3 at = e.getPosition(partialTick);
@@ -94,15 +103,21 @@ public final class SupergirlHearingVisuals implements WorldLayer {
         List<Heard> list = List.copyOf(frame);
         float t = time;
         float alpha = fade;
+        float[] left = {lx, ly, lz};
+        float[] up = {ux, uy, uz};
         collector.submitCustomGeometry(poseStack, RenderTypes.textSeeThrough(RING), (pose, vc) -> {
             for (Heard h : list) {
-                // Two ripples a second and a half apart, growing and fading, at the feet and at the chest.
+                float cy = h.y() + h.height() * 0.55F;
+                float size = Math.max(h.width(), h.height() * 0.5F);
+                // A steady glow where the heartbeat is, and two ripples a second and a half apart, growing and fading:
+                // facing her (seen through walls and the ground) and flat at the feet.
+                facing(vc, pose, h.x(), cy, h.z(), size * 0.35F, size * 0.35F, (int) (150 * alpha) << 24 | h.color(), left, up);
                 for (int k = 0; k < 2; k++) {
                     float p = ((t + h.phase() + k * 15) % 30) / 30.0F;
-                    float r = h.width() * 0.6F + p * (1.2F + h.width());
-                    int a = Mth.clamp((int) (220 * alpha * (1.0F - p)), 0, 255);
-                    ring(vc, pose, h.x(), h.y() + 0.05F, h.z(), r, 0.12F, a << 24 | h.color());
-                    ring(vc, pose, h.x(), h.y() + h.height() * 0.6F, h.z(), r * 0.8F, 0.08F, (a / 2) << 24 | h.color());
+                    float r = size * 0.5F + p * (1.0F + size);
+                    int a = Mth.clamp((int) (230 * alpha * (1.0F - p)), 0, 255);
+                    facing(vc, pose, h.x(), cy, h.z(), r, 0.12F, a << 24 | h.color(), left, up);
+                    ring(vc, pose, h.x(), h.y() + 0.05F, h.z(), r, 0.1F, (a / 2) << 24 | h.color());
                 }
             }
         });
@@ -117,6 +132,21 @@ public final class SupergirlHearingVisuals implements WorldLayer {
             float c0 = Mth.cos(a0), s0 = Mth.sin(a0), c1 = Mth.cos(a1), s1 = Mth.sin(a1);
             quad(vc, pose, x + c0 * inner, y, z + s0 * inner, x + c0 * radius, y, z + s0 * radius,
                     x + c1 * radius, y, z + s1 * radius, x + c1 * inner, y, z + s1 * inner, color);
+        }
+    }
+
+    /** A ring standing up toward the camera (left and up are the camera's axes). */
+    private static void facing(VertexConsumer vc, PoseStack.Pose pose, float x, float y, float z, float radius, float thickness, int color,
+                               float[] left, float[] up) {
+        float inner = Math.max(0.0F, radius - thickness);
+        for (int i = 0; i < SEGMENTS; i++) {
+            float a0 = i * Mth.TWO_PI / SEGMENTS;
+            float a1 = (i + 1) * Mth.TWO_PI / SEGMENTS;
+            float c0 = Mth.cos(a0), s0 = Mth.sin(a0), c1 = Mth.cos(a1), s1 = Mth.sin(a1);
+            float ox0 = left[0] * c0 + up[0] * s0, oy0 = left[1] * c0 + up[1] * s0, oz0 = left[2] * c0 + up[2] * s0;
+            float ox1 = left[0] * c1 + up[0] * s1, oy1 = left[1] * c1 + up[1] * s1, oz1 = left[2] * c1 + up[2] * s1;
+            quad(vc, pose, x + ox0 * inner, y + oy0 * inner, z + oz0 * inner, x + ox0 * radius, y + oy0 * radius, z + oz0 * radius,
+                    x + ox1 * radius, y + oy1 * radius, z + oz1 * radius, x + ox1 * inner, y + oy1 * inner, z + oz1 * inner, color);
         }
     }
 

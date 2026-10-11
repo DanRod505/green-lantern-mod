@@ -116,12 +116,17 @@ public final class SupergirlScript {
             look(20, -25);
         });
         // She puts on the suit for the first time: Krypto dives down from the sky.
-        step(10, () -> server(sp -> SupergirlHero.INSTANCE.summonSuit(sp)));
+        step(10, () -> {
+            mc().gui.getChat().clearMessages(false);
+            mc().options.hideGui = true;
+            server(sp -> SupergirlHero.INSTANCE.summonSuit(sp));
+        });
         watch(60, () -> {
             KryptoEntity krypto = krypto();
             return krypto != null && krypto.getY() > mc().player.getY() + 3 && krypto.getY() < mc().player.getY() + 10;
         }, "sg14_krypto_arrives");
-        step(60, () -> look(0, 10));
+        step(10, () -> clean("sg14b_krypto_landed"));
+        step(50, () -> look(0, 10));
         step(20, () -> {
             camera(CameraType.THIRD_PERSON_FRONT);
             mc().gui.getChat().clearMessages(false);
@@ -204,7 +209,13 @@ public final class SupergirlScript {
         // The Kryptonian Throw: a husk over her head, then far away.
         step(10, () -> {
             tp(0.5, 0, -15.5, 0, 20);
-            mobs(EntityType.HUSK, 0.5, -12.5, 1, 0);
+            // This one keeps its AI, so it really flies when thrown.
+            server(sp -> {
+                Mob husk = EntityType.HUSK.create(sp.level(), EntitySpawnReason.COMMAND);
+                husk.snapTo(base.getX() + 0.5, base.getY(), base.getZ() - 12.5, 180, 0);
+                husk.setPersistenceRequired();
+                sp.level().addFreshEntity(husk);
+            });
         });
         step(10, () -> power(SupergirlPower.KRYPTONIAN_THROW));
         step(8, () -> {
@@ -287,8 +298,21 @@ public final class SupergirlScript {
         step(10, () -> power(SupergirlPower.SOLAR_FLARE));
         step(4, () -> shot("sg11_solar_flare"));
         step(6, () -> shot("sg11b_solar_flare_wave"));
-        step(60, () -> look(180, 20));
-        watch(120, () -> {
+        step(30, () -> {
+            clearMobs();
+            look(180, 20);
+            server(sp -> {
+                ServerLevel level = sp.level();
+                for (int i = 0; i < 3; i++) {
+                    Mob mob = EntityType.HUSK.create(level, EntitySpawnReason.COMMAND);
+                    mob.snapTo(sp.getX() - 2 + i * 2, sp.getY(), sp.getZ() - 5, 0, 0);
+                    mob.setNoAi(true);
+                    mob.setPersistenceRequired();
+                    level.addFreshEntity(mob);
+                }
+            });
+        });
+        watch(160, () -> {
             KryptoEntity krypto = krypto();
             return krypto != null && !mc().level.getEntitiesOfClass(net.minecraft.world.entity.monster.zombie.Husk.class,
                     krypto.getBoundingBox().inflate(1.2)).isEmpty();

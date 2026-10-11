@@ -315,6 +315,14 @@ public class KryptoEntity extends Wolf {
             if (distanceToSqr(goal) < 1.5) setFlying(false);
         }
         Vec3 to = goal.subtract(position());
+        if (ownerFlying && ownerSpeed > 1.0 && (target == null || !target.isAlive())) {
+            // At her speed he simply keeps formation: half way to his spot beside her every tick, carried by her speed.
+            Vec3 next = position().add(ownerVelocity).add(to.subtract(ownerVelocity).scale(0.5));
+            if (level().noCollision(this, getBoundingBox().move(next.subtract(position())))) setPos(next.x, next.y, next.z);
+            setDeltaMovement(ownerVelocity);
+            face(ownerVelocity);
+            return;
+        }
         Vec3 want = ownerVelocity.add(to.scale(0.3));
         double max = Math.max(1.2, ownerSpeed * 1.25 + 0.4);
         if (want.length() > max) want = want.normalize().scale(max);
