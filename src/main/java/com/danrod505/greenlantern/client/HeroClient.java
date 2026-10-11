@@ -46,6 +46,11 @@ public interface HeroClient {
         return List.of();
     }
 
+    /** Geometry the hero draws in the world every frame (beams, outlines through walls), or null for none. */
+    default WorldLayer worldLayer() {
+        return null;
+    }
+
     /** Every client tick, after the shared flight visuals: the hero's visuals and sounds. */
     default void tick() {
     }

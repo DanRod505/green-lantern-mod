@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:function",
+  "function": "greenlantern:cyborg_shoulder_missiles",
+  "environment": "minecraft:default",
+  "structure": "greenlantern:arena",
+  "max_ticks": 200,
+  "required": true
+}

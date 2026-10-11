@@ -1,0 +1,135 @@
+{
+  "cyborg_suit_up": {
+    "subtitle": "subtitles.greenlantern.cyborg_suit_up",
+    "sounds": [
+      {
+        "name": "greenlantern:cyborg_suit_up",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "cyborg_suit_down": {
+    "subtitle": "subtitles.greenlantern.cyborg_suit_down",
+    "sounds": [
+      {
+        "name": "greenlantern:cyborg_suit_down",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "cyborg_sonic_cannon": {
+    "subtitle": "subtitles.greenlantern.cyborg_sonic_cannon",
+    "sounds": [
+      {
+        "name": "greenlantern:cyborg_sonic_cannon",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "cyborg_missile_launch": {
+    "subtitle": "subtitles.greenlantern.cyborg_missile_launch",
+    "sounds": [
+      {
+        "name": "greenlantern:cyborg_missile_launch",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "cyborg_missile_explode": {
+    "subtitle": "subtitles.greenlantern.cyborg_missile_explode",
+    "sounds": [
+      {
+        "name": "greenlantern:cyborg_missile_explode",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "cyborg_scan_on": {
+    "subtitle": "subtitles.greenlantern.cyborg_scan_on",
+    "sounds": [
+      {
+        "name": "greenlantern:cyborg_scan_on",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "cyborg_scan_off": {
+    "subtitle": "subtitles.greenlantern.cyborg_scan_off",
+    "sounds": [
+      {
+        "name": "greenlantern:cyborg_scan_off",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "cyborg_scan_ping": {
+    "subtitle": "subtitles.greenlantern.cyborg_scan_ping",
+    "sounds": [
+      {
+        "name": "greenlantern:cyborg_scan_ping",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "cyborg_hack": {
+    "subtitle": "subtitles.greenlantern.cyborg_hack",
+    "sounds": [
+      {
+        "name": "greenlantern:cyborg_hack",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "cyborg_emp": {
+    "subtitle": "subtitles.greenlantern.cyborg_emp",
+    "sounds": [
+      {
+        "name": "greenlantern:cyborg_emp",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "cyborg_repair": {
+    "subtitle": "subtitles.greenlantern.cyborg_repair",
+    "sounds": [
+      {
+        "name": "greenlantern:cyborg_repair",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "cyborg_battery_full": {
+    "subtitle": "subtitles.greenlantern.cyborg_battery_full",
+    "sounds": [
+      {
+        "name": "greenlantern:cyborg_battery_full",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "cyborg_boom_tube": {
+    "subtitle": "subtitles.greenlantern.cyborg_boom_tube",
+    "sounds": [
+      {
+        "name": "greenlantern:cyborg_boom_tube",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "cyborg_theme_base": {
+    "sounds": [
+      {
+        "name": "greenlantern:music/cyborg_theme_base",
+        "stream": true
+      }
+    ]
+  },
+  "cyborg_theme_peak": {
+    "sounds": [
+      {
+        "name": "greenlantern:music/cyborg_theme_peak",
+        "stream": true
+      }
+    ]
+  }
+}

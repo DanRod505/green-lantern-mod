@@ -2,6 +2,7 @@ package com.danrod505.greenlantern.hero;
 
 import com.danrod505.greenlantern.aquaman.AquamanHero;
 import com.danrod505.greenlantern.batman.BatmanHero;
+import com.danrod505.greenlantern.cyborg.CyborgHero;
 import com.danrod505.greenlantern.flash.FlashHero;
 import com.danrod505.greenlantern.ring.LanternHero;
 import com.danrod505.greenlantern.superman.SupermanHero;
@@ -23,7 +24,8 @@ public final class HeroRegistry {
             AquamanHero.INSTANCE,
             BatmanHero.INSTANCE,
             SupermanHero.INSTANCE,
-            WonderWomanHero.INSTANCE);
+            WonderWomanHero.INSTANCE,
+            CyborgHero.INSTANCE);
 
     private HeroRegistry() {}
 

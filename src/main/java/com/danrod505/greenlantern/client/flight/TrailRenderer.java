@@ -1,6 +1,9 @@
 package com.danrod505.greenlantern.client.flight;
 
 import com.danrod505.greenlantern.GreenLantern;
+import com.danrod505.greenlantern.client.ClientSetup;
+import com.danrod505.greenlantern.client.HeroClient;
+import com.danrod505.greenlantern.client.WorldLayer;
 import com.danrod505.greenlantern.client.aqua.SwimVisuals;
 import com.danrod505.greenlantern.client.render.HardLight;
 import com.danrod505.greenlantern.client.speed.SpeedVisuals;
@@ -123,6 +126,10 @@ public class TrailRenderer extends EntityRenderer<FlightTrailEntity, TrailRender
         extractSpeedTrails(state, mc, level, cam, origin, now, partialTick);
         extractSwimTrails(state, mc, level, cam, origin, now, partialTick);
         com.danrod505.greenlantern.client.superman.SupermanVisuals.extract(state.superman, mc, level, cam, origin, partialTick);
+        for (HeroClient hero : ClientSetup.heroes()) {
+            WorldLayer layer = hero.worldLayer();
+            if (layer != null) layer.extract(mc, level, cam, origin, partialTick);
+        }
     }
 
     /**
@@ -279,6 +286,10 @@ public class TrailRenderer extends EntityRenderer<FlightTrailEntity, TrailRender
     @Override
     public void submit(State state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
         com.danrod505.greenlantern.client.superman.SupermanVisuals.submit(state.superman, poseStack, collector);
+        for (HeroClient hero : ClientSetup.heroes()) {
+            WorldLayer layer = hero.worldLayer();
+            if (layer != null) layer.submit(poseStack, collector);
+        }
         if (state.ribbons.isEmpty()) return;
         List<Ribbon> ribbons = List.copyOf(state.ribbons);
         if (ribbons.stream().anyMatch(r -> r.kind <= KIND_LANTERN_SUPERSONIC)) {
