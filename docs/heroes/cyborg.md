@@ -35,7 +35,7 @@ Sete poderes, na ordem da roda. O voo com propulsores não entra na roda: usa as
 | `sonic_cannon` | Canhão Sônico | Sonic Cannon | 60 | O braço vira canhão e solta uma onda sônica em cone que causa dano, empurra os inimigos e estilhaça vidro e gelo. | The arm becomes a cannon and fires a sonic wave in a cone that damages, knocks back enemies and shatters glass and ice. |
 | `shoulder_missiles` | Mísseis do Ombro | Shoulder Missiles | 90 | Quatro microfoguetes saem do ombro e perseguem os inimigos mais próximos, explodindo sem quebrar blocos. | Four micro-rockets launch from the shoulder and chase the nearest enemies, exploding without breaking blocks. |
 | `tech_scan` | Varredura | Tech Scan | 15 | Ligado, marca inimigos e minérios em 24 blocos através das paredes e mostra a vida do alvo na mira. Custa por segundo. | While on, highlights enemies and ores within 24 blocks through walls and shows the health of the target in sight. Costs per second. |
-| `machine_hack` | Invasão | Machine Hack | 80 | Invade o que é máquina na mira: um golem de ferro vira aliado por um minuto, e portas, alçapões, pistões e trilhos obedecem ao toque. | Hacks the machine in sight: an iron golem becomes an ally for a minute, and doors, trapdoors, pistons and rails obey the touch. |
+| `machine_hack` | Invasão | Machine Hack | 80 | Invade o que é máquina na mira: um golem de ferro vira aliado por um minuto, portas, alçapões e portões abrem (até os de ferro), alavancas e botões obedecem e carrinhos disparam. | Hacks the machine in sight: an iron golem becomes an ally for a minute, doors, trapdoors and gates open (iron ones too), levers and buttons obey and minecarts shoot off. |
 | `emp_burst` | Pulso Eletromagnético | EMP Burst | 120 | Um pulso em volta atordoa os inimigos por alguns segundos, derruba os voadores e apaga a redstone por perto por um instante. | A pulse around him stuns enemies for a few seconds, grounds flying mobs and switches off nearby redstone for a moment. |
 | `self_repair` | Autorreparo | Self Repair | 100 | Os nanorrobôs consertam o corpo e o traje: cura aos poucos e recupera a durabilidade das peças. | Nanobots fix body and suit: heals over a few seconds and restores the suit's durability. |
 | `boom_tube` | Tubo de Explosão | Boom Tube | 250 | Abre um túnel de luz que leva o Ciborgue e quem estiver perto até o ponto marcado (agachado e usando marca o ponto; sem marca, vai para a cama ou o spawn). | Opens a tunnel of light that takes Cyborg and anyone near him to the marked point (sneak and use to mark it; without a mark, to the bed or spawn). |
@@ -46,7 +46,7 @@ A Bateria do Ciborgue é a energia da Caixa Materna fundida ao corpo dele. Enche
 
 ## Mobilidade
 
-Voo com propulsores nos pés e nas costas, reaproveitando o `FlightProfile` compartilhado. Fica entre a Mulher Maravilha e o Superman: velocidade máxima 2.6, sem barreira do som, com rastro de fogo azul dos propulsores e pouso amortecido (sem dano de queda enquanto o traje está ligado).
+Voo com propulsores nos pés e nas costas, reaproveitando o `FlightProfile` compartilhado. Fica entre a Mulher Maravilha e o Superman: velocidade máxima 2.5, abaixo da barreira do som (2.6), com rastro de fogo azul dos propulsores e pouso amortecido (sem dano de queda enquanto o traje está ligado).
 
 ## Momento épico
 
