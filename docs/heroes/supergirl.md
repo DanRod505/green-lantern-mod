@@ -64,7 +64,16 @@ Voo pelo `FlightProfile` compartilhado, com o perfil próprio dela: a mais ágil
 
 ## Momento épico
 
-**Cometa, o Supercavalo.** Agachada e usando o Pingente de Argo, ela chama o Cometa: um cavalo branco de crina e cauda douradas que desce do céu deixando um rastro de cometa. Ele voa, pode ser montado por ela ou por outro jogador, corre sobre a água, e quando ela está montada o Cometa dá coices que empurram os inimigos. Some quando ela tira o traje e volta ao chamá-la de novo (fica com o nome e a vida).
+**Krypto, o Supercão.** Um companheiro que fica com ela o tempo todo, não uma invocação que some depois do uso.
+
+- **Chegada:** na primeira vez que ela veste o traje, o Krypto desce do céu com a capinha vermelha esvoaçando e late para ela. Depois disso ele é dela, com nome e vida guardados, como um lobo domado.
+- **Segue e voa junto:** anda atrás dela no chão e voa ao lado quando ela voa, acompanhando até acima da barreira do som. Se ficar longe demais, aparece de novo do lado dela num risco de luz.
+- **Comandos:** clique com a mão vazia faz ele sentar ou voltar a seguir. Agachada e usando o Pingente de Argo, ela assobia e ele vem de onde estiver.
+- **Combate:** ataca quem ela ataca e quem machuca ela, com mordidas fortes que derrubam os inimigos. De vez em quando solta uma rajada curta de visão de calor pelos olhos. Não ataca jogadores, aldeões nem os animais domados de ninguém.
+- **Junto com os poderes dela:** com a Superaudição ligada, ele fareja e late na direção do inimigo mais perto. Na Explosão Solar, ele protege ela e fica na frente enquanto ela recarrega.
+- **Buscar:** pega os itens que caem dos inimigos derrotados e traz até ela.
+- **Não morre:** com a vida zerada, ele voa para o céu ganindo e volta depois de 60 segundos. Osso ou carne na mão dela curam ele.
+- **Visual:** cão branco de porte médio, capa vermelha curta com o S dourado na coleira, olhos dourados que brilham ao usar a visão de calor.
 
 ## Traje e paleta
 
@@ -80,7 +89,7 @@ Inspirado no visual moderno da personagem, bem distinto do Superman:
 
 ## Música e sons
 
-Tema original, mais leve e otimista que o do Superman: a base é um ostinato de cordas rápido com piano, e o pico entra com metais heroicos, bateria acelerada e um coro curto. Sons principais, todos originais: traje se formando em luz dourada, rajadas de calor curtas, o zumbido da Investida Meteoro, o estalo das Palmas Trovão, gelo rachando ao subir a muralha, o zumbido da superaudição, o grunhido do arremesso, a Explosão Solar crescendo e estourando, o assobio da pirueta e o relincho e galope do Cometa.
+Tema original, mais leve e otimista que o do Superman: a base é um ostinato de cordas rápido com piano, e o pico entra com metais heroicos, bateria acelerada e um coro curto. Sons principais, todos originais: traje se formando em luz dourada, rajadas de calor curtas, o zumbido da Investida Meteoro, o estalo das Palmas Trovão, gelo rachando ao subir a muralha, o zumbido da superaudição, o grunhido do arremesso, a Explosão Solar crescendo e estourando, o assobio da pirueta e os latidos, o ganido e o voo do Krypto.
 
 ## Prints
 
@@ -100,8 +109,9 @@ Tema original, mais leve e otimista que o do Superman: a base é um ostinato de 
 | `sg11_solar_flare` | explosão solar em volta dela |
 | `sg12_flight` | voando acima da barreira do som com o rastro vermelho e dourado |
 | `sg13_barrel_roll` | pirueta esquivando de flechas |
-| `sg14_comet_arrives` | Cometa descendo do céu |
-| `sg15_comet_ride` | montada no Cometa voando |
+| `sg14_krypto_arrives` | Krypto descendo do céu na primeira vez que ela veste o traje |
+| `sg15_krypto_fight` | Krypto mordendo um zumbi ao lado dela |
+| `sg15b_krypto_flight` | Krypto voando ao lado dela |
 | `sg16_guide` | seção da Supergirl no Guia dos Heróis |
 
 ## Definição de pronto
