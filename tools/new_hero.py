@@ -15,6 +15,7 @@ already compiling and passing the hero contract tests:
   * recipe and recipe advancement of the hero's item
   * gametests (gametest/heroes/<Class>Tests) and a screenshot script (gametest/scripts/<Class>Script)
   * one line each in HeroRegistry, ModGameTests, ClientScripts and .github/screenshot-scripts.txt
+  * the next minor mod_version, a sentence in mod_description and a README section (tools/release.py)
 
 Only the standard library is used. Run it from anywhere; paths are relative to the repository.
 """
@@ -25,6 +26,8 @@ import re
 import struct
 import sys
 import zlib
+
+import release
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODID = 'greenlantern'
@@ -958,7 +961,24 @@ public final class {cls}Script {{
     with open(mapping, 'a', encoding='utf-8', newline='\n') as f:
         f.write(f'claude/{hid.replace("_", "-")}- {pkg}\n')
     written.append('.github/screenshot-scripts.txt (+1 line)')
+    add_release_notes(h)
     return code
+
+
+def add_release_notes(h):
+    """A new hero is a new minor version: raises mod_version, adds the hero to the mod description and
+    starts its README section, which becomes the notes of the GitHub Release (tools/release.py)."""
+    v = release.bump('minor')
+    powers_en = [p['en'] for p in h['powers']]
+    release.add_to_description(f"{h['name_en']}: the {h['item_en']}, {', '.join(powers_en[:-1])} and {powers_en[-1]}.")
+    article = h['article_pt'].capitalize()
+    body = [f"* **{h['item_pt']}:** o item d{h['article_pt']} {h['name_pt']}. Clique direito (ou **G**) veste o traje.",
+            f"* **{h['energy_pt']}:** guarda {h['capacity']} e recarrega {h['recharge']} por segundo.",
+            '* **Menu radial (R, depois V):**']
+    body += [f"  * **{p['pt']}:** {p['desc_pt']}" for p in h['powers']]
+    release.add_readme_section(f"{article} {h['name_pt']} (novo na {v})", '\n'.join(body))
+    written.append(f'gradle.properties (mod_version {v}, mod_description +1 sentence)')
+    written.append('README.md (new section, the notes of the release)')
 
 
 def main():

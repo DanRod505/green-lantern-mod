@@ -1,0 +1,71 @@
+name: Release
+
+# Publishes a GitHub Release (tag v<mod_version>) with the jar, the CurseForge profile and the custom
+# music pack whenever main has a mod_version that was not released yet. The notes come from the README
+# section "(novo na <version>)" (python3 tools/release.py notes). Release files download without logging
+# in to GitHub and do not expire, unlike the artifacts of the Build workflow.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Is the version new?
+        id: version
+        run: |
+          v=$(python3 tools/release.py version)
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+          if git rev-parse -q --verify "refs/tags/v$v" >/dev/null; then
+            echo "new=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::v$v was already released; nothing to publish"
+          else
+            echo "new=true" >> "$GITHUB_OUTPUT"
+            echo "Releasing v$v"
+          fi
+
+      - name: Set up JDK 25
+        if: steps.version.outputs.new == 'true'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+
+      - name: Set up Gradle
+        if: steps.version.outputs.new == 'true'
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build mod
+        if: steps.version.outputs.new == 'true'
+        run: ./gradlew build --stacktrace
+
+      # After the build, like the Build workflow: the gametests share the class output with the mod and
+      # must never run before the jar is made.
+      - name: Run in-game tests
+        if: steps.version.outputs.new == 'true'
+        run: ./gradlew runGameTestServer -Pgametests --no-configuration-cache --stacktrace
+
+      - name: Publish the release
+        if: steps.version.outputs.new == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          python3 tools/release.py notes "$VERSION" > release-notes.md
+          gh release create "v$VERSION" --target "$GITHUB_SHA" --title "Heróis do Universo DC $VERSION" \
+            --notes-file release-notes.md --latest \
+            build/libs/*.jar build/distributions/*.zip
+          echo "::notice::https://github.com/${GITHUB_REPOSITORY}/releases/tag/v$VERSION"
