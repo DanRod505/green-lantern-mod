@@ -244,6 +244,7 @@ public class KryptoEntity extends Wolf {
         super.tick();
         resetFallDistance();
         if (!(level() instanceof ServerLevel level)) {
+            keepFormation();
             if (isFlying() && tickCount % 2 == 0) {
                 level().addParticle(new DustParticleOptions(tickCount % 4 == 0 ? RED : GOLD, 0.9F), getX(), getY() + 0.5, getZ(), 0, 0, 0);
             }
@@ -335,7 +336,26 @@ public class KryptoEntity extends Wolf {
     }
 
     /** A spot to her right, a little behind her. */
-    private static Vec3 besideHer(ServerPlayer owner, double side) {
+    /**
+     * On her own screen, when she flies fast, he is drawn right beside her: the server keeps him there,
+     * but its position updates arrive a few ticks late, which at Mach 2 would leave him far behind.
+     */
+    private void keepFormation() {
+        if (!isFlying() || !(getOwner() instanceof Player owner) || !owner.isLocalInstanceAuthoritative() || owner.level() != level()) return;
+        Vec3 v = owner.getDeltaMovement();
+        if (!owner.getAbilities().flying || v.length() < 1.0 || getTarget() != null) return;
+        Vec3 at = besideHer(owner, 1.6);
+        setPos(at.x, at.y, at.z);
+        xo = xOld = at.x - v.x;
+        yo = yOld = at.y - v.y;
+        zo = zOld = at.z - v.z;
+        face(v);
+        yRotO = getYRot();
+        yBodyRotO = yBodyRot;
+        yHeadRotO = yHeadRot;
+    }
+
+    private static Vec3 besideHer(Player owner, double side) {
         Vec3 look = owner.getLookAngle();
         Vec3 flat = new Vec3(look.x, 0, look.z);
         flat = flat.lengthSqr() < 1.0E-4 ? new Vec3(0, 0, 1) : flat.normalize();

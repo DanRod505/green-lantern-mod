@@ -113,7 +113,7 @@ public final class SupergirlScript {
                 }
             });
             camera(CameraType.THIRD_PERSON_BACK);
-            look(20, -25);
+            look(35, -30);
         });
         // She puts on the suit for the first time: Krypto dives down from the sky.
         step(10, () -> {
@@ -228,7 +228,7 @@ public final class SupergirlScript {
             look(0, -10);
         });
         step(4, () -> power(SupergirlPower.KRYPTONIAN_THROW));
-        step(3, () -> shot("sg10b_kryptonian_throw_hurl"));
+        step(6, () -> shot("sg10b_kryptonian_throw_hurl"));
         step(30, () -> {
             clearMobs();
             refill();
