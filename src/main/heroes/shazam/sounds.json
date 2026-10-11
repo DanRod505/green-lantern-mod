@@ -1,0 +1,135 @@
+{
+  "shazam_suit_up": {
+    "subtitle": "subtitles.greenlantern.shazam_suit_up",
+    "sounds": [
+      {
+        "name": "greenlantern:shazam_suit_up",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "shazam_suit_down": {
+    "subtitle": "subtitles.greenlantern.shazam_suit_down",
+    "sounds": [
+      {
+        "name": "greenlantern:shazam_suit_down",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "shazam_zeus_lightning": {
+    "subtitle": "subtitles.greenlantern.shazam_zeus_lightning",
+    "sounds": [
+      {
+        "name": "greenlantern:shazam_zeus_lightning",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "shazam_lightning_hit": {
+    "subtitle": "subtitles.greenlantern.shazam_lightning_hit",
+    "sounds": [
+      {
+        "name": "greenlantern:shazam_lightning_hit",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "shazam_thunder_call": {
+    "subtitle": "subtitles.greenlantern.shazam_thunder_call",
+    "sounds": [
+      {
+        "name": "greenlantern:shazam_thunder_call",
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "shazam_mercury_dash": {
+    "subtitle": "subtitles.greenlantern.shazam_mercury_dash",
+    "sounds": [
+      {
+        "name": "greenlantern:shazam_mercury_dash",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "shazam_hercules_slam": {
+    "subtitle": "subtitles.greenlantern.shazam_hercules_slam",
+    "sounds": [
+      {
+        "name": "greenlantern:shazam_hercules_slam",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "shazam_achilles_roar": {
+    "subtitle": "subtitles.greenlantern.shazam_achilles_roar",
+    "sounds": [
+      {
+        "name": "greenlantern:shazam_achilles_roar",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "shazam_atlas_on": {
+    "subtitle": "subtitles.greenlantern.shazam_atlas_on",
+    "sounds": [
+      {
+        "name": "greenlantern:shazam_atlas_on",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "shazam_atlas_off": {
+    "subtitle": "subtitles.greenlantern.shazam_atlas_off",
+    "sounds": [
+      {
+        "name": "greenlantern:shazam_atlas_off",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "shazam_solomon_on": {
+    "subtitle": "subtitles.greenlantern.shazam_solomon_on",
+    "sounds": [
+      {
+        "name": "greenlantern:shazam_solomon_on",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "shazam_solomon_off": {
+    "subtitle": "subtitles.greenlantern.shazam_solomon_off",
+    "sounds": [
+      {
+        "name": "greenlantern:shazam_solomon_off",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "shazam_magic_full": {
+    "subtitle": "subtitles.greenlantern.shazam_magic_full",
+    "sounds": [
+      {
+        "name": "greenlantern:shazam_magic_full",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "shazam_theme_base": {
+    "sounds": [
+      {
+        "name": "greenlantern:music/shazam_theme_base",
+        "stream": true
+      }
+    ]
+  },
+  "shazam_theme_peak": {
+    "sounds": [
+      {
+        "name": "greenlantern:music/shazam_theme_peak",
+        "stream": true
+      }
+    ]
+  }
+}

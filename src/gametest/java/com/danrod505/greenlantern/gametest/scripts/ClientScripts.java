@@ -24,7 +24,8 @@ public final class ClientScripts {
             TrenchScript.SCRIPT,
             WonderWomanScript.SCRIPT,
             CyborgScript.SCRIPT,
-            SupergirlScript.SCRIPT
+            SupergirlScript.SCRIPT,
+            ShazamScript.SCRIPT
             // tools/new_hero.py adds new heroes above this line
     );
 

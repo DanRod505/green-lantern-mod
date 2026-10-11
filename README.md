@@ -5,6 +5,22 @@
 Mod de heróis do **Universo DC** para **Minecraft Java 1.21.11** com **Forge 61.2.0** (compilado com **Java 25**).
 Começou como o mod do Lanterna Verde e agora traz também **o Flash** (v1.7.0) **o Aquaman** (v1.8.0), **Atlântida** (v1.9.0) **o Kraken do Aquaman** (v1.10.0), **o Batman** (v1.11.0), **as criaturas de Atlântida** (v1.12.0) **o Fosso**, os inimigos do Aquaman (v1.13.0), **o Superman** (v1.14.0), **a Mulher Maravilha** (v1.15.0) **o Ciborgue** (v1.16.0), o primeiro herói feito com o kit de herói, e **a Supergirl com o Krypto, o Supercão** (v1.17.0). O id do mod continua `greenlantern`, então mundos e configurações antigas continuam funcionando.
 
+## O Shazam (novo na 1.18.0)
+
+* **Raio do Mago:** o item do herói (ouro, pérola do End, ferro e diamante). Clique direito (ou **G**) diz a palavra mágica: um relâmpago cai do céu nele e forma o traje vermelho com o raio dourado no peito, a faixa e as botas douradas e a capa branca curta. O raio não fere o herói, mas fere e empurra os inimigos colados nele. **Agachado + clique direito** (ou **G** de novo): outro raio e ele volta a ser Billy. Não toma dano de queda.
+* **Magia de Shazam:** guarda 1000, volta 4 por segundo (12 numa tempestade). Cada "Shazam!" devolve 300 (uma vez a cada 10 segundos), e um raio de tempestade que cair nele enche tudo em vez de ferir.
+* **Voo:** **dois toques no pulo**. Velocidade máxima 4,8, entre o Lanterna Verde (4,0) e a Supergirl (5,5); rompe a barreira do som e deixa faíscas e pequenos raios no rastro. Trilha sonora original, aventureira, com cordas em pizzicato, caixa de marcha, metais e trovões.
+* **Menu radial (R, depois V)**, um poder para cada ancião do nome:
+  * **Raio de Zeus:** um raio dourado sai da mão, persegue o inimigo na mira e salta para mais dois inimigos próximos.
+  * **Chamado do Trovão:** um relâmpago cai do céu onde ele mira (até 48 blocos, também debaixo da terra), fere e arremessa os inimigos em volta e estilhaça vidro.
+  * **Velocidade de Mercúrio:** avança 14 blocos num borrão vermelho e dourado, atropelando cada inimigo uma vez e parando na parede.
+  * **Força de Hércules:** soco no chão com onda de choque que joga os inimigos para longe.
+  * **Coragem de Aquiles:** grito de guerra em cone que atordoa os inimigos e apaga fogo e tochas.
+  * **Vigor de Atlas:** ligado, ele não é empurrado nem por explosões, toma metade do dano e não sente fome (gasta por segundo).
+  * **Sabedoria de Salomão:** ligada, as criaturas hostis a até 32 blocos brilham mesmo atrás de paredes e o HUD mostra a vida de quem está na mira (gasta por segundo).
+* **Sons e trilha originais**, sem samples nem vozes gravadas; nova seção **Shazam** no Guia dos Heróis; configuração em `greenlantern-shazam.toml`.
+* Primeiro herói feito com a biblioteca de poderes (`hero/power`) e de arte e som (`tools/herolib`).
+
 ## A Supergirl (novo na 1.17.0)
 
 * **Pingente de Argo:** o item da heroína (ouro, pérola do End, ferro e diamante). Clique direito (ou **G**) veste o traje azul com o S, a saia vermelha, as botas e a capa curta. Com energia ela recebe menos dano (menos que o Superman) e não toma dano de queda.
