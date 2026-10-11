@@ -3,7 +3,22 @@
 > *"No dia mais claro, na noite mais densa, o mal sucumbirá ante a minha presença!"*
 
 Mod de heróis do **Universo DC** para **Minecraft Java 1.21.11** com **Forge 61.2.0** (compilado com **Java 25**).
-Começou como o mod do Lanterna Verde e agora traz também **o Flash** (v1.7.0) **o Aquaman** (v1.8.0), **Atlântida** (v1.9.0) **o Kraken do Aquaman** (v1.10.0), **o Batman** (v1.11.0), **as criaturas de Atlântida** (v1.12.0) **o Fosso**, os inimigos do Aquaman (v1.13.0), **o Superman** (v1.14.0) e **a Mulher Maravilha** (v1.15.0). O id do mod continua `greenlantern`, então mundos e configurações antigas continuam funcionando.
+Começou como o mod do Lanterna Verde e agora traz também **o Flash** (v1.7.0) **o Aquaman** (v1.8.0), **Atlântida** (v1.9.0) **o Kraken do Aquaman** (v1.10.0), **o Batman** (v1.11.0), **as criaturas de Atlântida** (v1.12.0) **o Fosso**, os inimigos do Aquaman (v1.13.0), **o Superman** (v1.14.0), **a Mulher Maravilha** (v1.15.0) e **o Ciborgue** (v1.16.0), o primeiro herói feito com o kit de herói. O id do mod continua `greenlantern`, então mundos e configurações antigas continuam funcionando.
+
+## O Ciborgue (novo na 1.16.0)
+
+* **Caixa Materna:** o item do herói. Clique direito (ou **G**) veste o corpo blindado: placas prateadas, metade do rosto humana e metade metálica com o olho vermelho, o núcleo vermelho no peito, propulsores nas costas, o canhão no braço e o lançador de mísseis no ombro. Com o traje ele recebe menos dano e não toma dano de queda.
+* **Bateria do Ciborgue:** volta sozinha aos poucos, o dobro perto de redstone ligada (bloco, tocha ou fio), e um raio que caia perto enche tudo. Debaixo d'água não recarrega.
+* **Voo com propulsores:** **dois toques no pulo**. Mais rápido que a Mulher Maravilha e mais lento que o Superman, abaixo da barreira do som. Voar gasta bateria; parado no ar, não. Trilha sonora eletrônica original.
+* **Menu radial (R, depois V):**
+  * **Canhão Sônico:** onda sônica em cone que fere, empurra e estilhaça vidro e gelo.
+  * **Mísseis do Ombro:** quatro microfoguetes que perseguem os inimigos e explodem sem quebrar blocos.
+  * **Varredura:** ligada, mostra minérios através do chão, o contorno dos inimigos através das paredes e a vida do alvo na mira (gasta por segundo).
+  * **Invasão:** um golem de ferro vira aliado por um minuto; portas, alçapões e portões abrem (até os de ferro), alavancas e botões obedecem e carrinhos disparam.
+  * **Pulso Eletromagnético:** atordoa os inimigos em volta, derruba os voadores e apaga as lâmpadas de redstone por um instante.
+  * **Autorreparo:** os nanorrobôs curam e consertam o traje.
+  * **Tubo de Explosão:** **agachado + usar** marca o destino; usar abre um túnel de luz que leva o Ciborgue e quem estiver perto até lá (sem marca, para a cama ou o spawn), até entre dimensões.
+* **Sons e trilha originais**, sem samples; nova seção **Ciborgue** no Guia dos Heróis; configuração em `greenlantern-cyborg.toml`.
 
 ## A Mulher Maravilha (novo na 1.15.0)
 
