@@ -13,6 +13,7 @@ import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.HeroRegistry;
 import java.util.List;
 import net.minecraft.client.CameraType;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -77,6 +78,8 @@ public final class FundacaoScript {
             });
             camera(CameraType.THIRD_PERSON_FRONT);
             look(0, 10);
+            mc().options.hideGui = true;
+            mc().gui.getChat().clearMessages(false);
         });
 
         // The 9 heroes, as in 1.18.0.
@@ -133,32 +136,28 @@ public final class FundacaoScript {
             // Creative unlocks every skin: K goes to the night suit.
             server(sp -> sp.setGameMode(GameType.CREATIVE));
         });
-        step(10, () -> key(KeyBindings.SKIN, true));
-        step(2, () -> key(KeyBindings.SKIN, false));
-        step(10, () -> {
+        step(10, () -> KeyMapping.click(KeyBindings.SKIN.getKey()));
+        step(20, () -> {
             camera(CameraType.THIRD_PERSON_FRONT);
             look(0, 10);
         });
         step(4, () -> shot("fd18_skin_k"));
-        step(4, () -> {
-            camera(CameraType.THIRD_PERSON_BACK);
-            look(180, 20);
-        });
+        // The wardrobe stands behind the player: the front camera sees both.
+        step(4, () -> look(0, 5));
         step(6, () -> server(sp -> {
             // Using the wardrobe with the item: back to the first skin.
             EngineHero hero = (EngineHero) hero("prototipo");
             ItemStack item = hero.findItem(sp);
             EngineServer.cycleSkin(sp, hero, item);
         }));
-        step(6, () -> shot("fd19_wardrobe"));
+        step(20, () -> shot("fd19_wardrobe"));
         step(4, () -> {
             server(sp -> sp.setGameMode(GameType.SURVIVAL));
             mc().gui.getChat().clearMessages(false);
             look(0, 10);
         });
-        step(10, () -> key(KeyBindings.HERO_POWER, true));
-        step(2, () -> key(KeyBindings.HERO_POWER, false));
-        step(6, () -> shot("fd20_ability_later_stage"));
+        step(10, () -> KeyMapping.click(KeyBindings.HERO_POWER.getKey()));
+        step(8, () -> shot("fd20_ability_later_stage"));
         step(30, () -> camera(CameraType.FIRST_PERSON));
         step(6, () -> shot("fd21_first_person_arm"));
         step(20, () -> mc().stop());
