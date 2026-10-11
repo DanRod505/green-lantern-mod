@@ -216,6 +216,10 @@ public abstract class HeroDefinition {
     public void onLogout(ServerPlayer player) {
     }
 
+    /** A special move of power flight the server accepted (barrel roll, air brake...), for heroes that add something to it. */
+    public void onFlightAction(ServerPlayer player, com.danrod505.greenlantern.flight.FlightAction action) {
+    }
+
     /** Damage multiplier for a fall while suited, or a negative number to leave the fall alone. */
     public float fallDamageMultiplier(Player player, double distance) {
         return -1.0F;

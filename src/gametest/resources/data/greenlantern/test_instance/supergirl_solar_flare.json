@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:function",
+  "function": "greenlantern:supergirl_solar_flare",
+  "environment": "minecraft:default",
+  "structure": "greenlantern:arena",
+  "max_ticks": 700,
+  "required": true
+}
