@@ -1,6 +1,6 @@
 # Ficha do herói: Supergirl
 
-> **Status:** rascunho. Troque para **aprovada** quando o Dalton aprovar; só então a thread começa o código.
+> **Status:** aprovada pelo Dalton em 2026-10-11.
 >
 > As duas tabelas (Identidade e Poderes) são lidas pelo gerador (`python3 tools/new_hero.py docs/heroes/supergirl.md`). O resto da ficha é para pessoas.
 
