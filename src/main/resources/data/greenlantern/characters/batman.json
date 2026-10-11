@@ -1,0 +1,70 @@
+{
+  "_comentario": "Um dos 9 heróis que já existiam: os poderes e a energia continuam no código dele. O traje, os bônus e a ordem da roda vêm daqui, com os mesmos números de antes.",
+  "id": "batman",
+  "nome": "Batman",
+  "classe": "vigilante",
+  "nivel": 1,
+  "esqueleto": "masculino",
+  "transformacao": "sombras",
+  "trilha": "gotham",
+  "legado": true,
+  "stats": {
+    "coracoes": 10,
+    "dano": 3,
+    "defesa": 20,
+    "velocidade": 10,
+    "firmeza": 0.3,
+    "energia": 1000
+  },
+  "traje": {
+    "visual": "greenlantern:batman",
+    "defesa": {
+      "cabeca": 3,
+      "peito": 8,
+      "pernas": 6,
+      "pes": 3
+    },
+    "resistencia": 2.5,
+    "resistencia_a_empurrao": 0.1,
+    "som": "minecraft:item.armor.equip_leather",
+    "conserto": "minecraft:repairs_leather_armor",
+    "atributos": [
+      {
+        "atributo": "minecraft:attack_damage",
+        "id": "batman_strength",
+        "valor": 3.0
+      },
+      {
+        "atributo": "minecraft:knockback_resistance",
+        "id": "batman_knockback",
+        "valor": 0.3
+      },
+      {
+        "atributo": "minecraft:movement_speed",
+        "id": "batman_speed",
+        "valor": 0.1,
+        "operacao": "multiplicar"
+      }
+    ]
+  },
+  "habilidades": [
+    {
+      "id": "batarang"
+    },
+    {
+      "id": "grapple"
+    },
+    {
+      "id": "bat_swarm"
+    },
+    {
+      "id": "batmobile"
+    }
+  ],
+  "skins": [
+    {
+      "id": "batman",
+      "nome": "Traje de hoje"
+    }
+  ]
+}

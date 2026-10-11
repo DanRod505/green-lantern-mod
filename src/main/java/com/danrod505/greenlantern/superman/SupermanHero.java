@@ -4,12 +4,12 @@ import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
 import com.danrod505.greenlantern.client.superman.SupermanClient;
+import com.danrod505.greenlantern.engine.Characters;
 import com.danrod505.greenlantern.flight.FlightProfile;
 import com.danrod505.greenlantern.flight.FlightStyle;
 import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.HeroEnergy;
 import com.danrod505.greenlantern.hero.HeroPowers;
-import com.danrod505.greenlantern.hero.SuitModifier;
 import com.danrod505.greenlantern.hero.SuitSet;
 import com.danrod505.greenlantern.hero.WheelStyle;
 import com.danrod505.greenlantern.hero.WheelTheme;
@@ -20,7 +20,6 @@ import com.danrod505.greenlantern.registry.ModItems;
 import com.danrod505.greenlantern.registry.ModParticles;
 import com.danrod505.greenlantern.registry.ModSounds;
 import com.danrod505.greenlantern.ring.FlightHandler;
-import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
@@ -28,7 +27,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -67,19 +65,7 @@ public final class SupermanHero extends HeroDefinition {
 
     private SupermanHero() {
         super("superman", SupermanHelper::isCrystal, new SuitSet(ModItems.SUPERMAN_HAIR, ModItems.SUPERMAN_SUIT, ModItems.SUPERMAN_LEGGINGS, ModItems.SUPERMAN_BOOTS,
-                "message.greenlantern.no_crystal", ModSounds.SUPERMAN_SUIT_UP, ModSounds.SUPERMAN_SUIT_DOWN, List.of(
-                        SuitModifier.add(Attributes.ATTACK_DAMAGE, "superman_strength", 10.0),
-                        SuitModifier.add(Attributes.ATTACK_KNOCKBACK, "superman_punch_knockback", 2.0),
-                        SuitModifier.add(Attributes.MAX_HEALTH, "superman_health", 20.0),
-                        SuitModifier.multiply(Attributes.MOVEMENT_SPEED, "superman_speed", 0.35),
-                        SuitModifier.add(Attributes.KNOCKBACK_RESISTANCE, "superman_steady", 1.0),
-                        SuitModifier.add(Attributes.EXPLOSION_KNOCKBACK_RESISTANCE, "superman_blast_proof", 1.0),
-                        SuitModifier.add(Attributes.STEP_HEIGHT, "superman_step", 0.65),
-                        SuitModifier.add(Attributes.JUMP_STRENGTH, "superman_jump", 0.25),
-                        SuitModifier.multiply(Attributes.BLOCK_BREAK_SPEED, "superman_mining", 1.5),
-                        SuitModifier.add(Attributes.ENTITY_INTERACTION_RANGE, "superman_reach", 1.5),
-                        SuitModifier.add(Attributes.BLOCK_INTERACTION_RANGE, "superman_block_reach", 1.5),
-                        SuitModifier.add(Attributes.OXYGEN_BONUS, "superman_breath", 8.0))));
+                "message.greenlantern.no_crystal", ModSounds.SUPERMAN_SUIT_UP, ModSounds.SUPERMAN_SUIT_DOWN, Characters.suitModifiers("superman")));
     }
 
     @Override

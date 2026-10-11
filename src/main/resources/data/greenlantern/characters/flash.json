@@ -1,0 +1,62 @@
+{
+  "_comentario": "Um dos 9 heróis que já existiam: os poderes e a energia continuam no código dele. O traje, os bônus e a ordem da roda vêm daqui, com os mesmos números de antes.",
+  "id": "flash",
+  "nome": "Flash",
+  "classe": "velocista",
+  "nivel": 3,
+  "esqueleto": "masculino",
+  "transformacao": "velocidade",
+  "trilha": "velocidade",
+  "legado": true,
+  "stats": {
+    "coracoes": 10,
+    "dano": 0,
+    "defesa": 17,
+    "velocidade": 35,
+    "firmeza": 0,
+    "energia": 1000
+  },
+  "traje": {
+    "visual": "greenlantern:flash",
+    "defesa": {
+      "cabeca": 2,
+      "peito": 7,
+      "pernas": 5,
+      "pes": 3
+    },
+    "resistencia": 1.0,
+    "resistencia_a_empurrao": 0.0,
+    "som": "minecraft:item.armor.equip_leather",
+    "conserto": "minecraft:repairs_leather_armor",
+    "atributos": [
+      {
+        "atributo": "minecraft:movement_speed",
+        "id": "flash_speed",
+        "valor": 0.35,
+        "operacao": "multiplicar"
+      },
+      {
+        "atributo": "minecraft:step_height",
+        "id": "flash_step",
+        "valor": 0.65
+      }
+    ]
+  },
+  "habilidades": [
+    {
+      "id": "tornado"
+    },
+    {
+      "id": "phase"
+    },
+    {
+      "id": "lightning"
+    }
+  ],
+  "skins": [
+    {
+      "id": "flash",
+      "nome": "Traje de hoje"
+    }
+  ]
+}

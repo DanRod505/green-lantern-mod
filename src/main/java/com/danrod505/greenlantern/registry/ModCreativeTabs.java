@@ -1,6 +1,7 @@
 package com.danrod505.greenlantern.registry;
 
 import com.danrod505.greenlantern.GreenLantern;
+import com.danrod505.greenlantern.engine.EngineContent;
 import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.HeroRegistry;
 import com.danrod505.greenlantern.item.PowerRingItem;
@@ -21,6 +22,7 @@ public final class ModCreativeTabs {
             .displayItems((params, output) -> {
                 // Each hero adds its own items, in hero order.
                 for (HeroDefinition hero : HeroRegistry.all()) hero.creativeTabItems(output);
+                output.accept(EngineContent.WARDROBE_ITEM.get());
             })
             .build());
 

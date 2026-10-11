@@ -4,10 +4,10 @@ import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
 import com.danrod505.greenlantern.client.speed.FlashClient;
+import com.danrod505.greenlantern.engine.Characters;
 import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.HeroEnergy;
 import com.danrod505.greenlantern.hero.HeroPowers;
-import com.danrod505.greenlantern.hero.SuitModifier;
 import com.danrod505.greenlantern.hero.SuitSet;
 import com.danrod505.greenlantern.hero.WheelStyle;
 import com.danrod505.greenlantern.hero.WheelTheme;
@@ -16,12 +16,10 @@ import com.danrod505.greenlantern.registry.ModDataComponents;
 import com.danrod505.greenlantern.registry.ModItems;
 import com.danrod505.greenlantern.registry.ModParticles;
 import com.danrod505.greenlantern.registry.ModSounds;
-import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 
@@ -48,9 +46,7 @@ public final class FlashHero extends HeroDefinition {
 
     private FlashHero() {
         super("flash", FlashHelper::isRing, new SuitSet(ModItems.FLASH_MASK, ModItems.FLASH_SUIT, ModItems.FLASH_LEGGINGS, ModItems.FLASH_BOOTS,
-                "message.greenlantern.no_flash_ring", ModSounds.FLASH_SUIT_UP, ModSounds.FLASH_SUIT_DOWN, List.of(
-                        SuitModifier.multiply(Attributes.MOVEMENT_SPEED, "flash_speed", 0.35),
-                        SuitModifier.add(Attributes.STEP_HEIGHT, "flash_step", 0.65))));
+                "message.greenlantern.no_flash_ring", ModSounds.FLASH_SUIT_UP, ModSounds.FLASH_SUIT_DOWN, Characters.suitModifiers("flash")));
     }
 
     @Override

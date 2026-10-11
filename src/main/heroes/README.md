@@ -8,6 +8,7 @@ Cada pasta aqui guarda os textos (`lang/en_us.json`, `lang/pt_br.json`) e os son
 | `lantern` | Lanterna Verde, construtos, Mecha e Oa |
 | `flash`, `aquaman` (com Atlântida, Kraken e montarias), `batman`, `superman`, `wonder_woman` | cada herói |
 | `trench` | O Fosso |
+| `engine` | a engine de personagens (2.0.0): classes, energias, esqueletos, teclas B, K e 1 a 6, Suprema, skins e Guarda-Roupa dos Heróis |
 
 O Minecraft só lê um arquivo de idioma por língua e um `sounds.json`, então a tarefa `mergeHeroResources` do Gradle junta tudo no build. Uma mesma chave em duas pastas faz o build falhar, com o nome das duas.
 

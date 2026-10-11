@@ -1,19 +1,17 @@
 package com.danrod505.greenlantern.supergirl;
 
 import com.danrod505.greenlantern.GreenLantern;
+import com.danrod505.greenlantern.engine.Characters;
 import com.danrod505.greenlantern.item.HeroItem;
 import com.danrod505.greenlantern.item.SuitArmorItem;
 import com.danrod505.greenlantern.ring.RingEnergy;
 import com.mojang.serialization.Codec;
-import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.Item;
@@ -86,15 +84,7 @@ public final class SupergirlContent {
     public static final ResourceKey<EquipmentAsset> ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, GreenLantern.id("supergirl"));
 
     /** The suit: as tough as diamond (Kryptonian skin shrugs off part of every blow on top, see {@link SupergirlHero#damageTakenMultiplier}). */
-    public static final ArmorMaterial MATERIAL = new ArmorMaterial(
-            1000,
-            Map.of(ArmorType.HELMET, 3, ArmorType.CHESTPLATE, 8, ArmorType.LEGGINGS, 6, ArmorType.BOOTS, 3, ArmorType.BODY, 8),
-            1,
-            SoundEvents.ARMOR_EQUIP_GENERIC,
-            2.0F,
-            0.0F,
-            ItemTags.REPAIRS_DIAMOND_ARMOR,
-            ASSET);
+    public static final ArmorMaterial MATERIAL = Characters.armorMaterial("supergirl", ASSET);
 
     public static final RegistryObject<SuitArmorItem> MASK = suit("supergirl_mask", ArmorType.HELMET);
     public static final RegistryObject<SuitArmorItem> SUIT = suit("supergirl_suit", ArmorType.CHESTPLATE);

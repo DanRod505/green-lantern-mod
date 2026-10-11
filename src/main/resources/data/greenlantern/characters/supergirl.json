@@ -1,0 +1,87 @@
+{
+  "_comentario": "Um dos 9 heróis que já existiam: os poderes e a energia continuam no código dele. O traje, os bônus e a ordem da roda vêm daqui, com os mesmos números de antes.",
+  "id": "supergirl",
+  "nome": "Supergirl",
+  "classe": "colosso",
+  "nivel": 3,
+  "esqueleto": "feminino",
+  "transformacao": "sol",
+  "trilha": "krypton",
+  "legado": true,
+  "fonte": "sol",
+  "stats": {
+    "coracoes": 14,
+    "dano": 3,
+    "defesa": 20,
+    "velocidade": 15,
+    "firmeza": 0,
+    "energia": 900,
+    "voo": 5.5
+  },
+  "traje": {
+    "visual": "greenlantern:supergirl",
+    "defesa": {
+      "cabeca": 3,
+      "peito": 8,
+      "pernas": 6,
+      "pes": 3
+    },
+    "resistencia": 2.0,
+    "resistencia_a_empurrao": 0.0,
+    "som": "minecraft:item.armor.equip_generic",
+    "conserto": "minecraft:repairs_diamond_armor",
+    "atributos": [
+      {
+        "atributo": "minecraft:attack_damage",
+        "id": "supergirl_strength",
+        "valor": 3.0
+      },
+      {
+        "atributo": "minecraft:max_health",
+        "id": "supergirl_health",
+        "valor": 8.0
+      },
+      {
+        "atributo": "minecraft:movement_speed",
+        "id": "supergirl_speed",
+        "valor": 0.15,
+        "operacao": "multiplicar"
+      }
+    ]
+  },
+  "habilidades": [
+    {
+      "id": "heat_bolts"
+    },
+    {
+      "id": "meteor_dash"
+    },
+    {
+      "id": "thunder_clap"
+    },
+    {
+      "id": "frost_wall"
+    },
+    {
+      "id": "super_hearing"
+    },
+    {
+      "id": "kryptonian_throw"
+    },
+    {
+      "id": "solar_flare"
+    }
+  ],
+  "skins": [
+    {
+      "id": "supergirl",
+      "nome": "Traje de hoje"
+    }
+  ],
+  "fraquezas": [
+    {
+      "tipo": "descricao",
+      "descricao": "Kryptonita verde por perto tira força e vida."
+    }
+  ]
+}

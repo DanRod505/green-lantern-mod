@@ -3,33 +3,44 @@ package com.danrod505.greenlantern.hero;
 import com.danrod505.greenlantern.aquaman.AquamanHero;
 import com.danrod505.greenlantern.batman.BatmanHero;
 import com.danrod505.greenlantern.cyborg.CyborgHero;
+import com.danrod505.greenlantern.engine.Characters;
+import com.danrod505.greenlantern.engine.EngineHero;
 import com.danrod505.greenlantern.flash.FlashHero;
 import com.danrod505.greenlantern.ring.LanternHero;
 import com.danrod505.greenlantern.shazam.ShazamHero;
 import com.danrod505.greenlantern.supergirl.SupergirlHero;
 import com.danrod505.greenlantern.superman.SupermanHero;
 import com.danrod505.greenlantern.wonderwoman.WonderWomanHero;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
 /**
- * The heroes of the mod, in priority order. Adding a hero is one line here plus its own package.
- * Decides which hero the shared keys (suit up, wheel, power) talk to: the hero whose suit is worn,
- * else the one whose item is in hand, else the first item carried (earlier heroes first).
+ * The heroes of the mod, in priority order: the first 9 heroes, with their own packages, then every
+ * character of the engine, built from its file in {@code data/greenlantern/characters} (see
+ * {@link Characters}). Decides which hero the shared keys (suit up, wheel, power) talk to: the hero
+ * whose suit is worn, else the one whose item is in hand, else the first item carried (earlier
+ * heroes first).
  */
 public final class HeroRegistry {
-    private static final List<HeroDefinition> HEROES = List.of(
-            LanternHero.INSTANCE,
-            FlashHero.INSTANCE,
-            AquamanHero.INSTANCE,
-            BatmanHero.INSTANCE,
-            SupermanHero.INSTANCE,
-            WonderWomanHero.INSTANCE,
-            CyborgHero.INSTANCE,
-            SupergirlHero.INSTANCE,
-            ShazamHero.INSTANCE);
+    private static final List<HeroDefinition> HEROES = build();
+
+    private static List<HeroDefinition> build() {
+        List<HeroDefinition> heroes = new ArrayList<>(List.of(
+                LanternHero.INSTANCE,
+                FlashHero.INSTANCE,
+                AquamanHero.INSTANCE,
+                BatmanHero.INSTANCE,
+                SupermanHero.INSTANCE,
+                WonderWomanHero.INSTANCE,
+                CyborgHero.INSTANCE,
+                SupergirlHero.INSTANCE,
+                ShazamHero.INSTANCE));
+        Characters.engine().forEach(data -> heroes.add(EngineHero.create(data)));
+        return List.copyOf(heroes);
+    }
 
     private HeroRegistry() {}
 

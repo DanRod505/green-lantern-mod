@@ -1,0 +1,80 @@
+{
+  "_comentario": "Um dos 9 heróis que já existiam: os poderes e a energia continuam no código dele. O traje, os bônus e a ordem da roda vêm daqui, com os mesmos números de antes.",
+  "id": "cyborg",
+  "nome": "Ciborgue",
+  "classe": "inventor",
+  "nivel": 3,
+  "esqueleto": "masculino",
+  "transformacao": "armadura",
+  "trilha": "digital",
+  "legado": true,
+  "stats": {
+    "coracoes": 14,
+    "dano": 3,
+    "defesa": 20,
+    "velocidade": 15,
+    "firmeza": 0,
+    "energia": 1200,
+    "voo": 2.5
+  },
+  "traje": {
+    "visual": "greenlantern:cyborg",
+    "defesa": {
+      "cabeca": 3,
+      "peito": 8,
+      "pernas": 6,
+      "pes": 3
+    },
+    "resistencia": 2.0,
+    "resistencia_a_empurrao": 0.0,
+    "som": "minecraft:item.armor.equip_generic",
+    "conserto": "minecraft:repairs_diamond_armor",
+    "atributos": [
+      {
+        "atributo": "minecraft:attack_damage",
+        "id": "cyborg_strength",
+        "valor": 3.0
+      },
+      {
+        "atributo": "minecraft:max_health",
+        "id": "cyborg_health",
+        "valor": 8.0
+      },
+      {
+        "atributo": "minecraft:movement_speed",
+        "id": "cyborg_speed",
+        "valor": 0.15,
+        "operacao": "multiplicar"
+      }
+    ]
+  },
+  "habilidades": [
+    {
+      "id": "sonic_cannon"
+    },
+    {
+      "id": "shoulder_missiles"
+    },
+    {
+      "id": "tech_scan"
+    },
+    {
+      "id": "machine_hack"
+    },
+    {
+      "id": "emp_burst"
+    },
+    {
+      "id": "self_repair"
+    },
+    {
+      "id": "boom_tube"
+    }
+  ],
+  "skins": [
+    {
+      "id": "cyborg",
+      "nome": "Traje de hoje"
+    }
+  ]
+}

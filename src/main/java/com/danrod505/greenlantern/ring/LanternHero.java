@@ -3,6 +3,7 @@ package com.danrod505.greenlantern.ring;
 import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.client.HeroClient;
 import com.danrod505.greenlantern.client.LanternClient;
+import com.danrod505.greenlantern.engine.Characters;
 import com.danrod505.greenlantern.flight.FlightProfile;
 import com.danrod505.greenlantern.flight.FlightStyle;
 import com.danrod505.greenlantern.hero.HeroDefinition;
@@ -13,7 +14,6 @@ import com.danrod505.greenlantern.registry.ModDamageTypes;
 import com.danrod505.greenlantern.registry.ModItems;
 import com.danrod505.greenlantern.registry.ModParticles;
 import com.danrod505.greenlantern.registry.ModSounds;
-import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -44,7 +44,7 @@ public final class LanternHero extends HeroDefinition {
 
     private LanternHero() {
         super("lantern", RingHelper::isRing, new SuitSet(ModItems.LANTERN_MASK, ModItems.LANTERN_SUIT, ModItems.LANTERN_LEGGINGS, ModItems.LANTERN_BOOTS,
-                "message.greenlantern.no_ring", ModSounds.RING_ACTIVATE, ModSounds.RING_DEACTIVATE, List.of()));
+                "message.greenlantern.no_ring", ModSounds.RING_ACTIVATE, ModSounds.RING_DEACTIVATE, Characters.suitModifiers("lantern")));
     }
 
     @Override

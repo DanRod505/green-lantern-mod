@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "greenlantern:block/heroes_wardrobe"
+    },
+    "facing=east": {
+      "model": "greenlantern:block/heroes_wardrobe",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "greenlantern:block/heroes_wardrobe",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "greenlantern:block/heroes_wardrobe",
+      "y": 270
+    }
+  }
+}

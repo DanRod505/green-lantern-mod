@@ -4,19 +4,18 @@ import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
 import com.danrod505.greenlantern.client.cyborg.CyborgClient;
+import com.danrod505.greenlantern.engine.Characters;
 import com.danrod505.greenlantern.flight.FlightProfile;
 import com.danrod505.greenlantern.flight.FlightStyle;
 import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.HeroEnergy;
 import com.danrod505.greenlantern.hero.HeroPowers;
-import com.danrod505.greenlantern.hero.SuitModifier;
 import com.danrod505.greenlantern.hero.SuitSet;
 import com.danrod505.greenlantern.hero.WheelStyle;
 import com.danrod505.greenlantern.hero.WheelTheme;
 import com.danrod505.greenlantern.registry.ModParticles;
 import com.danrod505.greenlantern.registry.ModSounds;
 import com.danrod505.greenlantern.ring.FlightHandler;
-import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
@@ -24,7 +23,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -60,10 +58,7 @@ public final class CyborgHero extends HeroDefinition {
 
     private CyborgHero() {
         super("cyborg", stack -> stack.is(CyborgContent.ITEM.get()), new SuitSet(CyborgContent.MASK, CyborgContent.SUIT, CyborgContent.LEGGINGS,
-                CyborgContent.BOOTS, "message.greenlantern.no_mother_box", CyborgContent.SUIT_UP, CyborgContent.SUIT_DOWN, List.of(
-                        SuitModifier.add(Attributes.ATTACK_DAMAGE, "cyborg_strength", 3.0),
-                        SuitModifier.add(Attributes.MAX_HEALTH, "cyborg_health", 8.0),
-                        SuitModifier.multiply(Attributes.MOVEMENT_SPEED, "cyborg_speed", 0.15))));
+                CyborgContent.BOOTS, "message.greenlantern.no_mother_box", CyborgContent.SUIT_UP, CyborgContent.SUIT_DOWN, Characters.suitModifiers("cyborg")));
     }
 
     @Override

@@ -1,11 +1,11 @@
 package com.danrod505.greenlantern.cyborg;
 
 import com.danrod505.greenlantern.GreenLantern;
+import com.danrod505.greenlantern.engine.Characters;
 import com.danrod505.greenlantern.item.HeroItem;
 import com.danrod505.greenlantern.item.SuitArmorItem;
 import com.danrod505.greenlantern.ring.RingEnergy;
 import com.mojang.serialization.Codec;
-import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.component.DataComponentType;
@@ -13,8 +13,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.equipment.ArmorMaterial;
@@ -69,15 +67,7 @@ public final class CyborgContent {
     public static final ResourceKey<EquipmentAsset> ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, GreenLantern.id("cyborg"));
 
     /** The suit: as tough as diamond (the armored body takes less damage on top, see {@link CyborgHero#damageTakenMultiplier}). */
-    public static final ArmorMaterial MATERIAL = new ArmorMaterial(
-            1000,
-            Map.of(ArmorType.HELMET, 3, ArmorType.CHESTPLATE, 8, ArmorType.LEGGINGS, 6, ArmorType.BOOTS, 3, ArmorType.BODY, 8),
-            1,
-            SoundEvents.ARMOR_EQUIP_GENERIC,
-            2.0F,
-            0.0F,
-            ItemTags.REPAIRS_DIAMOND_ARMOR,
-            ASSET);
+    public static final ArmorMaterial MATERIAL = Characters.armorMaterial("cyborg", ASSET);
 
     public static final RegistryObject<SuitArmorItem> MASK = suit("cyborg_mask", ArmorType.HELMET);
     public static final RegistryObject<SuitArmorItem> SUIT = suit("cyborg_suit", ArmorType.CHESTPLATE);

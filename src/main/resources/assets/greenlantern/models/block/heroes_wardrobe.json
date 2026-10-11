@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "front": "greenlantern:block/heroes_wardrobe_front",
+    "side": "greenlantern:block/heroes_wardrobe_side",
+    "top": "greenlantern:block/heroes_wardrobe_top"
+  }
+}

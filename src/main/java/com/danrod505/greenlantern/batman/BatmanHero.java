@@ -4,10 +4,10 @@ import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
 import com.danrod505.greenlantern.client.batman.BatmanClient;
+import com.danrod505.greenlantern.engine.Characters;
 import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.HeroEnergy;
 import com.danrod505.greenlantern.hero.HeroPowers;
-import com.danrod505.greenlantern.hero.SuitModifier;
 import com.danrod505.greenlantern.hero.SuitSet;
 import com.danrod505.greenlantern.hero.WheelStyle;
 import com.danrod505.greenlantern.hero.WheelTheme;
@@ -15,13 +15,11 @@ import com.danrod505.greenlantern.item.UtilityBeltItem;
 import com.danrod505.greenlantern.registry.ModDataComponents;
 import com.danrod505.greenlantern.registry.ModItems;
 import com.danrod505.greenlantern.registry.ModSounds;
-import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 
@@ -52,10 +50,7 @@ public final class BatmanHero extends HeroDefinition {
 
     private BatmanHero() {
         super("batman", BatmanHelper::isBelt, new SuitSet(ModItems.BATMAN_COWL, ModItems.BATMAN_SUIT, ModItems.BATMAN_LEGGINGS, ModItems.BATMAN_BOOTS,
-                "message.greenlantern.no_belt", ModSounds.BATMAN_SUIT_UP, ModSounds.BATMAN_SUIT_DOWN, List.of(
-                        SuitModifier.add(Attributes.ATTACK_DAMAGE, "batman_strength", 3.0),
-                        SuitModifier.add(Attributes.KNOCKBACK_RESISTANCE, "batman_knockback", 0.3),
-                        SuitModifier.multiply(Attributes.MOVEMENT_SPEED, "batman_speed", 0.1))));
+                "message.greenlantern.no_belt", ModSounds.BATMAN_SUIT_UP, ModSounds.BATMAN_SUIT_DOWN, Characters.suitModifiers("batman")));
     }
 
     @Override

@@ -2,6 +2,16 @@
 
 Como um herói novo entra no mod, do papel ao PR.
 
+> **Desde a 2.0.0 existe a engine de personagens.** Um personagem pode ser só uma ficha de dados em
+> `src/main/resources/data/greenlantern/characters/<id>.json` (classe, nível, esqueleto, 6 habilidades,
+> skins, fraquezas e cores), sem pacote Java próprio: a engine cria o item, o traje, a energia da classe,
+> a tela e a Suprema. As habilidades dela vêm da biblioteca de presets (próximas etapas do guia mestre);
+> até lá, uma habilidade sem preset avisa que chega numa próxima versão. O item de cada personagem precisa
+> de `assets/greenlantern/items/<id>.json` e dos 4 `items/<id>_cabeca|peito|pernas|pes.json` (que apontam
+> para os modelos `item/skin_suit_*`), e a skin fica em `textures/entity/skin/<id do skin>.png` (com
+> `_brilho` opcional). Exemplos: os personagens de teste em `src/gametest/resources`, feitos por
+> `python3 tools/generate_engine_textures.py --test`. O kit abaixo continua valendo para heróis com código próprio.
+
 ## 1. Ficha do herói (antes do código)
 
 Copie [`_modelo.md`](_modelo.md) para `docs/heroes/<id>.md` e preencha: identidade, recurso e recarga, mobilidade, de 5 a 8 poderes, momento épico, traje e paleta, música e lista de prints. O Dalton aprova a ficha; só então começa o código. Confira a ficha com:

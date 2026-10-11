@@ -1,0 +1,87 @@
+{
+  "_comentario": "Um dos 9 heróis que já existiam: os poderes e a energia continuam no código dele. O traje, os bônus e a ordem da roda vêm daqui, com os mesmos números de antes.",
+  "id": "shazam",
+  "nome": "Shazam",
+  "classe": "colosso",
+  "nivel": 3,
+  "esqueleto": "masculino",
+  "transformacao": "raio",
+  "trilha": "mago",
+  "legado": true,
+  "fonte": "tempestade",
+  "stats": {
+    "coracoes": 14,
+    "dano": 4,
+    "defesa": 20,
+    "velocidade": 15,
+    "firmeza": 0,
+    "energia": 1000,
+    "voo": 4.8
+  },
+  "traje": {
+    "visual": "greenlantern:shazam",
+    "defesa": {
+      "cabeca": 3,
+      "peito": 8,
+      "pernas": 6,
+      "pes": 3
+    },
+    "resistencia": 2.0,
+    "resistencia_a_empurrao": 0.0,
+    "som": "minecraft:item.armor.equip_generic",
+    "conserto": "minecraft:repairs_diamond_armor",
+    "atributos": [
+      {
+        "atributo": "minecraft:attack_damage",
+        "id": "shazam_strength",
+        "valor": 4.0
+      },
+      {
+        "atributo": "minecraft:max_health",
+        "id": "shazam_health",
+        "valor": 8.0
+      },
+      {
+        "atributo": "minecraft:movement_speed",
+        "id": "shazam_speed",
+        "valor": 0.15,
+        "operacao": "multiplicar"
+      }
+    ]
+  },
+  "habilidades": [
+    {
+      "id": "zeus_lightning"
+    },
+    {
+      "id": "thunder_call"
+    },
+    {
+      "id": "mercury_dash"
+    },
+    {
+      "id": "hercules_slam"
+    },
+    {
+      "id": "achilles_roar"
+    },
+    {
+      "id": "atlas_stamina"
+    },
+    {
+      "id": "solomon_wisdom"
+    }
+  ],
+  "skins": [
+    {
+      "id": "shazam",
+      "nome": "Traje de hoje"
+    }
+  ],
+  "fraquezas": [
+    {
+      "tipo": "descricao",
+      "descricao": "Magia: feitiços dão dano dobrado."
+    }
+  ]
+}
