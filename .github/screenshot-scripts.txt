@@ -13,3 +13,4 @@ claude/batman- batman
 claude/trench- trench
 claude/superman- superman
 claude/wonder-woman- wonderwoman
+claude/cyborg- cyborg

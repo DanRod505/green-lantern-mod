@@ -1,0 +1,20 @@
+{
+  "cyborg_suit_up": {
+    "subtitle": "subtitles.greenlantern.cyborg_suit_up",
+    "sounds": [
+      {
+        "name": "minecraft:item.armor.equip_netherite",
+        "type": "event"
+      }
+    ]
+  },
+  "cyborg_suit_down": {
+    "subtitle": "subtitles.greenlantern.cyborg_suit_down",
+    "sounds": [
+      {
+        "name": "minecraft:item.armor.equip_generic",
+        "type": "event"
+      }
+    ]
+  }
+}
