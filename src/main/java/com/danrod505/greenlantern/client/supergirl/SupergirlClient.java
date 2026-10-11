@@ -1,0 +1,35 @@
+package com.danrod505.greenlantern.client.supergirl;
+
+import com.danrod505.greenlantern.GreenLantern;
+import com.danrod505.greenlantern.client.GuideScreen;
+import com.danrod505.greenlantern.client.HeroClient;
+import com.danrod505.greenlantern.client.HeroHud;
+import com.danrod505.greenlantern.supergirl.SupergirlContent;
+import com.danrod505.greenlantern.supergirl.SupergirlHero;
+import java.util.List;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraftforge.client.event.AddGuiOverlayLayersEvent;
+import net.minecraftforge.client.gui.overlay.ForgeLayeredDraw;
+
+/** Client half of Supergirl: the standard hero HUD and the hero's section in the Heroes' Guide. */
+public final class SupergirlClient implements HeroClient {
+    /** Same grid as {@code data/greenlantern/recipe/argo_pendant.json}. */
+    private static final GuideScreen.Recipe RECIPE = new GuideScreen.Recipe("argo_pendant", () -> new ItemStack(SupergirlContent.ITEM.get()), () -> GuideScreen.grid(
+            Items.GOLD_INGOT, Items.ENDER_PEARL, Items.GOLD_INGOT,
+            Items.IRON_INGOT, Items.DIAMOND, Items.IRON_INGOT,
+            null, null, null));
+
+    private final HeroHud hud = new HeroHud(SupergirlHero.INSTANCE, 0x2A6FE0, 0xFFD447, 0xC0D8202E, 0xFFFFD447, null);
+
+    @Override
+    public void addHud(AddGuiOverlayLayersEvent event) {
+        event.getLayeredDraw().add(ForgeLayeredDraw.POST_SLEEP_STACK, GreenLantern.id("supergirl_hud"), hud::render);
+    }
+
+    @Override
+    public List<GuideScreen.Section> guideSections() {
+        return List.of(new GuideScreen.Section("supergirl", () -> SupergirlContent.ITEM.get().charged(SupergirlContent.ITEM.get().getDefaultInstance()), 0xFFD8202E,
+                List.of(GuideScreen.text("supergirl"), GuideScreen.text("supergirl_powers"), GuideScreen.text("controls_supergirl"), GuideScreen.recipes("supergirl", RECIPE))));
+    }
+}
