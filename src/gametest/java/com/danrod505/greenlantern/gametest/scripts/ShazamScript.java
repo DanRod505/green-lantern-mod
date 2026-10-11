@@ -71,9 +71,13 @@ public final class ShazamScript {
         });
     }
 
-    /** Whether a lightning bolt is falling right by the player (the magic word). */
+    private static int lightningTicks;
+
+    /** Whether a lightning bolt has been falling right by the player for a couple of ticks (so it is on screen). */
     private static boolean lightningNear() {
-        return !mc().level.getEntitiesOfClass(LightningBolt.class, mc().player.getBoundingBox().inflate(4)).isEmpty();
+        boolean near = !mc().level.getEntitiesOfClass(LightningBolt.class, mc().player.getBoundingBox().inflate(4)).isEmpty();
+        lightningTicks = near ? lightningTicks + 1 : 0;
+        return lightningTicks >= 3;
     }
 
     private static void refill() {
@@ -281,7 +285,7 @@ public final class ShazamScript {
             mc().options.hideGui = true;
             server(sp -> ShazamHero.INSTANCE.dismissSuit(sp, true));
         });
-        watch(60, ShazamScript::lightningNear, "sz05b_transform_back");
+        watch(60, () -> !mc().level.getEntitiesOfClass(LightningBolt.class, mc().player.getBoundingBox().inflate(4)).isEmpty(), "sz05b_transform_back");
         step(10, () -> {
             mc().options.hideGui = false;
             camera(CameraType.THIRD_PERSON_BACK);
