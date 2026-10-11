@@ -157,6 +157,14 @@ tasks.register('printCompileClasspath') {
 if (project.hasProperty('gametests')) {
     sourceSets.main.java.srcDir 'src/gametest/java'
     sourceSets.main.resources.srcDir 'src/gametest/resources'
+    // Classes and resources share build/sourceSets/main (merge-source-sets). After a normal build that
+    // took compileJava from the build cache, processResources counts the classes as its own old output
+    // and deletes them when the test resources are added, and the mod no longer loads. So for the
+    // tests the resources go first and the classes are always compiled from scratch after them.
+    tasks.named('compileJava', JavaCompile) {
+        mustRunAfter 'processResources'
+        options.incremental = false
+    }
 }
 
 // CurseForge profile: a zip that can be imported in the CurseForge app (Create Custom Profile > Import).
