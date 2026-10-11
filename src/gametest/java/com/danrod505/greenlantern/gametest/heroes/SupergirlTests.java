@@ -110,6 +110,7 @@ public final class SupergirlTests {
         helper.assertTrue(rate > SupergirlConfig.SHADE_RECHARGE_PER_SECOND.get(), "under the open sky by day the sun should charge her fast, rate " + rate);
         // A roof right over her head (once the light settles): the shade rate.
         helper.setBlock(new BlockPos(7, 3, 7), Blocks.STONE);
+        int[] start = {0};
         helper.startSequence()
                 .thenIdle(5)
                 .thenExecute(() -> {
@@ -117,12 +118,15 @@ public final class SupergirlTests {
                     helper.assertTrue(shade < rate, "under a roof she should charge slower, " + shade + " vs " + rate);
                     helper.setBlock(new BlockPos(7, 3, 7), Blocks.AIR);
                 })
-                .thenIdle(5)
+                // The sky light comes back a few ticks after the roof goes (sometimes more on a busy server):
+                // count from when the sun reaches her again.
+                .thenWaitUntil(() -> helper.assertTrue(SupergirlServer.rechargeRate(player) >= rate, "waiting for the sun to reach her again"))
+                .thenExecute(() -> start[0] = SupergirlHero.ENERGY.get(item).stored())
                 .thenExecuteFor(41, player::doTick)
                 .thenExecute(() -> {
-                    int stored = SupergirlHero.ENERGY.get(item).stored();
+                    int gained = SupergirlHero.ENERGY.get(item).stored() - start[0];
                     int expected = (int) (2 * rate) - 1;
-                    helper.assertTrue(stored >= expected, "the sun should bring energy back every second, got " + stored + " (expected " + expected + ")");
+                    helper.assertTrue(gained >= expected, "the sun should bring energy back every second, got " + gained + " (expected " + expected + ")");
                     done(player);
                 })
                 .thenSucceed();
