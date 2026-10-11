@@ -76,6 +76,13 @@ jobs:
       - name: Generate the test hero
         run: python3 tools/new_hero.py tools/hero_kit/heroi_teste.md
 
+      # The art and sound scripts the generator writes run on tools/herolib, so the library keeps working.
+      - name: Run the test hero's art and sound scripts
+        run: |
+          pip install --quiet pillow numpy scipy soundfile
+          python3 tools/generate_kit_test_textures.py
+          python3 tools/generate_kit_test_audio.py
+
       - name: Compile
         run: ./gradlew compileJava -Pgametests --stacktrace
 

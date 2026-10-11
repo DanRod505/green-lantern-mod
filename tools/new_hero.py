@@ -15,6 +15,7 @@ already compiling and passing the hero contract tests:
   * recipe and recipe advancement of the hero's item
   * gametests (gametest/heroes/<Class>Tests) and a screenshot script (gametest/scripts/<Class>Script)
   * one line each in HeroRegistry, ModGameTests, ClientScripts and .github/screenshot-scripts.txt
+  * starting points for its own art and sound: tools/generate_<id>_textures.py and _audio.py (tools/herolib)
   * the next minor mod_version, a sentence in mod_description and a README section (tools/release.py)
 
 Only the standard library is used. Run it from anywhere; paths are relative to the repository.
@@ -618,7 +619,10 @@ public final class {cls}Server {{
             player.displayClientMessage(Component.translatable("message.greenlantern.no_{energy}").withStyle(ChatFormatting.RED), true);
             return false;
         }}
-        // Each power still runs the placeholder: write the real one here (see the hero sheet).
+        // Each power still runs the placeholder: write the real one here (see the hero sheet), built from the
+        // blocks in hero/power: Targets (who is hit, where the hero aims), Area (blocks in a cone or a sphere),
+        // BlockEffects (shatter glass, snuff fire, freeze water), Hits (strike, knock away, stun),
+        // Dash (a charge that rams), Bolts (shots that fly and may home) and Fx (sounds and particles).
         return switch (power) {{
 {cases}
         }};
@@ -962,7 +966,146 @@ public final class {cls}Script {{
         f.write(f'claude/{hid.replace("_", "-")}- {pkg}\n')
     written.append('.github/screenshot-scripts.txt (+1 line)')
     add_release_notes(h)
+    write_art_scripts(h)
     return code
+
+
+def write_art_scripts(h):
+    """Starting points for the hero's own art and sound, built on tools/herolib: run them, then draw the
+    real item, suit and icons and compose the real sounds and theme in them."""
+    hid, item = h['id'], h['item']
+    hexs = {k: f'#{h[k]:06X}' for k in ('main', 'accent', 'glow')}
+    icons = '\n'.join(f'    icon(pal, "{p["id"]}"),  # {p["en"]}: {p["desc_en"][:70]}' for p in h['powers'])
+    write(os.path.join(ROOT, 'tools', f'generate_{hid}_textures.py'), f'''#!/usr/bin/env python3
+"""
+Textures of {h["name_en"]}: the {h["item_en"]}, the suit pieces, the suit on the body and the power wheel
+icons. Original pixel art. Started by tools/new_hero.py with simple shapes in the hero sheet's
+colours: redraw each map and icon as the real thing (see tools/herolib/pixel.py for the letters).
+
+Usage:  pip install pillow
+        python3 tools/generate_{hid}_textures.py
+"""
+from herolib.pixel import ARM, BODY, HEAD, LEG, Icon, Palette, blank, fill_box, fill_rect, from_map, paint_face, power_sheet, save
+
+pal = Palette(main="{hexs['main']}", accent="{hexs['accent']}", glow="{hexs['glow']}", seed=1)
+
+ITEM = [  # the {h["item_en"]}
+    "................",
+    "......OOOO......",
+    "....OOMMMMOO....",
+    "...OMMnnnnMMO...",
+    "..OMnAAAAAAnMO..",
+    "..OMnAbbbbAnMO..",
+    ".OMnAbGGGGbAnMO.",
+    ".OMnAbGhhGbAnMO.",
+    ".OMnAbGhhGbAnMO.",
+    ".OMnAbGGGGbAnMO.",
+    "..OMnAbbbbAnMO..",
+    "..OMnAAAAAAnMO..",
+    "...OMMnnnnMMO...",
+    "....OOMMMMOO....",
+    "......OOOO......",
+    "................",
+]
+
+
+def make_items():
+    save(from_map(ITEM, pal), "item", "{item}.png")
+    # The suit pieces as items: replace with real drawings of the mask, top, leggings and boots.
+    for name in ("mask", "suit", "leggings", "boots"):
+        img = blank(16, 16)
+        fill_rect(img, 3, 3, 10, 10, "M", pal)
+        fill_rect(img, 6, 6, 4, 4, "A", pal, 0)
+        save(img, "item", f"{hid}_{{name}}.png")
+
+
+def make_armor():
+    # Suit layer (64x32): head, body, arms and boots. Paint the faces with paint_face(img, BODY, "front", rows, pal).
+    img = blank(64, 32)
+    fill_box(img, BODY, "M", pal)
+    fill_box(img, ARM, "M", pal)
+    fill_box(img, LEG, "m", pal)
+    paint_face(img, BODY, "front", ["MMMMMMMM", "MMMMMMMM", "MMAAAAMM", "MMAGGAMM", "MMAGGAMM", "MMAAAAMM",
+                                    "MMMMMMMM", "MMMMMMMM", "MMMMMMMM", "MMMMMMMM", "aaaaaaaa", "MMMMMMMM"], pal)
+    x, y, w, h = HEAD["front"]
+    fill_rect(img, x, y + 2, w, 2, "m", pal, 0)  # a mask across the eyes
+    save(img, "entity", "equipment", "humanoid", "{hid}.png")
+    # Leggings layer: legs and the waist.
+    img = blank(64, 32)
+    fill_box(img, LEG, "M", pal)
+    x, y, w, h = BODY["front"]
+    fill_rect(img, x, y + 8, w, 4, "M", pal)
+    save(img, "entity", "equipment", "humanoid_leggings", "{hid}.png")
+
+
+def icon(pal, power):
+    """A placeholder badge: draw the power itself (a beam, a burst, a shield...) with Icon's shapes."""
+    return Icon(pal).disc(7.5, 7.5, 7, "A").disc(7.5, 7.5, 6, "M").disc(7.5, 7.5, 2.5, "G")
+
+
+def make_gui():
+    icons = [
+{icons}
+    ]
+    emblem = Icon(pal).disc(7.5, 7.5, 7, "O").disc(7.5, 7.5, 6, "A").disc(7.5, 7.5, 3, "G")
+    power_sheet("{hid}", icons, emblem)
+
+
+if __name__ == "__main__":
+    make_items()
+    make_armor()
+    make_gui()
+''')
+    write(os.path.join(ROOT, 'tools', f'generate_{hid}_audio.py'), f'''#!/usr/bin/env python3
+"""
+Audio of {h["name_en"]}: the suit going on and off, a sound per power and an ORIGINAL two-layer theme.
+Everything is synthesized here (tools/herolib/audio.py): no samples, recordings or existing music.
+Started by tools/new_hero.py: compose the real sounds, then point src/main/heroes/{hid}/sounds.json at
+them ("name": "{MODID}:{hid}_suit_up").
+
+Usage:  pip install numpy scipy soundfile
+        python3 tools/generate_{hid}_audio.py
+"""
+from herolib.audio import Theme, bass, fade, filt, kick, hat, mono_reverb, np, ns, pluck, save, seed, sparkle, whoosh
+
+seed({sum(map(ord, hid))})
+
+
+def suit_up():
+    x = whoosh(0.9, 200, 5000) + np.pad(sparkle(0.6), (ns(0.3), 0))[:ns(0.9)] * 0.6
+    save("{hid}_suit_up", fade(mono_reverb(x, 1.4, 0.3), 0.003, 0.2), 0.9)
+
+
+def suit_down():
+    x = whoosh(0.6, 300, 3000, rise=False)
+    save("{hid}_suit_down", fade(mono_reverb(x, 1.0, 0.25), 0.003, 0.15), 0.75)
+
+
+theme = Theme("{hid}_theme", bpm=120, bars=8)
+
+
+def base(track, offset):
+    """The base layer: rhythm and harmony that loop under everything."""
+    for beat in range(8 * 4):
+        at = offset + beat * theme.beat
+        track.add(kick(0.9), at, 0.7)
+        track.add(hat(0.6), at + theme.beat / 2, 0.3, 0.3)
+    for bar, root in enumerate([50, 46, 41, 48] * 2):
+        track.add(bass(root - 12, theme.bar * 0.95), offset + bar * theme.bar, 0.5)
+
+
+def peak(track, offset):
+    """The peak layer: the hero's melody, on top while flying fast or in action."""
+    for i, m in enumerate([74, 77, 81, 79, 77, 74, 72, 74] * 2):
+        track.add(pluck(m, theme.beat * 1.8), offset + i * theme.beat * 2, 0.5, -0.2 + 0.4 * (i % 2))
+
+
+if __name__ == "__main__":
+    suit_up()
+    suit_down()
+    theme.render(base, peak)
+''')
+    written.append(f'tools/generate_{hid}_textures.py, tools/generate_{hid}_audio.py (starting points, on tools/herolib)')
 
 
 def add_release_notes(h):

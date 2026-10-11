@@ -24,11 +24,30 @@ Cria, já compilando e passando nos testes de contrato:
 | HUD padrão e seção do Guia dos Heróis | `src/main/java/.../client/<pacote>/` |
 | Textos em pt e en, sons do traje | `src/main/heroes/<id>/` |
 | Texturas provisórias nas cores da ficha, receita e conquista | `src/main/resources/` |
+| Scripts de arte e som do herói, sobre `tools/herolib` | `tools/generate_<id>_textures.py` e `_audio.py` |
 | Gametests e roteiro de prints | `src/gametest/.../heroes/` e `.../scripts/` |
 | Uma linha em `HeroRegistry`, `ModGameTests`, `ClientScripts` e `.github/screenshot-scripts.txt` | |
 | Próxima versão menor, uma frase na descrição do mod e a seção do herói no README | `gradle.properties`, `README.md` |
 
-Cada poder começa com um efeito provisório que gasta energia e avisa "ainda não foi construído". A thread troca cada um pelo poder de verdade em `<Classe>Server.usePower`, faz os sons e texturas originais (os geradores em `tools/` mostram como) e escreve um gametest por poder.
+Cada poder começa com um efeito provisório que gasta energia e avisa "ainda não foi construído". A thread troca cada um pelo poder de verdade em `<Classe>Server.usePower`, faz os sons e texturas originais e escreve um gametest por poder.
+
+### Blocos de poder (`hero/power/`)
+
+Os poderes novos se montam com estes blocos, em vez de reescrever o que outro herói já fez. Cada um tem gametest próprio em `PowerKitTests`.
+
+| Bloco | Para quê |
+|---|---|
+| `Targets` | quem o poder acerta (nunca jogadores, suportes de armadura nem animais domados), inimigos, criaturas num raio ou num cone, a mira do herói |
+| `Area` | os blocos numa esfera ou num cone |
+| `BlockEffects` | estilhaçar vidro e gelo fino, apagar fogo e tochas, congelar água |
+| `Hits` | dano que acerta mesmo em golpes seguidos, empurrar para longe, arremessar, atordoar |
+| `Dash` | avanço em linha reta que para na parede e atropela cada criatura uma vez |
+| `Bolts` | rajadas que voam alguns ticks, param no primeiro bloco ou criatura e podem perseguir um alvo |
+| `Fx` | som para todos ou só para o herói, chão abaixo, poeira, anel e linha de partículas |
+
+### Arte e som (`tools/herolib/`)
+
+O gerador cria `tools/generate_<id>_textures.py` e `tools/generate_<id>_audio.py`, que já rodam e usam a biblioteca comum: `herolib.pixel` (paleta tirada das cores da ficha, mapas de letras, camadas do traje 64x32, ícones 16x16 e a folha da roda) e `herolib.audio` (ruído, varreduras, sinos, impactos, bateria e sintetizadores, os instrumentos de orquestra e `Theme`, que grava o tema em duas camadas que fazem loop). A thread redesenha os mapas e compõe os sons nesses arquivos. Os heróis feitos antes da biblioteca continuam com os scripts deles.
 
 ## 3. Testes que todo herói ganha
 
