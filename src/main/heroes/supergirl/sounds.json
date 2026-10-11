@@ -3,8 +3,8 @@
     "subtitle": "subtitles.greenlantern.supergirl_suit_up",
     "sounds": [
       {
-        "name": "minecraft:item.armor.equip_netherite",
-        "type": "event"
+        "name": "greenlantern:supergirl_suit_up",
+        "attenuation_distance": 24
       }
     ]
   },
@@ -12,8 +12,195 @@
     "subtitle": "subtitles.greenlantern.supergirl_suit_down",
     "sounds": [
       {
-        "name": "minecraft:item.armor.equip_generic",
-        "type": "event"
+        "name": "greenlantern:supergirl_suit_down",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "supergirl_heat_bolt": {
+    "subtitle": "subtitles.greenlantern.supergirl_heat_bolt",
+    "sounds": [
+      {
+        "name": "greenlantern:supergirl_heat_bolt",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "supergirl_heat_hit": {
+    "subtitle": "subtitles.greenlantern.supergirl_heat_hit",
+    "sounds": [
+      {
+        "name": "greenlantern:supergirl_heat_hit",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "supergirl_meteor_dash": {
+    "subtitle": "subtitles.greenlantern.supergirl_meteor_dash",
+    "sounds": [
+      {
+        "name": "greenlantern:supergirl_meteor_dash",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "supergirl_thunder_clap": {
+    "subtitle": "subtitles.greenlantern.supergirl_thunder_clap",
+    "sounds": [
+      {
+        "name": "greenlantern:supergirl_thunder_clap",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "supergirl_frost_breath": {
+    "subtitle": "subtitles.greenlantern.supergirl_frost_breath",
+    "sounds": [
+      {
+        "name": "greenlantern:supergirl_frost_breath",
+        "attenuation_distance": 20
+      }
+    ]
+  },
+  "supergirl_frost_melt": {
+    "subtitle": "subtitles.greenlantern.supergirl_frost_melt",
+    "sounds": [
+      {
+        "name": "greenlantern:supergirl_frost_melt",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "supergirl_hearing_on": {
+    "subtitle": "subtitles.greenlantern.supergirl_hearing_on",
+    "sounds": [
+      {
+        "name": "greenlantern:supergirl_hearing_on",
+        "attenuation_distance": 8
+      }
+    ]
+  },
+  "supergirl_hearing_off": {
+    "subtitle": "subtitles.greenlantern.supergirl_hearing_off",
+    "sounds": [
+      {
+        "name": "greenlantern:supergirl_hearing_off",
+        "attenuation_distance": 8
+      }
+    ]
+  },
+  "supergirl_hearing_pulse": {
+    "subtitle": "subtitles.greenlantern.supergirl_hearing_pulse",
+    "sounds": [
+      {
+        "name": "greenlantern:supergirl_hearing_pulse",
+        "attenuation_distance": 8
+      }
+    ]
+  },
+  "supergirl_throw_grab": {
+    "subtitle": "subtitles.greenlantern.supergirl_throw_grab",
+    "sounds": [
+      {
+        "name": "greenlantern:supergirl_throw_grab",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "supergirl_throw_hurl": {
+    "subtitle": "subtitles.greenlantern.supergirl_throw_hurl",
+    "sounds": [
+      {
+        "name": "greenlantern:supergirl_throw_hurl",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "supergirl_solar_flare": {
+    "subtitle": "subtitles.greenlantern.supergirl_solar_flare",
+    "sounds": [
+      {
+        "name": "greenlantern:supergirl_solar_flare",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "supergirl_roll": {
+    "subtitle": "subtitles.greenlantern.supergirl_roll",
+    "sounds": [
+      {
+        "name": "greenlantern:supergirl_roll",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "supergirl_solar_full": {
+    "subtitle": "subtitles.greenlantern.supergirl_solar_full",
+    "sounds": [
+      {
+        "name": "greenlantern:supergirl_solar_full",
+        "attenuation_distance": 8
+      }
+    ]
+  },
+  "krypto_bark": {
+    "subtitle": "subtitles.greenlantern.krypto_bark",
+    "sounds": [
+      {
+        "name": "greenlantern:krypto_bark",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "krypto_hurt": {
+    "subtitle": "subtitles.greenlantern.krypto_hurt",
+    "sounds": [
+      {
+        "name": "greenlantern:krypto_hurt",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "krypto_whine": {
+    "subtitle": "subtitles.greenlantern.krypto_whine",
+    "sounds": [
+      {
+        "name": "greenlantern:krypto_whine",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "krypto_fly": {
+    "subtitle": "subtitles.greenlantern.krypto_fly",
+    "sounds": [
+      {
+        "name": "greenlantern:krypto_fly",
+        "attenuation_distance": 20
+      }
+    ]
+  },
+  "krypto_whistle": {
+    "subtitle": "subtitles.greenlantern.krypto_whistle",
+    "sounds": [
+      {
+        "name": "greenlantern:krypto_whistle",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "supergirl_theme_base": {
+    "sounds": [
+      {
+        "name": "greenlantern:music/supergirl_theme_base",
+        "stream": true
+      }
+    ]
+  },
+  "supergirl_theme_peak": {
+    "sounds": [
+      {
+        "name": "greenlantern:music/supergirl_theme_peak",
+        "stream": true
       }
     ]
   }

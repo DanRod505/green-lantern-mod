@@ -3,7 +3,23 @@
 > *"No dia mais claro, na noite mais densa, o mal sucumbirá ante a minha presença!"*
 
 Mod de heróis do **Universo DC** para **Minecraft Java 1.21.11** com **Forge 61.2.0** (compilado com **Java 25**).
-Começou como o mod do Lanterna Verde e agora traz também **o Flash** (v1.7.0) **o Aquaman** (v1.8.0), **Atlântida** (v1.9.0) **o Kraken do Aquaman** (v1.10.0), **o Batman** (v1.11.0), **as criaturas de Atlântida** (v1.12.0) **o Fosso**, os inimigos do Aquaman (v1.13.0), **o Superman** (v1.14.0), **a Mulher Maravilha** (v1.15.0) e **o Ciborgue** (v1.16.0), o primeiro herói feito com o kit de herói. O id do mod continua `greenlantern`, então mundos e configurações antigas continuam funcionando.
+Começou como o mod do Lanterna Verde e agora traz também **o Flash** (v1.7.0) **o Aquaman** (v1.8.0), **Atlântida** (v1.9.0) **o Kraken do Aquaman** (v1.10.0), **o Batman** (v1.11.0), **as criaturas de Atlântida** (v1.12.0) **o Fosso**, os inimigos do Aquaman (v1.13.0), **o Superman** (v1.14.0), **a Mulher Maravilha** (v1.15.0) **o Ciborgue** (v1.16.0), o primeiro herói feito com o kit de herói, e **a Supergirl com o Krypto, o Supercão** (v1.17.0). O id do mod continua `greenlantern`, então mundos e configurações antigas continuam funcionando.
+
+## A Supergirl (novo na 1.17.0)
+
+* **Pingente de Argo:** o item da heroína (ouro, pérola do End, ferro e diamante). Clique direito (ou **G**) veste o traje azul com o S, a saia vermelha, as botas e a capa curta. Com energia ela recebe menos dano (menos que o Superman) e não toma dano de queda.
+* **Energia Solar:** volta rápido ao ar livre de dia, devagar na sombra e à noite, e nada debaixo da terra, no Nether e no End. Cada soco que acerta devolve um pouco.
+* **Voo:** **dois toques no pulo**. Rompe a barreira do som em um segundo (mais rápido que o Superman no arranque, mas com velocidade máxima menor) e pousa com impacto de heroína. Voando, **A A** ou **D D** faz a **Pirueta**: um giro que faz flechas e outros projéteis errarem por meio segundo. Trilha sonora original, mais leve que a do Superman.
+* **Menu radial (R, depois V):**
+  * **Rajadas de Calor:** rajadas rápidas dos olhos, uma por uso, que ferem, incendeiam e acendem fogo sem quebrar blocos.
+  * **Investida Meteoro:** ela dispara 12 blocos em linha reta como um cometa, atropelando quem estiver no caminho.
+  * **Palmas Trovão:** onda de choque em cone que atordoa inimigos, apaga tochas e fogueiras e estilhaça vidro.
+  * **Muralha de Gelo:** sopro gelado que congela água, apaga fogo e levanta uma muralha de gelo que derrete sozinha.
+  * **Superaudição:** ondas de som em volta das criaturas até atrás das paredes e setas no HUD de onde vêm (gasta por segundo).
+  * **Arremesso Kryptoniano:** agarra a criatura ou o bloco solto na mira, ergue acima da cabeça e arremessa no próximo uso.
+  * **Explosão Solar:** gasta toda a energia numa explosão de luz em volta dela; depois fica 20 segundos sem poderes nem voo.
+* **Krypto, o Supercão:** desce do céu na primeira vez que ela veste o traje e fica com ela. Segue a pé ou voando ao lado, morde quem a ataca ou quem ela ataca, solta visão de calor, traz os itens soltos que encontra e nunca ataca jogadores, aldeões nem animais domados. Mão vazia nele: senta ou segue. **Agachada + usar** o pingente: ela assobia e ele vem. Ferido demais, ele não morre: voa para descansar e volta depois de um minuto, com o nome guardado no pingente.
+* **Sons e trilha originais**, sem samples; nova seção **Supergirl** no Guia dos Heróis; configuração em `greenlantern-supergirl.toml`.
 
 ## O Ciborgue (novo na 1.16.0)
 
@@ -421,6 +437,8 @@ python tools/generate_superman_textures.py # cristal, traje, partículas e ícon
 python tools/generate_superman_audio.py    # sons originais do Superman e a trilha do voo
 python tools/generate_wonder_woman_textures.py # tiara, armadura, armas e ícones da Mulher Maravilha
 python tools/generate_wonder_woman_audio.py    # sons originais da Mulher Maravilha e a trilha do voo
+python tools/generate_supergirl_textures.py # pingente, traje, Krypto e ícones da Supergirl
+python tools/generate_supergirl_audio.py    # sons originais da Supergirl e do Krypto e a trilha do voo
 ```
 
 ## Licença

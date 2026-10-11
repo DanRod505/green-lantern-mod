@@ -58,7 +58,7 @@ Voo pelo `FlightProfile` compartilhado, com o perfil próprio dela: a mais ágil
 | Pouso de herói | | | 1.0 | **1.2** | 1.8 |
 
 - Acelera mais rápido que o Superman e faz curvas mais fechadas, mas chega a uma velocidade máxima menor e o pouso de herói abre uma cratera menor.
-- **Pirueta:** dois toques no pulo durante o voo fazem um giro rápido de lado que esquiva (meio segundo sem tomar dano de projéteis), com custo de 20 de energia.
+- **Pirueta:** dois toques em A ou D durante o voo (o mesmo giro do voo dos outros heróis) fazem um giro rápido de lado que esquiva (meio segundo sem tomar dano de projéteis), com custo de 20 de energia.
 - Rastro próprio: faixa vermelha da capa curta com faíscas douradas, diferente do rastro azul do Superman.
 - O voo gasta 2 por segundo, e o dobro acima da barreira do som.
 
