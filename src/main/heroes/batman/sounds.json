@@ -1,0 +1,120 @@
+{
+  "batman_suit_up": {
+    "subtitle": "subtitles.greenlantern.batman_suit_up",
+    "sounds": [
+      {
+        "name": "greenlantern:batman_suit_up"
+      }
+    ]
+  },
+  "batman_suit_down": {
+    "subtitle": "subtitles.greenlantern.batman_suit_down",
+    "sounds": [
+      {
+        "name": "greenlantern:batman_suit_down"
+      }
+    ]
+  },
+  "cape_glide": {
+    "subtitle": "subtitles.greenlantern.cape_glide",
+    "sounds": [
+      {
+        "name": "greenlantern:cape_glide"
+      }
+    ]
+  },
+  "cape_wind": {
+    "subtitle": "subtitles.greenlantern.cape_wind",
+    "sounds": [
+      {
+        "name": "greenlantern:cape_wind",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "batarang_throw": {
+    "subtitle": "subtitles.greenlantern.batarang_throw",
+    "sounds": [
+      {
+        "name": "greenlantern:batarang_throw"
+      }
+    ]
+  },
+  "batarang_hit": {
+    "subtitle": "subtitles.greenlantern.batarang_hit",
+    "sounds": [
+      {
+        "name": "greenlantern:batarang_hit"
+      }
+    ]
+  },
+  "grapple_fire": {
+    "subtitle": "subtitles.greenlantern.grapple_fire",
+    "sounds": [
+      {
+        "name": "greenlantern:grapple_fire"
+      }
+    ]
+  },
+  "grapple_hit": {
+    "subtitle": "subtitles.greenlantern.grapple_hit",
+    "sounds": [
+      {
+        "name": "greenlantern:grapple_hit"
+      }
+    ]
+  },
+  "grapple_reel": {
+    "subtitle": "subtitles.greenlantern.grapple_reel",
+    "sounds": [
+      {
+        "name": "greenlantern:grapple_reel",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "bat_swarm": {
+    "subtitle": "subtitles.greenlantern.bat_swarm",
+    "sounds": [
+      {
+        "name": "greenlantern:bat_swarm",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "batmobile_start": {
+    "subtitle": "subtitles.greenlantern.batmobile_start",
+    "sounds": [
+      {
+        "name": "greenlantern:batmobile_start"
+      }
+    ]
+  },
+  "batmobile_engine": {
+    "subtitle": "subtitles.greenlantern.batmobile_engine",
+    "sounds": [
+      {
+        "name": "greenlantern:batmobile_engine",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "batmobile_boost": {
+    "subtitle": "subtitles.greenlantern.batmobile_boost",
+    "sounds": [
+      {
+        "name": "greenlantern:batmobile_boost",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "batmobile_missile": {
+    "subtitle": "subtitles.greenlantern.batmobile_missile",
+    "sounds": [
+      {
+        "name": "greenlantern:batmobile_missile",
+        "attenuation_distance": 48
+      }
+    ]
+  }
+}

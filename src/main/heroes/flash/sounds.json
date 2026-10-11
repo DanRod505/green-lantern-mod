@@ -1,0 +1,142 @@
+{
+  "flash_suit_up": {
+    "subtitle": "subtitles.greenlantern.flash_suit_up",
+    "sounds": [
+      {
+        "name": "greenlantern:flash_suit_up"
+      }
+    ]
+  },
+  "flash_suit_down": {
+    "subtitle": "subtitles.greenlantern.flash_suit_down",
+    "sounds": [
+      {
+        "name": "greenlantern:flash_suit_down"
+      }
+    ]
+  },
+  "speed_start": {
+    "subtitle": "subtitles.greenlantern.speed_start",
+    "sounds": [
+      {
+        "name": "greenlantern:speed_start"
+      }
+    ]
+  },
+  "speed_crackle": {
+    "subtitle": "subtitles.greenlantern.speed_crackle",
+    "sounds": [
+      {
+        "name": "greenlantern:speed_crackle"
+      }
+    ]
+  },
+  "speed_boom": {
+    "subtitle": "subtitles.greenlantern.speed_boom",
+    "sounds": [
+      {
+        "name": "greenlantern:speed_boom",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "speed_skid": {
+    "subtitle": "subtitles.greenlantern.speed_skid",
+    "sounds": [
+      {
+        "name": "greenlantern:speed_skid"
+      }
+    ]
+  },
+  "super_jump": {
+    "subtitle": "subtitles.greenlantern.super_jump",
+    "sounds": [
+      {
+        "name": "greenlantern:super_jump"
+      }
+    ]
+  },
+  "speed_landing": {
+    "subtitle": "subtitles.greenlantern.speed_landing",
+    "sounds": [
+      {
+        "name": "greenlantern:speed_landing"
+      }
+    ]
+  },
+  "tornado_loop": {
+    "subtitle": "subtitles.greenlantern.tornado_loop",
+    "sounds": [
+      {
+        "name": "greenlantern:tornado_loop",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "tornado_start": {
+    "subtitle": "subtitles.greenlantern.tornado_start",
+    "sounds": [
+      {
+        "name": "greenlantern:tornado_start",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "phase_start": {
+    "subtitle": "subtitles.greenlantern.phase_start",
+    "sounds": [
+      {
+        "name": "greenlantern:phase_start"
+      }
+    ]
+  },
+  "phase_loop": {
+    "subtitle": "subtitles.greenlantern.phase_loop",
+    "sounds": [
+      {
+        "name": "greenlantern:phase_loop"
+      }
+    ]
+  },
+  "phase_end": {
+    "subtitle": "subtitles.greenlantern.phase_end",
+    "sounds": [
+      {
+        "name": "greenlantern:phase_end"
+      }
+    ]
+  },
+  "lightning_throw": {
+    "subtitle": "subtitles.greenlantern.lightning_throw",
+    "sounds": [
+      {
+        "name": "greenlantern:lightning_throw"
+      }
+    ]
+  },
+  "lightning_hit": {
+    "subtitle": "subtitles.greenlantern.lightning_hit",
+    "sounds": [
+      {
+        "name": "greenlantern:lightning_hit",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "speed_theme_base": {
+    "sounds": [
+      {
+        "name": "greenlantern:music/speed_theme_base",
+        "stream": true
+      }
+    ]
+  },
+  "speed_theme_peak": {
+    "sounds": [
+      {
+        "name": "greenlantern:music/speed_theme_peak",
+        "stream": true
+      }
+    ]
+  }
+}

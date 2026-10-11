@@ -1,0 +1,151 @@
+{
+  "wonder_woman_suit_up": {
+    "subtitle": "subtitles.greenlantern.wonder_woman_suit_up",
+    "sounds": [
+      {
+        "name": "greenlantern:wonder_woman_suit_up"
+      }
+    ]
+  },
+  "wonder_woman_suit_down": {
+    "subtitle": "subtitles.greenlantern.wonder_woman_suit_down",
+    "sounds": [
+      {
+        "name": "greenlantern:wonder_woman_suit_down"
+      }
+    ]
+  },
+  "lasso_throw": {
+    "subtitle": "subtitles.greenlantern.lasso_throw",
+    "sounds": [
+      {
+        "name": "greenlantern:lasso_throw"
+      }
+    ]
+  },
+  "lasso_capture": {
+    "subtitle": "subtitles.greenlantern.lasso_capture",
+    "sounds": [
+      {
+        "name": "greenlantern:lasso_capture"
+      }
+    ]
+  },
+  "lasso_pull": {
+    "subtitle": "subtitles.greenlantern.lasso_pull",
+    "sounds": [
+      {
+        "name": "greenlantern:lasso_pull"
+      }
+    ]
+  },
+  "lasso_spin": {
+    "subtitle": "subtitles.greenlantern.lasso_spin",
+    "sounds": [
+      {
+        "name": "greenlantern:lasso_spin"
+      }
+    ]
+  },
+  "bracelet_guard": {
+    "subtitle": "subtitles.greenlantern.bracelet_guard",
+    "sounds": [
+      {
+        "name": "greenlantern:bracelet_guard"
+      }
+    ]
+  },
+  "bracelet_deflect": {
+    "subtitle": "subtitles.greenlantern.bracelet_deflect",
+    "sounds": [
+      {
+        "name": "greenlantern:bracelet_deflect",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "bracelet_shockwave": {
+    "subtitle": "subtitles.greenlantern.bracelet_shockwave",
+    "sounds": [
+      {
+        "name": "greenlantern:bracelet_shockwave",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "amazon_sword_swing": {
+    "subtitle": "subtitles.greenlantern.amazon_sword_swing",
+    "sounds": [
+      {
+        "name": "greenlantern:amazon_sword_swing"
+      }
+    ]
+  },
+  "shield_throw": {
+    "subtitle": "subtitles.greenlantern.shield_throw",
+    "sounds": [
+      {
+        "name": "greenlantern:shield_throw"
+      }
+    ]
+  },
+  "shield_hit": {
+    "subtitle": "subtitles.greenlantern.shield_hit",
+    "sounds": [
+      {
+        "name": "greenlantern:shield_hit",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "shield_return": {
+    "subtitle": "subtitles.greenlantern.shield_return",
+    "sounds": [
+      {
+        "name": "greenlantern:shield_return"
+      }
+    ]
+  },
+  "invisible_jet_summon": {
+    "subtitle": "subtitles.greenlantern.invisible_jet_summon",
+    "sounds": [
+      {
+        "name": "greenlantern:invisible_jet_summon",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "invisible_jet_engine": {
+    "subtitle": "subtitles.greenlantern.invisible_jet_engine",
+    "sounds": [
+      {
+        "name": "greenlantern:invisible_jet_engine",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "invisible_jet_cloak": {
+    "subtitle": "subtitles.greenlantern.invisible_jet_cloak",
+    "sounds": [
+      {
+        "name": "greenlantern:invisible_jet_cloak"
+      }
+    ]
+  },
+  "wonder_woman_theme_base": {
+    "sounds": [
+      {
+        "name": "greenlantern:music/wonder_woman_theme_base",
+        "stream": true
+      }
+    ]
+  },
+  "wonder_woman_theme_peak": {
+    "sounds": [
+      {
+        "name": "greenlantern:music/wonder_woman_theme_peak",
+        "stream": true
+      }
+    ]
+  }
+}

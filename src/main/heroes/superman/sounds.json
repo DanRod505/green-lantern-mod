@@ -1,0 +1,102 @@
+{
+  "superman_suit_up": {
+    "subtitle": "subtitles.greenlantern.superman_suit_up",
+    "sounds": [
+      {
+        "name": "greenlantern:superman_suit_up"
+      }
+    ]
+  },
+  "superman_suit_down": {
+    "subtitle": "subtitles.greenlantern.superman_suit_down",
+    "sounds": [
+      {
+        "name": "greenlantern:superman_suit_down"
+      }
+    ]
+  },
+  "heat_vision": {
+    "subtitle": "subtitles.greenlantern.heat_vision",
+    "sounds": [
+      {
+        "name": "greenlantern:heat_vision",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "heat_vision_end": {
+    "subtitle": "subtitles.greenlantern.heat_vision_end",
+    "sounds": [
+      {
+        "name": "greenlantern:heat_vision_end"
+      }
+    ]
+  },
+  "super_punch": {
+    "subtitle": "subtitles.greenlantern.super_punch",
+    "sounds": [
+      {
+        "name": "greenlantern:super_punch",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "super_breath": {
+    "subtitle": "subtitles.greenlantern.super_breath",
+    "sounds": [
+      {
+        "name": "greenlantern:super_breath",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "xray_on": {
+    "subtitle": "subtitles.greenlantern.xray_on",
+    "sounds": [
+      {
+        "name": "greenlantern:xray_on"
+      }
+    ]
+  },
+  "xray_off": {
+    "subtitle": "subtitles.greenlantern.xray_off",
+    "sounds": [
+      {
+        "name": "greenlantern:xray_off"
+      }
+    ]
+  },
+  "solar_charged": {
+    "subtitle": "subtitles.greenlantern.solar_charged",
+    "sounds": [
+      {
+        "name": "greenlantern:solar_charged"
+      }
+    ]
+  },
+  "super_boom": {
+    "subtitle": "subtitles.greenlantern.super_boom",
+    "sounds": [
+      {
+        "name": "greenlantern:super_boom",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "superman_theme_base": {
+    "sounds": [
+      {
+        "name": "greenlantern:music/superman_theme_base",
+        "stream": true
+      }
+    ]
+  },
+  "superman_theme_peak": {
+    "sounds": [
+      {
+        "name": "greenlantern:music/superman_theme_peak",
+        "stream": true
+      }
+    ]
+  }
+}

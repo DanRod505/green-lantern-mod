@@ -1,15 +1,17 @@
 name: Screenshots
 
-# Development aid: runs the client under a virtual display, plays the scripted visual test
-# (src/gametest/.../ClientScript.java, selected with GL_CLIENT_SCRIPT) and uploads the screenshots.
+# Development aid: runs the client under a virtual display, plays a screenshot script
+# (src/gametest/.../scripts, selected with GL_CLIENT_SCRIPT) and uploads the screenshots and a contact
+# sheet with all of them. On a push the script comes from .github/screenshot-scripts.txt (branch prefix
+# to script); branches with no line there are skipped.
 on:
   workflow_dispatch:
     inputs:
       script:
-        description: 'Client script to run (default, wheel, flight, mecha, oa, flash, aquaman, atlantis, kraken, batman, mounts, trench, superman, wonderwoman)'
+        description: 'Client script to run (default, wheel, flight, mecha, oa, flash, aquaman, atlantis, kraken, batman, mounts, trench, superman, wonderwoman, or a new hero)'
         default: 'oa'
   push:
-    branches: ['claude/mecha-*', 'claude/oa-*', 'claude/flash-*', 'claude/aquaman-*', 'claude/atlantis-*', 'claude/batman-*', 'claude/trench-*', 'claude/superman-*', 'claude/wonder-woman-*']
+    branches: ['claude/**']
 
 jobs:
   screenshots:
@@ -18,31 +20,65 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Pick the script
+        id: pick
+        env:
+          INPUT: ${{ github.event.inputs.script }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          script="$INPUT"
+          if [ -z "$script" ]; then
+            while read -r prefix name; do
+              case "$prefix" in ''|'#'*) continue ;; esac
+              case "$BRANCH" in "$prefix"*) script="$name"; break ;; esac
+            done < .github/screenshot-scripts.txt
+          fi
+          echo "script=$script" >> "$GITHUB_OUTPUT"
+          if [ -z "$script" ]; then echo "No screenshot script for $BRANCH (see .github/screenshot-scripts.txt)"; else echo "Script: $script"; fi
+
       - name: Set up JDK 25
+        if: steps.pick.outputs.script != ''
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '25'
 
       - name: Set up Gradle
+        if: steps.pick.outputs.script != ''
         uses: gradle/actions/setup-gradle@v4
 
       - name: Install virtual display
+        if: steps.pick.outputs.script != ''
         run: sudo apt-get update && sudo apt-get install -y xvfb libgl1-mesa-dri mesa-utils
 
       - name: Run the scripted client
+        if: steps.pick.outputs.script != ''
         timeout-minutes: 25
         env:
-          GL_CLIENT_SCRIPT: ${{ github.event.inputs.script || (startsWith(github.ref_name, 'claude/wonder-woman-') && 'wonderwoman') || (startsWith(github.ref_name, 'claude/superman-') && 'superman') || (startsWith(github.ref_name, 'claude/trench-') && 'trench') || (startsWith(github.ref_name, 'claude/batman-') && 'batman') || (startsWith(github.ref_name, 'claude/atlantis-') && 'atlantis') || (startsWith(github.ref_name, 'claude/aquaman-atlantis-mounts') && 'mounts') || (startsWith(github.ref_name, 'claude/aquaman-kraken') && 'kraken') || (startsWith(github.ref_name, 'claude/aquaman-') && 'aquaman') || (startsWith(github.ref_name, 'claude/flash-') && 'flash') || (startsWith(github.ref_name, 'claude/oa-') && 'oa') || 'mecha' }}
+          GL_CLIENT_SCRIPT: ${{ steps.pick.outputs.script }}
           LIBGL_ALWAYS_SOFTWARE: '1'
         run: xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew runClient -Pgametests --no-configuration-cache --stacktrace
 
       - name: Upload screenshots
-        if: always()
+        if: always() && steps.pick.outputs.script != ''
         uses: actions/upload-artifact@v4
         with:
           name: screenshots
           path: |
             run/screenshots/*.png
             run/logs/latest.log
+          if-no-files-found: warn
+
+      - name: Contact sheet
+        if: always() && steps.pick.outputs.script != ''
+        run: |
+          pip install --quiet pillow
+          python3 tools/contact_sheet.py run/screenshots "contact-sheet-${{ steps.pick.outputs.script }}.png"
+
+      - name: Upload contact sheet
+        if: always() && steps.pick.outputs.script != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: contact-sheet
+          path: contact-sheet-*.png
           if-no-files-found: warn

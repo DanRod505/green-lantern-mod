@@ -133,4 +133,10 @@ public final class AquamanHero extends HeroDefinition {
     public boolean neverDropped(ItemStack stack) {
         return AquamanHelper.isTrident(stack);
     }
+
+    /** The emblem's HUD is taller: the Kraken's health goes under the powers. */
+    @Override
+    public int hudHeight() {
+        return 70;
+    }
 }

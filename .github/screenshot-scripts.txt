@@ -1,0 +1,15 @@
+# Which screenshot script (src/gametest/.../scripts/ClientScripts.java) runs on a push, by branch prefix.
+# One "<branch prefix> <script>" per line; the first prefix that matches wins, so list longer prefixes first.
+# A branch that matches no line gets no screenshots on push (run the workflow by hand with any script).
+# tools/new_hero.py adds a line for each new hero.
+claude/mecha- mecha
+claude/oa- oa
+claude/flash- flash
+claude/aquaman-atlantis-mounts mounts
+claude/aquaman-kraken kraken
+claude/aquaman- aquaman
+claude/atlantis- atlantis
+claude/batman- batman
+claude/trench- trench
+claude/superman- superman
+claude/wonder-woman- wonderwoman
