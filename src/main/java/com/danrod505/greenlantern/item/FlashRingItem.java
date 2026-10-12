@@ -2,8 +2,6 @@ package com.danrod505.greenlantern.item;
 
 import com.danrod505.greenlantern.flash.FlashHelper;
 import com.danrod505.greenlantern.flash.FlashHero;
-import com.danrod505.greenlantern.flash.SpeedsterPower;
-import com.danrod505.greenlantern.flash.SpeedsterServer;
 import com.danrod505.greenlantern.ring.RingEnergy;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
@@ -46,7 +44,7 @@ public class FlashRingItem extends Item {
             return InteractionResult.SUCCESS;
         }
         if (player instanceof ServerPlayer serverPlayer) {
-            SpeedsterServer.usePower(serverPlayer, ring, SpeedsterPower.POWERS.selected(ring));
+            FlashHero.INSTANCE.powers().use(serverPlayer, ring, -1);
         }
         return InteractionResult.SUCCESS;
     }
@@ -75,7 +73,7 @@ public class FlashRingItem extends Item {
         RingEnergy force = FlashHero.SPEED_FORCE.get(ring);
         tooltip.accept(Component.translatable("tooltip.greenlantern.speed_force", force.stored(), force.capacity())
                 .withStyle(force.fraction() < 0.2F ? ChatFormatting.RED : ChatFormatting.YELLOW));
-        tooltip.accept(Component.translatable("tooltip.greenlantern.power", SpeedsterPower.POWERS.selected(ring).displayName()).withStyle(ChatFormatting.GOLD));
+        tooltip.accept(Component.translatable("tooltip.greenlantern.power", FlashHero.INSTANCE.powers().set().selected(ring).displayName()).withStyle(ChatFormatting.GOLD));
         tooltip.accept(Component.translatable("tooltip.greenlantern.flash_ring_hint").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
     }
 }

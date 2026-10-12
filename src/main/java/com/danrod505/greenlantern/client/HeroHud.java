@@ -1,5 +1,6 @@
 package com.danrod505.greenlantern.client;
 
+import com.danrod505.greenlantern.engine.LegacyHero;
 import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.HeroPower;
 import com.danrod505.greenlantern.hero.HeroPowers;
@@ -55,7 +56,8 @@ public record HeroHud(HeroDefinition hero, int barEmpty, int barFull, int border
 
         int x = 8;
         int y = top(player, hero);
-        graphics.blit(RenderPipelines.GUI_TEXTURED, wheel.icons(), x, y - 2, count * 16, 0, 16, 16, wheel.iconsWidth(), WheelStyle.ICONS_HEIGHT);
+        if (hero instanceof LegacyHero legacy) LegacyRow.emblem(graphics, legacy, x, y - 2, legacy.ownPowers().set().count());
+        else graphics.blit(RenderPipelines.GUI_TEXTURED, wheel.icons(), x, y - 2, count * 16, 0, 16, 16, wheel.iconsWidth(), WheelStyle.ICONS_HEIGHT);
         int barX = x + 19;
         int barY = y + 2;
         int barW = 100;
@@ -74,8 +76,21 @@ public record HeroHud(HeroDefinition hero, int barEmpty, int barFull, int border
         graphics.fill(barX, barY, barX + fill, barY + 1, 0x90FFFFFF);
         graphics.drawString(mc.font, energy.stored() + " / " + energy.capacity(), barX + barW + 4, barY, low ? 0xFFFF5555 : text, true);
 
-        int selected = powers.selectedIndex(item);
         int iconsY = y + 15;
+        if (hero instanceof LegacyHero legacy) {
+            LegacyRow.draw(graphics, legacy, player, item, x + 19, iconsY, iconsY + 21, border, text, active, text);
+        } else {
+            row(graphics, mc, player, item, powers, wheel, x, iconsY);
+        }
+        if (!suited) {
+            graphics.drawString(mc.font, Component.translatable("hud.greenlantern." + hero.id() + "_suit_hint", KeyBindings.TOGGLE_UNIFORM.getTranslatedKeyMessage()),
+                    x + 19, iconsY + 32, 0xFFA0A0A0, true);
+        }
+    }
+
+    private void row(GuiGraphics graphics, Minecraft mc, Player player, ItemStack item, HeroPowers<?> powers, WheelStyle wheel, int x, int iconsY) {
+        int count = powers.set().count();
+        int selected = powers.selectedIndex(item);
         for (int i = 0; i < count; i++) {
             HeroPower power = powers.power(i);
             int ix = x + 19 + i * 20;
@@ -88,9 +103,5 @@ public record HeroHud(HeroDefinition hero, int barEmpty, int barFull, int border
         }
         graphics.drawString(mc.font, Component.translatable("hud.greenlantern.power_key", powers.power(selected).displayName(),
                 KeyBindings.HERO_POWER.getTranslatedKeyMessage()), x + 19, iconsY + 21, text, true);
-        if (!suited) {
-            graphics.drawString(mc.font, Component.translatable("hud.greenlantern." + hero.id() + "_suit_hint", KeyBindings.TOGGLE_UNIFORM.getTranslatedKeyMessage()),
-                    x + 19, iconsY + 32, 0xFFA0A0A0, true);
-        }
     }
 }

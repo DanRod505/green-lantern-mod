@@ -256,6 +256,8 @@ public final class AbilityIcons {
             Map.entry("cura", "coracao"), Map.entry("furia", "chama"), Map.entry("crescer", "crescer"), Map.entry("aura", "estrela"),
             Map.entry("sentidos", "olho"),
             Map.entry("grande_obra", "coroa"), Map.entry("suprema_de_combate", "coroa"),
+            // A power of one of the 9 heroes' own code: the game draws the icon of its old wheel over it.
+            Map.entry("poder_do_heroi", "estrela"),
             Map.entry("minerar_area", "picareta"), Map.entry("construir", "bloco"), Map.entry("plantar_e_colher", "broto"),
             Map.entry("gelo_e_calor", "floco"), Map.entry("luz", "lampada"), Map.entry("mover_blocos", "bloco"), Map.entry("abrir_caminho", "picareta"),
             Map.entry("procurar", "lupa"),

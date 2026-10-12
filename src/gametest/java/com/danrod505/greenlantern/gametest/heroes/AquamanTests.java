@@ -100,7 +100,7 @@ public final class AquamanTests {
         ServerPlayer player = player(helper, 7.5, 1, 2.5, 0, 0);
         ItemStack emblem = giveEmblem(player, 1000);
         AquamanHero.INSTANCE.summonSuit(player);
-        AquaPower.POWERS.select(emblem, AquaPower.TRIDENT);
+        AquamanHero.INSTANCE.selectOwn(emblem, AquaPower.TRIDENT.id());
         Zombie zombie = dummy(helper, 7.5, 1, 7.5);
         float health = zombie.getHealth();
         use(player);
@@ -130,12 +130,13 @@ public final class AquamanTests {
         ServerPlayer player = player(helper, 7.5, 2, 3.5, 0, 0);
         ItemStack emblem = giveEmblem(player, 1000);
         AquamanHero.INSTANCE.summonSuit(player);
-        AquaPower.POWERS.select(emblem, AquaPower.SHARK);
+        AquamanHero.INSTANCE.selectOwn(emblem, AquaPower.SHARK.id());
         helper.startSequence()
                 .thenExecuteFor(3, player::doTick) // notice the water
                 .thenExecute(() -> {
                     helper.assertTrue(player.isInWater(), "the player should be in the water");
-                    use(player);
+                    // The shark is the hold of the Call of the Sea on the wheel of the catalog.
+                    useOwn(player, AquamanHero.INSTANCE, AquaPower.SHARK.id());
                     GreatWhiteSharkEntity shark = GreatWhiteSharkEntity.find(player);
                     helper.assertTrue(shark != null, "a shark should be summoned");
                     helper.assertTrue(player.getVehicle() == shark, "Aquaman should ride the shark");
@@ -216,7 +217,7 @@ public final class AquamanTests {
         ServerPlayer player = player(helper, 7.5, 2, 7.5, 0, 0);
         ItemStack emblem = giveEmblem(player, 1000);
         AquamanHero.INSTANCE.summonSuit(player);
-        AquaPower.POWERS.select(emblem, AquaPower.KRAKEN);
+        AquamanHero.INSTANCE.selectOwn(emblem, AquaPower.KRAKEN.id());
         helper.startSequence()
                 .thenExecuteFor(3, player::doTick) // notice the water
                 .thenExecute(() -> {
@@ -301,7 +302,7 @@ public final class AquamanTests {
                 .thenExecuteFor(KrakenEntity.DEATH_TICKS + 5, player::doTick)
                 .thenExecute(() -> {
                     helper.assertTrue(kraken.isRemoved(), "the dead Kraken is gone after its death throes");
-                    AquaPower.POWERS.select(emblem, AquaPower.KRAKEN);
+                    AquamanHero.INSTANCE.selectOwn(emblem, AquaPower.KRAKEN.id());
                     helper.assertFalse(AquamanServer.usePower(player, emblem, AquaPower.KRAKEN), "it cannot be called while recovering");
                     KrakenEntity.clearRecovery(player);
                     remove(player);
@@ -314,7 +315,7 @@ public final class AquamanTests {
         ServerPlayer player = player(helper, 7.5, 2, 3.5, 0, 0);
         ItemStack emblem = giveEmblem(player, 1000);
         AquamanHero.INSTANCE.summonSuit(player);
-        AquaPower.POWERS.select(emblem, AquaPower.SEA_CALL);
+        AquamanHero.INSTANCE.selectOwn(emblem, AquaPower.SEA_CALL.id());
         helper.spawn(EntityType.COD, new Vec3(5.5, 3, 4.5));
         helper.spawn(EntityType.SQUID, new Vec3(9.5, 3, 4.5));
         Zombie zombie = dummy(helper, 7.5, 2, 9.5);

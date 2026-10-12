@@ -73,7 +73,7 @@ public final class BatmanTests {
                     int stored = BatmanHero.BAT_CHARGE.get(belt).stored();
                     helper.assertTrue(stored >= 10, "the belt should recharge on its own, got " + stored);
                     helper.assertTrue(player.hasEffect(net.minecraft.world.effect.MobEffects.NIGHT_VISION), "the cowl gives night vision");
-                    BatPower.POWERS.select(belt, BatPower.BAT_SWARM);
+                    BatmanHero.INSTANCE.selectOwn(belt, BatPower.BAT_SWARM.id());
                     BatmanHero.BAT_CHARGE.set(belt, 0);
                     helper.assertFalse(BatmanServer.usePower(player, belt, BatPower.BAT_SWARM), "no charge, no gadget");
                     remove(player);
@@ -85,7 +85,7 @@ public final class BatmanTests {
         ServerPlayer player = player(helper, 7.5, 1, 2.5, 0, 0);
         ItemStack belt = giveBelt(player, 1000);
         BatmanHero.INSTANCE.summonSuit(player);
-        BatPower.POWERS.select(belt, BatPower.BATARANG);
+        BatmanHero.INSTANCE.selectOwn(belt, BatPower.BATARANG.id());
         Zombie zombie = dummy(helper, 7.5, 1, 7.5);
         float health = zombie.getHealth();
         player.setXRot(8.0F);
@@ -109,7 +109,7 @@ public final class BatmanTests {
         }
         ItemStack belt = giveBelt(player, 1000);
         BatmanHero.INSTANCE.summonSuit(player);
-        BatPower.POWERS.select(belt, BatPower.GRAPPLE);
+        BatmanHero.INSTANCE.selectOwn(belt, BatPower.GRAPPLE.id());
         use(player);
         helper.assertTrue(GrappleHookEntity.find(player) != null, "the hook should be fired");
         helper.startSequence()
@@ -131,7 +131,7 @@ public final class BatmanTests {
         ServerPlayer player = player(helper, 7.5, 1, 7.5, 0, 0);
         ItemStack belt = giveBelt(player, 1000);
         BatmanHero.INSTANCE.summonSuit(player);
-        BatPower.POWERS.select(belt, BatPower.BAT_SWARM);
+        BatmanHero.INSTANCE.selectOwn(belt, BatPower.BAT_SWARM.id());
         Zombie zombie = dummy(helper, 7.5, 1, 11.5);
         float health = zombie.getHealth();
         use(player);
@@ -155,7 +155,7 @@ public final class BatmanTests {
         ServerPlayer player = player(helper, 7.5, 1, 3.5, 0, 0);
         ItemStack belt = giveBelt(player, 1000);
         BatmanHero.INSTANCE.summonSuit(player);
-        BatPower.POWERS.select(belt, BatPower.BATMOBILE);
+        BatmanHero.INSTANCE.selectOwn(belt, BatPower.BATMOBILE.id());
         Zombie zombie = dummy(helper, 7.5, 1, 12.5);
         float health = zombie.getHealth();
         use(player);

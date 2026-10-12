@@ -144,5 +144,19 @@
   "subtitles.greenlantern.atlantean_dolphin_ambient": "Atlantean dolphin whistles",
   "subtitles.greenlantern.atlantean_dolphin_hurt": "Atlantean dolphin hurts",
   "subtitles.greenlantern.atlantean_dolphin_leap": "Atlantean dolphin leaps",
-  "subtitles.greenlantern.atlantean_mount_saddle": "Atlantean mount takes a rider"
+  "subtitles.greenlantern.atlantean_mount_saddle": "Atlantean mount takes a rider",
+  "power.greenlantern.aquaman_tridente": "Trident",
+  "power.greenlantern.aquaman_tridente.desc": "Tap: throws the trident. Aiming at water: fishes.",
+  "power.greenlantern.aquaman_pele_atlante": "Atlantean Skin",
+  "power.greenlantern.aquaman_pele_atlante.desc": "Tap: your skin hardens and you take half the damage for a while.",
+  "power.greenlantern.aquaman_chamado_do_mar": "Call of the Sea",
+  "power.greenlantern.aquaman_chamado_do_mar.desc": "Tap: the sea creatures nearby fight for you. Hold: rides a shark.",
+  "power.greenlantern.aquaman_furia_do_oceano": "Ocean's Fury",
+  "power.greenlantern.aquaman_furia_do_oceano.desc": "Tap: you and your friends hit harder. Aiming at a plant: makes it grow.",
+  "power.greenlantern.aquaman_corrente_marinha": "Sea Current",
+  "power.greenlantern.aquaman_corrente_marinha.desc": "Tap: swim twice as fast. Aiming at a creature: takes it along.",
+  "power.greenlantern.aquaman_tesouros_do_mar": "Treasures of the Sea",
+  "power.greenlantern.aquaman_tesouros_do_mar.desc": "Tap: shows the chests around. Hold: a trail to an ocean ruin.",
+  "power.greenlantern.aquaman_kraken": "Kraken",
+  "power.greenlantern.aquaman_kraken.desc": "Supreme. Tap: summons the Kraken. Hold: opens the portal to Atlantis."
 }

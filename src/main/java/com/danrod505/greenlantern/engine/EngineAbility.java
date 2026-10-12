@@ -1,23 +1,30 @@
 package com.danrod505.greenlantern.engine;
 
 import com.danrod505.greenlantern.hero.HeroPower;
+import java.util.function.IntSupplier;
 import net.minecraft.network.chat.Component;
 
 /**
  * An ability of a character of the engine on the power wheel, built from its data file. The name
  * and description come from {@code power.greenlantern.<id>} in the lang files, or the name in the
  * file when there is none yet. Its icon is drawn from its preset and colour ({@link AbilityIcons}),
- * on the character's own sheet in wheel order.
+ * on the character's own sheet in wheel order. {@code ownCost} is the cost of the power of the hero's
+ * own code its tap runs (one of the 9 heroes), or null.
  */
-public record EngineAbility(CharacterData.Ability data, int ordinal, AbilityKind kind) implements HeroPower {
+public record EngineAbility(CharacterData.Ability data, int ordinal, AbilityKind kind, IntSupplier ownCost) implements HeroPower {
+    public EngineAbility(CharacterData.Ability data, int ordinal, AbilityKind kind) {
+        this(data, ordinal, kind, null);
+    }
+
     @Override
     public String id() {
         return data.id();
     }
 
+    /** The cost in its file; one of the 9 heroes' abilities whose tap is a power of their own code shows that power's cost. */
     @Override
     public int cost() {
-        return data.numbers().cost();
+        return ownCost != null ? ownCost.getAsInt() : data.numbers().cost();
     }
 
     @Override

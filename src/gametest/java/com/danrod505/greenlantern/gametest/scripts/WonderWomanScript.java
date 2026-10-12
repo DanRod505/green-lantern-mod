@@ -28,7 +28,7 @@ public final class WonderWomanScript {
     public static void wwPower(com.danrod505.greenlantern.wonderwoman.AmazonPower power) {
         server(sp -> {
             ItemStack tiara = com.danrod505.greenlantern.wonderwoman.WonderWomanHelper.findTiara(sp);
-            com.danrod505.greenlantern.wonderwoman.AmazonPower.POWERS.select(tiara, power);
+            com.danrod505.greenlantern.wonderwoman.WonderWomanHero.INSTANCE.selectOwn(tiara, power.id());
             sp.getCooldowns().removeCooldown(sp.getCooldowns().getCooldownGroup(tiara));
             boolean used = com.danrod505.greenlantern.wonderwoman.WonderWomanServer.usePower(sp, tiara, power);
             com.danrod505.greenlantern.GreenLantern.LOGGER.info("CLIENTSCRIPT power {} used={}", power.id(), used);
@@ -342,7 +342,7 @@ public final class WonderWomanScript {
             if (mc().screen != null) mc().screen.keyReleased(new net.minecraft.client.input.KeyEvent(org.lwjgl.glfw.GLFW.GLFW_KEY_R, 0, 0));
         });
         step(10, () -> com.danrod505.greenlantern.GreenLantern.LOGGER.info("CLIENTSCRIPT power selected={}",
-                com.danrod505.greenlantern.wonderwoman.AmazonPower.POWERS.selected(com.danrod505.greenlantern.wonderwoman.WonderWomanHelper.findTiara(mc().player)).id()));
+                com.danrod505.greenlantern.wonderwoman.WonderWomanHero.INSTANCE.powers().set().selected(com.danrod505.greenlantern.wonderwoman.WonderWomanHelper.findTiara(mc().player)).id()));
         // The guide.
         step(5, () -> mc().setScreen(com.danrod505.greenlantern.client.GuideScreen.atChapter("wonder_woman")));
         step(10, () -> shot("ww17_guide"));

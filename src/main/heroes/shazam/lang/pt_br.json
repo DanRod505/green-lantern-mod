@@ -50,5 +50,17 @@
   "message.greenlantern.shazam_solomon_on": "Sabedoria de Salomão: os inimigos aparecem",
   "message.greenlantern.shazam_solomon_off": "Sabedoria de Salomão desligada",
   "message.greenlantern.shazam_lightning": "O raio enche a Magia de Shazam!",
-  "hud.greenlantern.shazam_solomon_target": "%s: %s / %s ❤"
+  "hud.greenlantern.shazam_solomon_target": "%s: %s / %s ❤",
+  "power.greenlantern.shazam_forca_de_hercules": "Força de Hércules",
+  "power.greenlantern.shazam_forca_de_hercules.desc": "Toque: golpeia o chão. Mirando pedra: minera um buraco 3x3.",
+  "power.greenlantern.shazam_raio_de_zeus": "Raio de Zeus",
+  "power.greenlantern.shazam_raio_de_zeus.desc": "Toque: o raio de Zeus pelas mãos. Mirando uma alavanca ou botão: aciona.",
+  "power.greenlantern.shazam_vigor_de_atlas": "Vigor de Atlas",
+  "power.greenlantern.shazam_vigor_de_atlas.desc": "Toque: pesado como uma montanha, tomando metade do dano. Segurar: o rugido de Aquiles.",
+  "power.greenlantern.shazam_sabedoria_de_salomao": "Sabedoria de Salomão",
+  "power.greenlantern.shazam_sabedoria_de_salomao.desc": "Toque: criaturas hostis brilham através das paredes. Segurar: uma onda que empurra tudo em volta.",
+  "power.greenlantern.shazam_velocidade_de_mercurio": "Velocidade de Mercúrio",
+  "power.greenlantern.shazam_velocidade_de_mercurio.desc": "Toque: avança com a velocidade de Mercúrio. Segurar: leva junto a criatura na mira.",
+  "power.greenlantern.shazam_shazam": "SHAZAM!",
+  "power.greenlantern.shazam_shazam.desc": "Suprema. Toque: um relâmpago cai onde você mira. Segurar: chama uma tempestade."
 }

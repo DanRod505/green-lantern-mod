@@ -5,7 +5,7 @@ import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
 import com.danrod505.greenlantern.client.aqua.AquamanClient;
 import com.danrod505.greenlantern.engine.Characters;
-import com.danrod505.greenlantern.hero.HeroDefinition;
+import com.danrod505.greenlantern.engine.LegacyHero;
 import com.danrod505.greenlantern.hero.HeroEnergy;
 import com.danrod505.greenlantern.hero.HeroPowers;
 import com.danrod505.greenlantern.hero.SuitSet;
@@ -30,7 +30,7 @@ import net.minecraft.world.item.ItemStack;
  * stays on). While it is worn Aquaman breathes underwater, sees clearly in the deep, mines at full
  * speed underwater and hits harder.
  */
-public final class AquamanHero extends HeroDefinition {
+public final class AquamanHero extends LegacyHero {
     /**
      * Power of the Seas stored in the Atlantean Emblem. It refills quickly while Aquaman is in water
      * (slowly on land) and pays for his powers: the trident, the shark and the call of the sea.
@@ -46,7 +46,7 @@ public final class AquamanHero extends HeroDefinition {
 
     public static final AquamanHero INSTANCE = new AquamanHero();
 
-    private final HeroPowers<AquaPower> powers = new HeroPowers<>(AquaPower.POWERS, SEA_FORCE, ChatFormatting.AQUA,
+    private final HeroPowers<AquaPower> ownPowers = new HeroPowers<>(AquaPower.POWERS, SEA_FORCE, ChatFormatting.AQUA,
             0.8F, 0.08F, AquamanServer::usePower, WHEEL);
 
     private AquamanHero() {
@@ -100,9 +100,15 @@ public final class AquamanHero extends HeroDefinition {
         level.sendParticles(ParticleTypes.DOLPHIN, player.getX(), player.getY() + 1.0, player.getZ(), count / 2, 0.5, 0.9, 0.5, 0.05);
     }
 
+    /** The powers of his own code, as they were on the old wheel (the new wheel of the catalog runs them by id). */
     @Override
-    public HeroPowers<AquaPower> powers() {
-        return powers;
+    public HeroPowers<AquaPower> ownPowers() {
+        return ownPowers;
+    }
+
+    @Override
+    public HeroEnergy energy() {
+        return SEA_FORCE;
     }
 
     @Override

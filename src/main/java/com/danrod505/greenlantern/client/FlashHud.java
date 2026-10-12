@@ -2,7 +2,6 @@ package com.danrod505.greenlantern.client;
 
 import com.danrod505.greenlantern.flash.FlashHelper;
 import com.danrod505.greenlantern.flash.FlashHero;
-import com.danrod505.greenlantern.flash.SpeedsterPower;
 import com.danrod505.greenlantern.hero.WheelStyle;
 import com.danrod505.greenlantern.ring.RingEnergy;
 import com.danrod505.greenlantern.ring.RingHelper;
@@ -66,18 +65,8 @@ public final class FlashHud {
         String text = force.stored() + " / " + force.capacity();
         graphics.drawString(mc.font, text, barX + 104, barY + 2, low ? 0xFFFF5555 : 0xFFFFD24A, true);
 
-        SpeedsterPower selected = SpeedsterPower.POWERS.selected(ring);
         int iconsY = y + 17;
-        for (int i = 0; i < SpeedsterPower.POWERS.count(); i++) {
-            SpeedsterPower power = SpeedsterPower.POWERS.byIndex(i);
-            int ix = x + 19 + i * 20;
-            boolean isSelected = power == selected;
-            if (isSelected) graphics.fill(ix - 1, iconsY - 1, ix + 17, iconsY + 17, 0xC0FFC830);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, FlashHero.WHEEL.icons(), ix, iconsY, power.iconIndex() * 16, 0, 16, 16,
-                    FlashHero.WHEEL.iconsWidth(), WheelStyle.ICONS_HEIGHT, isSelected ? 0xFFFFFFFF : 0x90FFFFFF);
-        }
-        graphics.drawString(mc.font, Component.translatable("hud.greenlantern.power_key", selected.displayName(), KeyBindings.HERO_POWER.getTranslatedKeyMessage()),
-                x + 19, iconsY + 19, 0xFFFFD27A, true);
+        LegacyRow.draw(graphics, FlashHero.INSTANCE, player, ring, x + 19, iconsY, iconsY + 19, 0xC0FFC830, 0xFFFFC830, null, 0xFFFFD27A);
         if (!suited) {
             graphics.drawString(mc.font, Component.translatable("hud.greenlantern.flash_suit_hint", KeyBindings.TOGGLE_UNIFORM.getTranslatedKeyMessage()),
                     x + 19, iconsY + 30, 0xFFA0A0A0, true);

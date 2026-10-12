@@ -7,7 +7,7 @@ import com.danrod505.greenlantern.client.wonderwoman.WonderWomanClient;
 import com.danrod505.greenlantern.engine.Characters;
 import com.danrod505.greenlantern.flight.FlightProfile;
 import com.danrod505.greenlantern.flight.FlightStyle;
-import com.danrod505.greenlantern.hero.HeroDefinition;
+import com.danrod505.greenlantern.engine.LegacyHero;
 import com.danrod505.greenlantern.hero.HeroEnergy;
 import com.danrod505.greenlantern.hero.HeroPowers;
 import com.danrod505.greenlantern.hero.SuitSet;
@@ -38,7 +38,7 @@ import net.minecraft.world.item.ItemStack;
  * princess is stronger, tougher, quicker and steadier than any mortal, though not as mighty as the
  * Man of Steel.
  */
-public final class WonderWomanHero extends HeroDefinition {
+public final class WonderWomanHero extends LegacyHero {
     /**
      * The gift of the gods, kept in the Tiara of Themyscira: it pays for Wonder Woman's powers. It
      * comes back slowly on its own, and faster in battle (every blow of the Amazon sword feeds it).
@@ -61,7 +61,7 @@ public final class WonderWomanHero extends HeroDefinition {
 
     public static final WonderWomanHero INSTANCE = new WonderWomanHero();
 
-    private final HeroPowers<AmazonPower> powers = new HeroPowers<>(AmazonPower.POWERS, DIVINE_POWER, ChatFormatting.GOLD,
+    private final HeroPowers<AmazonPower> ownPowers = new HeroPowers<>(AmazonPower.POWERS, DIVINE_POWER, ChatFormatting.GOLD,
             0.85F, 0.06F, WonderWomanServer::usePower, WHEEL);
 
     private WonderWomanHero() {
@@ -107,9 +107,15 @@ public final class WonderWomanHero extends HeroDefinition {
         level.sendParticles(ModParticles.AMAZON_SHOCKWAVE.get(), player.getX(), player.getY() + 0.1, player.getZ(), 1, 0, 0, 0, 0);
     }
 
+    /** The powers of his own code, as they were on the old wheel (the new wheel of the catalog runs them by id). */
     @Override
-    public HeroPowers<AmazonPower> powers() {
-        return powers;
+    public HeroPowers<AmazonPower> ownPowers() {
+        return ownPowers;
+    }
+
+    @Override
+    public HeroEnergy energy() {
+        return DIVINE_POWER;
     }
 
     /** A strong, steady flight, but slower than the Lantern's (by default she never reaches the sound barrier). */

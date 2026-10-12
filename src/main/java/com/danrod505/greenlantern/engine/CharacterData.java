@@ -16,9 +16,10 @@ import net.minecraft.util.ExtraCodecs;
  * reads the file and builds the character from it (see {@link Characters}); nobody writes code for
  * one character.
  * <p>
- * The first 9 heroes are files too, marked {@code "legado": true}: their powers and energy are still
- * their own code, and the file holds what the engine needs from them (the suit, its bonuses and the
- * order of the wheel), with the same numbers as before.
+ * The first 9 heroes are files too, marked {@code "legado": true} (see {@link LegacyHero}): their
+ * wheel, functions and traits come from the file like any character's, and a function with the
+ * preset {@code poder_do_heroi} runs a power of their own code, with its own energy, cooldown and
+ * checks as before.
  *
  * @param id             short id, e.g. {@code "superman"} (also the file name)
  * @param name           display name in Portuguese, used when the lang files have no {@code character.greenlantern.<id>}
@@ -27,7 +28,7 @@ import net.minecraft.util.ExtraCodecs;
  * @param skeleton       the model the skin is drawn on
  * @param transformation the suit up animation (one of the 15 of the catalog)
  * @param theme          the music theme (one of the 15 of the catalog)
- * @param legacy         one of the 9 heroes that already existed: their own code drives them
+ * @param legacy         one of the 9 heroes that already existed: their own code has their powers
  * @param source         where the energy comes from (Colossus: sol, tempestade, calor) or the element (Elementalist)
  * @param stats          the stats; what is left out comes from the class rule
  * @param suit           the suit pieces and their bonuses (worked out from the stats when left out)

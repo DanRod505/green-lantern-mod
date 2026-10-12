@@ -4,6 +4,7 @@ import static com.danrod505.greenlantern.gametest.GameTestKit.*;
 
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.engine.EngineHero;
+import com.danrod505.greenlantern.engine.preset.PresetRuntime;
 import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.HeroPower;
 import com.danrod505.greenlantern.hero.HeroPowers;
@@ -165,8 +166,8 @@ public final class HeroContractTests {
                 int count = powers.set().count();
                 helper.assertTrue(count > 0, who + "a power wheel needs at least one power");
                 String icons = "assets/" + wheel.icons().getNamespace() + "/" + wheel.icons().getPath();
-                // A character of the engine draws its icons while the game runs (engine.AbilityIcons).
-                int width = hero instanceof com.danrod505.greenlantern.engine.EngineHero drawn
+                // A character of the engine, and one of the 9 heroes on the wheel of the catalog, draws its icons while the game runs (engine.AbilityIcons).
+                int width = hero instanceof com.danrod505.greenlantern.engine.CharacterHero drawn
                         ? com.danrod505.greenlantern.engine.AbilityIcons.sheet(drawn.data(), drawn.data().abilities().stream()
                                 .map(a -> a.kind().orElseThrow()).toList()).length / com.danrod505.greenlantern.engine.AbilityIcons.SIZE
                         : pngWidth(icons);
@@ -252,6 +253,10 @@ public final class HeroContractTests {
                 })
                         .thenExecuteFor(10, () -> player[0].doTick())
                         .thenExecute(() -> {
+                            // What an ability of the catalog built (a great work) comes down, so the tests next to this one keep their sky.
+                            for (int function = 0; function <= 3; function++) {
+                                PresetRuntime.undo(player[0], PresetRuntime.key(powers.power(index).id(), function));
+                            }
                             if (hero.isSuited(player[0])) hero.dismissSuit(player[0], false);
                             remove(player[0]);
                             sweep(helper);

@@ -2,6 +2,7 @@ package com.danrod505.greenlantern.network;
 
 import com.danrod505.greenlantern.engine.AbilityFunctions;
 import com.danrod505.greenlantern.engine.EngineAbility;
+import com.danrod505.greenlantern.engine.CharacterHero;
 import com.danrod505.greenlantern.engine.EngineHero;
 import com.danrod505.greenlantern.engine.EngineServer;
 import com.danrod505.greenlantern.hero.HeroRegistry;
@@ -14,8 +15,8 @@ import net.minecraftforge.event.network.CustomPayloadEvent;
 /**
  * Client -> server: the keys of the engine for its characters (catalog, stage 14): the power key
  * (or a direct key) uses an ability with how it was pressed (a tap, holding it, letting it go after
- * holding: the function that goes off depends on it), and the skin key. The first 9 heroes never get
- * this packet.
+ * holding: the function that goes off depends on it), and the skin key. The 9 heroes use it for their
+ * new wheel too; their skins come in a later lot.
  *
  * @param action  {@link #USE} or {@link #SKIN}
  * @param ability the ability to use, -1 for the chosen one
@@ -43,7 +44,7 @@ public record EnginePacket(int action, int ability, int press) {
         context.setPacketHandled(true);
         var player = context.getSender();
         if (player == null || !player.isAlive()) return;
-        if (!(HeroRegistry.context(player).orElse(null) instanceof EngineHero hero)) return;
+        if (!(HeroRegistry.context(player).orElse(null) instanceof CharacterHero hero)) return;
         ItemStack item = hero.findItem(player);
         if (item.isEmpty()) return;
         switch (packet.action) {
@@ -53,7 +54,9 @@ public record EnginePacket(int action, int ability, int press) {
                 if (index < 0 || index >= count || !(hero.powers().power(index) instanceof EngineAbility ability)) return;
                 EngineServer.useAbility(player, item, ability, AbilityFunctions.Press.byIndex(packet.press));
             }
-            case SKIN -> EngineServer.cycleSkin(player, hero, item);
+            case SKIN -> {
+                if (hero instanceof EngineHero engine) EngineServer.cycleSkin(player, engine, item);
+            }
             default -> {
             }
         }

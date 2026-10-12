@@ -1,9 +1,7 @@
 package com.danrod505.greenlantern.item;
 
-import com.danrod505.greenlantern.aquaman.AquaPower;
 import com.danrod505.greenlantern.aquaman.AquamanHelper;
 import com.danrod505.greenlantern.aquaman.AquamanHero;
-import com.danrod505.greenlantern.aquaman.AquamanServer;
 import com.danrod505.greenlantern.ring.RingEnergy;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
@@ -46,7 +44,7 @@ public class AquamanEmblemItem extends Item {
             return InteractionResult.SUCCESS;
         }
         if (player instanceof ServerPlayer serverPlayer) {
-            AquamanServer.usePower(serverPlayer, emblem, AquaPower.POWERS.selected(emblem));
+            AquamanHero.INSTANCE.powers().use(serverPlayer, emblem, -1);
         }
         return InteractionResult.SUCCESS;
     }
@@ -75,7 +73,7 @@ public class AquamanEmblemItem extends Item {
         RingEnergy force = AquamanHero.SEA_FORCE.get(emblem);
         tooltip.accept(Component.translatable("tooltip.greenlantern.sea_force", force.stored(), force.capacity())
                 .withStyle(force.fraction() < 0.2F ? ChatFormatting.RED : ChatFormatting.AQUA));
-        tooltip.accept(Component.translatable("tooltip.greenlantern.power", AquaPower.POWERS.selected(emblem).displayName()).withStyle(ChatFormatting.GOLD));
+        tooltip.accept(Component.translatable("tooltip.greenlantern.power", AquamanHero.INSTANCE.powers().set().selected(emblem).displayName()).withStyle(ChatFormatting.GOLD));
         tooltip.accept(Component.translatable("tooltip.greenlantern.aquaman_emblem_hint").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
     }
 }

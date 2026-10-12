@@ -61,7 +61,11 @@ public final class CommonEvents {
         if (player.tickCount % 10 == 0) {
             Uniform.removeStrayPieces(player);
         }
-        for (HeroDefinition hero : HeroRegistry.all()) hero.tick(player);
+        for (HeroDefinition hero : HeroRegistry.all()) {
+            hero.tick(player);
+            // The 9 heroes in the new model: the traits of their file and the supreme's ready sound.
+            if (hero instanceof com.danrod505.greenlantern.engine.LegacyHero legacy) com.danrod505.greenlantern.engine.EngineServer.legacyTick(player, legacy);
+        }
         com.danrod505.greenlantern.aquaman.Respirator.tick(player);
         if (player.tickCount % 5 == 0) {
             chargeFromCentralBattery(player);
@@ -152,6 +156,8 @@ public final class CommonEvents {
         for (HeroDefinition hero : HeroRegistry.all()) {
             // Tough heroes (Superman, Wonder Woman) shrug off part of every blow.
             float multiplier = hero.damageTakenMultiplier(player, event.getSource());
+            if (hero instanceof com.danrod505.greenlantern.engine.LegacyHero legacy
+                    && com.danrod505.greenlantern.engine.EngineServer.legacyImmune(player, legacy, event.getSource())) multiplier = 0.0F;
             if (multiplier != 1.0F) event.setAmount(event.getAmount() * multiplier);
         }
         BubbleConstructEntity bubble = BubbleConstructEntity.find(player);
@@ -168,7 +174,8 @@ public final class CommonEvents {
         // The ring cushions every landing; a speedster lands running; an Atlantean shrugs off any
         // ordinary fall; Batman's cape and training soften it (see each hero's fallDamageMultiplier).
         HeroRegistry.suited(player).ifPresent(hero -> {
-            float multiplier = hero.fallDamageMultiplier(player, event.getDistance());
+            float multiplier = hero instanceof com.danrod505.greenlantern.engine.LegacyHero legacy
+                    && com.danrod505.greenlantern.engine.EngineServer.legacyNoFall(legacy) ? 0.0F : hero.fallDamageMultiplier(player, event.getDistance());
             if (multiplier >= 0.0F) event.setDamageMultiplier(multiplier);
         });
     }

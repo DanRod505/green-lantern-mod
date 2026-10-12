@@ -122,11 +122,17 @@ public final class Traits {
     }
 
     /** Every tick with the suit on. */
-    static void tick(ServerPlayer player, EngineHero hero) {
+    static void tick(ServerPlayer player, CharacterHero hero) {
+        tick(player, hero, Set.of());
+    }
+
+    /** Every tick with the suit on, leaving out the traits in {@code own} (the 9 heroes' own code already gives those). */
+    static void tick(ServerPlayer player, CharacterHero hero, Set<String> own) {
         CharacterData data = hero.data();
         if (data.traits().isEmpty()) return;
         boolean second = player.tickCount % 20 == 0;
         for (CharacterData.Trait trait : data.traits()) {
+            if (own.contains(trait.type())) continue;
             CharacterData.Settings s = trait.settings();
             switch (trait.type()) {
                 case "supervelocidade" -> superSpeed(player, hero, s);
@@ -182,7 +188,7 @@ public final class Traits {
     }
 
     /** Running speeds up by itself while the player sprints. */
-    private static void superSpeed(ServerPlayer player, EngineHero hero, CharacterData.Settings s) {
+    private static void superSpeed(ServerPlayer player, CharacterHero hero, CharacterData.Settings s) {
         UUID uuid = player.getUUID();
         if (!player.isSprinting() || player.getAbilities().flying) {
             if (SPRINT.remove(uuid) != null) {

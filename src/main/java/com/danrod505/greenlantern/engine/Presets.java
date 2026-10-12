@@ -79,6 +79,9 @@ public final class Presets {
         CraftPresets.register();
         NaturePresets.register();
         LogisticsPresets.register();
+        // A power of one of the 9 heroes' own code, as it was before (their wheel uses it directly; see EngineServer.useAbility).
+        registerFight(CharacterHero.OWN_POWER, c -> c.hero().ownPower(c.player(), c.item(), c.settings().text("poder", "")) ? Outcome.DONE
+                : Outcome.fail(Component.translatable("message.greenlantern.engine_own_power", c.ability().displayName())));
     }
 
     private Presets() {}
@@ -117,7 +120,7 @@ public final class Presets {
     }
 
     /** Runs the function {@code chosen} of the ability. */
-    static Outcome use(ServerPlayer player, EngineHero hero, ItemStack item, EngineAbility ability, AbilityFunctions.Chosen chosen) {
+    static Outcome use(ServerPlayer player, CharacterHero hero, ItemStack item, EngineAbility ability, AbilityFunctions.Chosen chosen) {
         String id = chosen.function().preset();
         Preset preset = FIGHT.containsKey(id) ? FIGHT.get(id) : WORLD.get(id);
         if (preset == null) return notBuilt(player, hero, ability, "message.greenlantern.engine_not_built");
@@ -128,7 +131,7 @@ public final class Presets {
      * Runs function {@code index} of the ability (0 is the default one) with nothing in the way: no
      * cooldown, energy or condition. For the automatic test of every character (lot 7).
      */
-    public static Outcome tryFunction(ServerPlayer player, EngineHero hero, ItemStack item, EngineAbility ability, int index) {
+    public static Outcome tryFunction(ServerPlayer player, CharacterHero hero, ItemStack item, EngineAbility ability, int index) {
         CharacterData.Ability data = ability.data();
         CharacterData.Function function = index == 0 ? data.defaultFunction() : data.functions().get(index - 1);
         return use(player, hero, item, ability, new AbilityFunctions.Chosen(index, function));
@@ -144,7 +147,7 @@ public final class Presets {
         return outcome;
     }
 
-    private static Outcome notBuilt(ServerPlayer player, EngineHero hero, EngineAbility ability, String key) {
+    private static Outcome notBuilt(ServerPlayer player, CharacterHero hero, EngineAbility ability, String key) {
         EngineServer.puff(player, hero);
         EngineServer.play(player, SoundEvents.AMETHYST_BLOCK_CHIME, 1.0F, 0.8F + 0.1F * ability.ordinal());
         player.displayClientMessage(Component.translatable(key, ability.displayName()), true);

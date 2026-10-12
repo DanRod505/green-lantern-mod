@@ -5,7 +5,7 @@ import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
 import com.danrod505.greenlantern.client.batman.BatmanClient;
 import com.danrod505.greenlantern.engine.Characters;
-import com.danrod505.greenlantern.hero.HeroDefinition;
+import com.danrod505.greenlantern.engine.LegacyHero;
 import com.danrod505.greenlantern.hero.HeroEnergy;
 import com.danrod505.greenlantern.hero.HeroPowers;
 import com.danrod505.greenlantern.hero.SuitSet;
@@ -29,7 +29,7 @@ import net.minecraft.world.item.CreativeModeTab;
  * Batman sees in the dark (the cowl's lenses), hits harder (years of training), takes knocks better
  * and glides with the cape.
  */
-public final class BatmanHero extends HeroDefinition {
+public final class BatmanHero extends LegacyHero {
     /**
      * Charge of the Utility Belt's power cells. It refills steadily while the batsuit is worn (faster
      * in the dark: the night belongs to Batman) and pays for the gadgets and the Batmobile's boost.
@@ -45,7 +45,7 @@ public final class BatmanHero extends HeroDefinition {
 
     public static final BatmanHero INSTANCE = new BatmanHero();
 
-    private final HeroPowers<BatPower> powers = new HeroPowers<>(BatPower.POWERS, BAT_CHARGE, ChatFormatting.YELLOW,
+    private final HeroPowers<BatPower> ownPowers = new HeroPowers<>(BatPower.POWERS, BAT_CHARGE, ChatFormatting.YELLOW,
             0.7F, 0.08F, BatmanServer::usePower, WHEEL);
 
     private BatmanHero() {
@@ -85,9 +85,15 @@ public final class BatmanHero extends HeroDefinition {
         level.sendParticles(ParticleTypes.SQUID_INK, player.getX(), player.getY() + 1.0, player.getZ(), count / 2, 0.4, 0.8, 0.4, 0.05);
     }
 
+    /** The powers of his own code, as they were on the old wheel (the new wheel of the catalog runs them by id). */
     @Override
-    public HeroPowers<BatPower> powers() {
-        return powers;
+    public HeroPowers<BatPower> ownPowers() {
+        return ownPowers;
+    }
+
+    @Override
+    public HeroEnergy energy() {
+        return BAT_CHARGE;
     }
 
     @Override

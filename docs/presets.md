@@ -237,3 +237,15 @@ Os sons das 6 classes de mundo novas e o da suprema são originais, gerados por 
 ## Lote 7 (2.7.0): Ferramentas de produção
 
 Sem presets novos: o gerador do catálogo, o teste automático de cada personagem, os prints por lote e o verificador estão em [`ferramentas.md`](ferramentas.md). O gerador escolhe o preset de cada função do catálogo nesta biblioteca, e o teste automático usa cada função de cada personagem.
+
+## Etapa 3, lote 1 (2.8.0): os 9 heróis no modelo novo
+
+Os 9 heróis que já existiam (fichas com `"legado": true`) ganharam a roda do catálogo: 5 a 8 habilidades com a suprema por último, funções por contexto e as passivas da ficha. Os poderes que já eram código deles continuam iguais, chamados por um preset só deles:
+
+| Preset | Números | Ajustes |
+|---|---|---|
+| `poder_do_heroi` | (os do poder; custo e recarga são os de sempre) | `poder`: id do poder no código do herói (`kraken`, `lasso_pull`, `minigun`...) |
+
+- Só uma ficha `legado` pode usar `poder_do_heroi`, e sempre com `poder`. O teste `legacy_heroes_wheel` confere que cada `poder` existe no código do herói e que todo poder antigo continua em alguma função.
+- O poder gasta a energia do herói e liga a recarga dele, sem a recarga da roda. As outras funções da habilidade são presets da biblioteca, pagos com a mesma energia, nos números do catálogo.
+- As passivas que o código do herói já dá (`voo`, `supervelocidade`, `aquatico`, `planar`) ficam com o código dele; as outras (`superforca`, `invulneravel`, `visao_no_escuro`) vêm da engine.

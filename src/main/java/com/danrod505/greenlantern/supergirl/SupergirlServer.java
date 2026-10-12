@@ -936,6 +936,13 @@ public final class SupergirlServer {
         return krypto;
     }
 
+    /** She whistles for Krypto (free), as sneaking and using the pendant does: the tap of her supreme on the new wheel. */
+    public static boolean whistleForKrypto(ServerPlayer player, ItemStack item) {
+        if (!SupergirlHero.INSTANCE.isSuited(player) || player.isSpectator()) return false;
+        whistle(player, item, get(player));
+        return true;
+    }
+
     /** Sneaking and using the pendant: she whistles and he comes, wherever he is. */
     private static void whistle(ServerPlayer player, ItemStack item, State state) {
         ServerLevel level = player.level();

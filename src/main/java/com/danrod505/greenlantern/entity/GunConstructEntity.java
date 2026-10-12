@@ -1,14 +1,15 @@
 package com.danrod505.greenlantern.entity;
 
 import com.danrod505.greenlantern.construct.ConstructRegistry;
+import com.danrod505.greenlantern.engine.preset.PresetRuntime;
 import com.danrod505.greenlantern.ring.RingHelper;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -50,12 +51,12 @@ public class GunConstructEntity extends ConstructEntity {
         return position().add(0, getBbHeight() / 2, 0).add(Vec3.directionFromRotation(getXRot(), getYRot()).scale(1.1 * SCALE));
     }
 
+    /** The gun stays while the ring fires it (the hold of the Constructs of Will, see {@code LanternHero#ownPower}). */
     @Override
     protected boolean ownerValid() {
         Player owner = getOwner();
-        if (!super.ownerValid() || owner == null || !owner.isUsingItem()) return false;
-        ItemStack used = owner.getUseItem();
-        return RingHelper.isRing(used) && ConstructRegistry.selected(used) == ConstructRegistry.MINIGUN;
+        return super.ownerValid() && owner instanceof ServerPlayer player
+                && PresetRuntime.running(player, "lantern/" + ConstructRegistry.MINIGUN.id().getPath());
     }
 
     @Override

@@ -28,7 +28,7 @@ public final class BatmanScript {
     public static void batPower(com.danrod505.greenlantern.batman.BatPower power) {
         server(sp -> {
             ItemStack belt = com.danrod505.greenlantern.batman.BatmanHelper.findBelt(sp);
-            com.danrod505.greenlantern.batman.BatPower.POWERS.select(belt, power);
+            com.danrod505.greenlantern.batman.BatmanHero.INSTANCE.selectOwn(belt, power.id());
             sp.getCooldowns().removeCooldown(sp.getCooldowns().getCooldownGroup(belt));
             com.danrod505.greenlantern.batman.BatmanServer.usePower(sp, belt, power);
         });
@@ -268,7 +268,7 @@ public final class BatmanScript {
             if (mc().screen != null) mc().screen.keyReleased(new net.minecraft.client.input.KeyEvent(org.lwjgl.glfw.GLFW.GLFW_KEY_R, 0, 0));
         });
         step(10, () -> com.danrod505.greenlantern.GreenLantern.LOGGER.info("CLIENTSCRIPT gadget selected={}",
-                com.danrod505.greenlantern.batman.BatPower.POWERS.selected(com.danrod505.greenlantern.batman.BatmanHelper.findBelt(mc().player)).id()));
+                com.danrod505.greenlantern.batman.BatmanHero.INSTANCE.powers().set().selected(com.danrod505.greenlantern.batman.BatmanHelper.findBelt(mc().player)).id()));
         // The manual.
         step(5, () -> mc().setScreen(com.danrod505.greenlantern.client.GuideScreen.atChapter("batman")));
         step(10, () -> shot("bat11_guide"));

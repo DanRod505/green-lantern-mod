@@ -51,5 +51,19 @@
   "message.greenlantern.cyborg_hack_nothing": "No machine to hack in sight",
   "message.greenlantern.cyborg_boom_tube_open": "Boom Tube opening: stay close!",
   "message.greenlantern.cyborg_boom_tube_marked": "Boom Tube destination marked at %s, %s, %s",
-  "message.greenlantern.cyborg_lightning": "A lightning bolt filled the battery!"
+  "message.greenlantern.cyborg_lightning": "A lightning bolt filled the battery!",
+  "power.greenlantern.cyborg_canhao_sonico": "Sonic Cannon",
+  "power.greenlantern.cyborg_canhao_sonico.desc": "Tap: fires the sonic cannon. Aiming at stone: mines a hole.",
+  "power.greenlantern.cyborg_invasao_de_sistema": "System Hack",
+  "power.greenlantern.cyborg_invasao_de_sistema.desc": "Tap: takes over the machine you aim at. Hold: an EMP burst.",
+  "power.greenlantern.cyborg_blindagem": "Armor Plating",
+  "power.greenlantern.cyborg_blindagem.desc": "Tap: the armor closes and you take less damage for a while. Hold: repairs yourself.",
+  "power.greenlantern.cyborg_caixa_materna": "Mother Box",
+  "power.greenlantern.cyborg_caixa_materna.desc": "Tap: shoulder missiles. Hold: a helper that mines for you.",
+  "power.greenlantern.cyborg_scanner": "Scanner",
+  "power.greenlantern.cyborg_scanner.desc": "Tap: marks enemies and ores through the walls.",
+  "power.greenlantern.cyborg_braco_guindaste": "Crane Arm",
+  "power.greenlantern.cyborg_braco_guindaste.desc": "Tap: picks up the block you aim at and moves it.",
+  "power.greenlantern.cyborg_tubo_de_explosao": "Boom Tube",
+  "power.greenlantern.cyborg_tubo_de_explosao.desc": "Supreme. Tap: opens a Boom Tube."
 }

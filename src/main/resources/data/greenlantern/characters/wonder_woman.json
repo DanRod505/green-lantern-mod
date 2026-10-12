@@ -1,5 +1,5 @@
 {
-  "_comentario": "Um dos 9 heróis que já existiam: os poderes e a energia continuam no código dele. O traje, os bônus e a ordem da roda vêm daqui, com os mesmos números de antes.",
+  "_comentario": "Um dos 9 heróis que já existiam, no modelo novo de habilidades (Etapa 3, lote 1): a roda e as passivas são as do catálogo. As funções com o preset poder_do_heroi usam o poder do código dele como antes (energia, recarga e números de hoje); as outras são presets da biblioteca. O traje e os bônus vêm daqui, com os mesmos números de antes.",
   "id": "wonder_woman",
   "nome": "Mulher-Maravilha",
   "classe": "guerreiro",
@@ -81,28 +81,177 @@
   },
   "habilidades": [
     {
-      "id": "lasso_capture"
+      "id": "ww_espada_e_escudo",
+      "nome": "Espada e Escudo",
+      "classe": "golpe",
+      "preset": "poder_do_heroi",
+      "numeros": {
+        "dano": 12,
+        "custo": 6,
+        "recarga": 3,
+        "alcance": 4
+      },
+      "ajustes": {
+        "poder": "sword_and_shield"
+      },
+      "funcoes": [
+        {
+          "preset": "poder_do_heroi",
+          "quando": {
+            "aperto": "segurar"
+          },
+          "ajustes": {
+            "poder": "shield_throw"
+          }
+        },
+        {
+          "preset": "cortar_arvore",
+          "quando": {
+            "mira": "madeira"
+          },
+          "numeros": {
+            "alcance": 4
+          }
+        }
+      ]
     },
     {
-      "id": "lasso_pull"
+      "id": "ww_braceletes_da_vitoria",
+      "nome": "Braceletes da Vitória",
+      "classe": "defesa",
+      "preset": "poder_do_heroi",
+      "numeros": {
+        "custo": 5,
+        "recarga": 6,
+        "raio": 3,
+        "duracao": 10
+      },
+      "ajustes": {
+        "poder": "bracelet_guard"
+      },
+      "funcoes": [
+        {
+          "preset": "gelo_e_calor",
+          "quando": {
+            "mira": "#minecraft:campfires"
+          },
+          "numeros": {
+            "alcance": 6
+          },
+          "ajustes": {
+            "efeito": "calor"
+          }
+        }
+      ]
     },
     {
-      "id": "lasso_spin"
+      "id": "ww_laco_da_verdade",
+      "nome": "Laço da Verdade",
+      "classe": "controle",
+      "preset": "poder_do_heroi",
+      "numeros": {
+        "dano": 2.5,
+        "custo": 8,
+        "recarga": 12,
+        "alcance": 24,
+        "duracao": 4
+      },
+      "ajustes": {
+        "poder": "lasso_capture"
+      },
+      "funcoes": [
+        {
+          "preset": "poder_do_heroi",
+          "quando": {
+            "aperto": "segurar"
+          },
+          "ajustes": {
+            "poder": "lasso_pull"
+          }
+        },
+        {
+          "preset": "poder_do_heroi",
+          "quando": {
+            "aperto": "soltar"
+          },
+          "ajustes": {
+            "poder": "lasso_spin"
+          }
+        }
+      ]
     },
     {
-      "id": "bracelet_guard"
+      "id": "ww_bencao_dos_deuses",
+      "nome": "Bênção dos Deuses",
+      "classe": "natureza",
+      "preset": "aura",
+      "numeros": {
+        "custo": 8,
+        "recarga": 10,
+        "raio": 6,
+        "duracao": 60
+      },
+      "ajustes": {
+        "atributo": "todos",
+        "quanto": 0.3
+      },
+      "funcoes": [
+        {
+          "preset": "plantar_e_colher",
+          "quando": {
+            "aperto": "segurar"
+          }
+        }
+      ]
     },
     {
-      "id": "bracelet_shockwave"
+      "id": "ww_jato_invisivel",
+      "nome": "Jato Invisível",
+      "classe": "mobilidade",
+      "preset": "poder_do_heroi",
+      "numeros": {
+        "custo": 5,
+        "recarga": 4,
+        "alcance": 24
+      },
+      "ajustes": {
+        "poder": "invisible_jet"
+      }
     },
     {
-      "id": "sword_and_shield"
+      "id": "ww_choque_dos_braceletes",
+      "nome": "Choque dos Braceletes",
+      "classe": "explosao",
+      "suprema": true,
+      "preset": "poder_do_heroi",
+      "numeros": {
+        "dano": 43,
+        "custo": 40,
+        "recarga": 90,
+        "raio": 9
+      },
+      "ajustes": {
+        "poder": "bracelet_shockwave"
+      },
+      "funcoes": [
+        {
+          "preset": "grande_obra",
+          "quando": {
+            "aperto": "segurar"
+          },
+          "ajustes": {
+            "estrutura": "minecraft:village/desert/houses/desert_temple_1"
+          }
+        }
+      ]
+    }
+  ],
+  "passivas": [
+    {
+      "tipo": "voo"
     },
     {
-      "id": "shield_throw"
-    },
-    {
-      "id": "invisible_jet"
+      "tipo": "superforca"
     }
   ],
   "skins": [
