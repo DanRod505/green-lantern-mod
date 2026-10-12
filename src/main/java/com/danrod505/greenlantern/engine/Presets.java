@@ -1,11 +1,15 @@
 package com.danrod505.greenlantern.engine;
 
 import com.danrod505.greenlantern.engine.preset.BlastPresets;
+import com.danrod505.greenlantern.engine.preset.ControlPresets;
 import com.danrod505.greenlantern.engine.preset.DefensePresets;
+import com.danrod505.greenlantern.engine.preset.EmpowerPresets;
 import com.danrod505.greenlantern.engine.preset.EvasionPresets;
 import com.danrod505.greenlantern.engine.preset.MovementPresets;
 import com.danrod505.greenlantern.engine.preset.ShotPresets;
 import com.danrod505.greenlantern.engine.preset.StrikePresets;
+import com.danrod505.greenlantern.engine.preset.SummonPresets;
+import com.danrod505.greenlantern.engine.preset.SupremePresets;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -59,6 +63,10 @@ public final class Presets {
         MovementPresets.register();
         DefensePresets.register();
         EvasionPresets.register();
+        ControlPresets.register();
+        SummonPresets.register();
+        EmpowerPresets.register();
+        SupremePresets.register();
     }
 
     private Presets() {}

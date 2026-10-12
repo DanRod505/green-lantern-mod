@@ -93,6 +93,7 @@ public final class EngineServer {
             return false;
         }
         if (PresetRuntime.stop(player, ability.data().id())) return true;
+        if (PresetRuntime.undo(player, ability.data().id())) return true;
         if (!ready(player, hero, item, ability)) return false;
         return finish(player, hero, item, ability, Presets.useInFight(player, hero, item, ability));
     }

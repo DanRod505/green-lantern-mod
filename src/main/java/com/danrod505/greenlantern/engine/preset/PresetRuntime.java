@@ -4,7 +4,9 @@ import com.danrod505.greenlantern.engine.EngineServer;
 import com.danrod505.greenlantern.engine.PresetContext;
 import com.danrod505.greenlantern.engine.Presets.Outcome;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -60,12 +62,16 @@ public final class PresetRuntime {
     }
 
     private static final List<Running> RUNNING = new ArrayList<>();
+    /** What pressing an ability again takes back (a great work), by player and ability. */
+    private static final Map<String, Runnable> UNDO = new HashMap<>();
 
     private PresetRuntime() {}
 
     public static void register() {
         TickEvent.ServerTickEvent.Post.BUS.addListener(event -> tick(event.server()));
         Guards.register();
+        Summons.register();
+        ControlPresets.events();
     }
 
     /** Starts a task for {@code player}; it gets its first tick on the next server tick. */
@@ -111,6 +117,34 @@ public final class PresetRuntime {
         List<Running> ended = RUNNING.stream().filter(r -> r.key != null && r.owner.equals(player.getUUID())).toList();
         RUNNING.removeAll(ended);
         ended.forEach(r -> r.task.stop());
+    }
+
+    /** Ends one task of the player now, if it is still running. */
+    public static void cancel(ServerPlayer player, Task task) {
+        List<Running> ended = RUNNING.stream().filter(r -> r.task == task && r.owner.equals(player.getUUID())).toList();
+        RUNNING.removeAll(ended);
+        ended.forEach(r -> r.task.stop());
+    }
+
+    /**
+     * Leaves something the ability can take back: the next press of it (with no need of energy,
+     * cooldown or a full Supreme bar) runs {@code undo} instead of using the ability again.
+     */
+    public static void undoable(PresetContext c, Runnable undo) {
+        UNDO.put(c.player().getUUID() + "/" + key(c), undo);
+    }
+
+    /** Takes back what this ability of the player left, if anything; returns whether it did. */
+    public static boolean undo(ServerPlayer player, String key) {
+        Runnable undo = UNDO.remove(player.getUUID() + "/" + key);
+        if (undo == null) return false;
+        undo.run();
+        return true;
+    }
+
+    /** Whether this ability of the player left something to take back. */
+    public static boolean undoable(ServerPlayer player, String key) {
+        return UNDO.containsKey(player.getUUID() + "/" + key);
     }
 
     /** How many tasks of this player are running (for the tests). */
