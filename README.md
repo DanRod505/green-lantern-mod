@@ -5,6 +5,15 @@
 Mod de heróis do **Universo DC** para **Minecraft Java 1.21.11** com **Forge 61.2.0** (compilado com **Java 25**).
 Começou como o mod do Lanterna Verde e agora traz também **o Flash** (v1.7.0) **o Aquaman** (v1.8.0), **Atlântida** (v1.9.0) **o Kraken do Aquaman** (v1.10.0), **o Batman** (v1.11.0), **as criaturas de Atlântida** (v1.12.0) **o Fosso**, os inimigos do Aquaman (v1.13.0), **o Superman** (v1.14.0), **a Mulher Maravilha** (v1.15.0) **o Ciborgue** (v1.16.0), o primeiro herói feito com o kit de herói, e **a Supergirl com o Krypto, o Supercão** (v1.17.0). O id do mod continua `greenlantern`, então mundos e configurações antigas continuam funcionando.
 
+## Presets de controle, invocação, fortalecimento e suprema (novo na 2.3.0)
+
+Terceiro lote da biblioteca de presets. **Nada muda nos 9 heróis de hoje.**
+
+* **Controle:** Puxar (laço, chicote ou vinha que traz o alvo), Prender (jaula de energia, gelo, vinhas ou areia que segura até quebrar), Lentidão (cada vez mais lento; com gelo, congela), Medo e confusão (os mobs fogem ou brigam entre si), Dominar (o mob mirado luta pelo personagem) e Levitar (levanta uma criatura ou um bloco e solta depois).
+* **Invocação:** Ajudante (lobos ou outra criatura que lutam junto), Construto (martelo, serra ou broca de energia na cor do personagem), Veículo (montaria na hora: cavalo, camelo, ghast feliz, com ou sem armas), Enxame (morcegos que atacam), Cópia (cópias do personagem que atraem os monstros) e Torre (torreta que atira sozinha). As criaturas chamadas nunca atacam jogadores e somem ao fim do tempo.
+* **Fortalecimento:** Aura (mais dano, velocidade ou defesa), Cura (de uma vez ou aos poucos), Crescer (fica gigante e mais forte), Fúria (mais dano, menos defesa) e Sentidos (visão no escuro, mobs brilhando e minérios vistos através das paredes).
+* **Suprema:** Suprema de combate (carrega e solta um golpe enorme em volta, com visual de energia, solar ou raio) e Grande obra (monta uma estrutura peça por peça na frente do personagem; apertar de novo desmonta).
+
 ## Presets de movimento, defesa e evasão (novo na 2.2.0)
 
 Segundo lote da biblioteca de presets. **Nada muda nos 9 heróis de hoje.**

@@ -70,3 +70,31 @@ Os presets que duram (marcados com *) desligam ao apertar a tecla de novo ou ao 
 | `fuga_de_forma` | duracao (5) | `forma`: sombra, animal, poca; `velocidade` extra (0.6). Atacar termina |
 
 Os testes ficam em `src/gametest/.../heroes/PresetLot2Tests.java` e os prints no roteiro `presets_lote2`.
+
+## Lote 3 (2.3.0): Controle, Invocação, Fortalecimento e Suprema
+
+As criaturas chamadas ou dominadas lutam pelo dono: vão atrás dos monstros perto dele e de quem o ataca, nunca de jogadores nem umas das outras, e somem quando o tempo acaba (uma que sobrar depois de reiniciar o servidor não volta). Os presets nunca ferem as criaturas chamadas. Os de fortalecimento marcados com * desligam ao apertar a tecla de novo ou ao tirar o traje.
+
+| Preset | Números | Ajustes |
+|---|---|---|
+| `puxar` | alcance (12), dano (opcional) | `forca` (1.2), `laco` (elemento da linha) |
+| `prender` | alcance (12), duracao (4), dano (opcional) | `material`: energia, gelo, vinha, areia; `vida` da prisão (10): o dano que ela aguenta antes de quebrar |
+| `lentidao` | alcance (16) ou raio (em volta), duracao (5) | `forca` máxima da lentidão (3); com o elemento gelo também congela |
+| `medo_e_confusao` | raio (8), duracao (5) | `tipo`: medo (fogem) ou confusao (atacam uns aos outros). Nesse tempo deixam os jogadores em paz |
+| `dominar` | alcance (12), duracao (15) | `vida_maxima` de quem pode ser dominado (40) |
+| `levitar` | alcance (16), duracao (4) | `altura` (3), `peso` = vida máxima da criatura (40). Também levanta o bloco mirado |
+| `ajudante` | duracao (30), dano (o ataque deles; 0 mantém) | `criatura` (minecraft:wolf), `quantidade` (1), `vida` (0 mantém) |
+| `construto` | alcance (10), duracao (8), dano por golpe | `forma`: martelo, serra, broca; `intervalo` entre golpes (1.5) |
+| `veiculo` | duracao (60), dano dos tiros | `entidade` (minecraft:horse; camelo, ghast feliz...), `velocidade` extra (0.5), `vida`, `armas` (false). Termina ao descer |
+| `enxame` | alcance (12), duracao (6), dano por mordida | `criatura` (minecraft:bat), `quantidade` (8) |
+| `copia` | duracao (8), dano | `quantidade` (2), `vida` (6). Os monstros vão atrás das cópias |
+| `torre` | alcance (16), duracao (15), dano por tiro | `cadencia` em segundos (1), `velocidade` do tiro (1.4) |
+| `aura`* | duracao (10) | `atributo`: dano, velocidade, defesa ou todos; `quanto` (0.5 = +50%, ou metade do dano a menos); `cor` |
+| `cura` | | `quanto` (8 de vida), `tempo` em segundos (0 = de uma vez). Com a vida cheia não sai |
+| `crescer`* | duracao (20) | `tamanho` (1.8), `dano_extra` (4), `vida_extra` (10), `firmeza` contra empurrões (0.6). Precisa de espaço em cima |
+| `furia`* | duracao (8) | `troca` (0.5 = +50% de dano dado e recebido) |
+| `sentidos`* | alcance (24, até 32), duracao (10) | `mostra`: mobs, minerios ou tudo. Visão no escuro; as criaturas brilham e os 32 minérios mais perto aparecem através das paredes |
+| `suprema_de_combate` | dano (20), raio (8) | `carga` em segundos (1), `visual`: energia, solar (queima) ou raio |
+| `grande_obra` | | `estrutura` (id de uma estrutura do jogo ou de um pacote de dados; minecraft:igloo/top), `tempo` de montagem (4), `distancia` (3). Só ocupa ar, água e plantas; apertar de novo desmonta |
+
+Os testes ficam em `src/gametest/.../heroes/PresetLot3Tests.java` e os prints no roteiro `presets_lote3`.

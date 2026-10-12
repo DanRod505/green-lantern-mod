@@ -28,7 +28,8 @@ public final class ClientScripts {
             ShazamScript.SCRIPT,
             FundacaoScript.SCRIPT,
             PresetsScript.SCRIPT,
-            PresetsLot2Script.SCRIPT
+            PresetsLot2Script.SCRIPT,
+            PresetsLot3Script.SCRIPT
             // tools/new_hero.py adds new heroes above this line
     );
 

@@ -78,5 +78,12 @@
   "message.greenlantern.engine_no_place": "There is nowhere to appear there",
   "message.greenlantern.engine_no_wall": "There is no wall in front to pass through",
   "message.greenlantern.engine_too_thick": "That wall is too thick",
-  "message.greenlantern.engine_no_room": "There is no room for the wall there"
+  "message.greenlantern.engine_no_room": "There is no room for the wall there",
+  "message.greenlantern.engine_no_target": "There is nothing there to aim at",
+  "message.greenlantern.engine_too_strong": "%s is too strong to be dominated",
+  "message.greenlantern.engine_no_creature": "That creature cannot be called",
+  "message.greenlantern.engine_no_structure": "That structure does not exist",
+  "message.greenlantern.engine_dismantled": "The work was taken down",
+  "message.greenlantern.engine_full_health": "Your health is already full",
+  "message.greenlantern.engine_no_space": "There is no room for that here"
 }

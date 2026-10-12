@@ -1,6 +1,7 @@
 package com.danrod505.greenlantern.engine;
 
 import com.danrod505.greenlantern.engine.preset.PresetFx;
+import com.danrod505.greenlantern.engine.preset.Summons;
 import com.danrod505.greenlantern.hero.power.Hits;
 import com.danrod505.greenlantern.hero.power.Targets;
 import java.util.List;
@@ -68,9 +69,9 @@ public record PresetContext(ServerPlayer player, EngineHero hero, ItemStack item
         return player.damageSources().playerAttack(player);
     }
 
-    /** Whether a preset may hit this creature (never players, armor stands or tamed animals). */
+    /** Whether a preset may hit this creature (never players, armor stands, tamed animals or summons). */
     public boolean hittable(LivingEntity entity) {
-        return Targets.hittable(player, entity);
+        return Targets.hittable(player, entity) && !Summons.summoned(entity);
     }
 
     /** Damage that lands even right after another hit, plus the side effect of the ability's element. */

@@ -33,7 +33,7 @@ public final class Guards {
     /**
      * A guard: {@code reduction} of the damage it takes away (1 is untouchable), {@code halfAngle} in
      * degrees from where the player looks (180 is all around), whether it turns projectiles back and
-     * the chance of it.
+     * the chance of it. A negative reduction makes the hits hurt more (the fury).
      */
     public record Guard(double reduction, double halfAngle, boolean reflects, double chance) {
         boolean covers(ServerPlayer player, Vec3 from) {
@@ -132,9 +132,9 @@ public final class Guards {
         float amount = event.getAmount();
         boolean blocked = false;
         for (Guard guard : list) {
-            if (guard.reduction() > 0 && guard.covers(player, from)) {
+            if (guard.reduction() != 0 && guard.covers(player, from)) {
                 amount *= (float) Math.max(0.0, 1.0 - guard.reduction());
-                blocked |= guard.halfAngle() < 180.0;
+                blocked |= guard.reduction() > 0 && guard.halfAngle() < 180.0;
             }
         }
         event.setAmount(amount);

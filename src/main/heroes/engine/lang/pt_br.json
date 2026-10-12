@@ -78,5 +78,12 @@
   "message.greenlantern.engine_no_place": "Não há onde aparecer aí",
   "message.greenlantern.engine_no_wall": "Não há parede na frente para atravessar",
   "message.greenlantern.engine_too_thick": "Essa parede é grossa demais",
-  "message.greenlantern.engine_no_room": "Não há espaço para a parede aí"
+  "message.greenlantern.engine_no_room": "Não há espaço para a parede aí",
+  "message.greenlantern.engine_no_target": "Não há nada ali para mirar",
+  "message.greenlantern.engine_too_strong": "%s é forte demais para ser dominado",
+  "message.greenlantern.engine_no_creature": "Essa criatura não pode ser chamada",
+  "message.greenlantern.engine_no_structure": "Essa estrutura não existe",
+  "message.greenlantern.engine_dismantled": "A obra foi desmontada",
+  "message.greenlantern.engine_full_health": "Sua vida já está cheia",
+  "message.greenlantern.engine_no_space": "Não há espaço para isso aqui"
 }
