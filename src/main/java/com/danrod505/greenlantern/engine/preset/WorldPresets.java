@@ -80,11 +80,11 @@ public final class WorldPresets {
         Presets.registerWorld("procurar", WorldPresets::search);
     }
 
-    private static Outcome nothing() {
+    static Outcome nothing() {
         return Outcome.fail(Component.translatable("message.greenlantern.engine_nothing_here"));
     }
 
-    private static Outcome noTarget() {
+    static Outcome noTarget() {
         return Outcome.fail(Component.translatable("message.greenlantern.engine_no_target"));
     }
 
@@ -234,7 +234,7 @@ public final class WorldPresets {
     }
 
     /** The first stack of placeable full blocks in the player's inventory (the hotbar first). */
-    private static ItemStack stock(ServerPlayer player) {
+    static ItemStack stock(ServerPlayer player) {
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
             ItemStack stack = player.getInventory().getItem(i);
             if (!stack.isEmpty() && stack.getItem() instanceof BlockItem block
@@ -484,7 +484,7 @@ public final class WorldPresets {
         return Outcome.DONE;
     }
 
-    private static boolean soft(BlockState state) {
+    static boolean soft(BlockState state) {
         return state.is(BlockTags.LEAVES) || state.is(BlockTags.DIRT) || state.is(BlockTags.SAND) || state.is(Blocks.GRAVEL)
                 || state.is(Blocks.SNOW) || state.is(Blocks.SNOW_BLOCK) || state.is(Blocks.CLAY)
                 || state.canBeReplaced() && state.getFluidState().isEmpty() && !state.isAir();
@@ -502,7 +502,7 @@ public final class WorldPresets {
     }
 
     /** Fells the trees the way touches: each log with the logs and leaves joined to it. */
-    private static int fell(ServerLevel level, ServerPlayer player, List<BlockPos> way) {
+    static int fell(ServerLevel level, ServerPlayer player, List<BlockPos> way) {
         ItemStack axe = new ItemStack(Items.IRON_AXE);
         Set<BlockPos> tree = new HashSet<>();
         ArrayDeque<BlockPos> open = new ArrayDeque<>();

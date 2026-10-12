@@ -4,7 +4,6 @@ import com.danrod505.greenlantern.engine.EngineHero;
 import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.HeroRegistry;
 import com.danrod505.greenlantern.network.CycleConstructPacket;
-import com.danrod505.greenlantern.network.EnginePacket;
 import com.danrod505.greenlantern.network.ModNetwork;
 import com.danrod505.greenlantern.network.SelectPowerPacket;
 import com.danrod505.greenlantern.network.ToggleUniformPacket;
@@ -33,13 +32,22 @@ public final class ClientEvents {
         }
         HeroDefinition context = HeroRegistry.context(player).orElse(null);
         if (context instanceof EngineHero engine) com.danrod505.greenlantern.client.engine.EngineIcons.ensure(engine);
-        while (KeyBindings.HERO_POWER.consumeClick()) {
-            if (mc.screen != null || context == null || !context.hasPowers()) continue;
-            // Engine characters: crouch + V is the ability's use in the world.
-            if (context instanceof EngineHero && player.isShiftKeyDown()) ModNetwork.sendToServer(new EnginePacket(EnginePacket.WORLD_USE));
-            else ModNetwork.sendToServer(new UsePowerPacket(-1));
+        if (context instanceof EngineHero engine) {
+            // Engine characters: the function of the ability depends on how V is pressed (see EngineKeys).
+            com.danrod505.greenlantern.client.engine.EngineKeys.tick(mc, engine);
+        } else {
+            while (KeyBindings.HERO_POWER.consumeClick()) {
+                if (mc.screen != null || context == null || !context.hasPowers()) continue;
+                ModNetwork.sendToServer(new UsePowerPacket(-1));
+            }
+            // The skin and the direct keys only act for engine characters.
+            while (KeyBindings.SKIN.consumeClick()) {
+            }
+            for (var key : KeyBindings.ABILITIES) {
+                while (key.consumeClick()) {
+                }
+            }
         }
-        tickEngineKeys(mc, context);
         tickWheelKey(mc, player);
         for (HeroClient hero : ClientSetup.heroes()) hero.controlsTick(mc);
 
@@ -55,22 +63,6 @@ public final class ClientEvents {
                 double y = other.getY() + other.getRandom().nextDouble() * (flying ? 0.6 : 1.8);
                 double z = other.getZ() + (other.getRandom().nextDouble() - 0.5) * 0.5;
                 mc.level.addParticle(ModParticles.GLOW.get(), x, y, z, 0, flying ? -0.02 : 0.01, 0);
-            }
-        }
-    }
-
-    /** B (Supreme), K (skin) and the direct ability keys only act for engine characters. */
-    private static void tickEngineKeys(Minecraft mc, HeroDefinition context) {
-        boolean engine = mc.screen == null && context instanceof EngineHero;
-        while (KeyBindings.SUPREME.consumeClick()) {
-            if (engine) ModNetwork.sendToServer(new EnginePacket(EnginePacket.SUPREME));
-        }
-        while (KeyBindings.SKIN.consumeClick()) {
-            if (engine) ModNetwork.sendToServer(new EnginePacket(EnginePacket.SKIN));
-        }
-        for (int i = 0; i < KeyBindings.ABILITIES.length; i++) {
-            while (KeyBindings.ABILITIES[i].consumeClick()) {
-                if (engine && i < context.powers().set().count()) ModNetwork.sendToServer(new UsePowerPacket(i));
             }
         }
     }

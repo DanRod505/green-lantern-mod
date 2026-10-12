@@ -93,7 +93,7 @@ public final class PresetLot2Tests {
 
     /** The 18 presets of batch 2 are there for the character files to name. */
     public static void registered(GameTestHelper helper) {
-        for (String id : BATCH_2) helper.assertTrue(Presets.hasFight(id), "missing preset " + id);
+        for (String id : BATCH_2) helper.assertTrue(Presets.exists(id), "missing preset " + id);
         helper.succeed();
     }
 
@@ -106,8 +106,8 @@ public final class PresetLot2Tests {
         ServerPlayer player = player(helper, 7.5, 1, 7.5, 0, 0);
         player.setItemInHand(InteractionHand.MAIN_HAND, HeroContractTests.chargedItem(winged));
         helper.assertTrue(winged.summonSuit(player), "the suit goes on");
-        EngineAbility fly = (EngineAbility) winged.powers().power(3);
-        helper.assertTrue(fly.data().preset().equals("voo"), "the 4th ability is the flight");
+        EngineAbility fly = (EngineAbility) winged.powers().power(4);
+        helper.assertTrue(fly.data().preset().equals("voo"), "the 5th ability is the take-off");
         helper.assertTrue(EngineServer.useAbility(player, player.getMainHandItem(), fly), "the key takes off");
         helper.assertTrue(player.getAbilities().flying, "the player flies");
         helper.assertTrue(player.getDeltaMovement().y > 0.5, "with a jump up, got " + player.getDeltaMovement());
@@ -124,7 +124,7 @@ public final class PresetLot2Tests {
         ServerPlayer player = suited(helper, 7.5, 7.5);
         double speed = attribute(player, Attributes.MOVEMENT_SPEED);
         double step = attribute(player, Attributes.STEP_HEIGHT);
-        EngineAbility run = ability("supervelocidade", AbilityKind.MOVEMENT, 0, 4, 0, 0, 10, settings("velocidade", 2.0));
+        EngineAbility run = ability("supervelocidade", AbilityKind.MOBILITY, 0, 4, 0, 0, 10, settings("velocidade", 2.0));
         helper.assertTrue(use(player, run), "the run starts");
         helper.assertTrue(attribute(player, Attributes.MOVEMENT_SPEED) > speed * 2.9, "three times as fast, got " + attribute(player, Attributes.MOVEMENT_SPEED));
         helper.assertTrue(attribute(player, Attributes.STEP_HEIGHT) >= step + 0.5, "and it steps up whole blocks");
@@ -149,7 +149,7 @@ public final class PresetLot2Tests {
     public static void glide(GameTestHelper helper) {
         ServerPlayer player = suited(helper, 7.5, 7.5);
         player.setOnGround(false);
-        helper.assertTrue(use(player, ability("planar", AbilityKind.MOVEMENT, 0, 4, 0, 0, 10, settings("queda_por_segundo", 2.0))), "the glide opens");
+        helper.assertTrue(use(player, ability("planar", AbilityKind.MOBILITY, 0, 4, 0, 0, 10, settings("queda_por_segundo", 2.0))), "the glide opens");
         helper.assertTrue(attribute(player, Attributes.GRAVITY) < 0.01, "the fall is slow, gravity " + attribute(player, Attributes.GRAVITY));
         helper.startSequence()
                 .thenExecuteAfter(5, () -> player.setOnGround(true))
@@ -166,7 +166,7 @@ public final class PresetLot2Tests {
         player.setOnGround(true);
         Pig near = pig(helper, 9.5, 7.5);
         Pig far = pig(helper, 1.5, 1.5);
-        helper.assertTrue(use(player, ability("salto_gigante", AbilityKind.MOVEMENT, 3, 1, 0, 3, 0, settings("altura", 8, "distancia", 10))),
+        helper.assertTrue(use(player, ability("salto_gigante", AbilityKind.MOBILITY, 3, 1, 0, 3, 0, settings("altura", 8, "distancia", 10))),
                 "the leap goes off");
         Vec3 jump = player.getDeltaMovement();
         helper.assertTrue(jump.y > 1.0 && jump.z > 0.5, "high and forward, got " + jump);
@@ -184,12 +184,12 @@ public final class PresetLot2Tests {
 
     public static void grapple(GameTestHelper helper) {
         ServerPlayer player = suited(helper, 7.5, 2.5);
-        helper.assertFalse(use(player, ability("gancho", AbilityKind.MOVEMENT, 0, 1, 3, 0, 0, settings())), "with no block in reach it fails");
+        helper.assertFalse(use(player, ability("gancho", AbilityKind.MOBILITY, 0, 1, 3, 0, 0, settings())), "with no block in reach it fails");
         helper.setBlock(new BlockPos(7, 2, 11), Blocks.STONE);
         helper.setBlock(new BlockPos(7, 3, 11), Blocks.STONE);
         player.setXRot(-2.0F);
         double start = player.getZ();
-        helper.assertTrue(use(player, ability("gancho", AbilityKind.MOVEMENT, 0, 1, 24, 0, 0, settings("velocidade", 1.5))), "the line goes to the block");
+        helper.assertTrue(use(player, ability("gancho", AbilityKind.MOBILITY, 0, 1, 24, 0, 0, settings("velocidade", 1.5))), "the line goes to the block");
         helper.startSequence()
                 .thenExecuteAfter(12, () -> {
                     helper.assertTrue(player.getZ() - start > 5.0, "it pulls the player to the block, moved " + (player.getZ() - start));
@@ -203,7 +203,7 @@ public final class PresetLot2Tests {
         ServerPlayer player = suited(helper, 3.5, 3.5);
         // Down at the floor 6 blocks ahead.
         player.setXRot((float) Math.toDegrees(Math.atan2(1.62, 6.0)));
-        helper.assertTrue(use(player, ability("teleporte", AbilityKind.MOVEMENT, 0, 1, 16, 0, 0, settings("visual", "tubo", "tempo", 0.25))),
+        helper.assertTrue(use(player, ability("teleporte", AbilityKind.MOBILITY, 0, 1, 16, 0, 0, settings("visual", "tubo", "tempo", 0.25))),
                 "the teleport opens");
         Vec3 target = helper.absoluteVec(new Vec3(3.5, 1, 9.5));
         helper.startSequence()
@@ -217,7 +217,7 @@ public final class PresetLot2Tests {
 
     public static void fastSwim(GameTestHelper helper) {
         ServerPlayer player = suited(helper, 7.5, 7.5);
-        helper.assertTrue(use(player, ability("nado_rapido", AbilityKind.MOVEMENT, 0, 1, 0, 0, 2, settings())), "the swim goes on");
+        helper.assertTrue(use(player, ability("nado_rapido", AbilityKind.MOBILITY, 0, 1, 0, 0, 2, settings())), "the swim goes on");
         helper.assertTrue(player.hasEffect(MobEffects.DOLPHINS_GRACE) && player.hasEffect(MobEffects.WATER_BREATHING), "fast swimming and breath");
         helper.assertTrue(attribute(player, Attributes.WATER_MOVEMENT_EFFICIENCY) > 0.4, "it moves well in water");
         helper.startSequence()
@@ -233,9 +233,9 @@ public final class PresetLot2Tests {
         for (int z = 6; z <= 7; z++) {
             for (int y = 1; y <= 3; y++) helper.setBlock(new BlockPos(7, y, z), Blocks.STONE);
         }
-        helper.assertFalse(use(player, ability("atravessar", AbilityKind.MOVEMENT, 0, 1, 0, 0, 0, settings("espessura", 1))),
+        helper.assertFalse(use(player, ability("atravessar", AbilityKind.MOBILITY, 0, 1, 0, 0, 0, settings("espessura", 1))),
                 "a wall 2 blocks thick is too much for 1");
-        helper.assertTrue(use(player, ability("atravessar", AbilityKind.MOVEMENT, 0, 1, 0, 0, 0.3, settings("espessura", 3))), "it passes");
+        helper.assertTrue(use(player, ability("atravessar", AbilityKind.MOBILITY, 0, 1, 0, 0, 0.3, settings("espessura", 3))), "it passes");
         helper.assertTrue(Guards.of(player).stream().anyMatch(g -> g.reduction() >= 1.0), "untouchable while crossing");
         Vec3 behind = helper.absoluteVec(new Vec3(7.5, 1, 8.5));
         helper.startSequence()

@@ -3,7 +3,6 @@ package com.danrod505.greenlantern.gametest.heroes;
 import static com.danrod505.greenlantern.gametest.GameTestKit.*;
 
 import com.danrod505.greenlantern.engine.AbilityKind;
-import com.danrod505.greenlantern.engine.AbilitySlot;
 import com.danrod505.greenlantern.engine.CharacterData;
 import com.danrod505.greenlantern.engine.EngineAbility;
 import com.danrod505.greenlantern.engine.EngineHero;
@@ -102,9 +101,14 @@ public final class PresetTests {
     public static EngineAbility ability(String preset, AbilityKind kind, double damage, double cooldown, double reach, double radius, double duration,
                                         CharacterData.Settings settings) {
         CharacterData.Numbers numbers = new CharacterData.Numbers(damage, 5, cooldown, reach, radius, duration);
-        CharacterData.Ability data = new CharacterData.Ability("teste_" + preset, Optional.of(preset), Optional.of(kind), Optional.of(AbilitySlot.MAIN),
-                preset, Optional.empty(), numbers, settings);
+        CharacterData.Ability data = new CharacterData.Ability("teste_" + preset, Optional.of(preset), Optional.of(kind), false, preset, numbers, settings);
         return new EngineAbility(data, 0, kind);
+    }
+
+    /** The same ability marked as the character's supreme one ({@code "suprema": true}). */
+    public static EngineAbility supreme(EngineAbility ability) {
+        CharacterData.Ability d = ability.data();
+        return new EngineAbility(new CharacterData.Ability(d.id(), d.name(), d.kind(), true, d.preset(), d.numbers(), d.settings()), 0, ability.kind());
     }
 
     static boolean use(ServerPlayer player, EngineAbility ability) {

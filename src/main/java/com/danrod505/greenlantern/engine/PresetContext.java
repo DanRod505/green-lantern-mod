@@ -17,25 +17,32 @@ import net.minecraft.world.phys.Vec3;
 /**
  * One use of an ability by a preset: who uses it, the character, its item and the ability with its
  * numbers (stage 15) and settings. The numbers left at 0 in the file fall back to the preset's own
- * default, so {@code reach(4)} is the ability's {@code alcance} or 4 blocks. {@code world} is a use
- * in the world (crouching), not in a fight.
+ * default, so {@code reach(4)} is the ability's {@code alcance} or 4 blocks. {@code chosen} is the
+ * function of the ability that goes off: its numbers and settings are on top of the ability's.
  */
-public record PresetContext(ServerPlayer player, EngineHero hero, ItemStack item, EngineAbility ability, boolean world) {
-    /** A use in a fight. */
+public record PresetContext(ServerPlayer player, EngineHero hero, ItemStack item, EngineAbility ability, AbilityFunctions.Chosen chosen) {
+    /** A use of the ability's default function. */
     public PresetContext(ServerPlayer player, EngineHero hero, ItemStack item, EngineAbility ability) {
-        this(player, hero, item, ability, false);
+        this(player, hero, item, ability, new AbilityFunctions.Chosen(0, ability.data().defaultFunction()));
     }
 
     public ServerLevel level() {
         return player.level();
     }
 
+    /** The numbers of the function that goes off (its own, else the ability's). */
     public CharacterData.Numbers numbers() {
-        return ability.data().numbers();
+        return ability.data().numbers(chosen.function());
     }
 
+    /** The settings of the function that goes off (the ability's, with the function's own on top). */
     public CharacterData.Settings settings() {
-        return ability.data().settings();
+        return ability.data().settings(chosen.function());
+    }
+
+    /** The preset of the function that goes off. */
+    public String preset() {
+        return chosen.function().preset();
     }
 
     public float damage() {
@@ -80,7 +87,7 @@ public record PresetContext(ServerPlayer player, EngineHero hero, ItemStack item
         return hero.data().colors().light();
     }
 
-    /** The damage of the character's abilities: it counts as the player's, so it fills the Supreme. */
+    /** The damage of the character's abilities: it counts as the player's. */
     public DamageSource source() {
         return player.damageSources().playerAttack(player);
     }

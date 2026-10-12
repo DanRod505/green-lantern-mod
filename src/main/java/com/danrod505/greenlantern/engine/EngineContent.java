@@ -38,7 +38,7 @@ public final class EngineContent {
     public static final RegistryObject<DataComponentType<RingEnergy>> ENERGY = COMPONENTS.register("class_energy",
             () -> DataComponentType.<RingEnergy>builder().persistent(RingEnergy.CODEC).networkSynchronized(RingEnergy.STREAM_CODEC).build());
 
-    /** Cooldowns and the Supreme charge, on the character's item. */
+    /** The cooldowns of the abilities, on the character's item. */
     public static final RegistryObject<DataComponentType<AbilityState>> ABILITIES = COMPONENTS.register("ability_state",
             () -> DataComponentType.<AbilityState>builder().persistent(AbilityState.CODEC).networkSynchronized(AbilityState.STREAM_CODEC).build());
 
@@ -46,7 +46,10 @@ public final class EngineContent {
     public static final RegistryObject<DataComponentType<SkinState>> SKIN = COMPONENTS.register("skin",
             () -> DataComponentType.<SkinState>builder().persistent(SkinState.CODEC).networkSynchronized(SkinState.STREAM_CODEC).build());
 
+    /** The supreme ability is ready again (its cooldown ended). */
     public static final RegistryObject<SoundEvent> SUPREME_READY = sound("engine_supreme_ready");
+    /** The accent of a supreme ability, over the sound of its class. */
+    public static final RegistryObject<SoundEvent> SUPREME = sound("engine_supreme");
     public static final RegistryObject<SoundEvent> NO_ENERGY = sound("engine_no_energy");
     public static final RegistryObject<SoundEvent> SKIN_CHANGE = sound("engine_skin_change");
     /** The sound set of each class of ability (3 variations each, see tools/generate_engine_audio.py). */

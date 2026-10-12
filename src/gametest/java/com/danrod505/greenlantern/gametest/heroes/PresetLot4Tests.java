@@ -4,7 +4,6 @@ import static com.danrod505.greenlantern.gametest.GameTestKit.*;
 import static com.danrod505.greenlantern.gametest.heroes.PresetTests.*;
 
 import com.danrod505.greenlantern.engine.AbilityKind;
-import com.danrod505.greenlantern.engine.AbilitySlot;
 import com.danrod505.greenlantern.engine.CharacterData;
 import com.danrod505.greenlantern.engine.EngineAbility;
 import com.danrod505.greenlantern.engine.EngineServer;
@@ -51,16 +50,16 @@ public final class PresetLot4Tests {
         tests.register("preset_procurar", () -> PresetLot4Tests::search);
     }
 
-    /** An ability whose world use ({@code "uso_no_mundo"}) is {@code preset}: the shortest cooldown (half a second), cost 5. */
+    /** A world ability (Construção) that runs {@code preset}: the shortest cooldown (a tick), cost 5. */
     public static EngineAbility world(String preset, double reach, double radius, double duration, CharacterData.Settings settings) {
         CharacterData.Numbers numbers = new CharacterData.Numbers(0, 5, 0.05, reach, radius, duration);
-        CharacterData.Ability data = new CharacterData.Ability("teste_" + preset, Optional.of(preset), Optional.of(AbilityKind.STRIKE),
-                Optional.of(AbilitySlot.MAIN), "soco_forte", Optional.of(preset), numbers, settings);
-        return new EngineAbility(data, 0, AbilityKind.STRIKE);
+        CharacterData.Ability data = new CharacterData.Ability("teste_" + preset, Optional.of(preset), Optional.of(AbilityKind.BUILDING), false,
+                preset, numbers, settings);
+        return new EngineAbility(data, 0, AbilityKind.BUILDING);
     }
 
     static boolean useWorld(ServerPlayer player, EngineAbility ability) {
-        return EngineServer.useInWorld(player, prototype(), player.getMainHandItem(), ability);
+        return EngineServer.useAbility(player, player.getMainHandItem(), ability);
     }
 
     /** Turns the player to look at a point of the arena. */
@@ -197,7 +196,7 @@ public final class PresetLot4Tests {
                     look(helper, player, 7.5, 1.0, 9.5);
                     helper.assertTrue(useWorld(player, move), "the key again puts it down");
                     helper.assertTrue(is(helper, 7, 1, 9, Blocks.DIRT), "where the player aims");
-                    helper.assertFalse(PresetRuntime.undoable(player, PresetRuntime.worldKey("teste_mover_blocos")), "and it is done");
+                    helper.assertFalse(PresetRuntime.undoable(player, "teste_mover_blocos"), "and it is done");
                 })
                 .thenExecuteAfter(3, () -> {
                     helper.assertTrue(helper.getLevel().getEntitiesOfClass(FallingBlockEntity.class, player.getBoundingBox().inflate(6)).isEmpty(), "nothing floats any more");

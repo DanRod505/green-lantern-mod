@@ -4,9 +4,7 @@ import static com.danrod505.greenlantern.gametest.ClientScript.*;
 
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.engine.AbilityKind;
-import com.danrod505.greenlantern.engine.AbilityState;
 import com.danrod505.greenlantern.engine.EngineAbility;
-import com.danrod505.greenlantern.engine.EngineContent;
 import com.danrod505.greenlantern.engine.EngineServer;
 import com.danrod505.greenlantern.engine.preset.PresetRuntime;
 import com.danrod505.greenlantern.gametest.ClientScript;
@@ -24,7 +22,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.phys.Vec3;
 
@@ -97,10 +94,6 @@ public final class PresetsLot3Script {
             sp.setYRot(0);
             sp.setXRot(aimPitch);
             sp.setYHeadRot(0);
-            if (ability.supreme()) {
-                ItemStack item = sp.getMainHandItem();
-                item.set(EngineContent.ABILITIES.get(), EngineServer.state(item).withSupreme(AbilityState.SUPREME_FULL));
-            }
             boolean went = EngineServer.useAbility(sp, sp.getMainHandItem(), ability);
             GreenLantern.LOGGER.info("CLIENTSCRIPT preset {} went={}", ability.data().preset(), went);
         });
@@ -232,15 +225,15 @@ public final class PresetsLot3Script {
         });
 
         // ---- Suprema ----
-        demo("suprema_energia", ability("suprema_de_combate", AbilityKind.SUPREME, 20, 0, 8, 0, "carga", 1.5), 25,
+        demo("suprema_energia", PresetTests.supreme(ability("suprema_de_combate", AbilityKind.BLAST, 20, 0, 8, 0, "carga", 1.5)), 25,
                 new double[]{-3, 3, 3, 3, 0, 6, -5, 6, 5, 6}, 15, 18, 6);
-        demo("suprema_raio", ability("suprema_de_combate", AbilityKind.SUPREME, 20, 0, 8, 0, "carga", 1.0, "visual", "raio"), 25,
+        demo("suprema_raio", PresetTests.supreme(ability("suprema_de_combate", AbilityKind.BLAST, 20, 0, 8, 0, "carga", 1.0, "visual", "raio")), 25,
                 new double[]{-3, 3, 3, 3, 0, 6}, 21, 4);
-        demo("suprema_solar", ability("suprema_de_combate", AbilityKind.SUPREME, 20, 0, 8, 0, "carga", 1.0, "visual", "solar"), 25,
+        demo("suprema_solar", PresetTests.supreme(ability("suprema_de_combate", AbilityKind.BLAST, 20, 0, 8, 0, "carga", 1.0, "visual", "solar")), 25,
                 new double[]{-3, 3, 3, 3, 0, 6}, 21, 4);
         // The great work: an igloo goes up piece by piece; the key again takes it down.
         String work = label("grande_obra");
-        EngineAbility igloo = ability("grande_obra", AbilityKind.SUPREME, 0, 0, 0, 0, "tempo", 4, "distancia", 3);
+        EngineAbility igloo = PresetTests.supreme(ability("grande_obra", AbilityKind.BUILDING, 0, 0, 0, 0, "tempo", 4, "distancia", 3));
         reset(10);
         step(6, () -> look(0, 25));
         step(4, () -> use(igloo));

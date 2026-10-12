@@ -12,7 +12,8 @@ import java.util.function.Consumer;
  * batch 5): each preset has a shape (a fist, a beam, a wing, a shield...), the ability may pick
  * another with {@code "icone"} in its settings, and it is painted in the ability's colour
  * ({@code "icone_cor"}, else {@code "cor"}, else the character's main colour) with a dark outline and
- * a light shine. The last cell of a character's sheet is its emblem. Pure Java: the client turns the
+ * a light shine. The supreme ability gets a gold border; the sheet also has the icons of the extra
+ * functions and of the traits, and its last cell is the emblem. Pure Java: the client turns the
  * pixels into a texture ({@code client.engine.EngineIcons}).
  */
 public final class AbilityIcons {
@@ -216,6 +217,22 @@ public final class AbilityIcons {
         });
         shape("bloco", c -> c.poly(MAIN, 8, 1, 15, 4.5, 8, 8, 1, 4.5).poly(DARK, 1, 4.5, 8, 8, 8, 15, 1, 11.5).poly(SHINE, 15, 4.5, 8, 8, 8, 15, 15, 11.5));
         shape("lampada", c -> c.disc(8, 6, 4.6, MAIN).disc(6.5, 4.5, 1.5, SHINE).rect(6, 10, 10, 13, DARK).rect(7, 13, 9, 14, DARK));
+        // The new model of abilities (2.6.0): the classes and presets of the world.
+        shape("troca", c -> c.ring(8, 8, 5, 2, MAIN).rect(0, 7, 6, 9, EMPTY).rect(10, 7, 16, 9, EMPTY)
+                .poly(SHINE, 1, 6, 6, 6, 3.5, 10).poly(SHINE, 10, 10, 15, 10, 12.5, 6));
+        shape("bau", c -> c.rect(2, 4, 13, 13, MAIN).rect(2, 4, 13, 6, SHINE).rect(2, 8, 13, 8, DARK).rect(7, 7, 8, 10, SECOND).rect(2, 13, 13, 13, DARK));
+        shape("machado", c -> c.line(4, 14, 11, 3, 1.6, DARK).poly(MAIN, 9, 2, 15, 5, 13, 10, 10, 7).line(10, 3, 14, 5.5, 1, SHINE));
+        shape("pa", c -> c.line(3, 13, 10, 6, 1.6, DARK).poly(MAIN, 9, 3, 14, 2, 13, 7, 10, 8).line(10, 3.5, 13, 3, 1, SHINE)
+                .line(2, 14.5, 4, 12, 2.4, DARK));
+        shape("anzol", c -> c.line(9, 1, 9, 10, 1.6, MAIN).ring(6.5, 10, 2.6, 1.6, MAIN).rect(4, 6, 6, 9, EMPTY).poly(SHINE, 3, 7, 5, 9, 3.5, 10.5)
+                .disc(9, 1.5, 1.2, SECOND));
+        shape("engrenagem", c -> {
+            for (int i = 0; i < 8; i++) {
+                double a = i * Math.PI / 4;
+                c.line(8, 8, 8 + Math.cos(a) * 6.5, 8 + Math.sin(a) * 6.5, 2.4, MAIN);
+            }
+            c.disc(8, 8, 4.6, MAIN).disc(8, 8, 1.8, DARK).disc(6.5, 6.5, 1, SHINE);
+        });
     }
 
     /** The shape of each preset, fight and world, when the ability doesn't pick one. */
@@ -241,12 +258,30 @@ public final class AbilityIcons {
             Map.entry("grande_obra", "coroa"), Map.entry("suprema_de_combate", "coroa"),
             Map.entry("minerar_area", "picareta"), Map.entry("construir", "bloco"), Map.entry("plantar_e_colher", "broto"),
             Map.entry("gelo_e_calor", "floco"), Map.entry("luz", "lampada"), Map.entry("mover_blocos", "bloco"), Map.entry("abrir_caminho", "picareta"),
-            Map.entry("procurar", "lupa"));
+            Map.entry("procurar", "lupa"),
+            Map.entry("cortar_arvore", "machado"), Map.entry("cavar_solto", "pa"), Map.entry("aplanar", "pa"), Map.entry("pescar", "anzol"),
+            Map.entry("projeto_em_fantasma", "bloco"), Map.entry("trocar_bloco", "troca"), Map.entry("ligar_maquina", "engrenagem"),
+            Map.entry("domar_e_guiar", "corrente"), Map.entry("clima", "nuvem"), Map.entry("rastro", "olho"), Map.entry("ima_de_itens", "ima"),
+            Map.entry("ajudante_de_trabalho", "figura"), Map.entry("organizar", "bau"), Map.entry("levar_junto", "figuras"),
+            Map.entry("montaria", "veiculo"));
 
     /** The shape of each class, for a preset that has none (or an ability with no preset yet). */
-    private static final Map<AbilityKind, String> BY_KIND = Map.of(AbilityKind.STRIKE, "punho", AbilityKind.SHOT, "bola", AbilityKind.BLAST, "explosao",
-            AbilityKind.MOVEMENT, "asa", AbilityKind.DEFENSE, "escudo", AbilityKind.CONTROL, "espiral", AbilityKind.SUMMON, "figura",
-            AbilityKind.EVASION, "vulto", AbilityKind.EMPOWER, "seta_cima", AbilityKind.SUPREME, "coroa");
+    private static final Map<AbilityKind, String> BY_KIND = Map.ofEntries(Map.entry(AbilityKind.STRIKE, "punho"), Map.entry(AbilityKind.SHOT, "bola"),
+            Map.entry(AbilityKind.BLAST, "explosao"), Map.entry(AbilityKind.CONTROL, "espiral"), Map.entry(AbilityKind.DEFENSE, "escudo"),
+            Map.entry(AbilityKind.SUMMON, "figura"), Map.entry(AbilityKind.EVASION, "vulto"), Map.entry(AbilityKind.EMPOWER, "seta_cima"),
+            Map.entry(AbilityKind.MOBILITY, "portal"), Map.entry(AbilityKind.GATHERING, "picareta"), Map.entry(AbilityKind.BUILDING, "bloco"),
+            Map.entry(AbilityKind.TRANSMUTATION, "troca"), Map.entry(AbilityKind.NATURE, "broto"), Map.entry(AbilityKind.DETECTION, "lupa"),
+            Map.entry(AbilityKind.LOGISTICS, "bau"));
+
+    /** The shape of each trait (passiva), in the HUD while it is on. */
+    private static final Map<String, String> BY_TRAIT = Map.ofEntries(Map.entry("voo", "asa"), Map.entry("levitar", "espiral"),
+            Map.entry("supervelocidade", "velocidade"), Map.entry("aquatico", "onda"), Map.entry("planar", "asa"), Map.entry("superforca", "punho"),
+            Map.entry("invulneravel", "escudo"), Map.entry("visao_no_escuro", "olho"), Map.entry("sentidos_agucados", "olho"),
+            Map.entry("pulo_alto", "seta_cima"), Map.entry("escalar", "mao"), Map.entry("regeneracao", "coracao"), Map.entry("elastico", "mao"),
+            Map.entry("imune_a_veneno", "bolha"));
+
+    /** The gold of the border of the supreme ability. */
+    public static final int GOLD = 0xF2B705;
 
     private AbilityIcons() {}
 
@@ -263,12 +298,31 @@ public final class AbilityIcons {
         return BY_PRESET.get(preset);
     }
 
+    /** The shape of a class of ability. */
+    public static String kindShape(AbilityKind kind) {
+        return BY_KIND.getOrDefault(kind, "estrela");
+    }
+
+    /** The shape of a trait. */
+    public static String traitShape(String trait) {
+        return BY_TRAIT.getOrDefault(trait, "estrela");
+    }
+
     /** The shape of an ability: its {@code icone}, its preset's, or its class's. */
     public static String shape(CharacterData.Ability ability, AbilityKind kind) {
-        String chosen = ability.settings().text("icone", "");
+        return shape(ability.settings(), ability.preset(), kind);
+    }
+
+    /** The shape of one more function of an ability: its own {@code icone}, its preset's, or the ability's class's. */
+    public static String shape(CharacterData.Function function, AbilityKind kind) {
+        return shape(function.settings(), function.preset(), kind);
+    }
+
+    private static String shape(CharacterData.Settings settings, String preset, AbilityKind kind) {
+        String chosen = settings.text("icone", "");
         if (SHAPES.containsKey(chosen)) return chosen;
-        String byPreset = BY_PRESET.get(ability.preset());
-        return byPreset != null ? byPreset : BY_KIND.getOrDefault(kind, "estrela");
+        String byPreset = BY_PRESET.get(preset);
+        return byPreset != null ? byPreset : kindShape(kind);
     }
 
     /** The colour of an ability's icon: {@code icone_cor}, else {@code cor}, else the character's main colour. */
@@ -278,19 +332,58 @@ public final class AbilityIcons {
     }
 
     /**
-     * The icon sheet of a character, ARGB pixels {@code 16 * (abilities + 1)} wide and 16 high: one
-     * cell per ability in wheel order, then the emblem.
+     * How many cells the sheet of a character has: one per ability in wheel order, one per extra
+     * function of each ability (the function the HUD shows before it goes off), one per trait, and
+     * the emblem last.
+     */
+    public static int cells(CharacterData data) {
+        int functions = data.abilities().stream().mapToInt(a -> a.functions().size()).sum();
+        return data.abilities().size() + functions + data.traits().size() + 1;
+    }
+
+    /** The cell of function {@code function} (0 is the default one, the ability's own icon) of ability {@code ability}. */
+    public static int functionCell(CharacterData data, int ability, int function) {
+        if (function == 0) return ability;
+        int cell = data.abilities().size();
+        for (int i = 0; i < ability; i++) cell += data.abilities().get(i).functions().size();
+        return cell + function - 1;
+    }
+
+    /** The cell of trait {@code index}. */
+    public static int traitCell(CharacterData data, int index) {
+        return cells(data) - 1 - data.traits().size() + index;
+    }
+
+    /**
+     * The icon sheet of a character, ARGB pixels {@code 16 * cells} wide and 16 high (see
+     * {@link #cells}). The icon of the supreme ability has a gold border.
      */
     public static int[] sheet(CharacterData data, List<AbilityKind> kinds) {
         List<CharacterData.Ability> abilities = data.abilities();
-        int cells = abilities.size() + 1;
+        int cells = cells(data);
         int width = SIZE * cells;
         int[] out = new int[width * SIZE];
+        int cell = abilities.size();
         for (int i = 0; i < abilities.size(); i++) {
-            paint(out, width, i, SHAPES.get(shape(abilities.get(i), kinds.get(i))), color(abilities.get(i), data), data.colors());
+            CharacterData.Ability ability = abilities.get(i);
+            paint(out, width, i, SHAPES.get(shape(ability, kinds.get(i))), color(ability, data), data.colors());
+            if (ability.supreme()) border(out, width, i);
+            for (CharacterData.Function function : ability.functions()) {
+                CharacterData.Settings s = function.settings();
+                int color = s.color("icone_cor", s.color("cor", color(ability, data)));
+                paint(out, width, cell++, SHAPES.get(shape(function, kinds.get(i))), color, data.colors());
+            }
         }
-        paint(out, width, abilities.size(), SHAPES.get("estrela"), data.colors().second(), data.colors());
+        for (CharacterData.Trait trait : data.traits()) paint(out, width, cell++, SHAPES.get(traitShape(trait.type())), data.colors().light(), data.colors());
+        paint(out, width, cell, SHAPES.get("estrela"), data.colors().second(), data.colors());
         return out;
+    }
+
+    /** A gold frame around a cell (the supreme ability). */
+    private static void border(int[] out, int width, int cell) {
+        for (int k = 0; k < SIZE; k++) {
+            for (int[] p : new int[][] {{k, 0}, {k, SIZE - 1}, {0, k}, {SIZE - 1, k}}) out[p[1] * width + cell * SIZE + p[0]] = 0xFF000000 | GOLD;
+        }
     }
 
     /** One icon of {@code shape} painted in {@code color}, ARGB pixels 16x16 (for the tests and the tools). */

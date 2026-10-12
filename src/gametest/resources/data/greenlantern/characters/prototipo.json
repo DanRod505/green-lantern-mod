@@ -12,36 +12,49 @@
       "id": "teste_golpe",
       "nome": "Golpe de Teste",
       "classe": "golpe",
-      "tipo": "principal",
       "preset": "golpe_forte",
-      "uso_no_mundo": "quebrar_bloco",
       "numeros": {
         "dano": 6,
         "custo": 10,
         "recarga": 1
-      }
+      },
+      "funcoes": [
+        {
+          "preset": "cortar_arvore",
+          "quando": {
+            "mira": "madeira"
+          }
+        }
+      ]
     },
     {
       "id": "teste_disparo",
       "nome": "Disparo de Teste",
       "classe": "disparo",
-      "tipo": "principal",
       "preset": "projetil",
-      "uso_no_mundo": "acender",
       "numeros": {
         "dano": 5,
         "custo": 15,
         "recarga": 2,
         "alcance": 24
-      }
+      },
+      "funcoes": [
+        {
+          "preset": "leque",
+          "quando": {
+            "aperto": "segurar"
+          },
+          "ajustes": {
+            "quantidade": 5
+          }
+        }
+      ]
     },
     {
       "id": "teste_explosao",
       "nome": "Explosão de Teste",
       "classe": "explosao",
-      "tipo": "principal",
       "preset": "onda_de_choque",
-      "uso_no_mundo": "limpar_area",
       "numeros": {
         "dano": 8,
         "custo": 30,
@@ -50,24 +63,10 @@
       }
     },
     {
-      "id": "teste_movimento",
-      "nome": "Salto de Teste",
-      "classe": "movimento",
-      "tipo": "secundaria",
-      "preset": "salto",
-      "uso_no_mundo": "subir",
-      "numeros": {
-        "custo": 10,
-        "recarga": 3
-      }
-    },
-    {
       "id": "teste_defesa",
       "nome": "Escudo de Teste",
       "classe": "defesa",
-      "tipo": "secundaria",
       "preset": "escudo",
-      "uso_no_mundo": "abrigo",
       "numeros": {
         "custo": 20,
         "recarga": 8,
@@ -75,17 +74,54 @@
       }
     },
     {
+      "id": "teste_coleta",
+      "nome": "Mineração de Teste",
+      "classe": "coleta_e_terreno",
+      "preset": "minerar_area",
+      "ajustes": {
+        "tamanho": 3
+      },
+      "numeros": {
+        "custo": 10,
+        "recarga": 2,
+        "alcance": 6
+      },
+      "funcoes": [
+        {
+          "preset": "cavar_solto",
+          "quando": {
+            "mira": "terra"
+          }
+        }
+      ]
+    },
+    {
+      "id": "teste_movimento",
+      "nome": "Salto de Teste",
+      "classe": "mobilidade",
+      "preset": "salto",
+      "numeros": {
+        "custo": 10,
+        "recarga": 3
+      }
+    },
+    {
       "id": "teste_suprema",
       "nome": "Suprema de Teste",
-      "classe": "suprema",
-      "tipo": "suprema",
+      "classe": "explosao",
+      "suprema": true,
       "preset": "suprema_onda",
-      "uso_no_mundo": "grande_obra",
       "numeros": {
         "dano": 20,
+        "custo": 40,
         "recarga": 60,
         "raio": 8
       }
+    }
+  ],
+  "passivas": [
+    {
+      "tipo": "escalar"
     }
   ],
   "skins": [

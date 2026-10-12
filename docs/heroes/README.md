@@ -3,10 +3,10 @@
 Como um herói novo entra no mod, do papel ao PR.
 
 > **Desde a 2.0.0 existe a engine de personagens.** Um personagem pode ser só uma ficha de dados em
-> `src/main/resources/data/greenlantern/characters/<id>.json` (classe, nível, esqueleto, 6 habilidades,
-> skins, fraquezas e cores), sem pacote Java próprio: a engine cria o item, o traje, a energia da classe,
-> a tela e a Suprema. As habilidades dela vêm da biblioteca de presets (próximas etapas do guia mestre);
-> até lá, uma habilidade sem preset avisa que chega numa próxima versão. O item de cada personagem precisa
+> `src/main/resources/data/greenlantern/characters/<id>.json` (classe, nível, esqueleto, 5 a 8 habilidades,
+> passivas, skins, fraquezas e cores), sem pacote Java próprio: a engine cria o item, o traje, a energia da classe,
+> a tela e a roda. As habilidades dela vêm da biblioteca de presets (ver [`docs/presets.md`](../presets.md));
+> uma habilidade com preset que não existe avisa que chega numa próxima versão. O item de cada personagem precisa
 > de `assets/greenlantern/items/<id>.json` e dos 4 `items/<id>_cabeca|peito|pernas|pes.json` (que apontam
 > para os modelos `item/skin_suit_*`), e a skin fica em `textures/entity/skin/<id do skin>.png` (com
 > `_brilho` opcional). Exemplos: os personagens de teste em `src/gametest/resources`, feitos por

@@ -2,12 +2,15 @@ package com.danrod505.greenlantern.client.engine;
 
 import com.danrod505.greenlantern.client.HeroHud;
 import com.danrod505.greenlantern.client.KeyBindings;
+import com.danrod505.greenlantern.engine.AbilityFunctions;
+import com.danrod505.greenlantern.engine.AbilityIcons;
 import com.danrod505.greenlantern.engine.AbilityState;
 import com.danrod505.greenlantern.engine.CharacterData;
 import com.danrod505.greenlantern.engine.EngineAbility;
 import com.danrod505.greenlantern.engine.EngineHero;
 import com.danrod505.greenlantern.engine.EngineServer;
 import com.danrod505.greenlantern.engine.Passive;
+import com.danrod505.greenlantern.engine.Traits;
 import com.danrod505.greenlantern.hero.HeroPowers;
 import com.danrod505.greenlantern.hero.WheelStyle;
 import com.danrod505.greenlantern.ring.RingEnergy;
@@ -20,20 +23,18 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.EntityHitResult;
 
 /**
  * The HUD of a character of the engine (catalog, stage 14), the same for all of them: emblem and
  * name, the class energy bar with its name (blinking when the chosen ability costs more than is
- * left), the 6 abilities with their cost and a ring that fills during the cooldown, the gold Supreme
- * bar, the fight or world mode (sword, or pickaxe while crouching), and the keys.
+ * left), the 5 to 8 abilities with their cost and a ring that fills during the cooldown (the supreme
+ * one with a gold border), the icon of the function that goes off now (it changes with the aim, the
+ * place and holding the key), the traits (lit while they are on) and the keys.
  */
 public final class EngineHud {
-    private static final ItemStack FIGHT = new ItemStack(Items.IRON_SWORD);
-    private static final ItemStack WORLD = new ItemStack(Items.IRON_PICKAXE);
     private static final int RING_SEGMENTS = 24;
-    private static final int GOLD = 0xFFF2B705;
+    private static final int GOLD = 0xFF000000 | com.danrod505.greenlantern.engine.AbilityIcons.GOLD;
 
     private final EngineHero hero;
 
@@ -97,33 +98,47 @@ public final class EngineHud {
             graphics.blit(RenderPipelines.GUI_TEXTURED, wheel.icons(), ix, iconsY, ability.iconIndex() * 16, 0, 16, 16, wheel.iconsWidth(),
                     WheelStyle.ICONS_HEIGHT, left > 0 ? 0x70FFFFFF : isSelected ? 0xFFFFFFFF : 0xB0FFFFFF);
             if (left > 0) cooldownRing(graphics, ix + 8, iconsY + 8, 1.0F - (float) left / ability.cooldownTicks(), light);
-            String cost = ability.supreme() ? Math.round(state.supremeFraction() * 100) + "%" : String.valueOf(ability.cost());
+            String cost = String.valueOf(ability.cost());
             graphics.pose().pushMatrix();
             graphics.pose().translate(ix + 16 - mc.font.width(cost) * 0.5F, iconsY + 12);
             graphics.pose().scale(0.5F, 0.5F);
             graphics.drawString(mc.font, cost, 0, 0, ability.supreme() ? GOLD : 0xFFFFFFFF, true);
             graphics.pose().popMatrix();
         }
-        // Fight or world: a sword, or a pickaxe while crouching.
-        graphics.renderItem(player.isShiftKeyDown() ? WORLD : FIGHT, x + 19 + count * 20 + 2, iconsY);
+        // The function that goes off now: an arrow and its icon, a bar filling while the key is held.
+        EngineAbility chosen = (EngineAbility) powers.power(selected);
+        AbilityFunctions.Chosen function = AbilityFunctions.choose(chosen.data(), EngineKeys.press(chosen), player);
+        int fx = x + 19 + count * 20 + 2;
+        graphics.drawString(mc.font, "\u203a", fx, iconsY + 4, light, true);
+        int cell = AbilityIcons.functionCell(data, selected, function.index());
+        graphics.blit(RenderPipelines.GUI_TEXTURED, wheel.icons(), fx + 7, iconsY, cell * 16, 0, 16, 16, wheel.iconsWidth(), WheelStyle.ICONS_HEIGHT, 0xFFFFFFFF);
+        int held = EngineKeys.held();
+        if (held > 0 && AbilityFunctions.usesHold(chosen.data())) {
+            int w = Math.round(16 * Math.min(1.0F, (float) held / AbilityFunctions.HOLD_TICKS));
+            graphics.fill(fx + 7, iconsY + 17, fx + 7 + w, iconsY + 19, held >= AbilityFunctions.HOLD_TICKS ? GOLD : light);
+        }
 
-        // The Supreme bar: thin and gold, shining when full.
-        int supremeY = iconsY + 19;
-        int supremeW = count * 20 - 4;
-        graphics.fill(barX - 1, supremeY - 1, barX + supremeW + 1, supremeY + 3, 0xC0302000);
-        int supremeFill = Math.round(supremeW * state.supremeFraction());
-        int shine = state.supremeFull() ? (int) (200 + 55 * Mth.sin(player.tickCount * 0.3F)) : 255;
-        graphics.fill(barX, supremeY, barX + supremeFill, supremeY + 2, shine << 24 | (GOLD & 0xFFFFFF));
+        // The traits: small icons, lit while they are on.
+        int traitsY = iconsY + 20;
+        for (int i = 0; i < data.traits().size(); i++) {
+            boolean on = suited && Traits.on(data.traits().get(i), player);
+            graphics.pose().pushMatrix();
+            graphics.pose().translate(barX + i * 12, traitsY);
+            graphics.pose().scale(0.625F, 0.625F);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, wheel.icons(), 0, 0, AbilityIcons.traitCell(data, i) * 16, 0, 16, 16, wheel.iconsWidth(),
+                    WheelStyle.ICONS_HEIGHT, on ? 0xFFFFFFFF : 0x50FFFFFF);
+            graphics.pose().popMatrix();
+        }
 
-        Component keys = Component.translatable(player.isShiftKeyDown() ? "hud.greenlantern.engine_world_key" : "hud.greenlantern.power_key",
-                powers.power(selected).displayName(), KeyBindings.HERO_POWER.getTranslatedKeyMessage());
-        graphics.drawString(mc.font, keys, x + 19, supremeY + 5, light, true);
+        int keysY = traitsY + (data.traits().isEmpty() ? 0 : 12);
+        Component keys = Component.translatable("hud.greenlantern.power_key", chosen.displayName(), KeyBindings.HERO_POWER.getTranslatedKeyMessage());
+        graphics.drawString(mc.font, keys, x + 19, keysY, chosen.supreme() ? GOLD : light, true);
         if (!suited) {
             graphics.drawString(mc.font, Component.translatable("hud.greenlantern.engine_suit_hint", data.name(), KeyBindings.TOGGLE_UNIFORM.getTranslatedKeyMessage()),
-                    x + 19, supremeY + 16, 0xFFA0A0A0, true);
-        } else if (state.supremeFull()) {
-            graphics.drawString(mc.font, Component.translatable("hud.greenlantern.engine_supreme_key", KeyBindings.SUPREME.getTranslatedKeyMessage()),
-                    x + 19, supremeY + 16, GOLD, true);
+                    x + 19, keysY + 11, 0xFFA0A0A0, true);
+        } else if (AbilityFunctions.usesHold(chosen.data())) {
+            graphics.drawString(mc.font, Component.translatable("hud.greenlantern.engine_hold_hint", KeyBindings.HERO_POWER.getTranslatedKeyMessage()),
+                    x + 19, keysY + 11, 0xFFA0A0A0, true);
         }
         if (suited && data.passive() == Passive.SEE_HEALTH) aimedHealth(graphics, mc, light);
     }

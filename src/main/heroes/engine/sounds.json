@@ -68,17 +68,17 @@
       }
     ]
   },
-  "engine_class_movimento": {
-    "subtitle": "subtitles.greenlantern.engine_class_movimento",
+  "engine_class_mobilidade": {
+    "subtitle": "subtitles.greenlantern.engine_class_mobilidade",
     "sounds": [
       {
-        "name": "greenlantern:engine/movimento_1"
+        "name": "greenlantern:engine/mobilidade_1"
       },
       {
-        "name": "greenlantern:engine/movimento_2"
+        "name": "greenlantern:engine/mobilidade_2"
       },
       {
-        "name": "greenlantern:engine/movimento_3"
+        "name": "greenlantern:engine/mobilidade_3"
       }
     ]
   },
@@ -152,8 +152,8 @@
       }
     ]
   },
-  "engine_class_suprema": {
-    "subtitle": "subtitles.greenlantern.engine_class_suprema",
+  "engine_supreme": {
+    "subtitle": "subtitles.greenlantern.engine_supreme",
     "sounds": [
       {
         "name": "greenlantern:engine/suprema_1"
@@ -163,6 +163,90 @@
       },
       {
         "name": "greenlantern:engine/suprema_3"
+      }
+    ]
+  },
+  "engine_class_coleta_e_terreno": {
+    "subtitle": "subtitles.greenlantern.engine_class_coleta_e_terreno",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/coleta_e_terreno_1"
+      },
+      {
+        "name": "greenlantern:engine/coleta_e_terreno_2"
+      },
+      {
+        "name": "greenlantern:engine/coleta_e_terreno_3"
+      }
+    ]
+  },
+  "engine_class_construcao": {
+    "subtitle": "subtitles.greenlantern.engine_class_construcao",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/construcao_1"
+      },
+      {
+        "name": "greenlantern:engine/construcao_2"
+      },
+      {
+        "name": "greenlantern:engine/construcao_3"
+      }
+    ]
+  },
+  "engine_class_transmutacao": {
+    "subtitle": "subtitles.greenlantern.engine_class_transmutacao",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/transmutacao_1"
+      },
+      {
+        "name": "greenlantern:engine/transmutacao_2"
+      },
+      {
+        "name": "greenlantern:engine/transmutacao_3"
+      }
+    ]
+  },
+  "engine_class_natureza": {
+    "subtitle": "subtitles.greenlantern.engine_class_natureza",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/natureza_1"
+      },
+      {
+        "name": "greenlantern:engine/natureza_2"
+      },
+      {
+        "name": "greenlantern:engine/natureza_3"
+      }
+    ]
+  },
+  "engine_class_deteccao": {
+    "subtitle": "subtitles.greenlantern.engine_class_deteccao",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/deteccao_1"
+      },
+      {
+        "name": "greenlantern:engine/deteccao_2"
+      },
+      {
+        "name": "greenlantern:engine/deteccao_3"
+      }
+    ]
+  },
+  "engine_class_logistica": {
+    "subtitle": "subtitles.greenlantern.engine_class_logistica",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/logistica_1"
+      },
+      {
+        "name": "greenlantern:engine/logistica_2"
+      },
+      {
+        "name": "greenlantern:engine/logistica_3"
       }
     ]
   },

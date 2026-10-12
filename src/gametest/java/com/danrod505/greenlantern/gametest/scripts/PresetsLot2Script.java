@@ -153,7 +153,7 @@ public final class PresetsLot2Script {
         // Super speed: the run with its trail, holding forward and sprint.
         String run = label("supervelocidade");
         reset(0);
-        step(6, () -> use(ability("supervelocidade", AbilityKind.MOVEMENT, 0, 0, 0, 6, "velocidade", 2.5)));
+        step(6, () -> use(ability("supervelocidade", AbilityKind.MOBILITY, 0, 0, 0, 6, "velocidade", 2.5)));
         // The script can't hold keys: the server carries the runner forward, as running would.
         for (int i = 0; i < 18; i++) {
             step(1, () -> server(sp -> com.danrod505.greenlantern.engine.preset.PresetBody.push(sp, new Vec3(0, sp.getDeltaMovement().y, 1.1))));
@@ -164,13 +164,13 @@ public final class PresetsLot2Script {
         String glide = label("planar");
         reset(0);
         step(6, () -> server(sp -> sp.teleportTo(base.getX() + 0.5, base.getY() + 14, base.getZ() + 0.5)));
-        step(4, () -> use(ability("planar", AbilityKind.MOVEMENT, 0, 0, 0, 10)));
+        step(4, () -> use(ability("planar", AbilityKind.MOBILITY, 0, 0, 0, 10)));
         shots(glide, 12, 16);
         // Giant leap: up high, then the landing among the husks.
         String leap = label("salto_gigante");
         reset(0);
         step(6, () -> targets(-2, 10, 2, 10, 0, 12));
-        step(10, () -> use(ability("salto_gigante", AbilityKind.MOVEMENT, 3, 0, 3.5, 0, "altura", 7, "distancia", 10)));
+        step(10, () -> use(ability("salto_gigante", AbilityKind.MOBILITY, 3, 0, 3.5, 0, "altura", 7, "distancia", 10)));
         step(12, () -> clean(leap + "_a_up"));
         watch(40, () -> mc().player.onGround(), leap + "_b_land");
         step(3, () -> clean(leap + "_c_after"));
@@ -178,19 +178,19 @@ public final class PresetsLot2Script {
         String hook = label("gancho");
         reset(-8);
         step(4, () -> fill(-1, 0, 12, 1, 6, 12, "minecraft:stone_bricks"));
-        step(10, () -> use(ability("gancho", AbilityKind.MOVEMENT, 0, 24, 0, 0, "velocidade", 1.0)));
+        step(10, () -> use(ability("gancho", AbilityKind.MOBILITY, 0, 24, 0, 0, "velocidade", 1.0)));
         shots(hook, 4, 8);
         step(10, () -> fill(-1, 0, 12, 1, 6, 12, "minecraft:air"));
         // Teleport: a boom tube, then a shadow.
-        demo("teleporte_tubo", ability("teleporte", AbilityKind.MOVEMENT, 0, 16, 0, 0, "visual", "tubo", "tempo", 0.5), 12,
+        demo("teleporte_tubo", ability("teleporte", AbilityKind.MOBILITY, 0, 16, 0, 0, "visual", "tubo", "tempo", 0.5), 12,
                 new double[]{}, 3, 9);
-        demo("teleporte_sombra", ability("teleporte", AbilityKind.MOVEMENT, 0, 16, 0, 0, "visual", "sombra", "tempo", 0.5), 12,
+        demo("teleporte_sombra", ability("teleporte", AbilityKind.MOBILITY, 0, 16, 0, 0, "visual", "sombra", "tempo", 0.5), 12,
                 new double[]{}, 3, 9);
         // Pass through a wall 2 blocks thick.
         String phase = label("atravessar");
         reset(0);
         step(4, () -> fill(-2, 0, 2, 2, 2, 3, "minecraft:stone_bricks"));
-        step(10, () -> use(ability("atravessar", AbilityKind.MOVEMENT, 0, 0, 0, 0.6, "espessura", 3)));
+        step(10, () -> use(ability("atravessar", AbilityKind.MOBILITY, 0, 0, 0, 0.6, "espessura", 3)));
         shots(phase + "_a", 5);
         // From the front: the character on the other side of the wall.
         step(8, () -> camera(CameraType.THIRD_PERSON_FRONT));
@@ -201,7 +201,7 @@ public final class PresetsLot2Script {
         reset(10);
         step(4, () -> fill(-3, -3, 1, 3, -1, 14, "minecraft:water"));
         step(10, () -> server(sp -> sp.teleportTo(base.getX() + 0.5, base.getY() - 2, base.getZ() + 2.5)));
-        step(6, () -> use(ability("nado_rapido", AbilityKind.MOVEMENT, 0, 0, 0, 5, "velocidade", 1.5)));
+        step(6, () -> use(ability("nado_rapido", AbilityKind.MOBILITY, 0, 0, 0, 5, "velocidade", 1.5)));
         shots(swim, 3, 6);
         step(10, () -> {
             fill(-3, -3, 1, 3, -2, 14, "minecraft:dirt");
@@ -255,7 +255,7 @@ public final class PresetsLot2Script {
         step(4, () -> suit("prototipo_alado"));
         step(20, () -> server(sp -> {
             EngineHero winged = (EngineHero) HeroRegistry.byId("prototipo_alado").orElseThrow();
-            EngineAbility flight = (EngineAbility) winged.powers().power(3);
+            EngineAbility flight = (EngineAbility) winged.powers().power(4);
             boolean went = EngineServer.useAbility(sp, sp.getMainHandItem(), flight);
             GreenLantern.LOGGER.info("CLIENTSCRIPT preset voo went={} flying={}", went, sp.getAbilities().flying);
         }));

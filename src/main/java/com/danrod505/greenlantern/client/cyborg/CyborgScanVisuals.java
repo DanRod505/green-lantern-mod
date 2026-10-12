@@ -147,7 +147,8 @@ public final class CyborgScanVisuals implements WorldLayer {
         });
     }
 
-    private static void box(VertexConsumer vc, PoseStack.Pose pose, float x0, float y0, float z0, float x1, float y1, float z1, int color) {
+    /** A box seen from both sides (also the outline of the block an engine character aims at). */
+    public static void box(VertexConsumer vc, PoseStack.Pose pose, float x0, float y0, float z0, float x1, float y1, float z1, int color) {
         face(vc, pose, x1, y0, z0, x0, y0, z0, x0, y1, z0, x1, y1, z0, color);
         face(vc, pose, x0, y0, z1, x1, y0, z1, x1, y1, z1, x0, y1, z1, color);
         face(vc, pose, x0, y0, z0, x0, y0, z1, x0, y1, z1, x0, y1, z0, color);

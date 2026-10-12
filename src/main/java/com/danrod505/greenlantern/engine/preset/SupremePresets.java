@@ -45,8 +45,9 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.phys.Vec3;
 
 /**
- * The two Supremes (suprema): the great blow and the great work. They are used with a full Supreme
- * bar, like every character's last ability.
+ * The two pieces of the supreme abilities: the great blow and the great work. Since the new model
+ * of abilities they are ordinary presets: an ability marked supreme (any class) names them like any
+ * other, with a bigger cost and cooldown, and so may an ordinary one. The great work is a Construção.
  */
 public final class SupremePresets {
     /** The most blocks a great work places. */
@@ -56,7 +57,7 @@ public final class SupremePresets {
 
     public static void register() {
         Presets.registerFight("suprema_de_combate", SupremePresets::greatBlow);
-        Presets.registerFight("grande_obra", SupremePresets::greatWork);
+        Presets.registerWorld("grande_obra", SupremePresets::greatWork);
     }
 
     // ---- suprema_de_combate ------------------------------------------------------------------------

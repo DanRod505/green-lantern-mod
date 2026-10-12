@@ -12,9 +12,7 @@
       "id": "teste_golpe",
       "nome": "Golpe de Teste",
       "classe": "golpe",
-      "tipo": "principal",
       "preset": "golpe_forte",
-      "uso_no_mundo": "quebrar_bloco",
       "numeros": {
         "dano": 6,
         "custo": 10,
@@ -25,9 +23,7 @@
       "id": "teste_disparo",
       "nome": "Disparo de Teste",
       "classe": "disparo",
-      "tipo": "principal",
       "preset": "projetil",
-      "uso_no_mundo": "acender",
       "numeros": {
         "dano": 5,
         "custo": 15,
@@ -39,9 +35,7 @@
       "id": "teste_explosao",
       "nome": "Explosão de Teste",
       "classe": "explosao",
-      "tipo": "principal",
       "preset": "onda_de_choque",
-      "uso_no_mundo": "limpar_area",
       "numeros": {
         "dano": 8,
         "custo": 30,
@@ -50,27 +44,10 @@
       }
     },
     {
-      "id": "teste_movimento",
-      "nome": "Voo de Teste",
-      "classe": "movimento",
-      "tipo": "secundaria",
-      "preset": "voo",
-      "ajustes": {
-        "velocidade_maxima": 3.0
-      },
-      "uso_no_mundo": "subir",
-      "numeros": {
-        "custo": 10,
-        "recarga": 3
-      }
-    },
-    {
       "id": "teste_defesa",
       "nome": "Escudo de Teste",
       "classe": "defesa",
-      "tipo": "secundaria",
       "preset": "escudo",
-      "uso_no_mundo": "abrigo",
       "numeros": {
         "custo": 20,
         "recarga": 8,
@@ -78,17 +55,51 @@
       }
     },
     {
-      "id": "teste_suprema",
-      "nome": "Suprema de Teste",
-      "classe": "suprema",
-      "tipo": "suprema",
-      "preset": "suprema_onda",
-      "uso_no_mundo": "grande_obra",
+      "id": "teste_movimento",
+      "nome": "Voo de Teste",
+      "classe": "mobilidade",
+      "preset": "voo",
       "numeros": {
-        "dano": 20,
-        "recarga": 60,
-        "raio": 8
+        "custo": 10,
+        "recarga": 3
       }
+    },
+    {
+      "id": "teste_luz",
+      "nome": "Luz de Teste",
+      "classe": "construcao",
+      "preset": "luz",
+      "numeros": {
+        "custo": 5,
+        "recarga": 1
+      }
+    },
+    {
+      "id": "teste_suprema",
+      "nome": "Visão de Teste",
+      "classe": "deteccao",
+      "suprema": true,
+      "preset": "procurar",
+      "ajustes": {
+        "mostra": "mobs"
+      },
+      "numeros": {
+        "custo": 40,
+        "recarga": 60,
+        "raio": 16,
+        "duracao": 10
+      }
+    }
+  ],
+  "passivas": [
+    {
+      "tipo": "voo",
+      "ajustes": {
+        "velocidade_maxima": 3.0
+      }
+    },
+    {
+      "tipo": "visao_no_escuro"
     }
   ],
   "skins": [

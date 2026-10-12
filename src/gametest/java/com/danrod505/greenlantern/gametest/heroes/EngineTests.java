@@ -2,7 +2,6 @@ package com.danrod505.greenlantern.gametest.heroes;
 
 import static com.danrod505.greenlantern.gametest.GameTestKit.*;
 
-import com.danrod505.greenlantern.engine.AbilityState;
 import com.danrod505.greenlantern.engine.CharacterData;
 import com.danrod505.greenlantern.engine.Characters;
 import com.danrod505.greenlantern.engine.EngineAbility;
@@ -175,8 +174,9 @@ public final class EngineTests {
         }
         for (String id : List.of("prototipo", "prototipo_colosso", "prototipo_alado")) {
             EngineHero hero = engineHero(id);
-            helper.assertTrue(hero.powers().set().count() == 6, id + ": 6 abilities");
-            helper.assertTrue(hero.powers().power(5) instanceof EngineAbility a && a.supreme(), id + ": the last one is the Supreme");
+            int count = hero.powers().set().count();
+            helper.assertTrue(count >= 5 && count <= 8, id + ": 5 to 8 abilities, has " + count);
+            helper.assertTrue(hero.powers().power(count - 1) instanceof EngineAbility a && a.supreme(), id + ": the last one is the supreme");
             helper.assertTrue(Characters.check(hero.data(), id).isEmpty(), id + ": " + Characters.check(hero.data(), id));
         }
         helper.succeed();
@@ -227,19 +227,18 @@ public final class EngineTests {
         helper.succeed();
     }
 
-    /** The Supreme waits for a full bar, which fighting fills, and empties it. */
+    /** The supreme ability has no bar: it goes off like the others and waits for its long cooldown. */
     public static void supreme(GameTestHelper helper) {
         EngineHero hero = engineHero("prototipo");
         ServerPlayer player = suited(helper, "prototipo", 7.5, 7.5);
         ItemStack item = player.getMainHandItem();
-        helper.assertFalse(EngineServer.useSupreme(player, hero), "an empty Supreme bar is refused");
-        var zombie = dummy(helper, 7.5, 1, 9.5);
-        zombie.hurtServer(helper.getLevel(), helper.getLevel().damageSources().playerAttack(player), 4.0F);
-        helper.assertTrue(EngineServer.state(item).supreme() > 0, "hitting fills the Supreme bar");
-        zombie.discard();
-        item.set(EngineContent.ABILITIES.get(), EngineServer.state(item).withSupreme(AbilityState.SUPREME_FULL));
-        helper.assertTrue(EngineServer.useSupreme(player, hero), "a full bar lets it go off");
-        helper.assertTrue(EngineServer.state(item).supreme() == 0, "and empties it");
+        int last = hero.powers().set().count() - 1;
+        EngineAbility supreme = (EngineAbility) hero.powers().power(last);
+        helper.assertTrue(supreme.supreme(), "the last ability is the supreme one");
+        helper.assertTrue(EngineServer.useAbility(player, item, supreme), "it goes off with no bar to fill");
+        long now = player.level().getGameTime();
+        helper.assertTrue(EngineServer.state(item).remaining(last, now) > 20 * 50, "then waits for its long cooldown");
+        helper.assertFalse(EngineServer.useAbility(player, item, supreme), "a second use is refused");
         hero.dismissSuit(player, false);
         remove(player);
         helper.succeed();
@@ -277,15 +276,21 @@ public final class EngineTests {
         helper.succeed();
     }
 
-    /** Crouch + power key: the chosen ability's use in the world goes through the same checks. */
+    /** A world ability goes through the same checks as the others: energy and cooldown. */
     public static void worldUse(GameTestHelper helper) {
-        EngineHero hero = engineHero("prototipo");
-        ServerPlayer player = suited(helper, "prototipo", 7.5, 7.5);
+        EngineHero hero = engineHero("prototipo_colosso");
+        ServerPlayer player = suited(helper, "prototipo_colosso", 7.5, 7.5);
         ItemStack item = player.getMainHandItem();
+        EngineAbility level = null;
+        for (int i = 0; i < hero.powers().set().count(); i++) {
+            if (hero.powers().power(i) instanceof EngineAbility a && a.id().equals("teste_coleta")) level = a;
+        }
+        helper.assertTrue(level != null && !level.kind().fight(), "the colossus has a world ability");
+        helper.setBlock(new BlockPos(8, 1, 8), Blocks.DIRT);
         int before = hero.energy().get(item).stored();
-        helper.assertTrue(EngineServer.useInWorld(player, hero, item), "the world use goes off");
+        helper.assertTrue(EngineServer.useAbility(player, item, level), "the world ability goes off");
         helper.assertTrue(hero.energy().get(item).stored() < before, "and spends energy");
-        helper.assertFalse(EngineServer.useInWorld(player, hero, item), "then waits for the cooldown");
+        helper.assertFalse(EngineServer.useAbility(player, item, level), "then waits for the cooldown");
         hero.dismissSuit(player, false);
         remove(player);
         helper.succeed();
