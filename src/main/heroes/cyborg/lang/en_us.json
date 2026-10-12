@@ -51,5 +51,19 @@
   "message.greenlantern.cyborg_hack_nothing": "No machine to hack in sight",
   "message.greenlantern.cyborg_boom_tube_open": "Boom Tube opening: stay close!",
   "message.greenlantern.cyborg_boom_tube_marked": "Boom Tube destination marked at %s, %s, %s",
-  "message.greenlantern.cyborg_lightning": "A lightning bolt filled the battery!"
+  "message.greenlantern.cyborg_lightning": "A lightning bolt filled the battery!",
+  "power.greenlantern.cyborg_canhao": "Sonic Cannon",
+  "power.greenlantern.cyborg_canhao.desc": "The arm becomes a cannon and fires a sonic wave in a cone. Aiming at stone: breaks it from afar.",
+  "power.greenlantern.cyborg_invasao": "System Hack",
+  "power.greenlantern.cyborg_invasao.desc": "Hacks the machine in sight: an iron golem becomes an ally. Hold: an electromagnetic pulse stuns all around. Aiming at redstone: switches it from afar.",
+  "power.greenlantern.cyborg_blindagem": "Armor Plating",
+  "power.greenlantern.cyborg_blindagem.desc": "Tap: the plating reduces damage. Hold: the nanobots repair body and suit.",
+  "power.greenlantern.cyborg_caixa": "Mother Box",
+  "power.greenlantern.cyborg_caixa.desc": "Tap: drones attack. Aiming at a creature: the missiles fly from the shoulders. Hold: a drone mines at your side.",
+  "power.greenlantern.cyborg_scanner": "Scanner",
+  "power.greenlantern.cyborg_scanner.desc": "While on, shows enemies and ores through walls and the health of the target.",
+  "power.greenlantern.cyborg_guindaste": "Crane Arm",
+  "power.greenlantern.cyborg_guindaste.desc": "Lifts the block or chest in sight and carries it somewhere else.",
+  "power.greenlantern.cyborg_tubo": "Boom Tube",
+  "power.greenlantern.cyborg_tubo.desc": "Supreme. A tunnel of light takes you and anyone near to the marked point (sneaking marks the point)."
 }

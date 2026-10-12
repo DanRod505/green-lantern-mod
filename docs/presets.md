@@ -60,7 +60,7 @@ Os presets que duram (marcados com *) desligam ao apertar a tecla de novo ou ao 
 | `teleporte` | alcance (16) | `tempo` entre sumir e aparecer em segundos (0.25), `visual`: energia, tubo, sombra, magia |
 | `nado_rapido` | duracao (20) | `velocidade` (1), `folego` (true) |
 | `atravessar` | duracao da travessia (0.3) | `espessura` máxima (3), `visual`: vibrar, intangivel |
-| `bolha`* | raio (1.6), duracao (20) | `reducao` (0.6), `gasto_por_segundo` (2), `devolve` (false) |
+| `bolha`* | raio (1.6), duracao (20) | `reducao` (0.6), `gasto_por_segundo` (2), `devolve` (false), `respirar` (false: bolha de ar para respirar debaixo da água) |
 | `bloqueio` | duracao (2) | `reducao` (0.8), `angulo` da abertura inteira (120), `devolve` (false) |
 | `pele_dura` | duracao (8) | `reducao` (0.4) |
 | `parede` | duracao (8) | `material`: energia (vidro na cor do personagem), gelo, pedra, terra, areia, madeira ou id de bloco; `largura` (5), `altura` (3), `distancia` (2) |
@@ -225,7 +225,7 @@ Como os do Lote 4, só mexem no que o jogador pode mudar ali, e um uso que não 
 | `trocar_bloco` | Transmutação | alcance (8), raio (0) | `modo`: fornalha (areia vira vidro...), tabela (`trocas`: {"minecraft:stone": "minecraft:iron_block"}) ou cor (`cor_nova`, red) |
 | `ligar_maquina` | Transmutação | alcance (16), duracao (2) | vira a alavanca, aperta o botão ou dá sinal de redstone ao que estiver mirado |
 | `domar_e_guiar` | Natureza | alcance (8), raio (6), duracao (30) | doma lobos, gatos, papagaios e cavalos; os outros animais seguem na corda; `quantos` (4) |
-| `clima` | Natureza | duracao (120) | `tipo`: chuva, sol ou tempestade |
+| `clima` | Natureza | duracao (120) | `tipo`: chuva, sol, tempestade ou dia (pula a noite: amanhece na hora e o céu limpa) |
 | `rastro` | Detecção | raio (48), duracao (10) | trilha de partículas até o `alvo`: mob, estrutura (`estrutura`, uma tag, minecraft:village) ou casa |
 | `ima_de_itens` | Logística | alcance (6), raio (8), duracao (5) | mirando um baú, traz o que cabe para o inventário; senão, puxa itens e experiência em volta |
 | `ajudante_de_trabalho` | Logística | raio (6), duracao (30) | um ajudante voa ao lado e a cada segundo faz a `tarefa`: colher, guardar ou minerar |
@@ -237,3 +237,12 @@ Os sons das 6 classes de mundo novas e o da suprema são originais, gerados por 
 ## Lote 7 (2.7.0): Ferramentas de produção
 
 Sem presets novos: o gerador do catálogo, o teste automático de cada personagem, os prints por lote e o verificador estão em [`ferramentas.md`](ferramentas.md). O gerador escolhe o preset de cada função do catálogo nesta biblioteca, e o teste automático usa cada função de cada personagem.
+
+## Etapa 3, lote 1 (2.8.0): os 9 heróis no modelo novo
+
+Os 9 heróis de antes (Lanterna Verde, Flash, Aquaman, Batman, Superman, Mulher-Maravilha, Ciborgue, Supergirl e Shazam) passaram a ter a roda do modelo novo: as habilidades vêm das fichas em `data/greenlantern/characters/<id>.json` (com `"legado": true`), cada uma com as funções por contexto, e a suprema por último. O item, a energia, o traje, o voo e o HUD de cada um continuam os mesmos.
+
+- **`poder_de_hoje`** (luta): roda um poder que o herói já tinha, com `"poder": "<id>"` nos ajustes (`heat_vision`, `batarang`, `hammer`...). O poder gasta a energia e a recarga de sempre; o motor não cobra custo nem recarga a mais. Só serve para os heróis de antes.
+- **Passiva com `"do_heroi": true`**: o herói já faz aquilo por conta própria (o voo do Superman, a supervelocidade do Flash); o motor só a mostra na ficha.
+- **`bolha`** ganhou `respirar` (o jogador não perde ar dentro dela) e **`clima`** ganhou o tipo `dia` (de noite pula para a manhã; limpa o tempo).
+- A metralhadora do anel, que antes atirava enquanto o botão ficava apertado, agora atira sozinha por 3 segundos; usar de novo para.

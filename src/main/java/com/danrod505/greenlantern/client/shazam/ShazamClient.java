@@ -42,7 +42,7 @@ public final class ShazamClient implements HeroClient {
 
     private final HeroHud hud = new HeroHud(ShazamHero.INSTANCE, 0xC81E1E, 0xFFF6B0, 0xC0F2B705, 0xFFFFF6B0, (player, power) -> {
         ItemStack item = ShazamHero.INSTANCE.findItem(player);
-        return power == ShazamPower.ATLAS_STAMINA && ShazamServer.isAtlas(item) || power == ShazamPower.SOLOMON_WISDOM && ShazamServer.isSolomon(item);
+        return power.id().equals(ShazamPower.ATLAS_STAMINA.id()) && ShazamServer.isAtlas(item) || power.id().equals(ShazamPower.SOLOMON_WISDOM.id()) && ShazamServer.isSolomon(item);
     });
 
     @Override

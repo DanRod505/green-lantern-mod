@@ -95,7 +95,8 @@ public final class NaturePresets {
 
     /**
      * Clima: calls {@code tipo} (chuva, sol or tempestade) over the world for {@code duracao}
-     * seconds (120); then the weather goes on as it would.
+     * seconds (120); then the weather goes on as it would. {@code dia} skips the night: the next
+     * morning comes at once and the sky clears.
      */
     static Outcome weather(PresetContext c) {
         ServerPlayer player = c.player();
@@ -103,6 +104,12 @@ public final class NaturePresets {
         if (!level.dimensionType().hasSkyLight() || level.dimensionType().hasCeiling()) return WorldPresets.nothing();
         int ticks = c.durationTicks(120.0);
         switch (c.settings().text("tipo", "chuva")) {
+            case "dia" -> {
+                long time = level.getDayTime() % 24000L;
+                if (time < 12000L && !level.isRaining()) return WorldPresets.nothing();
+                if (time >= 12000L) level.setDayTime(level.getDayTime() + 24000L - time);
+                level.setWeatherParameters(ticks, 0, false, false);
+            }
             case "sol" -> {
                 if (!level.isRaining()) return WorldPresets.nothing();
                 level.setWeatherParameters(ticks, 0, false, false);

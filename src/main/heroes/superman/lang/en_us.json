@@ -45,5 +45,17 @@
   "guide.greenlantern.superman_powers": "In the suit, hold §eR§r for the power menu (tap R for the next one) and press §eV§r (or right-click with the crystal) to use it.\n\n§6Heat Vision§r\nTwo red beams from the eyes burn what you look at: they set creatures on fire, melt ice and snow, light TNT and set fires. They last a few seconds; use again to stop.\n\n§6Super Punch§r\nA thunderclap: every creature around the impact is hurt and thrown far away, and arrows are knocked out of the air. Punch while flying fast and it hits much harder.\n\n§6Super Breath§r\nA freezing gale in front of you: pushes and hurts, slows and freezes creatures, turns water into ice and lava into stone, and puts out fires.\n\n§6X-Ray Vision§r\nSee through everything: creatures nearby glow through the walls and ores, chests and spawners show up in color through the stone. It costs very little; use again to turn it off.",
   "guide.greenlantern.controls_superman.title": "Controls",
   "guide.greenlantern.controls_superman": "§eRight-click§r (crystal): put on the suit or use the power.\n§eG§r: put on / remove the suit.\n§eDouble-tap jump§r: take off / stop flying.\n§eW§r while flying: accelerate. §eCtrl§r: accelerate faster.\n§eA A§r or §eD D§r flying fast: barrel roll. §eS§r: air brake.\n§eR§r (hold / tap): power menu / next power.\n§eV§r: use the selected power.\n§eShift + mouse wheel§r (crystal in hand): switch power.",
-  "guide.greenlantern.recipe.kryptonian_crystal": "Amethyst shards in the corners, diamonds on top and bottom, gold ingots on the sides and a sunflower in the center. Put on the suit and stand in the sunlight to charge it."
+  "guide.greenlantern.recipe.kryptonian_crystal": "Amethyst shards in the corners, diamonds on top and bottom, gold ingots on the sides and a sunflower in the center. Put on the suit and stand in the sunlight to charge it.",
+  "power.greenlantern.superman_supersoco": "Super Punch",
+  "power.greenlantern.superman_supersoco.desc": "A punch that shakes the ground and throws everything around. Aiming at a block nearby: breaks even obsidian in one punch.",
+  "power.greenlantern.superman_visao_de_calor": "Heat Vision",
+  "power.greenlantern.superman_visao_de_calor.desc": "Twin red beams from the eyes burn whatever they touch. Aiming at ice or snow: melts it.",
+  "power.greenlantern.superman_sopro": "Freezing Breath",
+  "power.greenlantern.superman_sopro.desc": "A freezing gale that pushes back, chills and hurts. Aiming at water: freezes it.",
+  "power.greenlantern.superman_pele_de_aco": "Skin of Steel",
+  "power.greenlantern.superman_pele_de_aco.desc": "Greatly reduces damage for a few seconds.",
+  "power.greenlantern.superman_raio_x": "X-Ray Vision",
+  "power.greenlantern.superman_raio_x.desc": "Sees through walls and the ground: creatures, ores and chests light up.",
+  "power.greenlantern.superman_fortaleza": "Fortress of Solitude",
+  "power.greenlantern.superman_fortaleza.desc": "Supreme. Raises a fortress where you are. In the air: dives into a devastating landing with a shockwave."
 }

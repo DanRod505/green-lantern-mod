@@ -1,5 +1,5 @@
 {
-  "_comentario": "Um dos 9 heróis que já existiam: os poderes e a energia continuam no código dele. O traje, os bônus e a ordem da roda vêm daqui, com os mesmos números de antes.",
+  "_comentario": "Um dos 9 heróis que já existiam, no modelo novo de habilidades (etapa 3, lote 1): as habilidades do catálogo com as funções por contexto e a suprema por último na roda. Uma função com o preset poder_de_hoje usa um poder de antes (ajuste \"poder\"), com a energia e a recarga de sempre. O item, a energia, o traje e o voo continuam no código dele.",
   "id": "lantern",
   "nome": "Lanterna Verde",
   "classe": "anel",
@@ -31,7 +31,238 @@
     "conserto": "minecraft:repairs_netherite_armor",
     "atributos": []
   },
-  "habilidades": [],
+  "habilidades": [
+    {
+      "id": "lantern_construtos",
+      "nome": "Construtos da Vontade",
+      "classe": "invocacao",
+      "preset": "poder_de_hoje",
+      "numeros": {
+        "dano": 7,
+        "custo": 20,
+        "recarga": 45,
+        "duracao": 60
+      },
+      "ajustes": {
+        "poder": "hammer",
+        "icone": "martelo"
+      },
+      "funcoes": [
+        {
+          "preset": "poder_de_hoje",
+          "ajustes": {
+            "poder": "minigun",
+            "icone": "torre"
+          },
+          "quando": {
+            "aperto": "segurar"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lantern_rajada",
+      "nome": "Rajada do Anel",
+      "classe": "disparo",
+      "preset": "poder_de_hoje",
+      "numeros": {
+        "dano": 8.5,
+        "custo": 3,
+        "recarga": 1,
+        "alcance": 48
+      },
+      "ajustes": {
+        "poder": "energy_blast",
+        "icone": "feixe"
+      },
+      "funcoes": [
+        {
+          "preset": "gelo_e_calor",
+          "ajustes": {
+            "efeito": "calor"
+          },
+          "quando": {
+            "mira": "bloco"
+          },
+          "numeros": {
+            "alcance": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "lantern_bolha",
+      "nome": "Bolha Verde",
+      "classe": "defesa",
+      "preset": "poder_de_hoje",
+      "numeros": {
+        "custo": 5,
+        "recarga": 6,
+        "raio": 3,
+        "duracao": 10
+      },
+      "ajustes": {
+        "poder": "bubble",
+        "icone": "bolha"
+      },
+      "funcoes": [
+        {
+          "preset": "bolha",
+          "ajustes": {
+            "respirar": true
+          },
+          "quando": {
+            "lugar": "agua"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lantern_mao",
+      "nome": "Mão Verde",
+      "classe": "controle",
+      "preset": "prender",
+      "numeros": {
+        "dano": 2.5,
+        "custo": 8,
+        "recarga": 12,
+        "alcance": 24,
+        "duracao": 4
+      },
+      "ajustes": {
+        "material": "energia"
+      },
+      "funcoes": [
+        {
+          "preset": "mover_blocos",
+          "quando": {
+            "mira": "bloco"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lantern_broca",
+      "nome": "Broca Esmeralda",
+      "classe": "coleta_e_terreno",
+      "preset": "poder_de_hoje",
+      "numeros": {
+        "custo": 4,
+        "recarga": 2,
+        "alcance": 6,
+        "raio": 1
+      },
+      "ajustes": {
+        "poder": "drill",
+        "icone": "picareta"
+      },
+      "funcoes": [
+        {
+          "preset": "poder_de_hoje",
+          "ajustes": {
+            "poder": "saw",
+            "icone": "machado"
+          },
+          "quando": {
+            "mira": "madeira"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lantern_ponte",
+      "nome": "Ponte de Luz",
+      "classe": "construcao",
+      "preset": "construir",
+      "numeros": {
+        "custo": 8,
+        "recarga": 6,
+        "alcance": 16,
+        "duracao": 30
+      },
+      "ajustes": {
+        "forma": "ponte",
+        "material": "energia"
+      },
+      "funcoes": [
+        {
+          "preset": "construir",
+          "ajustes": {
+            "forma": "ponte",
+            "material": "inventario"
+          },
+          "quando": {
+            "aperto": "segurar"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lantern_portal",
+      "nome": "Portal para Oa",
+      "classe": "mobilidade",
+      "preset": "levar_junto",
+      "numeros": {
+        "custo": 5,
+        "recarga": 4,
+        "alcance": 24
+      },
+      "funcoes": [
+        {
+          "preset": "poder_de_hoje",
+          "ajustes": {
+            "poder": "portal",
+            "icone": "portal"
+          },
+          "quando": {
+            "aperto": "segurar"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lantern_mecha",
+      "nome": "Mecha Gigante",
+      "classe": "invocacao",
+      "suprema": true,
+      "preset": "poder_de_hoje",
+      "numeros": {
+        "dano": 21.5,
+        "custo": 40,
+        "recarga": 135,
+        "duracao": 60
+      },
+      "ajustes": {
+        "poder": "mecha",
+        "icone": "figura"
+      },
+      "funcoes": [
+        {
+          "preset": "mover_blocos",
+          "ajustes": {
+            "peso": 5
+          },
+          "quando": {
+            "aperto": "segurar",
+            "mira": "bloco"
+          }
+        }
+      ]
+    }
+  ],
+  "passivas": [
+    {
+      "tipo": "voo",
+      "ajustes": {
+        "do_heroi": true
+      }
+    }
+  ],
+  "cores": {
+    "principal": "#2FA84E",
+    "secundaria": "#0F2216",
+    "brilho": "#C8FFD2"
+  },
   "skins": [
     {
       "id": "lantern",

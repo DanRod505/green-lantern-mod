@@ -81,7 +81,7 @@ public final class SupermanTests {
         ServerPlayer player = player(helper, 7.5, 1, 2.5, 0, 0);
         ItemStack crystal = giveCrystal(player, 3000);
         SupermanHero.INSTANCE.summonSuit(player);
-        SuperPower.POWERS.select(crystal, SuperPower.HEAT_VISION);
+        choose(player, SupermanHero.INSTANCE, SuperPower.HEAT_VISION);
         net.minecraft.world.entity.animal.pig.Pig pig = dummyPig(helper, 7.5, 1, 7.5);
         float health = pig.getHealth();
         player.setXRot(8.0F);
@@ -103,7 +103,7 @@ public final class SupermanTests {
         ServerPlayer player = player(helper, 7.5, 1, 4.5, 0, 0);
         ItemStack crystal = giveCrystal(player, 3000);
         SupermanHero.INSTANCE.summonSuit(player);
-        SuperPower.POWERS.select(crystal, SuperPower.SUPER_PUNCH);
+        choose(player, SupermanHero.INSTANCE, SuperPower.SUPER_PUNCH);
         // One pig right in front and two more off to the sides: the blast hits them all.
         net.minecraft.world.entity.animal.pig.Pig front = dummyPig(helper, 7.5, 1, 6.5);
         net.minecraft.world.entity.animal.pig.Pig left = dummyPig(helper, 10.5, 1, 7.5);
@@ -122,7 +122,7 @@ public final class SupermanTests {
         ServerPlayer player = player(helper, 7.5, 1, 2.5, 0, 0);
         ItemStack crystal = giveCrystal(player, 3000);
         SupermanHero.INSTANCE.summonSuit(player);
-        SuperPower.POWERS.select(crystal, SuperPower.SUPER_BREATH);
+        choose(player, SupermanHero.INSTANCE, SuperPower.SUPER_BREATH);
         net.minecraft.world.entity.animal.pig.Pig pig = dummyPig(helper, 7.5, 1, 6.5);
         float health = pig.getHealth();
         use(player);
@@ -143,7 +143,7 @@ public final class SupermanTests {
         ServerPlayer player = player(helper, 7.5, 1, 7.5, 0, 0);
         ItemStack crystal = giveCrystal(player, 3000);
         SupermanHero.INSTANCE.summonSuit(player);
-        SuperPower.POWERS.select(crystal, SuperPower.XRAY_VISION);
+        choose(player, SupermanHero.INSTANCE, SuperPower.XRAY_VISION);
         use(player);
         helper.assertTrue(SupermanServer.isXray(player), "X-ray vision should be on");
         helper.startSequence()

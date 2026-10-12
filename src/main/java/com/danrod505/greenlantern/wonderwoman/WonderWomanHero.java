@@ -1,5 +1,9 @@
 package com.danrod505.greenlantern.wonderwoman;
 
+import com.danrod505.greenlantern.engine.OwnPowers;
+import com.danrod505.greenlantern.engine.EngineAbility;
+import com.danrod505.greenlantern.engine.CharacterData;
+import com.danrod505.greenlantern.engine.AbilityHero;
 import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
@@ -38,7 +42,7 @@ import net.minecraft.world.item.ItemStack;
  * princess is stronger, tougher, quicker and steadier than any mortal, though not as mighty as the
  * Man of Steel.
  */
-public final class WonderWomanHero extends HeroDefinition {
+public final class WonderWomanHero extends AbilityHero {
     /**
      * The gift of the gods, kept in the Tiara of Themyscira: it pays for Wonder Woman's powers. It
      * comes back slowly on its own, and faster in battle (every blow of the Amazon sword feeds it).
@@ -61,8 +65,11 @@ public final class WonderWomanHero extends HeroDefinition {
 
     public static final WonderWomanHero INSTANCE = new WonderWomanHero();
 
-    private final HeroPowers<AmazonPower> powers = new HeroPowers<>(AmazonPower.POWERS, DIVINE_POWER, ChatFormatting.GOLD,
-            0.85F, 0.06F, WonderWomanServer::usePower, WHEEL);
+    private final CharacterData data = Characters.get("wonder_woman");
+    /** The powers of before, run by the functions of the abilities (see {@link OwnPowers}). */
+    private final OwnPowers own = OwnPowers.of(AmazonPower.values(), WonderWomanServer::usePower);
+    /** The wheel in the new model: the abilities of the catalog from the file. */
+    private final HeroPowers<EngineAbility> powers = wheel(data, own, DIVINE_POWER, ChatFormatting.GOLD, 0.85F, 0.06F, WHEEL);
 
     private WonderWomanHero() {
         super("wonder_woman", WonderWomanHelper::isTiara, new SuitSet(ModItems.WONDER_WOMAN_HAIR, ModItems.WONDER_WOMAN_SUIT, ModItems.WONDER_WOMAN_LEGGINGS,
@@ -108,7 +115,22 @@ public final class WonderWomanHero extends HeroDefinition {
     }
 
     @Override
-    public HeroPowers<AmazonPower> powers() {
+    public CharacterData data() {
+        return data;
+    }
+
+    @Override
+    public HeroEnergy energy() {
+        return DIVINE_POWER;
+    }
+
+    @Override
+    public OwnPowers ownPowers() {
+        return own;
+    }
+
+    @Override
+    public HeroPowers<EngineAbility> powers() {
         return powers;
     }
 

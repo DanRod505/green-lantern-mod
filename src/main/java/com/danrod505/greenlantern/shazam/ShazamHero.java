@@ -1,5 +1,9 @@
 package com.danrod505.greenlantern.shazam;
 
+import com.danrod505.greenlantern.engine.OwnPowers;
+import com.danrod505.greenlantern.engine.EngineAbility;
+import com.danrod505.greenlantern.engine.CharacterData;
+import com.danrod505.greenlantern.engine.AbilityHero;
 import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
@@ -34,7 +38,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
  * powers, one for each elder of the name, built from the power blocks in {@code hero/power}, and
  * flight between the Lantern's and Supergirl's. Made with the hero kit from {@code docs/heroes/shazam.md}.
  */
-public final class ShazamHero extends HeroDefinition {
+public final class ShazamHero extends AbilityHero {
     /** The Shazam's Magic, kept in the Wizard's Bolt: it pays for the powers and comes back on its own. */
     public static final HeroEnergy ENERGY = new HeroEnergy(ShazamContent.ENERGY, () -> ShazamConfig.CAPACITY.get());
 
@@ -53,8 +57,11 @@ public final class ShazamHero extends HeroDefinition {
 
     public static final ShazamHero INSTANCE = new ShazamHero();
 
-    private final HeroPowers<ShazamPower> powers = new HeroPowers<>(ShazamPower.POWERS, ENERGY, ChatFormatting.GOLD,
-            0.85F, 0.06F, ShazamServer::usePower, WHEEL);
+    private final CharacterData data = Characters.get("shazam");
+    /** The powers of before, run by the functions of the abilities (see {@link OwnPowers}). */
+    private final OwnPowers own = OwnPowers.of(ShazamPower.values(), ShazamServer::usePower);
+    /** The wheel in the new model: the abilities of the catalog from the file. */
+    private final HeroPowers<EngineAbility> powers = wheel(data, own, ENERGY, ChatFormatting.GOLD, 0.85F, 0.06F, WHEEL);
 
     private ShazamHero() {
         super("shazam", stack -> stack.is(ShazamContent.ITEM.get()), new SuitSet(ShazamContent.MASK, ShazamContent.SUIT, ShazamContent.LEGGINGS,
@@ -101,7 +108,27 @@ public final class ShazamHero extends HeroDefinition {
     }
 
     @Override
-    public HeroPowers<ShazamPower> powers() {
+    public CharacterData data() {
+        return data;
+    }
+
+    @Override
+    public HeroEnergy energy() {
+        return ENERGY;
+    }
+
+    @Override
+    public WheelStyle ownWheel() {
+        return WHEEL;
+    }
+
+    @Override
+    public OwnPowers ownPowers() {
+        return own;
+    }
+
+    @Override
+    public HeroPowers<EngineAbility> powers() {
         return powers;
     }
 

@@ -1,5 +1,9 @@
 package com.danrod505.greenlantern.superman;
 
+import com.danrod505.greenlantern.engine.OwnPowers;
+import com.danrod505.greenlantern.engine.EngineAbility;
+import com.danrod505.greenlantern.engine.CharacterData;
+import com.danrod505.greenlantern.engine.AbilityHero;
 import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
@@ -37,7 +41,7 @@ import net.minecraft.world.item.ItemStack;
  * (and the curl of black hair). While it is worn the Man of Steel is far stronger, tougher, faster
  * and can't be pushed around.
  */
-public final class SupermanHero extends HeroDefinition {
+public final class SupermanHero extends AbilityHero {
     /**
      * Solar energy of Superman, kept in the Kryptonian Crystal. His cells soak up the light of the
      * (yellow) sun under the open sky, and it pays for flight and every power.
@@ -60,8 +64,11 @@ public final class SupermanHero extends HeroDefinition {
 
     public static final SupermanHero INSTANCE = new SupermanHero();
 
-    private final HeroPowers<SuperPower> powers = new HeroPowers<>(SuperPower.POWERS, SOLAR_ENERGY, ChatFormatting.AQUA,
-            0.9F, 0.08F, SupermanServer::usePower, WHEEL);
+    private final CharacterData data = Characters.get("superman");
+    /** The powers of before, run by the functions of the abilities (see {@link OwnPowers}). */
+    private final OwnPowers own = OwnPowers.of(SuperPower.values(), SupermanServer::usePower);
+    /** The wheel in the new model: the abilities of the catalog from the file. */
+    private final HeroPowers<EngineAbility> powers = wheel(data, own, SOLAR_ENERGY, ChatFormatting.AQUA, 0.9F, 0.08F, WHEEL);
 
     private SupermanHero() {
         super("superman", SupermanHelper::isCrystal, new SuitSet(ModItems.SUPERMAN_HAIR, ModItems.SUPERMAN_SUIT, ModItems.SUPERMAN_LEGGINGS, ModItems.SUPERMAN_BOOTS,
@@ -107,7 +114,22 @@ public final class SupermanHero extends HeroDefinition {
     }
 
     @Override
-    public HeroPowers<SuperPower> powers() {
+    public CharacterData data() {
+        return data;
+    }
+
+    @Override
+    public HeroEnergy energy() {
+        return SOLAR_ENERGY;
+    }
+
+    @Override
+    public OwnPowers ownPowers() {
+        return own;
+    }
+
+    @Override
+    public HeroPowers<EngineAbility> powers() {
         return powers;
     }
 

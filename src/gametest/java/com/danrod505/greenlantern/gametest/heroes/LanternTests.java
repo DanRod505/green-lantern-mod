@@ -128,18 +128,20 @@ public final class LanternTests {
         Zombie zombie = dummy(helper, 7.5, 1, 9.5);
         float health = zombie.getHealth();
         use(player);
-        helper.assertTrue(player.isUsingItem(), "minigun is used while holding the button");
+        helper.assertTrue(com.danrod505.greenlantern.ring.RingConstructs.autoFiring(player), "the minigun fires on its own");
         helper.startSequence()
                 .thenExecuteFor(30, player::doTick)
                 .thenExecute(() -> {
                     helper.assertTrue(!around(player, GunConstructEntity.class, 4).isEmpty(), "gun construct should float next to the player");
                     helper.assertTrue(RingEnergy.get(ring).stored() < 1000, "shots should cost energy");
                     helper.assertTrue(zombie.getHealth() < health || zombie.isDeadOrDying(), "zombie should be shot");
-                    player.releaseUsingItem();
+                    // Using it again stops it.
+                    use(player);
                 })
                 .thenExecuteFor(3, player::doTick)
                 .thenExecute(() -> {
-                    helper.assertTrue(around(player, GunConstructEntity.class, 4).isEmpty(), "gun should vanish on release");
+                    helper.assertFalse(com.danrod505.greenlantern.ring.RingConstructs.autoFiring(player), "using it again stops the minigun");
+                    helper.assertTrue(around(player, GunConstructEntity.class, 4).isEmpty(), "gun should vanish when it stops");
                     remove(player);
                 })
                 .thenSucceed();

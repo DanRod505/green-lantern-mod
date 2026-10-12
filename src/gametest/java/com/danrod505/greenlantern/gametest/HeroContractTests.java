@@ -166,7 +166,7 @@ public final class HeroContractTests {
                 helper.assertTrue(count > 0, who + "a power wheel needs at least one power");
                 String icons = "assets/" + wheel.icons().getNamespace() + "/" + wheel.icons().getPath();
                 // A character of the engine draws its icons while the game runs (engine.AbilityIcons).
-                int width = hero instanceof com.danrod505.greenlantern.engine.EngineHero drawn
+                int width = hero instanceof com.danrod505.greenlantern.engine.AbilityHero drawn
                         ? com.danrod505.greenlantern.engine.AbilityIcons.sheet(drawn.data(), drawn.data().abilities().stream()
                                 .map(a -> a.kind().orElseThrow()).toList()).length / com.danrod505.greenlantern.engine.AbilityIcons.SIZE
                         : pngWidth(icons);
@@ -177,9 +177,10 @@ public final class HeroContractTests {
                     helper.assertTrue(powerIds.add(power.id()), who + "two powers with the id " + power.id());
                     helper.assertTrue(power.cost() >= 0, who + "power " + power.id() + " has a negative cost");
                     helper.assertTrue((power.iconIndex() + 1) * 16 <= wheel.iconsWidth(), who + "no icon for power " + power.id());
-                    if (engine) {
+                    if (hero instanceof com.danrod505.greenlantern.engine.AbilityHero) {
                         helper.assertFalse(power.displayName().getString().startsWith("power."), who + "power " + power.id() + " has no name");
-                    } else {
+                    }
+                    if (!engine) {
                         keys.add("power." + GreenLantern.MODID + "." + power.id());
                         keys.add("power." + GreenLantern.MODID + "." + power.id() + ".desc");
                     }

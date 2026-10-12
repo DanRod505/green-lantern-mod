@@ -28,7 +28,7 @@ public final class SupergirlClient implements HeroClient {
 
     private final SupergirlHearingVisuals hearing = new SupergirlHearingVisuals();
     private final HeroHud hud = new HeroHud(SupergirlHero.INSTANCE, 0x2A6FE0, 0xFFD447, 0xC0D8202E, 0xFFFFD447,
-            (player, power) -> power == SupergirlPower.SUPER_HEARING && SupergirlServer.isHearing(SupergirlHero.INSTANCE.findItem(player)));
+            (player, power) -> power.id().equals(SupergirlPower.SUPER_HEARING.id()) && SupergirlServer.isHearing(SupergirlHero.INSTANCE.findItem(player)));
 
     @Override
     public void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {

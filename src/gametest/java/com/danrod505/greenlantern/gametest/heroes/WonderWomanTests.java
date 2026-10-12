@@ -69,7 +69,7 @@ public final class WonderWomanTests {
         ServerPlayer player = player(helper, 7.5, 1, 3.5, 0, 0);
         ItemStack tiara = giveTiara(player, 1000);
         WonderWomanHero.INSTANCE.summonSuit(player);
-        AmazonPower.POWERS.select(tiara, AmazonPower.LASSO_CAPTURE);
+        choose(player, WonderWomanHero.INSTANCE, AmazonPower.LASSO_CAPTURE);
         net.minecraft.world.entity.animal.pig.Pig pig = dummyPig(helper, 7.5, 1, 7.5);
         // The loop leaves from her right hand, a little below the eyes: aim it at the middle of the pig.
         Vec3 eye = player.getEyePosition();

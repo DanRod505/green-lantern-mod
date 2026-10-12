@@ -1,5 +1,5 @@
 {
-  "_comentario": "Um dos 9 heróis que já existiam: os poderes e a energia continuam no código dele. O traje, os bônus e a ordem da roda vêm daqui, com os mesmos números de antes.",
+  "_comentario": "Um dos 9 heróis que já existiam, no modelo novo de habilidades (etapa 3, lote 1): as habilidades do catálogo com as funções por contexto e a suprema por último na roda. Uma função com o preset poder_de_hoje usa um poder de antes (ajuste \"poder\"), com a energia e a recarga de sempre. O item, a energia, o traje e o voo continuam no código dele.",
   "id": "aquaman",
   "nome": "Aquaman",
   "classe": "guerreiro",
@@ -53,21 +53,161 @@
   },
   "habilidades": [
     {
-      "id": "trident"
+      "id": "aquaman_tridente",
+      "nome": "Tridente",
+      "classe": "golpe",
+      "preset": "poder_de_hoje",
+      "numeros": {
+        "dano": 10,
+        "custo": 6,
+        "recarga": 3,
+        "alcance": 4
+      },
+      "ajustes": {
+        "poder": "trident",
+        "icone": "espada"
+      },
+      "funcoes": [
+        {
+          "preset": "pescar",
+          "quando": {
+            "mira": "agua"
+          }
+        }
+      ]
     },
     {
-      "id": "shark"
+      "id": "aquaman_pele",
+      "nome": "Pele Atlante",
+      "classe": "defesa",
+      "preset": "pele_dura",
+      "numeros": {
+        "custo": 5,
+        "recarga": 6,
+        "raio": 3,
+        "duracao": 10
+      }
     },
     {
-      "id": "sea_call"
+      "id": "aquaman_chamado",
+      "nome": "Chamado do Mar",
+      "classe": "controle",
+      "preset": "poder_de_hoje",
+      "numeros": {
+        "dano": 2,
+        "custo": 8,
+        "recarga": 12,
+        "alcance": 24,
+        "duracao": 4
+      },
+      "ajustes": {
+        "poder": "sea_call",
+        "icone": "onda"
+      },
+      "funcoes": [
+        {
+          "preset": "poder_de_hoje",
+          "ajustes": {
+            "poder": "shark",
+            "icone": "veiculo"
+          },
+          "quando": {
+            "aperto": "segurar"
+          }
+        }
+      ]
     },
     {
-      "id": "atlantis_portal"
+      "id": "aquaman_furia",
+      "nome": "Fúria do Oceano",
+      "classe": "fortalecimento",
+      "preset": "furia",
+      "numeros": {
+        "custo": 15,
+        "recarga": 40,
+        "duracao": 15
+      },
+      "funcoes": [
+        {
+          "preset": "plantar_e_colher",
+          "quando": {
+            "aperto": "segurar"
+          }
+        }
+      ]
     },
     {
-      "id": "kraken"
+      "id": "aquaman_corrente",
+      "nome": "Corrente Marinha",
+      "classe": "mobilidade",
+      "preset": "nado_rapido",
+      "numeros": {
+        "custo": 5,
+        "recarga": 4,
+        "alcance": 24
+      }
+    },
+    {
+      "id": "aquaman_tesouros",
+      "nome": "Tesouros do Mar",
+      "classe": "deteccao",
+      "preset": "procurar",
+      "numeros": {
+        "custo": 5,
+        "recarga": 15,
+        "raio": 24,
+        "duracao": 20
+      },
+      "ajustes": {
+        "mostra": "baus"
+      }
+    },
+    {
+      "id": "aquaman_kraken",
+      "nome": "Kraken",
+      "classe": "invocacao",
+      "suprema": true,
+      "preset": "poder_de_hoje",
+      "numeros": {
+        "dano": 18,
+        "custo": 40,
+        "recarga": 135,
+        "duracao": 60
+      },
+      "ajustes": {
+        "poder": "kraken",
+        "icone": "veiculo"
+      },
+      "funcoes": [
+        {
+          "preset": "poder_de_hoje",
+          "ajustes": {
+            "poder": "atlantis_portal",
+            "icone": "portal"
+          },
+          "quando": {
+            "aperto": "segurar"
+          }
+        }
+      ]
     }
   ],
+  "passivas": [
+    {
+      "tipo": "aquatico",
+      "ajustes": {
+        "do_heroi": true
+      }
+    },
+    {
+      "tipo": "superforca"
+    }
+  ],
+  "cores": {
+    "principal": "#1AA8A0",
+    "secundaria": "#F2C94A",
+    "brilho": "#FFF0B0"
+  },
   "skins": [
     {
       "id": "aquaman",

@@ -1,12 +1,20 @@
 package com.danrod505.greenlantern.ring;
 
+import com.danrod505.greenlantern.registry.ModDataComponents;
+import com.danrod505.greenlantern.GreenLantern;
+import com.danrod505.greenlantern.hero.WheelStyle;
+import com.danrod505.greenlantern.hero.HeroPowers;
+import com.danrod505.greenlantern.hero.HeroEnergy;
+import com.danrod505.greenlantern.engine.OwnPowers;
+import com.danrod505.greenlantern.engine.EngineAbility;
+import com.danrod505.greenlantern.engine.CharacterData;
+import com.danrod505.greenlantern.engine.AbilityHero;
 import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.client.HeroClient;
 import com.danrod505.greenlantern.client.LanternClient;
 import com.danrod505.greenlantern.engine.Characters;
 import com.danrod505.greenlantern.flight.FlightProfile;
 import com.danrod505.greenlantern.flight.FlightStyle;
-import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.SuitSet;
 import com.danrod505.greenlantern.hero.WheelTheme;
 import com.danrod505.greenlantern.item.PowerRingItem;
@@ -28,7 +36,7 @@ import net.minecraft.world.item.ItemStack;
  * The Green Lantern: the Power Ring calls the uniform of hard light (it needs energy in the ring), flies and
  * builds constructs (picked on the construct wheel).
  */
-public final class LanternHero extends HeroDefinition {
+public final class LanternHero extends AbilityHero {
     /** Colours of the construct wheel: green hard light. */
     public static final WheelTheme WHEEL_THEME = new WheelTheme("wheel", 0x07120A, 0x030604, 0x2A8A44, 0x2E6A3E, 0x060D08, 0x0F2216,
             0x0F4A20, 0x2FA84E, 0x7CFF96, 0xC8FFD2, 0x3CE064);
@@ -40,7 +48,20 @@ public final class LanternHero extends HeroDefinition {
             new FlightStyle.Hud(0xD8FFE0, 0x9BFFB0, 0x2CFF5A, 0x2CFF5A, 0xFF6CFF86, 0xFFB6FFC6, 1.6F, 0xFF2EE65A, 0xFFC8FFD2, 0xFFE0FFE6),
             ModSounds.FLIGHT_THEME_BASE, ModSounds.FLIGHT_THEME_PEAK, false);
 
+    /** The wheel of the abilities, in the colours of the construct wheel. */
+    public static final WheelStyle WHEEL = new WheelStyle(WHEEL_THEME, GreenLantern.id("textures/gui/constructs.png"), 128, "wheel.greenlantern.cost",
+            "tooltip.greenlantern.energy", 0x66030604, 0x7CFF96, 0xC8FFD2, 0xE0FFE6, 0xA0C8A8, 0x7CFF96, 0xA0C0A8);
+
+    /** The energy of the ring. */
+    public static final HeroEnergy ENERGY = new HeroEnergy(ModDataComponents.RING_ENERGY, RingEnergy::configuredCapacity);
+
     public static final LanternHero INSTANCE = new LanternHero();
+
+    private final CharacterData data = Characters.get("lantern");
+    /** The constructs of the ring, run by the functions of the abilities (see {@link RingConstructs}). */
+    private final OwnPowers own = RingConstructs.powers();
+    /** The wheel in the new model: the abilities of the catalog from the file. */
+    private final HeroPowers<EngineAbility> powers = wheel(data, own, ENERGY, ChatFormatting.GREEN, 0.8F, 0.08F, WHEEL);
 
     private LanternHero() {
         super("lantern", RingHelper::isRing, new SuitSet(ModItems.LANTERN_MASK, ModItems.LANTERN_SUIT, ModItems.LANTERN_LEGGINGS, ModItems.LANTERN_BOOTS,
@@ -83,6 +104,26 @@ public final class LanternHero extends HeroDefinition {
     @Override
     protected void suitDownEffects(ServerLevel level, ServerPlayer player) {
         level.sendParticles(ModParticles.GLOW.get(), player.getX(), player.getY() + 1.0, player.getZ(), 25, 0.4, 0.9, 0.4, 0.01);
+    }
+
+    @Override
+    public CharacterData data() {
+        return data;
+    }
+
+    @Override
+    public HeroEnergy energy() {
+        return ENERGY;
+    }
+
+    @Override
+    public OwnPowers ownPowers() {
+        return own;
+    }
+
+    @Override
+    public HeroPowers<EngineAbility> powers() {
+        return powers;
     }
 
     @Override

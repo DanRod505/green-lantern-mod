@@ -26,7 +26,7 @@ public final class FlashScript {
 
     public static void flashPower(com.danrod505.greenlantern.flash.SpeedsterPower power) {
         server(sp -> {
-            com.danrod505.greenlantern.flash.SpeedsterPower.POWERS.select(sp.getMainHandItem(), power);
+            ClientScript.selectAbility(com.danrod505.greenlantern.flash.FlashHero.INSTANCE, sp.getMainHandItem(), power.id());
             sp.getCooldowns().removeCooldown(sp.getCooldowns().getCooldownGroup(sp.getMainHandItem()));
             com.danrod505.greenlantern.flash.SpeedsterServer.usePower(sp, sp.getMainHandItem(), power);
         });
@@ -212,7 +212,7 @@ public final class FlashScript {
             if (mc().screen != null) mc().screen.keyReleased(new net.minecraft.client.input.KeyEvent(org.lwjgl.glfw.GLFW.GLFW_KEY_R, 0, 0));
         });
         step(10, () -> com.danrod505.greenlantern.GreenLantern.LOGGER.info("CLIENTSCRIPT power selected={}",
-                com.danrod505.greenlantern.flash.SpeedsterPower.POWERS.selected(mc().player.getMainHandItem()).id()));
+                ClientScript.selectedAbility(com.danrod505.greenlantern.flash.FlashHero.INSTANCE, mc().player.getMainHandItem())));
         step(20, () -> mc().stop());
     }
 

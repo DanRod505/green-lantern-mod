@@ -76,23 +76,13 @@ public final class AquaHud {
         String text = force.stored() + " / " + force.capacity();
         graphics.drawString(mc.font, text, barX + 104, barY + 2, low ? 0xFFFF5555 : 0xFFF2C94A, true);
 
-        AquaPower selected = AquaPower.POWERS.selected(emblem);
         int iconsY = y + 17;
-        for (int i = 0; i < AquaPower.POWERS.count(); i++) {
-            AquaPower power = AquaPower.POWERS.byIndex(i);
-            int ix = x + 19 + i * 20;
-            boolean isSelected = power == selected;
-            if (isSelected) graphics.fill(ix - 1, iconsY - 1, ix + 17, iconsY + 17, 0xC03CE0D0);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, AquamanHero.WHEEL.icons(), ix, iconsY, power.iconIndex() * 16, 0, 16, 16,
-                    iconsW, WheelStyle.ICONS_HEIGHT, isSelected ? 0xFFFFFFFF : 0x90FFFFFF);
-        }
-        graphics.drawString(mc.font, Component.translatable("hud.greenlantern.power_key", selected.displayName(), KeyBindings.HERO_POWER.getTranslatedKeyMessage()),
-                x + 19, iconsY + 19, 0xFF8FF0E4, true);
+        com.danrod505.greenlantern.client.engine.AbilityRow.render(graphics, AquamanHero.INSTANCE, emblem, player, x + 19, iconsY, 0xC03CE0D0, 0xFF8FF0E4, null);
         if (!suited) {
             graphics.drawString(mc.font, Component.translatable("hud.greenlantern.aquaman_suit_hint", KeyBindings.TOGGLE_UNIFORM.getTranslatedKeyMessage()),
-                    x + 19, iconsY + 30, 0xFFA0A0A0, true);
+                    x + 19, iconsY + 32, 0xFFA0A0A0, true);
         } else {
-            renderKraken(graphics, mc, player, x + 19, iconsY + 32);
+            renderKraken(graphics, mc, player, x + 19, iconsY + 33);
         }
     }
 

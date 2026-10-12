@@ -144,5 +144,19 @@
   "subtitles.greenlantern.atlantean_dolphin_ambient": "Atlantean dolphin whistles",
   "subtitles.greenlantern.atlantean_dolphin_hurt": "Atlantean dolphin hurts",
   "subtitles.greenlantern.atlantean_dolphin_leap": "Atlantean dolphin leaps",
-  "subtitles.greenlantern.atlantean_mount_saddle": "Atlantean mount takes a rider"
+  "subtitles.greenlantern.atlantean_mount_saddle": "Atlantean mount takes a rider",
+  "power.greenlantern.aquaman_tridente": "Trident",
+  "power.greenlantern.aquaman_tridente.desc": "The trident of Atlantis in your hand: a heavy weapon you can throw and that comes back. Aiming at water: fishes up fish and treasure.",
+  "power.greenlantern.aquaman_pele": "Atlantean Skin",
+  "power.greenlantern.aquaman_pele.desc": "Atlantean skin withstands the pressure of the deep: much less damage for a few seconds.",
+  "power.greenlantern.aquaman_chamado": "Call of the Sea",
+  "power.greenlantern.aquaman_chamado.desc": "Tap: the sea creatures nearby follow and defend you. Hold: a great white shark answers for you to ride.",
+  "power.greenlantern.aquaman_furia": "Ocean's Fury",
+  "power.greenlantern.aquaman_furia.desc": "Tap: the ocean's fury raises the damage you deal (and take). Hold: the crops around grow.",
+  "power.greenlantern.aquaman_corrente": "Sea Current",
+  "power.greenlantern.aquaman_corrente.desc": "A current carries you far and fast through the water.",
+  "power.greenlantern.aquaman_tesouros": "Treasures of the Sea",
+  "power.greenlantern.aquaman_tesouros.desc": "Shows the chests and treasure nearby through walls.",
+  "power.greenlantern.aquaman_kraken": "Kraken",
+  "power.greenlantern.aquaman_kraken.desc": "Supreme. Tap: a 15 block tall Kraken rises from the deep and carries you on its head. Hold: opens the way to Atlantis."
 }

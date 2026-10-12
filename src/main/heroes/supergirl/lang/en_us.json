@@ -65,5 +65,17 @@
   "subtitles.greenlantern.krypto_fly": "Krypto flies",
   "subtitles.greenlantern.krypto_whistle": "Supergirl whistles",
   "guide.greenlantern.krypto.title": "Krypto the Superdog",
-  "guide.greenlantern.krypto": "The first time she puts on the suit, §6Krypto§r dives down from the sky in his little red cape and stays with her.\n\n§6Companion§r\nHe follows Supergirl on foot or flies beside her, bites whoever attacks her or whoever she attacks, fires heat vision now and then and brings loose items he finds to her feet. He never attacks players, villagers or tamed animals.\n\n§6Commands§r\nRight-click him with an empty hand to make him sit or follow again. Name him with a name tag. Bones heal him. Crouch and use the pendant to §6whistle§r: he comes from wherever he is.\n\n§6Hurt§r\nIf his health runs out he does not die: he flies off to rest and comes back after a minute. The pendant keeps his name and health."
+  "guide.greenlantern.krypto": "The first time she puts on the suit, §6Krypto§r dives down from the sky in his little red cape and stays with her.\n\n§6Companion§r\nHe follows Supergirl on foot or flies beside her, bites whoever attacks her or whoever she attacks, fires heat vision now and then and brings loose items he finds to her feet. He never attacks players, villagers or tamed animals.\n\n§6Commands§r\nRight-click him with an empty hand to make him sit or follow again. Name him with a name tag. Bones heal him. Crouch and use the pendant to §6whistle§r: he comes from wherever he is.\n\n§6Hurt§r\nIf his health runs out he does not die: he flies off to rest and comes back after a minute. The pendant keeps his name and health.",
+  "power.greenlantern.supergirl_soco": "Speed Punch",
+  "power.greenlantern.supergirl_soco.desc": "Tap: the Meteor Dash rams everything in the way. Hold: grabs and hurls. Aiming at stone: mines fast.",
+  "power.greenlantern.supergirl_visao_de_calor": "Heat Vision",
+  "power.greenlantern.supergirl_visao_de_calor.desc": "Quick heat bolts from the eyes. Aiming at an ore: smelts it at once.",
+  "power.greenlantern.supergirl_palmas": "Thunder Clap",
+  "power.greenlantern.supergirl_palmas.desc": "Tap: a wave in a cone stuns the enemies. Hold: a freezing breath raises a wall of ice. Aiming at grass and leaves: clears around.",
+  "power.greenlantern.supergirl_raio_x": "X-Ray Vision",
+  "power.greenlantern.supergirl_raio_x.desc": "Tap: shows the ores through walls. Hold: turns Super Hearing on.",
+  "power.greenlantern.supergirl_entrega": "Kryptonian Delivery",
+  "power.greenlantern.supergirl_entrega.desc": "Gathers the loose items around, flying in seconds; aiming at a chest, brings what it holds.",
+  "power.greenlantern.supergirl_krypto": "Krypto, Attack!",
+  "power.greenlantern.supergirl_krypto.desc": "Supreme. Tap: Krypto comes and you attack together, ending in the Solar Flare. Hold: Krypto sniffs out the chests nearby."
 }

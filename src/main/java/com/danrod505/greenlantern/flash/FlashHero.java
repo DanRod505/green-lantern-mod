@@ -1,5 +1,9 @@
 package com.danrod505.greenlantern.flash;
 
+import com.danrod505.greenlantern.engine.OwnPowers;
+import com.danrod505.greenlantern.engine.EngineAbility;
+import com.danrod505.greenlantern.engine.CharacterData;
+import com.danrod505.greenlantern.engine.AbilityHero;
 import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
@@ -28,7 +32,7 @@ import net.minecraft.world.item.CreativeModeTab;
  * running). The suit springs out of the ring (like Barry Allen's); while it is worn the player walks
  * faster and steps up whole blocks, so a run is never stopped by a single step.
  */
-public final class FlashHero extends HeroDefinition {
+public final class FlashHero extends AbilityHero {
     /** Speed Force stored in the Flash ring: pays for the speedster powers (tornado, phasing, lightning). */
     public static final HeroEnergy SPEED_FORCE = new HeroEnergy(ModDataComponents.SPEED_FORCE, () -> GLConfig.SPEED_FORCE_CAPACITY.get());
 
@@ -41,8 +45,11 @@ public final class FlashHero extends HeroDefinition {
 
     public static final FlashHero INSTANCE = new FlashHero();
 
-    private final HeroPowers<SpeedsterPower> powers = new HeroPowers<>(SpeedsterPower.POWERS, SPEED_FORCE, ChatFormatting.YELLOW,
-            1.0F, 0.08F, SpeedsterServer::usePower, WHEEL);
+    private final CharacterData data = Characters.get("flash");
+    /** The powers of before, run by the functions of the abilities (see {@link OwnPowers}). */
+    private final OwnPowers own = OwnPowers.of(SpeedsterPower.values(), SpeedsterServer::usePower);
+    /** The wheel in the new model: the abilities of the catalog from the file. */
+    private final HeroPowers<EngineAbility> powers = wheel(data, own, SPEED_FORCE, ChatFormatting.YELLOW, 1.0F, 0.08F, WHEEL);
 
     private FlashHero() {
         super("flash", FlashHelper::isRing, new SuitSet(ModItems.FLASH_MASK, ModItems.FLASH_SUIT, ModItems.FLASH_LEGGINGS, ModItems.FLASH_BOOTS,
@@ -77,7 +84,22 @@ public final class FlashHero extends HeroDefinition {
     }
 
     @Override
-    public HeroPowers<SpeedsterPower> powers() {
+    public CharacterData data() {
+        return data;
+    }
+
+    @Override
+    public HeroEnergy energy() {
+        return SPEED_FORCE;
+    }
+
+    @Override
+    public OwnPowers ownPowers() {
+        return own;
+    }
+
+    @Override
+    public HeroPowers<EngineAbility> powers() {
         return powers;
     }
 

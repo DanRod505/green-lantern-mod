@@ -82,29 +82,18 @@ public final class WonderWomanHud {
         graphics.fill(barX, barY, barX + fill, barY + 1, 0x90FFFFFF);
         graphics.drawString(mc.font, energy.stored() + " / " + energy.capacity(), barX + barW + 4, barY, low ? 0xFFFF5555 : 0xFFFFD24A, true);
 
-        AmazonPower selected = AmazonPower.POWERS.selected(tiara);
         int iconsY = y + 15;
         int flags = WonderWomanVisuals.flags(player.getId());
         LassoEntity lasso = LassoEntity.find(player);
-        for (int i = 0; i < AmazonPower.POWERS.count(); i++) {
-            AmazonPower power = AmazonPower.POWERS.byIndex(i);
-            int ix = x + 19 + i * 20;
-            boolean isSelected = power == selected;
-            boolean active = switch (power) {
-                case LASSO_CAPTURE -> lasso != null && lasso.boundTarget() != null;
-                case LASSO_SPIN -> AmazonFlags.has(flags, AmazonFlags.SPIN);
-                case BRACELET_GUARD -> AmazonFlags.has(flags, AmazonFlags.GUARD);
-                case SWORD_AND_SHIELD -> WonderWomanHelper.swordSlot(player) >= 0;
-                case INVISIBLE_JET -> player.getVehicle() instanceof InvisibleJetEntity;
-                default -> false;
-            };
-            if (isSelected) graphics.fill(ix - 1, iconsY - 1, ix + 17, iconsY + 17, 0xC0C8102E);
-            if (active) graphics.fill(ix - 1, iconsY + 17, ix + 17, iconsY + 19, 0xFFF2B71C);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, WonderWomanHero.WHEEL.icons(), ix, iconsY, power.iconIndex() * 16, 0, 16, 16,
-                    iconsW, WheelStyle.ICONS_HEIGHT, isSelected || active ? 0xFFFFFFFF : 0x90FFFFFF);
-        }
-        graphics.drawString(mc.font, Component.translatable("hud.greenlantern.power_key", selected.displayName(), KeyBindings.HERO_POWER.getTranslatedKeyMessage()),
-                x + 19, iconsY + 21, 0xFFFFECE0, true);
+        com.danrod505.greenlantern.client.engine.AbilityRow.render(graphics, WonderWomanHero.INSTANCE, tiara, player, x + 19, iconsY, 0xC0C8102E, 0xFFFFECE0,
+                (p, power) -> switch (power) {
+                    case "lasso_capture" -> lasso != null && lasso.boundTarget() != null;
+                    case "lasso_spin" -> AmazonFlags.has(flags, AmazonFlags.SPIN);
+                    case "bracelet_guard" -> AmazonFlags.has(flags, AmazonFlags.GUARD);
+                    case "sword_and_shield" -> WonderWomanHelper.swordSlot(p) >= 0;
+                    case "invisible_jet" -> p.getVehicle() instanceof InvisibleJetEntity;
+                    default -> false;
+                });
         if (!suited) {
             graphics.drawString(mc.font, Component.translatable("hud.greenlantern.wonder_woman_suit_hint", KeyBindings.TOGGLE_UNIFORM.getTranslatedKeyMessage()),
                     x + 19, iconsY + 32, 0xFFA0A0A0, true);

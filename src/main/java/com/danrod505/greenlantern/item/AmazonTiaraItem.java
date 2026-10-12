@@ -46,7 +46,7 @@ public class AmazonTiaraItem extends Item {
             return InteractionResult.SUCCESS;
         }
         if (player instanceof ServerPlayer serverPlayer) {
-            WonderWomanServer.usePower(serverPlayer, tiara, AmazonPower.POWERS.selected(tiara));
+            WonderWomanHero.INSTANCE.powers().use(serverPlayer, tiara, -1);
         }
         return InteractionResult.SUCCESS;
     }
@@ -75,7 +75,7 @@ public class AmazonTiaraItem extends Item {
         RingEnergy energy = WonderWomanHero.DIVINE_POWER.get(tiara);
         tooltip.accept(Component.translatable("tooltip.greenlantern.divine_power", energy.stored(), energy.capacity())
                 .withStyle(energy.fraction() < 0.2F ? ChatFormatting.RED : ChatFormatting.GOLD));
-        tooltip.accept(Component.translatable("tooltip.greenlantern.power", AmazonPower.POWERS.selected(tiara).displayName()).withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.translatable("tooltip.greenlantern.power", WonderWomanHero.INSTANCE.powers().power(WonderWomanHero.INSTANCE.powers().selectedIndex(tiara)).displayName()).withStyle(ChatFormatting.GRAY));
         tooltip.accept(Component.translatable("tooltip.greenlantern.amazon_tiara_hint").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
     }
 }

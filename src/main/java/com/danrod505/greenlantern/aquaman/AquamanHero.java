@@ -1,5 +1,9 @@
 package com.danrod505.greenlantern.aquaman;
 
+import com.danrod505.greenlantern.engine.OwnPowers;
+import com.danrod505.greenlantern.engine.EngineAbility;
+import com.danrod505.greenlantern.engine.CharacterData;
+import com.danrod505.greenlantern.engine.AbilityHero;
 import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
@@ -30,7 +34,7 @@ import net.minecraft.world.item.ItemStack;
  * stays on). While it is worn Aquaman breathes underwater, sees clearly in the deep, mines at full
  * speed underwater and hits harder.
  */
-public final class AquamanHero extends HeroDefinition {
+public final class AquamanHero extends AbilityHero {
     /**
      * Power of the Seas stored in the Atlantean Emblem. It refills quickly while Aquaman is in water
      * (slowly on land) and pays for his powers: the trident, the shark and the call of the sea.
@@ -46,8 +50,11 @@ public final class AquamanHero extends HeroDefinition {
 
     public static final AquamanHero INSTANCE = new AquamanHero();
 
-    private final HeroPowers<AquaPower> powers = new HeroPowers<>(AquaPower.POWERS, SEA_FORCE, ChatFormatting.AQUA,
-            0.8F, 0.08F, AquamanServer::usePower, WHEEL);
+    private final CharacterData data = Characters.get("aquaman");
+    /** The powers of before, run by the functions of the abilities (see {@link OwnPowers}). */
+    private final OwnPowers own = OwnPowers.of(AquaPower.values(), AquamanServer::usePower);
+    /** The wheel in the new model: the abilities of the catalog from the file. */
+    private final HeroPowers<EngineAbility> powers = wheel(data, own, SEA_FORCE, ChatFormatting.AQUA, 0.8F, 0.08F, WHEEL);
 
     private AquamanHero() {
         super("aquaman", AquamanHelper::isEmblem, new SuitSet(null, ModItems.AQUAMAN_SUIT, ModItems.AQUAMAN_LEGGINGS, ModItems.AQUAMAN_BOOTS,
@@ -101,7 +108,22 @@ public final class AquamanHero extends HeroDefinition {
     }
 
     @Override
-    public HeroPowers<AquaPower> powers() {
+    public CharacterData data() {
+        return data;
+    }
+
+    @Override
+    public HeroEnergy energy() {
+        return SEA_FORCE;
+    }
+
+    @Override
+    public OwnPowers ownPowers() {
+        return own;
+    }
+
+    @Override
+    public HeroPowers<EngineAbility> powers() {
         return powers;
     }
 

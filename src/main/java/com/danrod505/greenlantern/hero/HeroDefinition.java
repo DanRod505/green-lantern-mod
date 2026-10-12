@@ -107,6 +107,7 @@ public abstract class HeroDefinition {
         onSuitRemoving(player);
         Uniform.removeSuit(player);
         updateSuitModifiers(player, false);
+        afterSuitRemoved(player);
         FlightHandler.refreshAbilities(player);
         if (effects) {
             ServerLevel level = player.level();
@@ -135,6 +136,10 @@ public abstract class HeroDefinition {
 
     /** Before the suit comes off: put away what the hero's powers left in the world. */
     protected void onSuitRemoving(ServerPlayer player) {
+    }
+
+    /** Right after the suit pieces and bonuses are off. */
+    protected void afterSuitRemoved(ServerPlayer player) {
     }
 
     /** Particles after the suit down sound (only when taken off with effects). */

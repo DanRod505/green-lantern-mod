@@ -93,7 +93,7 @@ public final class EngineServer {
      * one that left something to take back (a carried block) takes it back. Returns whether it went off.
      */
     public static boolean useAbility(ServerPlayer player, ItemStack item, EngineAbility ability, AbilityFunctions.Press press) {
-        EngineHero hero = owner(item);
+        AbilityHero hero = owner(item);
         if (hero == null) return false;
         if (!hero.isSuited(player)) {
             player.displayClientMessage(Component.translatable("message.greenlantern.engine_need_suit"), true);
@@ -105,11 +105,14 @@ public final class EngineServer {
             if (PresetRuntime.stop(player, key) || PresetRuntime.undo(player, key)) return true;
         }
         AbilityFunctions.Chosen chosen = AbilityFunctions.choose(ability.data(), press, player);
+        // A power of before (the heroes that already existed) pays its own energy and starts its own recharge.
+        String own = OwnPowers.power(chosen.function(), ability.data());
+        if (own != null) return hero.ownPowers().use(player, item, own);
         if (!ready(player, hero, item, ability)) return false;
         return finish(player, hero, item, ability, Presets.use(player, hero, item, ability, chosen));
     }
 
-    private static boolean ready(ServerPlayer player, EngineHero hero, ItemStack item, EngineAbility ability) {
+    private static boolean ready(ServerPlayer player, AbilityHero hero, ItemStack item, EngineAbility ability) {
         AbilityState state = state(item);
         long now = player.level().getGameTime();
         long left = state.remaining(ability.ordinal(), now);
@@ -128,7 +131,7 @@ public final class EngineServer {
      * After the preset: the cooldown (the ability's, or the one the preset asked for). A use that
      * could not go off gives the energy back and says why.
      */
-    private static boolean finish(ServerPlayer player, EngineHero hero, ItemStack item, EngineAbility ability, Presets.Outcome outcome) {
+    private static boolean finish(ServerPlayer player, AbilityHero hero, ItemStack item, EngineAbility ability, Presets.Outcome outcome) {
         if (!outcome.went()) {
             if (!player.isCreative()) hero.energy().add(item, ability.cost());
             refuse(player, outcome.reason());
@@ -141,7 +144,7 @@ public final class EngineServer {
     }
 
     /** Starts the ability's cooldown now: a lasting preset (a bubble, super speed) just ended. */
-    public static void startCooldown(ServerPlayer player, EngineHero hero, EngineAbility ability) {
+    public static void startCooldown(ServerPlayer player, AbilityHero hero, EngineAbility ability) {
         ItemStack item = hero.findItem(player);
         if (item.isEmpty()) return;
         long now = player.level().getGameTime();
@@ -154,8 +157,13 @@ public final class EngineServer {
         play(player, EngineContent.NO_ENERGY.get(), 0.6F, 0.8F);
     }
 
-    private static EngineHero owner(ItemStack item) {
-        return item.getItem() instanceof CharacterItem characterItem ? characterItem.hero() : null;
+    /** The hero whose item this is (a character of the engine or one of the heroes of before), or null. */
+    private static AbilityHero owner(ItemStack item) {
+        if (item.getItem() instanceof CharacterItem characterItem) return characterItem.hero();
+        for (var hero : HeroRegistry.all()) {
+            if (hero instanceof AbilityHero abilities && hero.isActivator(item)) return abilities;
+        }
+        return null;
     }
 
     // ---- skins -------------------------------------------------------------------------------------
@@ -452,7 +460,7 @@ public final class EngineServer {
     }
 
     /** A puff of the character's colours around the player (the provisional look of an ability without a preset). */
-    static void puff(ServerPlayer player, EngineHero hero) {
+    static void puff(ServerPlayer player, AbilityHero hero) {
         CharacterData.Colors colors = hero.data().colors();
         ServerLevel level = player.level();
         for (int color : new int[]{colors.main(), colors.second()}) {

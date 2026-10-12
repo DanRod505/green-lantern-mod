@@ -52,5 +52,19 @@
   "guide.greenlantern.recipe.utility_belt": "Couro nos cantos, barras de ouro em cima e embaixo, barras de ferro nas laterais e uma membrana de phantom no centro. O cinto começa vazio: vista o traje e espere as células carregarem.",
   "guide.greenlantern.controls_batman": "§ePulo§r (segurar, caindo): planar com a capa; olhe para baixo para mergulhar e para cima para subir.\n§eR§r (segurar / tocar): menu de equipamentos / próximo equipamento.\n§eV§r: usa o equipamento escolhido. §ePulo§r no gancho: soltar o cabo.\n§eNo Batmóvel§r: §eW A S D§r dirigir, §eCtrl§r boost, §eBotão esquerdo§r mísseis, §eAgachar§r sair.",
   "guide.greenlantern.section.batman": "Batman",
-  "guide.greenlantern.controls_batman.title": "Controles"
+  "guide.greenlantern.controls_batman.title": "Controles",
+  "power.greenlantern.batman_combate": "Combate de Gotham",
+  "power.greenlantern.batman_combate.desc": "Um combo de três golpes. Mirando uma porta ou armadilha: arromba com um golpe.",
+  "power.greenlantern.batman_batarangue": "Batarangue",
+  "power.greenlantern.batman_batarangue.desc": "Um batarangue acerta o que encontrar e volta para o cinto. Mirando um botão ou alavanca: aperta de longe.",
+  "power.greenlantern.batman_enxame": "Enxame de Morcegos",
+  "power.greenlantern.batman_enxame.desc": "Toque: uma nuvem de morcegos defende você. Segurar: os morcegos mostram o caminho de casa.",
+  "power.greenlantern.batman_fumaca": "Bomba de Fumaça",
+  "power.greenlantern.batman_fumaca.desc": "Some numa nuvem de fumaça que cega os inimigos.",
+  "power.greenlantern.batman_gancho": "Gancho",
+  "power.greenlantern.batman_gancho.desc": "O gancho prende numa parede ou beirada e o cabo puxa você até lá.",
+  "power.greenlantern.batman_detetive": "Modo Detetive",
+  "power.greenlantern.batman_detetive.desc": "Toque: mostra os baús por perto através das paredes. Segurar: mostra as criaturas.",
+  "power.greenlantern.batman_batcaverna": "Batcaverna",
+  "power.greenlantern.batman_batcaverna.desc": "Suprema. Toque: chama o Batmóvel. Segurar: ergue uma base escondida."
 }

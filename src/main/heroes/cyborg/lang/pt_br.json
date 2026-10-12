@@ -51,5 +51,19 @@
   "message.greenlantern.cyborg_hack_nothing": "Nenhuma máquina para invadir na mira",
   "message.greenlantern.cyborg_boom_tube_open": "Tubo de Explosão abrindo: fique perto!",
   "message.greenlantern.cyborg_boom_tube_marked": "Destino do Tubo de Explosão marcado em %s, %s, %s",
-  "message.greenlantern.cyborg_lightning": "Um raio encheu a bateria!"
+  "message.greenlantern.cyborg_lightning": "Um raio encheu a bateria!",
+  "power.greenlantern.cyborg_canhao": "Canhão Sônico",
+  "power.greenlantern.cyborg_canhao.desc": "O braço vira canhão e dispara uma onda sônica em cone. Mirando pedra: quebra de longe.",
+  "power.greenlantern.cyborg_invasao": "Invasão de Sistema",
+  "power.greenlantern.cyborg_invasao.desc": "Invade a máquina mirada: um golem de ferro vira aliado. Segurar: um pulso eletromagnético atordoa em volta. Mirando redstone: liga de longe.",
+  "power.greenlantern.cyborg_blindagem": "Blindagem",
+  "power.greenlantern.cyborg_blindagem.desc": "Toque: a blindagem reduz o dano. Segurar: os nanorrobôs consertam o corpo e o traje.",
+  "power.greenlantern.cyborg_caixa": "Caixa Materna",
+  "power.greenlantern.cyborg_caixa.desc": "Toque: drones atacam. Mirando uma criatura: os mísseis saem dos ombros. Segurar: um drone minera ao seu lado.",
+  "power.greenlantern.cyborg_scanner": "Scanner",
+  "power.greenlantern.cyborg_scanner.desc": "Ligado, mostra inimigos e minérios através das paredes e a vida do alvo.",
+  "power.greenlantern.cyborg_guindaste": "Braço Guindaste",
+  "power.greenlantern.cyborg_guindaste.desc": "Levanta o bloco ou baú mirado e o leva para outro lugar.",
+  "power.greenlantern.cyborg_tubo": "Tubo de Explosão",
+  "power.greenlantern.cyborg_tubo.desc": "Suprema. Um túnel de luz leva você e quem estiver perto ao ponto marcado (agachado, marca o ponto)."
 }
