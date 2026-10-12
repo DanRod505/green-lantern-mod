@@ -45,6 +45,11 @@ jobs:
       - name: Build mod
         run: ./gradlew build --stacktrace
 
+      # Unique recipes, numbers within bounds, names and texts, files that are missing (tools/verificar.py).
+      # After the build, so the Minecraft jar is in the Gradle cache for the ingredient ids.
+      - name: Verify
+        run: python3 tools/verificar.py
+
       - name: Run in-game tests
         run: ./gradlew runGameTestServer -Pgametests --no-configuration-cache --stacktrace
 
@@ -87,4 +92,35 @@ jobs:
         run: ./gradlew compileJava -Pgametests --stacktrace
 
       - name: Run in-game tests with the test hero
+        run: ./gradlew runGameTestServer -Pgametests --no-configuration-cache --stacktrace
+
+  # The production tools keep working: generates every character of the catalog in this checkout
+  # (tools/catalogo.py, never committed), verifies them, compiles and runs every gametest, the
+  # automatic test of every character (engine_every_character) included.
+  catalogo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Generate every character of the catalog
+        run: |
+          pip install --quiet pillow
+          python3 tools/catalogo.py --todos
+
+      - name: Compile
+        run: ./gradlew compileJava -Pgametests --stacktrace
+
+      - name: Verify
+        run: python3 tools/verificar.py
+
+      - name: Run in-game tests with every character
         run: ./gradlew runGameTestServer -Pgametests --no-configuration-cache --stacktrace

@@ -5,6 +5,16 @@
 Mod de heróis do **Universo DC** para **Minecraft Java 1.21.11** com **Forge 61.2.0** (compilado com **Java 25**).
 Começou como o mod do Lanterna Verde e agora traz também **o Flash** (v1.7.0) **o Aquaman** (v1.8.0), **Atlântida** (v1.9.0) **o Kraken do Aquaman** (v1.10.0), **o Batman** (v1.11.0), **as criaturas de Atlântida** (v1.12.0) **o Fosso**, os inimigos do Aquaman (v1.13.0), **o Superman** (v1.14.0), **a Mulher Maravilha** (v1.15.0) **o Ciborgue** (v1.16.0), o primeiro herói feito com o kit de herói, e **a Supergirl com o Krypto, o Supercão** (v1.17.0). O id do mod continua `greenlantern`, então mundos e configurações antigas continuam funcionando.
 
+## Ferramentas de produção (novo na 2.7.0)
+
+Sétimo e último lote da Etapa 2: as ferramentas para produzir os personagens do catálogo em lotes. **Nada muda no jogo nem nos 9 heróis de hoje.** Detalhes em [`docs/ferramentas.md`](docs/ferramentas.md).
+
+* **Gerador do catálogo** (`tools/catalogo.py`): escreve a ficha, a receita do item, a skin rascunho e o ícone de cada personagem do catálogo, por lote (`--lote 1`) ou por nome.
+* **Teste automático** (`engine_every_character`): todo personagem da engine tem item, receita, energia, passivas, 5 a 8 habilidades e skins, e cada função de cada habilidade funciona sem erro.
+* **Prints por lote** (roteiro `personagens`): traje, frente, costas, roda e cada habilidade de cada personagem do lote, com folha de contato.
+* **Verificador** (`tools/verificar.py`): receitas únicas, números dentro dos limites, nomes e textos, e arquivos que faltam, antes do PR.
+* O CI gera os 91 personagens do catálogo a cada PR, verifica e roda todos os testes com eles, sem guardá-los no mod.
+
 ## O novo modelo de habilidades (novo na 2.6.0)
 
 Sexto lote da Etapa 2: a engine passa para o modelo de habilidades aprovado. **Nada muda nos 9 heróis de hoje.**

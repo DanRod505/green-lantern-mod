@@ -124,6 +124,16 @@ public final class Presets {
         return afterUse(preset, new PresetContext(player, hero, item, ability, chosen));
     }
 
+    /**
+     * Runs function {@code index} of the ability (0 is the default one) with nothing in the way: no
+     * cooldown, energy or condition. For the automatic test of every character (lot 7).
+     */
+    public static Outcome tryFunction(ServerPlayer player, EngineHero hero, ItemStack item, EngineAbility ability, int index) {
+        CharacterData.Ability data = ability.data();
+        CharacterData.Function function = index == 0 ? data.defaultFunction() : data.functions().get(index - 1);
+        return use(player, hero, item, ability, new AbilityFunctions.Chosen(index, function));
+    }
+
     /** Runs a preset; when it went off, the sound of its class (and of a supreme ability) and the camera of its settings follow. */
     private static Outcome afterUse(Preset preset, PresetContext context) {
         Outcome outcome = preset.use(context);
