@@ -3,9 +3,12 @@ package com.danrod505.greenlantern.engine;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.google.gson.JsonElement;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.ExtraCodecs;
 
 /**
  * A character as a data file ({@code data/greenlantern/characters/<id>.json}): class, power level,
@@ -114,10 +117,12 @@ public record CharacterData(String id, String name, CharacterClass characterClas
 
     /**
      * An ability: the preset that runs it in a fight and the one that runs it in the world (crouch
-     * plus the power key), with its numbers. The first heroes only list the ids of their powers.
+     * plus the power key), with its numbers and the settings of its preset ({@code "ajustes"}: the
+     * push of a punch, the number of shots of a fan, the element of a cone...). The first heroes only
+     * list the ids of their powers.
      */
     public record Ability(String id, Optional<String> name, Optional<AbilityKind> kind, Optional<AbilitySlot> slot, String preset,
-                          Optional<String> worldPreset, Numbers numbers) {
+                          Optional<String> worldPreset, Numbers numbers, Settings settings) {
         static final Codec<Ability> CODEC = RecordCodecBuilder.create(i -> i.group(
                 Codec.STRING.fieldOf("id").forGetter(Ability::id),
                 Codec.STRING.optionalFieldOf("nome").forGetter(Ability::name),
@@ -125,8 +130,48 @@ public record CharacterData(String id, String name, CharacterClass characterClas
                 AbilitySlot.CODEC.optionalFieldOf("tipo").forGetter(Ability::slot),
                 Codec.STRING.optionalFieldOf("preset", "legado").forGetter(Ability::preset),
                 Codec.STRING.optionalFieldOf("uso_no_mundo").forGetter(Ability::worldPreset),
-                Numbers.CODEC.optionalFieldOf("numeros", Numbers.NONE).forGetter(Ability::numbers)
+                Numbers.CODEC.optionalFieldOf("numeros", Numbers.NONE).forGetter(Ability::numbers),
+                Settings.CODEC.optionalFieldOf("ajustes", Settings.NONE).forGetter(Ability::settings)
         ).apply(i, Ability::new));
+    }
+
+    /**
+     * The settings of a preset ({@code "ajustes"} in the file): numbers, words and yes/no by name.
+     * Each preset says which ones it reads and their defaults; a setting it doesn't know is ignored.
+     */
+    public record Settings(Map<String, JsonElement> values) {
+        public static final Settings NONE = new Settings(Map.of());
+        static final Codec<Settings> CODEC = Codec.unboundedMap(Codec.STRING, ExtraCodecs.JSON).xmap(Settings::new, Settings::values);
+
+        public double number(String key, double fallback) {
+            JsonElement value = values.get(key);
+            return value != null && value.isJsonPrimitive() && value.getAsJsonPrimitive().isNumber() ? value.getAsDouble() : fallback;
+        }
+
+        public int whole(String key, int fallback) {
+            return (int) Math.round(number(key, fallback));
+        }
+
+        public String text(String key, String fallback) {
+            JsonElement value = values.get(key);
+            return value != null && value.isJsonPrimitive() && value.getAsJsonPrimitive().isString() ? value.getAsString() : fallback;
+        }
+
+        public boolean flag(String key, boolean fallback) {
+            JsonElement value = values.get(key);
+            return value != null && value.isJsonPrimitive() && value.getAsJsonPrimitive().isBoolean() ? value.getAsBoolean() : fallback;
+        }
+
+        /** A list of numbers ({@code [4, 4, 7]}), or empty when the setting is missing. */
+        public List<Double> numbers(String key) {
+            JsonElement value = values.get(key);
+            if (value == null || !value.isJsonArray()) return List.of();
+            List<Double> list = new java.util.ArrayList<>();
+            for (JsonElement e : value.getAsJsonArray()) {
+                if (e.isJsonPrimitive() && e.getAsJsonPrimitive().isNumber()) list.add(e.getAsDouble());
+            }
+            return list;
+        }
     }
 
     /** A skin: its texture is {@code textures/entity/skin/<id>.png}, with {@code _brilho} (glows) and {@code _asas} (wings) beside it. */

@@ -68,5 +68,10 @@
   "item.greenlantern.engine_suit_cabeca": "%s's suit: head",
   "item.greenlantern.engine_suit_peito": "%s's suit: chest",
   "item.greenlantern.engine_suit_pernas": "%s's suit: legs",
-  "item.greenlantern.engine_suit_pes": "%s's suit: feet"
+  "item.greenlantern.engine_suit_pes": "%s's suit: feet",
+  "message.greenlantern.engine_too_heavy": "%s is too heavy to lift",
+  "message.greenlantern.engine_nothing_to_grab": "Nothing in reach to grab",
+  "message.greenlantern.engine_no_ammo": "Out of ammo: %s",
+  "message.greenlantern.engine_no_aim": "Aim at a point in reach",
+  "message.greenlantern.engine_combo": "Blow %s of %s: press again in rhythm!"
 }

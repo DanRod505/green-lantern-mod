@@ -26,7 +26,8 @@ public final class ClientScripts {
             CyborgScript.SCRIPT,
             SupergirlScript.SCRIPT,
             ShazamScript.SCRIPT,
-            FundacaoScript.SCRIPT
+            FundacaoScript.SCRIPT,
+            PresetsScript.SCRIPT
             // tools/new_hero.py adds new heroes above this line
     );
 
