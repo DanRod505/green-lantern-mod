@@ -56,9 +56,11 @@ public final class Characters {
     }
 
     /**
-     * What is wrong with a character file (empty when it is right): the id must be the file name and
-     * a character of the engine has its 6 abilities in wheel order (3 main, 2 secondary, the Supreme),
-     * each with a kind, and at least one skin.
+     * What is wrong with a character file (empty when it is right): the id must be the file name, and
+     * a character of the engine has 5 to 8 abilities, each with a class, at least 3 for fighting and
+     * 2 for the world (by main class) within its class's arsenal, the fighting ones first, then the
+     * world ones, and exactly 1 supreme, the last; each ability has up to 2 more functions, each with
+     * a condition the game knows; up to 4 known traits; at least one skin; a known transformation.
      */
     public static List<String> check(CharacterData data, String fileName) {
         List<String> problems = new ArrayList<>();
@@ -69,17 +71,50 @@ public final class Characters {
             return problems;
         }
         List<CharacterData.Ability> abilities = data.abilities();
-        if (abilities.size() != 6) {
-            problems.add("needs 6 abilities, has " + abilities.size());
-        } else {
-            AbilitySlot[] order = {AbilitySlot.MAIN, AbilitySlot.MAIN, AbilitySlot.MAIN, AbilitySlot.SECONDARY, AbilitySlot.SECONDARY, AbilitySlot.SUPREME};
-            for (int i = 0; i < 6; i++) {
-                CharacterData.Ability ability = abilities.get(i);
-                if (ability.slot().orElse(null) != order[i]) problems.add("ability " + (i + 1) + " must be " + order[i].getSerializedName());
-                if (ability.kind().isEmpty()) problems.add("ability " + ability.id() + " has no classe");
-                if (i == 5 && ability.kind().orElse(null) != AbilityKind.SUPREME) problems.add("the last ability is the Supreme (classe suprema)");
+        ClassRules.Arsenal arsenal = data.classRule().arsenal();
+        int fight = 0;
+        int world = 0;
+        int supreme = 0;
+        boolean worldSeen = false;
+        for (int i = 0; i < abilities.size(); i++) {
+            CharacterData.Ability ability = abilities.get(i);
+            String who = "ability " + ability.id() + ": ";
+            if (ability.kind().isEmpty()) {
+                problems.add(who + "has no classe");
+                continue;
+            }
+            boolean last = i == abilities.size() - 1;
+            if (ability.supreme()) {
+                supreme++;
+                if (!last) problems.add(who + "the supreme ability is the last one on the wheel");
+            }
+            if (ability.kind().get().fight()) {
+                fight++;
+                if (worldSeen && !(ability.supreme() && last)) problems.add(who + "the fighting abilities come before the world ones");
+            } else {
+                world++;
+                if (!ability.supreme()) worldSeen = true;
+            }
+            if (ability.functions().size() > 2) problems.add(who + "has " + (ability.functions().size() + 1) + " functions, at most 3");
+            for (CharacterData.Function function : ability.functions()) {
+                CharacterData.When when = function.when();
+                if (when.always()) problems.add(who + "function " + function.preset() + " needs a condition (quando)");
+                when.press().filter(p -> !AbilityFunctions.PRESSES.contains(p)).ifPresent(p -> problems.add(who + "unknown aperto " + p + " (one of " + AbilityFunctions.PRESSES + ")"));
+                when.place().filter(p -> !AbilityFunctions.PLACES.contains(p)).ifPresent(p -> problems.add(who + "unknown lugar " + p + " (one of " + AbilityFunctions.PLACES + ")"));
+                when.aim().filter(a -> !AbilityFunctions.knownAim(a)).ifPresent(a -> problems.add(who + "unknown mira " + a + " (one of " + AbilityFunctions.AIMS + ", a block or a #tag)"));
             }
         }
+        if (!arsenal.wheel().holds(abilities.size()) || abilities.size() < 5 || abilities.size() > 8) {
+            problems.add("needs " + arsenal.wheel() + " abilities for the class " + data.characterClass().id() + ", has " + abilities.size());
+        }
+        if (fight < 3 || !arsenal.fight().holds(fight)) problems.add("needs " + arsenal.fight() + " fighting abilities (at least 3), has " + fight);
+        if (world < 2 || !arsenal.world().holds(world)) problems.add("needs " + arsenal.world() + " world abilities (at least 2), has " + world);
+        if (supreme != 1) problems.add("needs exactly 1 supreme ability (suprema: true), has " + supreme);
+        if (data.traits().size() > Traits.MAX) problems.add("has " + data.traits().size() + " traits (passivas), at most " + Traits.MAX);
+        for (CharacterData.Trait trait : data.traits()) {
+            if (!Traits.TYPES.contains(trait.type())) problems.add("unknown passiva " + trait.type() + " (one of " + Traits.TYPES + ")");
+        }
+        if (data.traits().stream().map(CharacterData.Trait::type).distinct().count() != data.traits().size()) problems.add("a passiva is listed twice");
         if (data.skins().isEmpty()) problems.add("needs at least one skin");
         if (!com.danrod505.greenlantern.engine.preset.Transformations.exists(data.transformation())) {
             problems.add("unknown transformacao " + data.transformation() + " (one of " + com.danrod505.greenlantern.engine.preset.Transformations.IDS + " or padrao)");

@@ -94,14 +94,14 @@ public final class PresetRuntime {
         return Outcome.cooldown(1);
     }
 
-    /** The name a lasting preset runs under: the ability's (its world use has a name of its own). */
+    /** The name a lasting preset runs under: the ability's (each other function of it has a name of its own). */
     public static String key(PresetContext c) {
-        return c.world() ? worldKey(c.ability().data().id()) : c.ability().data().id();
+        return key(c.ability().data().id(), c.chosen().index());
     }
 
-    /** The name the world use of an ability runs under. */
-    public static String worldKey(String ability) {
-        return ability + "#mundo";
+    /** The name function {@code index} of an ability runs under (0 is the default one, named after the ability). */
+    public static String key(String ability, int index) {
+        return index == 0 ? ability : ability + "#" + index;
     }
 
     /** Whether a lasting preset of this ability is running for the player. */
@@ -133,7 +133,7 @@ public final class PresetRuntime {
 
     /**
      * Leaves something the ability can take back: the next press of it (with no need of energy,
-     * cooldown or a full Supreme bar) runs {@code undo} instead of using the ability again.
+     * cooldown) runs {@code undo} instead of using the ability again.
      */
     public static void undoable(PresetContext c, Runnable undo) {
         UNDO.put(c.player().getUUID() + "/" + key(c), undo);

@@ -96,7 +96,7 @@ public final class PresetLot5Tests {
         CharacterData d = prototype().data();
         for (String id : List.of("raio", "anel", "padrao", "nada")) {
             CharacterData changed = new CharacterData(d.id(), d.name(), d.characterClass(), d.level(), d.skeleton(), id, d.theme(), d.legacy(), d.source(),
-                    d.stats(), d.suit(), d.abilities(), d.skins(), d.weaknesses(), d.colors(), d.visual());
+                    d.stats(), d.suit(), d.abilities(), d.skins(), d.weaknesses(), d.colors(), d.visual(), d.traits());
             boolean bad = Characters.check(changed, d.id()).stream().anyMatch(p -> p.contains("transformacao"));
             helper.assertTrue(bad == id.equals("nada"), "transformacao " + id + (bad ? " refused" : " accepted"));
         }
@@ -173,9 +173,9 @@ public final class PresetLot5Tests {
         CharacterData data = prototype().data();
         List<AbilityKind> kinds = data.abilities().stream().map(a -> a.kind().orElseThrow()).toList();
         int[] sheet = AbilityIcons.sheet(data, kinds);
-        int width = AbilityIcons.SIZE * (data.abilities().size() + 1);
-        helper.assertTrue(sheet.length == width * AbilityIcons.SIZE, "one cell per ability and the emblem");
-        for (int cell = 0; cell <= data.abilities().size(); cell++) {
+        int width = AbilityIcons.SIZE * AbilityIcons.cells(data);
+        helper.assertTrue(sheet.length == width * AbilityIcons.SIZE, "one cell per ability, function and trait, and the emblem");
+        for (int cell = 0; cell < AbilityIcons.cells(data); cell++) {
             boolean drawn = false;
             for (int y = 0; y < AbilityIcons.SIZE && !drawn; y++) {
                 for (int x = 0; x < AbilityIcons.SIZE && !drawn; x++) drawn = sheet[y * width + cell * AbilityIcons.SIZE + x] != 0;

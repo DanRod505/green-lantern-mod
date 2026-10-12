@@ -30,8 +30,9 @@ public record EngineAbility(CharacterData.Ability data, int ordinal, AbilityKind
         return Math.max(10, (int) Math.round(data.numbers().cooldown() * 20.0));
     }
 
+    /** The character's supreme ability: stronger, with a gold border on the wheel and the HUD. */
     public boolean supreme() {
-        return kind == AbilityKind.SUPREME;
+        return data.supreme();
     }
 
     @Override

@@ -7,10 +7,12 @@ Uma habilidade da ficha de um personagem (`data/greenlantern/characters/<id>.jso
   "id": "rajada_do_anel",
   "nome": "Rajada do Anel",
   "classe": "disparo",
-  "tipo": "principal",
   "preset": "projetil",
   "numeros": { "dano": 8.5, "custo": 3, "recarga": 1, "alcance": 48 },
-  "ajustes": { "velocidade": 1.8, "perseguicao": 0.3, "elemento": "energia" }
+  "ajustes": { "velocidade": 1.8, "perseguicao": 0.3, "elemento": "energia" },
+  "funcoes": [
+    { "preset": "leque", "quando": { "aperto": "segurar" }, "ajustes": { "quantidade": 5 } }
+  ]
 }
 ```
 
@@ -101,7 +103,7 @@ Os testes ficam em `src/gametest/.../heroes/PresetLot3Tests.java` e os prints no
 
 ## Lote 4 (2.4.0): Usos no mundo
 
-Os usos no mundo vão no campo `"uso_no_mundo"` da habilidade e saem agachado. Só mexem em blocos que o jogador pode mudar ali, nunca em blocos que guardam coisas (baús, fornalhas...), e um uso que não muda nada devolve a energia. Os números vêm da mesma habilidade.
+Na 2.4.0 os usos no mundo iam no campo `"uso_no_mundo"` e saíam agachado; desde a 2.6.0 são presets como os outros, de uma habilidade de mundo ou de uma função dela (ver o Lote 6). Só mexem em blocos que o jogador pode mudar ali, nunca em blocos que guardam coisas (baús, fornalhas...), e um uso que não muda nada devolve a energia. Os números vêm da mesma habilidade.
 
 | Preset | Números | Ajustes |
 |---|---|---|
@@ -178,3 +180,56 @@ Tocam ao vestir o traje (tecla G). O campo `"transformacao"` do personagem escol
 | `asas` | Asas de Metal Nth | As asas abrem nas costas e o jogador sobe um pouco | |
 
 Os sons (10 classes e 15 transformações) são originais, gerados por `tools/generate_engine_audio.py`. Os ícones da roda são desenhados no jogo a partir do preset e da cor (`engine/AbilityIcons.java`). Os testes ficam em `src/gametest/.../heroes/PresetLot5Tests.java` e os prints no roteiro `presets_lote5`.
+
+## Lote 6 (2.6.0): O novo modelo de habilidades
+
+### A ficha
+
+- `classe` de cada habilidade, uma das 15: de luta `golpe`, `disparo`, `explosao`, `controle`, `defesa`, `invocacao`, `evasao`, `fortalecimento`; de mundo `mobilidade`, `coleta_e_terreno`, `construcao`, `transmutacao`, `natureza`, `deteccao`, `logistica`.
+- A roda tem de 5 a 8 habilidades, dentro do arsenal da classe do personagem (`arsenal` em `data/greenlantern/engine/classes.json`: `roda`, `luta` e `mundo`), com pelo menos 3 de luta e 2 de mundo. As de luta vêm primeiro, depois as de mundo, e por último a única com `"suprema": true` (borda dourada, recarga longa e um som quando fica pronta). Não há mais barra nem tecla da Suprema.
+- `funcoes`: até 2 funções além do preset da habilidade. Cada uma tem `preset`, `quando` e, se quiser, `numeros` e `ajustes` próprios (o que não diz vem da habilidade; custo e recarga são sempre os da habilidade). V usa a primeira função cujo `quando` vale agora; se nenhuma vale, o preset da habilidade.
+  - `aperto`: `toque`, `segurar` (V seguro por quase meio segundo) ou `soltar` (ao soltar V depois de segurar).
+  - `mira` (o que está a até 8 blocos, ou no `alcance` da função): `mob`, `bloco`, `vazio`, `minerio`, `madeira`, `folhas`, `planta`, `terra`, `pedra`, `agua`, `lava`, `fogo`, `gelo`, `fornalha`, `bau`, `maquina`, um id de bloco ou uma `#tag`.
+  - `lugar`: `chao`, `ar`, `agua` ou `correndo`.
+- `passivas`: até 4, cada uma `{"tipo": ..., "ajustes": {...}}`, sempre ligadas com o traje. O voo do personagem vem da passiva `voo` (ou `levitar`).
+- A tela mostra, ao lado do nome, o ícone da função que vai sair; quando é de mundo, o bloco mirado ganha contorno (do tamanho do `tamanho`, se houver). As passivas aparecem como ícones, acesos quando estão agindo. Teclas diretas de 1 a 8.
+
+| Passiva | Ajustes |
+|---|---|
+| `voo` | os do voo: `velocidade_maxima`, `velocidade_inicial`, `aceleracao`, `gasto_por_segundo`, `pouso` |
+| `levitar` | os mesmos, devagar (`velocidade_maxima` 0.6) |
+| `supervelocidade` | correndo acelera sozinho até `velocidade` (1.5 = +150%) em `aceleracao` segundos (2); sobe blocos, corre na água e nas paredes (`agua`, `paredes`) |
+| `aquatico` | na água nada rápido (`velocidade`, 0 a 2), respira e enxerga |
+| `planar` | pulando enquanto cai, plana (`queda_por_segundo` 2, `controle` 0.6), sem dano de queda |
+| `superforca` | quebra blocos mais rápido (`forca`, +100%) |
+| `invulneravel` | sem dano de `danos` (queda, fogo, frio, afogamento; todos por padrão) |
+| `visao_no_escuro` | enxerga no escuro |
+| `sentidos_agucados` | agachado e parado, as criaturas a até `raio` (16) brilham através das paredes |
+| `pulo_alto` | pula mais alto (`altura`, +0.3), sem dano de queda |
+| `escalar` | andando contra a parede, sobe (`velocidade` 0.2); agachado, se segura |
+| `regeneracao` | depois de `espera` segundos (5) sem dano, a vida volta (`cura`, 1 por segundo) |
+| `elastico` | alcança blocos e criaturas `alcance` (3) blocos mais longe, sem dano de queda |
+| `imune_a_veneno` | veneno, comida estragada e gases não fazem efeito |
+
+### Presets de mundo novos
+
+Como os do Lote 4, só mexem no que o jogador pode mudar ali, e um uso que não muda nada devolve a energia. `gancho`, `teleporte` e `grande_obra` agora contam como presets de mundo; a montaria é o preset `veiculo`.
+
+| Preset | Classe | Números | Ajustes |
+|---|---|---|---|
+| `cortar_arvore` | Coleta e terreno | alcance (6) | derruba a árvore inteira do tronco mirado; `altura_maxima` (32), `replanta` (true) |
+| `cavar_solto` | Coleta e terreno | alcance (6) | cava terra, areia, cascalho, neve, argila, folhas e plantas, nunca pedra; `tamanho` (3), `profundidade` (3) |
+| `aplanar` | Coleta e terreno | raio (4) | tira o que está acima dos pés (`altura` 4, `dureza` 5) e enche os buracos (`fundo` 3) com `material` (minecraft:dirt, ou inventario) |
+| `pescar` | Coleta e terreno | alcance (16) | mirando a água, tira `quantidade` (3) pescas de uma vez, como a vara; `tesouro` (0.1) |
+| `projeto_em_fantasma` | Construção | duracao (60) | mostra a `estrutura` (minecraft:igloo/top) em vidro à `distancia` (3); a tecla de novo constrói com os blocos do inventário |
+| `trocar_bloco` | Transmutação | alcance (8), raio (0) | `modo`: fornalha (areia vira vidro...), tabela (`trocas`: {"minecraft:stone": "minecraft:iron_block"}) ou cor (`cor_nova`, red) |
+| `ligar_maquina` | Transmutação | alcance (16), duracao (2) | vira a alavanca, aperta o botão ou dá sinal de redstone ao que estiver mirado |
+| `domar_e_guiar` | Natureza | alcance (8), raio (6), duracao (30) | doma lobos, gatos, papagaios e cavalos; os outros animais seguem na corda; `quantos` (4) |
+| `clima` | Natureza | duracao (120) | `tipo`: chuva, sol ou tempestade |
+| `rastro` | Detecção | raio (48), duracao (10) | trilha de partículas até o `alvo`: mob, estrutura (`estrutura`, uma tag, minecraft:village) ou casa |
+| `ima_de_itens` | Logística | alcance (6), raio (8), duracao (5) | mirando um baú, traz o que cabe para o inventário; senão, puxa itens e experiência em volta |
+| `ajudante_de_trabalho` | Logística | raio (6), duracao (30) | um ajudante voa ao lado e a cada segundo faz a `tarefa`: colher, guardar ou minerar |
+| `organizar` | Logística | alcance (6) | junta e ordena o baú mirado pela `regra`: nome, quantidade ou tipo |
+| `levar_junto` | Mobilidade | raio (4), duracao (30) | os `quantos` (3) animais, aldeões ou criaturas do personagem mais perto vão junto, flutuando atrás dele |
+
+Os sons das 6 classes de mundo novas e o da suprema são originais, gerados por `tools/generate_engine_audio.py`. Os testes ficam em `src/gametest/.../heroes/PresetLot6Tests.java` e os prints no roteiro `presets_lote6`.

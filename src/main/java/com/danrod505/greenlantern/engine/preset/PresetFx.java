@@ -246,5 +246,6 @@ public final class PresetFx {
             default -> null;
         };
         if (accent != null) Fx.play(player.level(), player, accent, volume * 0.35F, pitch);
+        if (c.ability().supreme()) Fx.play(player.level(), player, EngineContent.SUPREME.get(), Math.max(0.5F, volume), 1.0F);
     }
 }

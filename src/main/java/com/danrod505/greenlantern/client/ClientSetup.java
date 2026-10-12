@@ -97,7 +97,6 @@ public final class ClientSetup {
         event.register(KeyBindings.TOGGLE_UNIFORM);
         event.register(KeyBindings.CONSTRUCT_WHEEL);
         event.register(KeyBindings.HERO_POWER);
-        event.register(KeyBindings.SUPREME);
         event.register(KeyBindings.SKIN);
         for (var key : KeyBindings.ABILITIES) event.register(key);
     }

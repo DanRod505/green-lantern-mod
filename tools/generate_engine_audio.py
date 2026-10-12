@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
 """
-Sounds of the character engine (presets batch 5, version 2.5.0): a set for each of the 10 classes of
-ability (3 variations each, the game picks one at random) and the sound of each of the 15
-transformations of the catalog. Everything is synthesized here (tools/herolib/audio.py): no samples,
+Sounds of the character engine (presets batch 5, version 2.5.0; batch 6, 2.6.0): a set for each of
+the 15 classes of ability (3 variations each, the game picks one at random), the accent of the
+supreme abilities and the sound of each of the 15 transformations of the catalog. Everything is synthesized here (tools/herolib/audio.py): no samples,
 recordings, voices or existing music.
 
 Files: assets/greenlantern/sounds/engine/<class>_<1..3>.ogg and engine/transform_<id>.ogg.
 
 Usage:  pip install numpy scipy soundfile
-        python3 tools/generate_engine_audio.py
+        python3 tools/generate_engine_audio.py            (all of them)
+        python3 tools/generate_engine_audio.py natureza   (only the named ones; the others come out the same)
 """
-from herolib.audio import (bell, choir_note, expsweep, fade, filt, impact, mono_reverb, noise, np, ns, place, save, seed, sine, sizzle,
+from herolib.audio import (bell, choir_note, pluck, expsweep, fade, filt, impact, mono_reverb, noise, np, ns, place, save, seed, sine, sizzle,
                            sparkle, sub_boom, t_of, whoosh, zap)
 
 SR = 44100
@@ -57,7 +58,7 @@ def explosao(v):  # a blast: a deep boom with crackle
     return mix(1.3, (sub_boom(1.2, 1.0), 0, 1.0), (crack, 0, 0.5), (impact(0.6, 0.8), 0, 0.8 + 0.1 * v))
 
 
-def movimento(v):  # moving: a rush of air
+def mobilidade(v):  # mobility: a rush of air
     return mix(0.6, (whoosh(0.55, 300 + 80 * v, 5000), 0, 1.0), (tone(200, 420, 0.4, 5), 0.05, 0.2))
 
 
@@ -88,13 +89,52 @@ def fortalecimento(v):  # empowering: a rising shimmer
     return mix(1.0, (tone(300 + 30 * v, 900, 0.8, 1.8), 0, 0.6), (sparkle(0.8, 1600, 10), 0.1, 0.5), (whoosh(0.6, 400, 3000), 0, 0.3))
 
 
-def suprema(v):  # the Supreme: a choir hit over a boom
+def suprema(v):  # the accent of a supreme ability: a choir hit over a boom
     choir = sum(choir_note(m + v, 1.4, 0.9) for m in (57, 61, 64))
     return mix(1.8, (sub_boom(1.6, 1.0), 0, 0.9), (choir, 0.05, 0.7), (impact(0.7, 1.0), 0, 0.7))
 
 
-CLASSES = {"golpe": golpe, "disparo": disparo, "explosao": explosao, "movimento": movimento, "defesa": defesa, "controle": controle,
+def coleta_e_terreno(v):  # gathering and terrain: earth crunching and stones tumbling
+    n = ns(0.6)
+    crunch = filt(noise(n), "bandpass", [150 + 40 * v, 1400]) * env(n, 0.004, 9)
+    return mix(0.7, (crunch, 0, 1.0), (impact(0.35, 0.7), 0, 0.6), (metal(1300 + 150 * v, 0.15, 0.3), 0.12, 0.5), (metal(1700 + 120 * v, 0.12, 0.25), 0.22, 0.4))
+
+
+def construcao(v):  # building: blocks set down one after another, a clack and a ring
+    clack = filt(noise(ns(0.06)), "bandpass", [900, 3000]) * env(ns(0.06), 0.001, 50)
+    return mix(0.8, (clack, 0, 0.8), (clack, 0.14, 0.7), (clack, 0.28, 0.9), (bell(660 + 80 * v, 0.5, 0.5), 0.3, 0.5), (impact(0.3, 0.5), 0.28, 0.4))
+
+
+def transmutacao(v):  # transmutation: a tone that bends up and turns into a shimmer
+    n = ns(0.9)
+    t = t_of(n)
+    bend = sine(expsweep(320 + 40 * v, 980, n) * (1 + 0.05 * np.sin(2 * np.pi * 6 * t)), n) * env(n, 0.03, 2.8)
+    return mix(1.0, (bend, 0, 0.7), (sparkle(0.6, 2200, 12), 0.3, 0.5), (sizzle(ns(0.4), 3000, 8000) * env(ns(0.4), 0.05, 6), 0.2, 0.2))
+
+
+def natureza(v):  # nature: leaves rustling and a soft wooden chime
+    n = ns(0.9)
+    rustle = filt(noise(n), "bandpass", [1800, 7000]) * np.sin(np.pi * t_of(n) / 0.9) ** 2
+    chime = sum(tone(f, f, 0.7, 4.0) for f in (392 * 2 ** (v / 12), 523 * 2 ** (v / 12)))
+    return mix(1.0, (rustle, 0, 0.45), (chime, 0.1, 0.45), (pluck(67 + v, 0.5, 0.6), 0.25, 0.4))
+
+
+def deteccao(v):  # detection: a sonar ping and its echo
+    ping = tone(1250 + 90 * v, 1180 + 90 * v, 0.6, 5)
+    return mix(1.2, (ping, 0, 0.8), (ping, 0.45, 0.35), (whoosh(0.3, 2000, 6000), 0, 0.15))
+
+
+def logistica(v):  # logistics: a pull of air and a pop as things arrive
+    pop = tone(500 + 60 * v, 900, 0.12, 25)
+    return mix(0.7, (whoosh(0.4, 400, 3000), 0, 0.7), (pop, 0.32, 0.8), (pop, 0.42, 0.5))
+
+
+CLASSES = {"golpe": golpe, "disparo": disparo, "explosao": explosao, "mobilidade": mobilidade, "defesa": defesa, "controle": controle,
            "invocacao": invocacao, "evasao": evasao, "fortalecimento": fortalecimento, "suprema": suprema}
+# The 6 classes of the world that came with the new model of abilities (2.6.0): made after everything
+# else, so the sounds made before them stay the same.
+WORLD_CLASSES = {"coleta_e_terreno": coleta_e_terreno, "construcao": construcao, "transmutacao": transmutacao, "natureza": natureza,
+                 "deteccao": deteccao, "logistica": logistica}
 
 # ---- the 15 transformations -------------------------------------------------------------------------
 
@@ -221,14 +261,24 @@ TRANSFORMATIONS = {"raio": thunder, "anel": ring_hum, "sol": krypton_sun, "veloc
                    "arsenal": arsenal, "espetaculo": show, "asas": wings}
 
 
-def main():
-    seed(2500)
-    for name, make in CLASSES.items():
+def classes(table, only):
+    for name, make in table.items():
         for v in range(3):
-            save("engine/" + name + "_" + str(v + 1), fade(mono_reverb(make(v), 0.8, 0.12), 0.002, 0.05), 0.8)
+            sound = fade(mono_reverb(make(v), 0.8, 0.12), 0.002, 0.05)
+            if not only or name in only:
+                save("engine/" + name + "_" + str(v + 1), sound, 0.8)
+
+
+def main(only=()):
+    seed(2500)
+    classes(CLASSES, only)
     for name, make in TRANSFORMATIONS.items():
-        save("engine/transform_" + name, fade(mono_reverb(make(), 1.2, 0.18), 0.005, 0.15), 0.85)
+        sound = fade(mono_reverb(make(), 1.2, 0.18), 0.005, 0.15)
+        if not only or "transform_" + name in only:
+            save("engine/transform_" + name, sound, 0.85)
+    classes(WORLD_CLASSES, only)
 
 
 if __name__ == "__main__":
-    main()
+    import sys
+    main(tuple(sys.argv[1:]))

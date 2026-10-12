@@ -4,10 +4,7 @@ import static com.danrod505.greenlantern.gametest.GameTestKit.*;
 import static com.danrod505.greenlantern.gametest.heroes.PresetTests.*;
 
 import com.danrod505.greenlantern.engine.AbilityKind;
-import com.danrod505.greenlantern.engine.AbilityState;
 import com.danrod505.greenlantern.engine.EngineAbility;
-import com.danrod505.greenlantern.engine.EngineContent;
-import com.danrod505.greenlantern.engine.EngineServer;
 import com.danrod505.greenlantern.engine.Presets;
 import com.danrod505.greenlantern.engine.preset.ControlPresets;
 import com.danrod505.greenlantern.engine.preset.EmpowerPresets;
@@ -31,7 +28,6 @@ import net.minecraft.world.entity.animal.pig.Pig;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.decoration.Mannequin;
 import net.minecraft.world.entity.monster.zombie.Zombie;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.DeferredRegister;
@@ -107,12 +103,6 @@ public final class PresetLot3Tests {
         return player.level().getEntitiesOfClass(type, player.getBoundingBox().inflate(24.0), e -> player.getUUID().equals(Summons.owner(e)));
     }
 
-    /** Fills the player's Supreme bar. */
-    private static void fullSupreme(ServerPlayer player) {
-        ItemStack item = player.getMainHandItem();
-        item.set(EngineContent.ABILITIES.get(), EngineServer.state(item).withSupreme(AbilityState.SUPREME_FULL));
-    }
-
     private static int count(GameTestHelper helper, net.minecraft.world.level.block.Block block) {
         int n = 0;
         for (BlockPos pos : BlockPos.betweenClosed(helper.absolutePos(new BlockPos(1, 1, 1)), helper.absolutePos(new BlockPos(13, 7, 13)))) {
@@ -125,7 +115,7 @@ public final class PresetLot3Tests {
 
     /** The 19 presets of batch 3 are there for the character files to name. */
     public static void registered(GameTestHelper helper) {
-        for (String id : BATCH_3) helper.assertTrue(Presets.hasFight(id), "missing preset " + id);
+        for (String id : BATCH_3) helper.assertTrue(Presets.exists(id), "missing preset " + id);
         helper.succeed();
     }
 
@@ -401,11 +391,9 @@ public final class PresetLot3Tests {
         ServerPlayer player = suited(helper, 7.5, 7.5);
         Zombie near = target(helper, 7.5, 1, 10.5);
         Zombie far = target(helper, 7.5, 1, 13.5);
-        EngineAbility supreme = ability("suprema_de_combate", AbilityKind.SUPREME, 12, 1, 0, 4, 0, settings("carga", 0.5, "visual", "raio"));
-        helper.assertFalse(use(player, supreme), "without a full Supreme bar it does not go off");
-        fullSupreme(player);
-        helper.assertTrue(use(player, supreme), "with a full bar it goes off");
-        helper.assertTrue(EngineServer.state(player.getMainHandItem()).supreme() == 0, "and empties the bar");
+        EngineAbility supreme = supreme(ability("suprema_de_combate", AbilityKind.BLAST, 12, 30, 0, 4, 0, settings("carga", 0.5, "visual", "raio")));
+        helper.assertTrue(use(player, supreme), "the supreme ability goes off, with no bar to fill");
+        helper.assertFalse(use(player, supreme), "then waits for its long cooldown");
         helper.startSequence()
                 .thenExecuteAfter(8, () -> helper.assertFalse(hurt(near), "while it charges nothing happens yet"))
                 .thenExecuteAfter(6, () -> {
@@ -418,8 +406,7 @@ public final class PresetLot3Tests {
 
     public static void greatWork(GameTestHelper helper) {
         ServerPlayer player = suited(helper, 7.5, 1.5);
-        EngineAbility work = ability("grande_obra", AbilityKind.SUPREME, 0, 1, 0, 0, 0, settings("tempo", 1, "distancia", 2));
-        fullSupreme(player);
+        EngineAbility work = supreme(ability("grande_obra", AbilityKind.BUILDING, 0, 1, 0, 0, 0, settings("tempo", 1, "distancia", 2)));
         helper.assertTrue(use(player, work), "the work starts");
         helper.assertTrue(PresetRuntime.undoable(player, "teste_grande_obra"), "and can be taken down");
         helper.startSequence()
@@ -430,7 +417,7 @@ public final class PresetLot3Tests {
                 .thenExecuteAfter(25, () -> {
                     int snow = count(helper, Blocks.SNOW_BLOCK);
                     helper.assertTrue(snow > 20, "the igloo is up, got " + snow + " snow blocks");
-                    helper.assertTrue(use(player, work), "the key again takes it down, with an empty bar");
+                    helper.assertTrue(use(player, work), "the key again takes it down, with no cooldown");
                     helper.assertTrue(count(helper, Blocks.SNOW_BLOCK) == 0, "all of it");
                     helper.assertFalse(PresetRuntime.undoable(player, "teste_grande_obra"), "once");
                     remove(player);

@@ -20,6 +20,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
+import java.util.List;
+import java.util.UUID;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -52,10 +54,11 @@ public final class MovementPresets {
         Presets.registerFight("supervelocidade", MovementPresets::superSpeed);
         Presets.registerFight("planar", MovementPresets::glide);
         Presets.registerFight("salto_gigante", MovementPresets::giantLeap);
-        Presets.registerFight("gancho", MovementPresets::grapple);
-        Presets.registerFight("teleporte", MovementPresets::teleport);
+        Presets.registerWorld("gancho", MovementPresets::grapple);
+        Presets.registerWorld("teleporte", MovementPresets::teleport);
         Presets.registerFight("nado_rapido", MovementPresets::fastSwim);
         Presets.registerFight("atravessar", MovementPresets::phase);
+        Presets.registerWorld("levar_junto", MovementPresets::takeAlong);
     }
 
     // ---- voo ---------------------------------------------------------------------------------------
@@ -408,6 +411,61 @@ public final class MovementPresets {
             return age < ticks;
         }, () -> PresetBody.remove(player, Attributes.WATER_MOVEMENT_EFFICIENCY, swim)));
         return Outcome.DONE;
+    }
+
+    // ---- levar_junto -------------------------------------------------------------------------------
+
+    /**
+     * Levar junto: the {@code quantos} (3) nearest friendly creatures within {@code raio} (4)
+     * (animals, villagers, tamed ones and the character's own summons, never monsters or players) go
+     * along with the character for {@code duracao} seconds (30), floating close behind them wherever
+     * they fly, run or teleport; they land softly. Pressing again lets them down.
+     */
+    static Outcome takeAlong(PresetContext c) {
+        ServerPlayer player = c.player();
+        ServerLevel level = c.level();
+        int many = Mth.clamp(c.settings().whole("quantos", 3), 1, 8);
+        List<LivingEntity> along = new java.util.ArrayList<>();
+        for (LivingEntity e : Targets.inRadius(level, player.position(), c.radius(4.0), e -> e != player && friendly(player, e))) {
+            if (along.size() >= many) break;
+            along.add(e);
+        }
+        if (along.isEmpty()) return WorldPresets.nothing();
+        int ticks = c.durationTicks(30.0);
+        Fx.play(level, player, SoundEvents.ENDER_EYE_LAUNCH, 1.0F, 1.2F);
+        along.forEach(e -> {
+            e.setNoGravity(true);
+            PresetFx.burst(c, e.position().add(0, e.getBbHeight() / 2, 0), 8, 0.4);
+        });
+        return PresetRuntime.lasting(c, PresetRuntime.Task.ending(age -> {
+            Vec3 back = player.getLookAngle().multiply(1, 0, 1);
+            back = back.lengthSqr() < 1.0E-4 ? new Vec3(0, 0, 1) : back.normalize();
+            for (int i = 0; i < along.size(); i++) {
+                LivingEntity e = along.get(i);
+                if (!e.isAlive() || e.level() != level) continue;
+                double angle = (i - (along.size() - 1) / 2.0) * 0.7;
+                Vec3 spot = player.position().subtract(back.yRot((float) angle).scale(1.6 + 0.3 * i)).add(0, 0.2, 0);
+                e.snapTo(spot.x, spot.y, spot.z, player.getYRot(), 0);
+                e.setDeltaMovement(Vec3.ZERO);
+                e.resetFallDistance();
+                if (age % 10 == 0) PresetFx.burst(c, e.position(), 2, 0.2);
+            }
+            return age < ticks && player.level() == level;
+        }, () -> along.forEach(e -> {
+            e.setNoGravity(false);
+            e.resetFallDistance();
+        })));
+    }
+
+    /** Whether a creature is one the character can take along: never a monster, never a player. */
+    static boolean friendly(ServerPlayer player, LivingEntity e) {
+        if (e instanceof net.minecraft.world.entity.player.Player || e instanceof net.minecraft.world.entity.monster.Enemy) return false;
+        UUID owner = Summons.owner(e);
+        if (owner != null) return owner.equals(player.getUUID());
+        if (e instanceof net.minecraft.world.entity.OwnableEntity pet && pet.getOwnerReference() != null) {
+            return pet.getOwnerReference().getUUID().equals(player.getUUID());
+        }
+        return e instanceof net.minecraft.world.entity.animal.Animal || e instanceof net.minecraft.world.entity.npc.villager.AbstractVillager;
     }
 
     // ---- atravessar --------------------------------------------------------------------------------

@@ -4,7 +4,6 @@ import static com.danrod505.greenlantern.gametest.ClientScript.*;
 
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.engine.EngineAbility;
-import com.danrod505.greenlantern.engine.EngineHero;
 import com.danrod505.greenlantern.engine.EngineServer;
 import com.danrod505.greenlantern.engine.preset.PresetRuntime;
 import com.danrod505.greenlantern.gametest.ClientScript;
@@ -102,9 +101,8 @@ public final class PresetsLot4Script {
             sp.setYRot(0);
             sp.setXRot(aimPitch);
             sp.setYHeadRot(0);
-            EngineHero hero = (EngineHero) HeroRegistry.byId("prototipo").orElseThrow();
-            boolean went = EngineServer.useInWorld(sp, hero, sp.getMainHandItem(), ability);
-            GreenLantern.LOGGER.info("CLIENTSCRIPT world {} went={}", ability.data().worldPreset().orElse("-"), went);
+            boolean went = EngineServer.useAbility(sp, sp.getMainHandItem(), ability);
+            GreenLantern.LOGGER.info("CLIENTSCRIPT world {} went={}", ability.data().preset(), went);
         });
     }
 

@@ -48,11 +48,41 @@ public record ClassRules(List<LevelRule> levels, Legendary legendary, List<Class
         ).apply(i, EnergyRule::new));
     }
 
+    /** A range of whole numbers, {@code [min, max]} in the file. */
+    public record Range(int min, int max) {
+        static final Codec<Range> CODEC = Codec.INT.listOf(2, 2).xmap(l -> new Range(l.get(0), l.get(1)), r -> List.of(r.min, r.max));
+
+        public boolean holds(int value) {
+            return value >= min && value <= max;
+        }
+
+        @Override
+        public String toString() {
+            return min == max ? String.valueOf(min) : min + " to " + max;
+        }
+    }
+
+    /**
+     * How many abilities a character of the class has on the wheel ({@code roda}), how many of them
+     * are for fighting ({@code luta}) and for the world ({@code mundo}), counted by the main class of
+     * each ability. Every character has at least 3 for fighting, 2 for the world and 1 supreme.
+     */
+    public record Arsenal(Range wheel, Range fight, Range world) {
+        public static final Arsenal ANY = new Arsenal(new Range(5, 8), new Range(3, 6), new Range(2, 5));
+        static final Codec<Arsenal> CODEC = RecordCodecBuilder.create(i -> i.group(
+                Range.CODEC.fieldOf("roda").forGetter(Arsenal::wheel),
+                Range.CODEC.fieldOf("luta").forGetter(Arsenal::fight),
+                Range.CODEC.fieldOf("mundo").forGetter(Arsenal::world)
+        ).apply(i, Arsenal::new));
+    }
+
     /**
      * The stat weights of a class: hearts and damage are these times the level's extra, defense,
-     * speed (percent) and knockback resistance are the class's own.
+     * speed (percent) and knockback resistance are the class's own. Its arsenal says how many
+     * abilities its characters have.
      */
-    public record ClassRule(CharacterClass id, double life, double damage, int defense, int speed, double firmness, EnergyRule energy, Passive passive) {
+    public record ClassRule(CharacterClass id, double life, double damage, int defense, int speed, double firmness, EnergyRule energy, Passive passive,
+                            Arsenal arsenal) {
         static final Codec<ClassRule> CODEC = RecordCodecBuilder.create(i -> i.group(
                 CharacterClass.CODEC.fieldOf("id").forGetter(ClassRule::id),
                 Codec.DOUBLE.fieldOf("vida").forGetter(ClassRule::life),
@@ -61,7 +91,8 @@ public record ClassRules(List<LevelRule> levels, Legendary legendary, List<Class
                 Codec.INT.fieldOf("velocidade").forGetter(ClassRule::speed),
                 Codec.DOUBLE.fieldOf("firmeza").forGetter(ClassRule::firmness),
                 EnergyRule.CODEC.fieldOf("energia").forGetter(ClassRule::energy),
-                Passive.CODEC.fieldOf("passiva").forGetter(ClassRule::passive)
+                Passive.CODEC.fieldOf("passiva").forGetter(ClassRule::passive),
+                Arsenal.CODEC.optionalFieldOf("arsenal", Arsenal.ANY).forGetter(ClassRule::arsenal)
         ).apply(i, ClassRule::new));
     }
 

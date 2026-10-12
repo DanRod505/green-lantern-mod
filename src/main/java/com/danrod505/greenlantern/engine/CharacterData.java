@@ -31,15 +31,16 @@ import net.minecraft.util.ExtraCodecs;
  * @param source         where the energy comes from (Colossus: sol, tempestade, calor) or the element (Elementalist)
  * @param stats          the stats; what is left out comes from the class rule
  * @param suit           the suit pieces and their bonuses (worked out from the stats when left out)
- * @param abilities      the abilities in wheel order (6 for a new character: 3 main, 2 secondary, the Supreme)
+ * @param abilities      the abilities in wheel order (5 to 8 for a new character: the fighting ones, the world ones, the supreme last)
  * @param skins          the skins, the first one is the default
  * @param weaknesses     what hurts the character (kryptonite, magic, fire...)
  * @param colors         colours of the HUD and the wheel
  * @param visual         the settings of the transformation, the trail and the aura
+ * @param traits         the character's traits (0 to 4), off the wheel: flight, super speed, swimming...
  */
 public record CharacterData(String id, String name, CharacterClass characterClass, int level, Skeleton skeleton, String transformation,
                             String theme, boolean legacy, Optional<String> source, Stats stats, Optional<Suit> suit, List<Ability> abilities,
-                            List<Skin> skins, List<Weakness> weaknesses, Colors colors, Visual visual) {
+                            List<Skin> skins, List<Weakness> weaknesses, Colors colors, Visual visual, List<Trait> traits) {
 
     /** Stats of the catalog (stage 12); empty ones come from the class rule. */
     public record Stats(Optional<Double> hearts, Optional<Double> damage, Optional<Integer> defense, Optional<Integer> speed,
@@ -117,23 +118,105 @@ public record CharacterData(String id, String name, CharacterClass characterClas
     }
 
     /**
-     * An ability: the preset that runs it in a fight and the one that runs it in the world (crouch
-     * plus the power key), with its numbers and the settings of its preset ({@code "ajustes"}: the
-     * push of a punch, the number of shots of a fan, the element of a cone...). The first heroes only
-     * list the ids of their powers.
+     * An ability on the wheel: its main class ({@code "classe"}), whether it is the character's
+     * supreme one ({@code "suprema"}: stronger or more impressive, with a much bigger cost and
+     * cooldown), the preset of its default function with its numbers and settings ({@code "ajustes"}:
+     * the push of a punch, the number of shots of a fan...), and up to 2 more functions
+     * ({@code "funcoes"}) that go off instead when their condition holds (see
+     * {@link AbilityFunctions}). The first heroes only list the ids of their powers.
      */
-    public record Ability(String id, Optional<String> name, Optional<AbilityKind> kind, Optional<AbilitySlot> slot, String preset,
-                          Optional<String> worldPreset, Numbers numbers, Settings settings) {
+    public record Ability(String id, Optional<String> name, Optional<AbilityKind> kind, boolean supreme, String preset, Numbers numbers,
+                          Settings settings, List<Function> functions) {
         static final Codec<Ability> CODEC = RecordCodecBuilder.create(i -> i.group(
                 Codec.STRING.fieldOf("id").forGetter(Ability::id),
                 Codec.STRING.optionalFieldOf("nome").forGetter(Ability::name),
                 AbilityKind.CODEC.optionalFieldOf("classe").forGetter(Ability::kind),
-                AbilitySlot.CODEC.optionalFieldOf("tipo").forGetter(Ability::slot),
+                Codec.BOOL.optionalFieldOf("suprema", false).forGetter(Ability::supreme),
                 Codec.STRING.optionalFieldOf("preset", "legado").forGetter(Ability::preset),
-                Codec.STRING.optionalFieldOf("uso_no_mundo").forGetter(Ability::worldPreset),
                 Numbers.CODEC.optionalFieldOf("numeros", Numbers.NONE).forGetter(Ability::numbers),
-                Settings.CODEC.optionalFieldOf("ajustes", Settings.NONE).forGetter(Ability::settings)
+                Settings.CODEC.optionalFieldOf("ajustes", Settings.NONE).forGetter(Ability::settings),
+                Function.CODEC.listOf().optionalFieldOf("funcoes", List.of()).forGetter(Ability::functions)
         ).apply(i, Ability::new));
+
+        /** An ability with only its default function. */
+        public Ability(String id, Optional<String> name, Optional<AbilityKind> kind, boolean supreme, String preset, Numbers numbers, Settings settings) {
+            this(id, name, kind, supreme, preset, numbers, settings, List.of());
+        }
+
+        /** The default function (index 0): the ability's own preset, numbers and settings, with no condition. */
+        public Function defaultFunction() {
+            return new Function(preset, When.ALWAYS, Numbers.NONE, Settings.NONE);
+        }
+
+        /** Every function in order: the default one first, then those of {@code "funcoes"}. */
+        public List<Function> allFunctions() {
+            List<Function> all = new java.util.ArrayList<>(functions.size() + 1);
+            all.add(defaultFunction());
+            all.addAll(functions);
+            return all;
+        }
+
+        /** The numbers of a function: its own where it gives them (above 0), else the ability's. */
+        public Numbers numbers(Function function) {
+            Numbers own = function.numbers();
+            return new Numbers(own.damage() > 0 ? own.damage() : numbers.damage(), numbers.cost(), numbers.cooldown(),
+                    own.reach() > 0 ? own.reach() : numbers.reach(), own.radius() > 0 ? own.radius() : numbers.radius(),
+                    own.duration() > 0 ? own.duration() : numbers.duration());
+        }
+
+        /** The settings of a function: the ability's, with the function's own on top. */
+        public Settings settings(Function function) {
+            if (function.settings().values().isEmpty()) return settings;
+            Map<String, JsonElement> merged = new java.util.LinkedHashMap<>(settings.values());
+            merged.putAll(function.settings().values());
+            return new Settings(merged);
+        }
+    }
+
+    /**
+     * When a function goes off ({@code "quando"} in the file): how the key is pressed
+     * ({@code "aperto"}: toque, segurar or soltar after holding), what the crosshair is on
+     * ({@code "mira"}: mob, bloco, vazio, a kind of block like minerio or agua, a block id or a
+     * {@code #tag}) and where the player is ({@code "lugar"}: chao, ar, agua or correndo). What is
+     * left out always holds.
+     */
+    public record When(Optional<String> press, Optional<String> aim, Optional<String> place) {
+        public static final When ALWAYS = new When(Optional.empty(), Optional.empty(), Optional.empty());
+        static final Codec<When> CODEC = RecordCodecBuilder.create(i -> i.group(
+                Codec.STRING.optionalFieldOf("aperto").forGetter(When::press),
+                Codec.STRING.optionalFieldOf("mira").forGetter(When::aim),
+                Codec.STRING.optionalFieldOf("lugar").forGetter(When::place)
+        ).apply(i, When::new));
+
+        public boolean always() {
+            return press.isEmpty() && aim.isEmpty() && place.isEmpty();
+        }
+    }
+
+    /**
+     * One more function of an ability: the preset it runs, when ({@code "quando"}), and its own
+     * numbers and settings on top of the ability's. It may be of another class than the ability, even
+     * of the other group: the heat vision is a shot at a mob and melts the block it aims at.
+     */
+    public record Function(String preset, When when, Numbers numbers, Settings settings) {
+        static final Codec<Function> CODEC = RecordCodecBuilder.create(i -> i.group(
+                Codec.STRING.fieldOf("preset").forGetter(Function::preset),
+                When.CODEC.optionalFieldOf("quando", When.ALWAYS).forGetter(Function::when),
+                Numbers.CODEC.optionalFieldOf("numeros", Numbers.NONE).forGetter(Function::numbers),
+                Settings.CODEC.optionalFieldOf("ajustes", Settings.NONE).forGetter(Function::settings)
+        ).apply(i, Function::new));
+    }
+
+    /**
+     * A trait of the character ({@code "passivas"} in the file): something natural to it that is not
+     * on the wheel and turns on by itself, through Minecraft's own action or the moment (flight on a
+     * double jump, super speed when sprinting, swimming in water...). See {@link Traits}.
+     */
+    public record Trait(String type, Settings settings) {
+        static final Codec<Trait> CODEC = RecordCodecBuilder.create(i -> i.group(
+                Codec.STRING.fieldOf("tipo").forGetter(Trait::type),
+                Settings.CODEC.optionalFieldOf("ajustes", Settings.NONE).forGetter(Trait::settings)
+        ).apply(i, Trait::new));
     }
 
     /**
@@ -176,6 +259,30 @@ public record CharacterData(String id, String name, CharacterClass characterClas
 
         public boolean has(String key) {
             return values.containsKey(key);
+        }
+
+        /** A list of words ({@code ["queda", "fogo"]} or {@code "queda, fogo"}), or empty when the setting is missing. */
+        public List<String> words(String key) {
+            JsonElement value = values.get(key);
+            List<String> list = new java.util.ArrayList<>();
+            if (value == null) return list;
+            if (value.isJsonArray()) {
+                for (JsonElement e : value.getAsJsonArray()) {
+                    if (e.isJsonPrimitive() && e.getAsJsonPrimitive().isString()) list.add(e.getAsString().trim());
+                }
+            } else if (value.isJsonPrimitive() && value.getAsJsonPrimitive().isString()) {
+                for (String word : value.getAsString().split(",")) {
+                    if (!word.isBlank()) list.add(word.trim());
+                }
+            }
+            return list;
+        }
+
+        /** These settings, with {@code defaults} for the ones they leave out. */
+        public Settings or(Map<String, JsonElement> defaults) {
+            Map<String, JsonElement> merged = new java.util.LinkedHashMap<>(defaults);
+            merged.putAll(values);
+            return new Settings(merged);
         }
 
         /** A list of numbers ({@code [4, 4, 7]}), or empty when the setting is missing. */
@@ -280,8 +387,18 @@ public record CharacterData(String id, String name, CharacterClass characterClas
             Skin.CODEC.listOf().optionalFieldOf("skins", List.of()).forGetter(CharacterData::skins),
             Weakness.CODEC.listOf().optionalFieldOf("fraquezas", List.of()).forGetter(CharacterData::weaknesses),
             Colors.CODEC.optionalFieldOf("cores", Colors.DEFAULT).forGetter(CharacterData::colors),
-            Visual.CODEC.optionalFieldOf("visual", Visual.NONE).forGetter(CharacterData::visual)
-    ).apply(i, CharacterData::new));
+            Extra.CODEC.forGetter(d -> new Extra(d.visual, d.traits))
+    ).apply(i, (id, name, characterClass, level, skeleton, transformation, theme, legacy, source, stats, suit, abilities, skins, weaknesses, colors, extra) ->
+            new CharacterData(id, name, characterClass, level, skeleton, transformation, theme, legacy, source, stats, suit, abilities, skins, weaknesses,
+                    colors, extra.visual(), extra.traits())));
+
+    /** The last fields of the file, in a group of their own (a codec takes at most 16 at once). */
+    private record Extra(Visual visual, List<Trait> traits) {
+        static final com.mojang.serialization.MapCodec<Extra> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
+                Visual.CODEC.optionalFieldOf("visual", Visual.NONE).forGetter(Extra::visual),
+                Trait.CODEC.listOf().optionalFieldOf("passivas", List.of()).forGetter(Extra::traits)
+        ).apply(i, Extra::new));
+    }
 
     // ---- stats worked out from the class rule ------------------------------------------------------
 
@@ -333,6 +450,11 @@ public record CharacterData(String id, String name, CharacterClass characterClas
             int capacity = classRule().energy().capacity();
             return legendary() ? (int) Math.round(capacity * ClassRules.get().legendary().energy()) : capacity;
         });
+    }
+
+    /** The trait of this type ({@code "voo"}, {@code "aquatico"}...), when the character has it. */
+    public Optional<Trait> trait(String type) {
+        return traits.stream().filter(t -> t.type().equals(type)).findFirst();
     }
 
     /** The default skin (the first one), or a skin named after the character. */

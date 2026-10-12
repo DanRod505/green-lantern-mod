@@ -5,6 +5,16 @@
 Mod de heróis do **Universo DC** para **Minecraft Java 1.21.11** com **Forge 61.2.0** (compilado com **Java 25**).
 Começou como o mod do Lanterna Verde e agora traz também **o Flash** (v1.7.0) **o Aquaman** (v1.8.0), **Atlântida** (v1.9.0) **o Kraken do Aquaman** (v1.10.0), **o Batman** (v1.11.0), **as criaturas de Atlântida** (v1.12.0) **o Fosso**, os inimigos do Aquaman (v1.13.0), **o Superman** (v1.14.0), **a Mulher Maravilha** (v1.15.0) **o Ciborgue** (v1.16.0), o primeiro herói feito com o kit de herói, e **a Supergirl com o Krypto, o Supercão** (v1.17.0). O id do mod continua `greenlantern`, então mundos e configurações antigas continuam funcionando.
 
+## O novo modelo de habilidades (novo na 2.6.0)
+
+Sexto lote da Etapa 2: a engine passa para o modelo de habilidades aprovado. **Nada muda nos 9 heróis de hoje.**
+
+* **15 classes de habilidade:** 8 de luta (golpe, disparo, explosão, controle, defesa, invocação, evasão, fortalecimento) e 7 de mundo (mobilidade, coleta e terreno, construção, transmutação, natureza, detecção, logística). A classe Suprema saiu: a suprema agora é uma habilidade comum da roda, a última, com borda dourada e recarga longa; um som avisa quando ela fica pronta.
+* **Roda de 5 a 8 habilidades**, as de luta primeiro, depois as de mundo e a suprema por último, e **teclas diretas de 1 a 8**. Saem a tecla B, a barra da Suprema e o agachar + V.
+* **V escolhe pelo contexto:** cada habilidade pode ter até 3 funções, escolhidas pelo jeito de apertar (toque, segurar ou soltar), pelo que se mira (madeira, terra, minério, água, um mob...) e por onde se está (no chão, no ar, na água, correndo). A tela mostra o ícone da função que vai sair e, nas de mundo, o contorno do bloco mirado.
+* **Passivas:** até 4 por personagem, sempre ligadas com o traje: voo, levitar, supervelocidade, aquático, planar, superforça, invulnerável, visão no escuro, sentidos aguçados, pulo alto, escalar, regeneração, elástico e imune a veneno. Aparecem como ícones na tela.
+* **14 presets de mundo novos:** cortar árvore, cavar solto, aplanar, pescar, projeto em fantasma, trocar bloco, ligar máquina, domar e guiar, clima, rastro, ímã de itens, ajudante de trabalho, organizar e levar junto.
+
 ## Visuais, sons e transformações (novo na 2.5.0)
 
 Quinto lote da biblioteca de presets. **Nada muda nos 9 heróis de hoje.**

@@ -30,10 +30,11 @@ import net.minecraftforge.registries.RegistryObject;
 
 /**
  * A character of the engine, built from its data file with no code of its own: the item (class
- * energy, cooldowns, Supreme charge, skin), the suit pieces with the stats of its class and level,
- * the 6 abilities on the wheel and the HUD. With the full suit on, the player is drawn as the
- * character, with its skin on its skeleton. The abilities run through their presets (stage 2); until
- * a preset exists the ability spends its energy, starts its cooldown and says it is not built yet.
+ * energy, cooldowns, skin), the suit pieces with the stats of its class and level, the 5 to 8
+ * abilities on the wheel, the traits off the wheel and the HUD. With the full suit on, the player is
+ * drawn as the character, with its skin on its skeleton. The abilities run through their presets
+ * (stage 2); until a preset exists the ability spends its energy, starts its cooldown and says it is
+ * not built yet.
  */
 public final class EngineHero extends HeroDefinition {
 
@@ -41,7 +42,7 @@ public final class EngineHero extends HeroDefinition {
     private final RegistryObject<CharacterItem> item;
     private final HeroEnergy energy;
     private final HeroPowers<EngineAbility> powers;
-    /** The settings of the character's "voo" ability, or null when it doesn't fly. */
+    /** The settings of the character's flight (the trait voo or levitar), or null when it doesn't fly. */
     private final CharacterData.Settings flight;
 
     private EngineHero(CharacterData data, RegistryObject<CharacterItem> item, SuitSet suit) {
@@ -53,8 +54,7 @@ public final class EngineHero extends HeroDefinition {
         EngineAbility[] abilities = new EngineAbility[list.size()];
         for (int i = 0; i < abilities.length; i++) abilities[i] = new EngineAbility(list.get(i), i, list.get(i).kind().orElseThrow());
         this.powers = new HeroPowers<>(new PowerSet<>(abilities), energy, ChatFormatting.AQUA, 0.8F, 0.08F, EngineServer::useAbility, wheel(data));
-        CharacterData.Ability fly = list.stream().filter(a -> a.preset().equals(MovementPresets.FLIGHT)).findFirst().orElse(null);
-        this.flight = fly == null ? null : fly.settings();
+        this.flight = Traits.flight(data);
     }
 
     /** Builds the character of a data file and registers its item and suit pieces. */
@@ -82,7 +82,7 @@ public final class EngineHero extends HeroDefinition {
         int darker = ARGB.scaleRGB(main, 0.12F) & 0xFFFFFF;
         WheelTheme theme = new WheelTheme("engine_" + data.id() + "_wheel", dark, darker, second, ARGB.scaleRGB(main, 0.7F) & 0xFFFFFF, darker, dark,
                 ARGB.scaleRGB(main, 0.6F) & 0xFFFFFF, main, light, light, second);
-        return new WheelStyle(theme, GreenLantern.id("engine_icons/" + data.id()), AbilityIcons.SIZE * (data.abilities().size() + 1), "wheel.greenlantern.engine_cost",
+        return new WheelStyle(theme, GreenLantern.id("engine_icons/" + data.id()), AbilityIcons.SIZE * AbilityIcons.cells(data), "wheel.greenlantern.engine_cost",
                 "energy.greenlantern." + data.characterClass().id() + ".amount", 0x66000000 | darker, 0xFF000000 | light, 0xFF000000 | second,
                 0xFFE8E8E8, 0xFFB0B0B0, 0xFF000000 | light, 0xFFB0B0B0);
     }
@@ -144,7 +144,7 @@ public final class EngineHero extends HeroDefinition {
         EngineServer.tick(player, this);
     }
 
-    /** A character with a "voo" ability power-flies like the heroes do (double tap jump, or the ability's key). */
+    /** A character with the trait voo (or levitar) power-flies like the heroes do (double tap jump). */
     @Override
     public FlightProfile flightProfile() {
         return flight == null ? null : MovementPresets.flightProfile(data, flight);
