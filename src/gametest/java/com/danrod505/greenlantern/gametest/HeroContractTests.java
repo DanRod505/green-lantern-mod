@@ -165,11 +165,20 @@ public final class HeroContractTests {
                 int count = powers.set().count();
                 helper.assertTrue(count > 0, who + "a power wheel needs at least one power");
                 String icons = "assets/" + wheel.icons().getNamespace() + "/" + wheel.icons().getPath();
-                // A character of the engine draws its icons while the game runs (engine.AbilityIcons).
-                int width = hero instanceof com.danrod505.greenlantern.engine.EngineHero drawn
-                        ? com.danrod505.greenlantern.engine.AbilityIcons.sheet(drawn.data(), drawn.data().abilities().stream()
+                // The wheel of the new model draws its icons while the game runs (engine.AbilityIcons), the
+                // first 9 heroes too; their own powers keep their cells on the sheet of before.
+                int width = hero.abilityWheel()
+                        ? com.danrod505.greenlantern.engine.AbilityIcons.sheet(hero.data(), hero.data().abilities().stream()
                                 .map(a -> a.kind().orElseThrow()).toList()).length / com.danrod505.greenlantern.engine.AbilityIcons.SIZE
                         : pngWidth(icons);
+                if (hero.ownIcons() != null) {
+                    String own = "assets/" + hero.ownIcons().getNamespace() + "/" + hero.ownIcons().getPath();
+                    int ownWidth = pngWidth(own);
+                    for (HeroPower power : hero.ownPowers()) {
+                        helper.assertTrue((power.iconIndex() + 1) * 16 <= ownWidth, who + own + " has no icon for the power " + power.id());
+                        if (power.displayName().getContents() instanceof net.minecraft.network.chat.contents.TranslatableContents name) keys.add(name.getKey());
+                    }
+                }
                 helper.assertTrue(width == wheel.iconsWidth(), who + icons + " is " + width + " pixels wide, the wheel says " + wheel.iconsWidth());
                 Set<String> powerIds = new HashSet<>();
                 for (int i = 0; i < count; i++) {

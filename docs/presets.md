@@ -225,7 +225,7 @@ Como os do Lote 4, só mexem no que o jogador pode mudar ali, e um uso que não 
 | `trocar_bloco` | Transmutação | alcance (8), raio (0) | `modo`: fornalha (areia vira vidro...), tabela (`trocas`: {"minecraft:stone": "minecraft:iron_block"}) ou cor (`cor_nova`, red) |
 | `ligar_maquina` | Transmutação | alcance (16), duracao (2) | vira a alavanca, aperta o botão ou dá sinal de redstone ao que estiver mirado |
 | `domar_e_guiar` | Natureza | alcance (8), raio (6), duracao (30) | doma lobos, gatos, papagaios e cavalos; os outros animais seguem na corda; `quantos` (4) |
-| `clima` | Natureza | duracao (120) | `tipo`: chuva, sol ou tempestade |
+| `clima` | Natureza | duracao (120) | `tipo`: chuva, sol, tempestade ou dia (a noite passa na hora e amanhece; desde a 2.8.0) |
 | `rastro` | Detecção | raio (48), duracao (10) | trilha de partículas até o `alvo`: mob, estrutura (`estrutura`, uma tag, minecraft:village) ou casa |
 | `ima_de_itens` | Logística | alcance (6), raio (8), duracao (5) | mirando um baú, traz o que cabe para o inventário; senão, puxa itens e experiência em volta |
 | `ajudante_de_trabalho` | Logística | raio (6), duracao (30) | um ajudante voa ao lado e a cada segundo faz a `tarefa`: colher, guardar ou minerar |
@@ -237,3 +237,12 @@ Os sons das 6 classes de mundo novas e o da suprema são originais, gerados por 
 ## Lote 7 (2.7.0): Ferramentas de produção
 
 Sem presets novos: o gerador do catálogo, o teste automático de cada personagem, os prints por lote e o verificador estão em [`ferramentas.md`](ferramentas.md). O gerador escolhe o preset de cada função do catálogo nesta biblioteca, e o teste automático usa cada função de cada personagem.
+
+## Adaptação dos 9 heróis (2.8.0)
+
+Os 9 heróis que já existiam usam a roda do novo modelo, montada pela ficha deles (`characters/<id>.json`, com `"legado": true`), sob as mesmas regras do arsenal e da ordem da roda. O traje, a energia, o HUD e o voo continuam no código de cada um.
+
+- O preset `poder` usa um poder do próprio herói: `"preset": "poder", "ajustes": {"poder": "heat_vision"}`. Esse poder paga a energia e a recarga dele, como antes; as outras funções gastam o `custo` da habilidade na energia do herói. Os ids são os dos poderes de cada herói (no Lanterna, os construtos: `hammer`, `minigun`, `energy_blast`, `bubble`, `saw`, `drill`, `mecha`, `portal`), mais `krypto` (Supergirl assobia) e `boom_tube_mark` (Ciborgue marca o destino do Tubo).
+- Uma passiva com `"ajustes": {"legado": true}` fica com o código do herói (o voo do Lanterna, a corrida do Flash); as outras agem como nos personagens do motor.
+- Os ícones das funções com `poder` vêm da folha de ícones antiga do herói; os outros são desenhados como os do motor.
+- O clique direito com o item do herói e a tecla de poder usam a habilidade escolhida na roda.

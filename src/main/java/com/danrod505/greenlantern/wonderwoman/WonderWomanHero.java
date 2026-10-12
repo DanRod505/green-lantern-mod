@@ -4,7 +4,9 @@ import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
 import com.danrod505.greenlantern.client.wonderwoman.WonderWomanClient;
+import com.danrod505.greenlantern.engine.AbilityWheel;
 import com.danrod505.greenlantern.engine.Characters;
+import com.danrod505.greenlantern.engine.EngineAbility;
 import com.danrod505.greenlantern.flight.FlightProfile;
 import com.danrod505.greenlantern.flight.FlightStyle;
 import com.danrod505.greenlantern.hero.HeroDefinition;
@@ -20,9 +22,11 @@ import com.danrod505.greenlantern.registry.ModItems;
 import com.danrod505.greenlantern.registry.ModParticles;
 import com.danrod505.greenlantern.registry.ModSounds;
 import com.danrod505.greenlantern.ring.FlightHandler;
+import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
@@ -61,8 +65,8 @@ public final class WonderWomanHero extends HeroDefinition {
 
     public static final WonderWomanHero INSTANCE = new WonderWomanHero();
 
-    private final HeroPowers<AmazonPower> powers = new HeroPowers<>(AmazonPower.POWERS, DIVINE_POWER, ChatFormatting.GOLD,
-            0.85F, 0.06F, WonderWomanServer::usePower, WHEEL);
+    /** The wheel of the new model (stage 3): the abilities of the file, using the powers of {@link AmazonPower} and the presets. */
+    private final HeroPowers<EngineAbility> powers = AbilityWheel.build(this, data(), DIVINE_POWER, ChatFormatting.GOLD, 0.85F, 0.06F, AbilityWheel.style(WHEEL, data()));
 
     private WonderWomanHero() {
         super("wonder_woman", WonderWomanHelper::isTiara, new SuitSet(ModItems.WONDER_WOMAN_HAIR, ModItems.WONDER_WOMAN_SUIT, ModItems.WONDER_WOMAN_LEGGINGS,
@@ -108,8 +112,23 @@ public final class WonderWomanHero extends HeroDefinition {
     }
 
     @Override
-    public HeroPowers<AmazonPower> powers() {
+    public HeroPowers<EngineAbility> powers() {
         return powers;
+    }
+
+    @Override
+    public List<AmazonPower> ownPowers() {
+        return List.of(AmazonPower.values());
+    }
+
+    @Override
+    public boolean useOwnPower(ServerPlayer player, ItemStack item, String id) {
+        return own(ownPowers(), id).map(power -> WonderWomanServer.usePower(player, item, power)).orElse(false);
+    }
+
+    @Override
+    public Identifier ownIcons() {
+        return WHEEL.icons();
     }
 
     /** A strong, steady flight, but slower than the Lantern's (by default she never reaches the sound barrier). */

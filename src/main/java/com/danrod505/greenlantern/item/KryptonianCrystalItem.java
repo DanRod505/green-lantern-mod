@@ -45,7 +45,7 @@ public class KryptonianCrystalItem extends Item {
             return InteractionResult.SUCCESS;
         }
         if (player instanceof ServerPlayer serverPlayer) {
-            SupermanServer.usePower(serverPlayer, crystal, SuperPower.POWERS.selected(crystal));
+            SupermanHero.INSTANCE.powers().use(serverPlayer, crystal, -1);
         }
         return InteractionResult.SUCCESS;
     }
@@ -74,7 +74,7 @@ public class KryptonianCrystalItem extends Item {
         RingEnergy energy = SupermanHero.SOLAR_ENERGY.get(crystal);
         tooltip.accept(Component.translatable("tooltip.greenlantern.solar_energy", energy.stored(), energy.capacity())
                 .withStyle(energy.fraction() < 0.2F ? ChatFormatting.RED : ChatFormatting.GOLD));
-        tooltip.accept(Component.translatable("tooltip.greenlantern.power", SuperPower.POWERS.selected(crystal).displayName()).withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.translatable("tooltip.greenlantern.power", SupermanHero.INSTANCE.powers().power(SupermanHero.INSTANCE.powers().selectedIndex(crystal)).displayName()).withStyle(ChatFormatting.GRAY));
         tooltip.accept(Component.translatable("tooltip.greenlantern.kryptonian_crystal_hint").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
     }
 }

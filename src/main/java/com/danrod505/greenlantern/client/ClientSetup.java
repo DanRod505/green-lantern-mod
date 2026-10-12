@@ -48,7 +48,14 @@ public final class ClientSetup {
     /** The client half of every hero, in {@link HeroRegistry} order. */
     public static List<HeroClient> heroes() {
         if (heroes == null) {
-            heroes = HeroRegistry.all().stream().map(HeroDefinition::client).filter(Objects::nonNull).map(Supplier::get).toList();
+            List<HeroClient> list = new java.util.ArrayList<>(HeroRegistry.all().stream().map(HeroDefinition::client).filter(Objects::nonNull).map(Supplier::get).toList());
+            // The heroes of before with the wheel of the new model also show the block a function works on.
+            for (HeroDefinition hero : HeroRegistry.all()) {
+                if (!(hero instanceof com.danrod505.greenlantern.engine.EngineHero) && hero.abilityWheel()) {
+                    list.add(new com.danrod505.greenlantern.client.engine.WheelOutlineClient(hero));
+                }
+            }
+            heroes = List.copyOf(list);
         }
         return heroes;
     }

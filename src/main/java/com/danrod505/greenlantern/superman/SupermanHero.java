@@ -4,7 +4,9 @@ import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
 import com.danrod505.greenlantern.client.superman.SupermanClient;
+import com.danrod505.greenlantern.engine.AbilityWheel;
 import com.danrod505.greenlantern.engine.Characters;
+import com.danrod505.greenlantern.engine.EngineAbility;
 import com.danrod505.greenlantern.flight.FlightProfile;
 import com.danrod505.greenlantern.flight.FlightStyle;
 import com.danrod505.greenlantern.hero.HeroDefinition;
@@ -20,9 +22,11 @@ import com.danrod505.greenlantern.registry.ModItems;
 import com.danrod505.greenlantern.registry.ModParticles;
 import com.danrod505.greenlantern.registry.ModSounds;
 import com.danrod505.greenlantern.ring.FlightHandler;
+import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
@@ -60,8 +64,8 @@ public final class SupermanHero extends HeroDefinition {
 
     public static final SupermanHero INSTANCE = new SupermanHero();
 
-    private final HeroPowers<SuperPower> powers = new HeroPowers<>(SuperPower.POWERS, SOLAR_ENERGY, ChatFormatting.AQUA,
-            0.9F, 0.08F, SupermanServer::usePower, WHEEL);
+    /** The wheel of the new model (stage 3): the abilities of the file, using the powers of {@link SuperPower} and the presets. */
+    private final HeroPowers<EngineAbility> powers = AbilityWheel.build(this, data(), SOLAR_ENERGY, ChatFormatting.AQUA, 0.9F, 0.08F, AbilityWheel.style(WHEEL, data()));
 
     private SupermanHero() {
         super("superman", SupermanHelper::isCrystal, new SuitSet(ModItems.SUPERMAN_HAIR, ModItems.SUPERMAN_SUIT, ModItems.SUPERMAN_LEGGINGS, ModItems.SUPERMAN_BOOTS,
@@ -107,8 +111,23 @@ public final class SupermanHero extends HeroDefinition {
     }
 
     @Override
-    public HeroPowers<SuperPower> powers() {
+    public HeroPowers<EngineAbility> powers() {
         return powers;
+    }
+
+    @Override
+    public List<SuperPower> ownPowers() {
+        return List.of(SuperPower.values());
+    }
+
+    @Override
+    public boolean useOwnPower(ServerPlayer player, ItemStack item, String id) {
+        return own(ownPowers(), id).map(power -> SupermanServer.usePower(player, item, power)).orElse(false);
+    }
+
+    @Override
+    public Identifier ownIcons() {
+        return WHEEL.icons();
     }
 
     /** Much faster and stronger than the Lantern's flight. */

@@ -6,9 +6,9 @@ import com.danrod505.greenlantern.client.cyborg.CyborgScanVisuals;
 import com.danrod505.greenlantern.engine.AbilityFunctions;
 import com.danrod505.greenlantern.engine.CharacterData;
 import com.danrod505.greenlantern.engine.EngineAbility;
-import com.danrod505.greenlantern.engine.EngineHero;
 import com.danrod505.greenlantern.engine.Presets;
 import com.danrod505.greenlantern.engine.preset.GatheringPresets;
+import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -24,18 +24,19 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * The outline of the block an engine character aims at (the new model of abilities, 2.6.0): when
+ * The outline of the block a hero aims at (the new model of abilities, 2.6.0; the first 9 heroes too
+ * since their adaptation): when
  * the function V would use now is a world preset, the block it would work on shows in the
  * character's light colour through walls, as big as the preset's {@code tamanho} square.
  */
 final class EngineOutline implements WorldLayer {
     private static final Identifier BOX = GreenLantern.id("textures/misc/xray_box.png");
 
-    private final EngineHero hero;
+    private final HeroDefinition hero;
     /** The box to draw this frame, relative to the origin, or null. */
     private float[] box;
 
-    EngineOutline(EngineHero hero) {
+    EngineOutline(HeroDefinition hero) {
         this.hero = hero;
     }
 

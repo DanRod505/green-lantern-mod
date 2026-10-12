@@ -4,7 +4,9 @@ import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
 import com.danrod505.greenlantern.client.speed.FlashClient;
+import com.danrod505.greenlantern.engine.AbilityWheel;
 import com.danrod505.greenlantern.engine.Characters;
+import com.danrod505.greenlantern.engine.EngineAbility;
 import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.HeroEnergy;
 import com.danrod505.greenlantern.hero.HeroPowers;
@@ -16,12 +18,15 @@ import com.danrod505.greenlantern.registry.ModDataComponents;
 import com.danrod505.greenlantern.registry.ModItems;
 import com.danrod505.greenlantern.registry.ModParticles;
 import com.danrod505.greenlantern.registry.ModSounds;
+import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * The Flash: the ring holds the suit and the Speed Force (it refills on its own, much faster while
@@ -41,8 +46,8 @@ public final class FlashHero extends HeroDefinition {
 
     public static final FlashHero INSTANCE = new FlashHero();
 
-    private final HeroPowers<SpeedsterPower> powers = new HeroPowers<>(SpeedsterPower.POWERS, SPEED_FORCE, ChatFormatting.YELLOW,
-            1.0F, 0.08F, SpeedsterServer::usePower, WHEEL);
+    /** The wheel of the new model (stage 3): the abilities of the file, using the powers of {@link SpeedsterPower} and the presets. */
+    private final HeroPowers<EngineAbility> powers = AbilityWheel.build(this, data(), SPEED_FORCE, ChatFormatting.YELLOW, 1.0F, 0.08F, AbilityWheel.style(WHEEL, data()));
 
     private FlashHero() {
         super("flash", FlashHelper::isRing, new SuitSet(ModItems.FLASH_MASK, ModItems.FLASH_SUIT, ModItems.FLASH_LEGGINGS, ModItems.FLASH_BOOTS,
@@ -77,8 +82,23 @@ public final class FlashHero extends HeroDefinition {
     }
 
     @Override
-    public HeroPowers<SpeedsterPower> powers() {
+    public HeroPowers<EngineAbility> powers() {
         return powers;
+    }
+
+    @Override
+    public List<SpeedsterPower> ownPowers() {
+        return List.of(SpeedsterPower.values());
+    }
+
+    @Override
+    public boolean useOwnPower(ServerPlayer player, ItemStack item, String id) {
+        return own(ownPowers(), id).map(power -> SpeedsterServer.usePower(player, item, power)).orElse(false);
+    }
+
+    @Override
+    public Identifier ownIcons() {
+        return WHEEL.icons();
     }
 
     @Override

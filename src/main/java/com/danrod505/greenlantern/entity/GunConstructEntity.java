@@ -53,7 +53,10 @@ public class GunConstructEntity extends ConstructEntity {
     @Override
     protected boolean ownerValid() {
         Player owner = getOwner();
-        if (!super.ownerValid() || owner == null || !owner.isUsingItem()) return false;
+        if (!super.ownerValid() || owner == null) return false;
+        // Held by the Lantern's wheel: it fires by itself for a few seconds.
+        if (com.danrod505.greenlantern.construct.impl.MinigunConstruct.autoFiring(owner.getUUID())) return true;
+        if (!owner.isUsingItem()) return false;
         ItemStack used = owner.getUseItem();
         return RingHelper.isRing(used) && ConstructRegistry.selected(used) == ConstructRegistry.MINIGUN;
     }

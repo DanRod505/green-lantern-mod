@@ -144,5 +144,19 @@
   "subtitles.greenlantern.atlantean_dolphin_ambient": "Atlantean dolphin whistles",
   "subtitles.greenlantern.atlantean_dolphin_hurt": "Atlantean dolphin hurts",
   "subtitles.greenlantern.atlantean_dolphin_leap": "Atlantean dolphin leaps",
-  "subtitles.greenlantern.atlantean_mount_saddle": "Atlantean mount takes a rider"
+  "subtitles.greenlantern.atlantean_mount_saddle": "Atlantean mount takes a rider",
+  "power.greenlantern.aquaman_tridente": "Trident",
+  "power.greenlantern.aquaman_tridente.desc": "A trident combo. Aiming at water, catches fish and treasure.",
+  "power.greenlantern.aquaman_pele_atlante": "Atlantean Skin",
+  "power.greenlantern.aquaman_pele_atlante.desc": "Takes much less damage for a few seconds.",
+  "power.greenlantern.aquaman_chamado_do_mar": "Call of the Sea",
+  "power.greenlantern.aquaman_chamado_do_mar.desc": "Sea creatures attack the target. Hold: calls a shark.",
+  "power.greenlantern.aquaman_furia_do_oceano": "Ocean Fury",
+  "power.greenlantern.aquaman_furia_do_oceano.desc": "Grows stronger for a few seconds. Aiming at crops, they grow at once.",
+  "power.greenlantern.aquaman_corrente_marinha": "Sea Current",
+  "power.greenlantern.aquaman_corrente_marinha.desc": "Swims much faster without running out of breath.",
+  "power.greenlantern.aquaman_tesouros_do_mar": "Sea Treasures",
+  "power.greenlantern.aquaman_tesouros_do_mar.desc": "Shows the chests around you through the walls.",
+  "power.greenlantern.aquaman_kraken": "Kraken",
+  "power.greenlantern.aquaman_kraken.desc": "Supreme: ride the Kraken. Hold: opens the way to Atlantis."
 }

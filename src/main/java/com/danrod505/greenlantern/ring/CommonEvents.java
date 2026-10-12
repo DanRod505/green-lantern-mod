@@ -61,7 +61,10 @@ public final class CommonEvents {
         if (player.tickCount % 10 == 0) {
             Uniform.removeStrayPieces(player);
         }
-        for (HeroDefinition hero : HeroRegistry.all()) hero.tick(player);
+        for (HeroDefinition hero : HeroRegistry.all()) {
+            hero.tick(player);
+            com.danrod505.greenlantern.engine.AbilityWheel.tick(player, hero);
+        }
         com.danrod505.greenlantern.aquaman.Respirator.tick(player);
         if (player.tickCount % 5 == 0) {
             chargeFromCentralBattery(player);
@@ -151,7 +154,8 @@ public final class CommonEvents {
         }
         for (HeroDefinition hero : HeroRegistry.all()) {
             // Tough heroes (Superman, Wonder Woman) shrug off part of every blow.
-            float multiplier = hero.damageTakenMultiplier(player, event.getSource());
+            float multiplier = hero.damageTakenMultiplier(player, event.getSource())
+                    * com.danrod505.greenlantern.engine.AbilityWheel.damageTaken(player, hero, event.getSource());
             if (multiplier != 1.0F) event.setAmount(event.getAmount() * multiplier);
         }
         BubbleConstructEntity bubble = BubbleConstructEntity.find(player);
@@ -169,6 +173,7 @@ public final class CommonEvents {
         // ordinary fall; Batman's cape and training soften it (see each hero's fallDamageMultiplier).
         HeroRegistry.suited(player).ifPresent(hero -> {
             float multiplier = hero.fallDamageMultiplier(player, event.getDistance());
+            if (com.danrod505.greenlantern.engine.AbilityWheel.noFall(player, hero)) multiplier = 0.0F;
             if (multiplier >= 0.0F) event.setDamageMultiplier(multiplier);
         });
     }

@@ -61,6 +61,8 @@ public final class Characters {
      * 2 for the world (by main class) within its class's arsenal, the fighting ones first, then the
      * world ones, and exactly 1 supreme, the last; each ability has up to 2 more functions, each with
      * a condition the game knows; up to 4 known traits; at least one skin; a known transformation.
+     * The first 9 heroes keep their suit in the file and, since the adaptation (stage 3), follow the
+     * same rules for their wheel.
      */
     public static List<String> check(CharacterData data, String fileName) {
         List<String> problems = new ArrayList<>();
@@ -68,7 +70,8 @@ public final class Characters {
         if (!data.id().matches("[a-z0-9_]+")) problems.add("id must be lowercase letters, digits and _");
         if (data.legacy()) {
             if (data.suit().isEmpty()) problems.add("a legacy hero keeps its suit in the file (traje)");
-            return problems;
+            // A hero of before with the wheel of before only lists the ids of its powers.
+            if (data.abilities().stream().anyMatch(a -> a.kind().isEmpty())) return problems;
         }
         List<CharacterData.Ability> abilities = data.abilities();
         ClassRules.Arsenal arsenal = data.classRule().arsenal();

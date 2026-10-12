@@ -50,5 +50,17 @@
   "message.greenlantern.shazam_solomon_on": "Sabedoria de Salomão: os inimigos aparecem",
   "message.greenlantern.shazam_solomon_off": "Sabedoria de Salomão desligada",
   "message.greenlantern.shazam_lightning": "O raio enche a Magia de Shazam!",
-  "hud.greenlantern.shazam_solomon_target": "%s: %s / %s ❤"
+  "hud.greenlantern.shazam_solomon_target": "%s: %s / %s ❤",
+  "power.greenlantern.shazam_forca_de_hercules": "Força de Hércules",
+  "power.greenlantern.shazam_forca_de_hercules.desc": "Um golpe semidivino. Mirando pedra, minera em área.",
+  "power.greenlantern.shazam_raio_de_zeus": "Raio de Zeus",
+  "power.greenlantern.shazam_raio_de_zeus.desc": "Um raio no alvo. Mirando redstone, aciona como um raio de verdade.",
+  "power.greenlantern.shazam_vigor_de_atlas": "Vigor de Atlas",
+  "power.greenlantern.shazam_vigor_de_atlas.desc": "Aguenta muito dano. Segurar: a coragem de Aquiles.",
+  "power.greenlantern.shazam_sabedoria_de_salomao": "Sabedoria de Salomão",
+  "power.greenlantern.shazam_sabedoria_de_salomao.desc": "A sabedoria de Salomão. Mirando um mob, uma onda de impacto.",
+  "power.greenlantern.shazam_velocidade_de_mercurio": "Velocidade de Mercúrio",
+  "power.greenlantern.shazam_velocidade_de_mercurio.desc": "Disparada no chão ou no ar. Segurar: leva os amigos junto.",
+  "power.greenlantern.shazam_shazam": "SHAZAM!",
+  "power.greenlantern.shazam_shazam.desc": "Suprema: o raio com os seis poderes em volta. Segurar: chama uma tempestade."
 }

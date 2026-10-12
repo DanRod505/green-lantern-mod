@@ -87,71 +87,13 @@ public final class EngineHud {
         Component energyLine = Component.translatable("hud.greenlantern.engine_energy", data.characterClass().energyName(), energy.stored(), energy.capacity());
         graphics.drawString(mc.font, energyLine, barX + barW + 4, barY, energy.fraction() < 0.2F ? 0xFFFF5555 : light, true);
 
-        // The 6 abilities: cost under each one, a ring filling during its cooldown.
-        int iconsY = y + 15;
-        for (int i = 0; i < count; i++) {
-            EngineAbility ability = (EngineAbility) powers.power(i);
-            int ix = x + 19 + i * 20;
-            boolean isSelected = i == selected;
-            long left = state.remaining(i, now);
-            if (isSelected) graphics.fill(ix - 1, iconsY - 1, ix + 17, iconsY + 17, second);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, wheel.icons(), ix, iconsY, ability.iconIndex() * 16, 0, 16, 16, wheel.iconsWidth(),
-                    WheelStyle.ICONS_HEIGHT, left > 0 ? 0x70FFFFFF : isSelected ? 0xFFFFFFFF : 0xB0FFFFFF);
-            if (left > 0) cooldownRing(graphics, ix + 8, iconsY + 8, 1.0F - (float) left / ability.cooldownTicks(), light);
-            String cost = String.valueOf(ability.cost());
-            graphics.pose().pushMatrix();
-            graphics.pose().translate(ix + 16 - mc.font.width(cost) * 0.5F, iconsY + 12);
-            graphics.pose().scale(0.5F, 0.5F);
-            graphics.drawString(mc.font, cost, 0, 0, ability.supreme() ? GOLD : 0xFFFFFFFF, true);
-            graphics.pose().popMatrix();
-        }
-        // The function that goes off now: an arrow and its icon, a bar filling while the key is held.
-        EngineAbility chosen = (EngineAbility) powers.power(selected);
-        AbilityFunctions.Chosen function = AbilityFunctions.choose(chosen.data(), EngineKeys.press(chosen), player);
-        int fx = x + 19 + count * 20 + 2;
-        graphics.drawString(mc.font, "\u203a", fx, iconsY + 4, light, true);
-        int cell = AbilityIcons.functionCell(data, selected, function.index());
-        graphics.blit(RenderPipelines.GUI_TEXTURED, wheel.icons(), fx + 7, iconsY, cell * 16, 0, 16, 16, wheel.iconsWidth(), WheelStyle.ICONS_HEIGHT, 0xFFFFFFFF);
-        int held = EngineKeys.held();
-        if (held > 0 && AbilityFunctions.usesHold(chosen.data())) {
-            int w = Math.round(16 * Math.min(1.0F, (float) held / AbilityFunctions.HOLD_TICKS));
-            graphics.fill(fx + 7, iconsY + 17, fx + 7 + w, iconsY + 19, held >= AbilityFunctions.HOLD_TICKS ? GOLD : light);
-        }
-
-        // The traits: small icons, lit while they are on.
-        int traitsY = iconsY + 20;
-        for (int i = 0; i < data.traits().size(); i++) {
-            boolean on = suited && Traits.on(data.traits().get(i), player);
-            graphics.pose().pushMatrix();
-            graphics.pose().translate(barX + i * 12, traitsY);
-            graphics.pose().scale(0.625F, 0.625F);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, wheel.icons(), 0, 0, AbilityIcons.traitCell(data, i) * 16, 0, 16, 16, wheel.iconsWidth(),
-                    WheelStyle.ICONS_HEIGHT, on ? 0xFFFFFFFF : 0x50FFFFFF);
-            graphics.pose().popMatrix();
-        }
-
-        int keysY = traitsY + (data.traits().isEmpty() ? 0 : 12);
-        Component keys = Component.translatable("hud.greenlantern.power_key", chosen.displayName(), KeyBindings.HERO_POWER.getTranslatedKeyMessage());
-        graphics.drawString(mc.font, keys, x + 19, keysY, chosen.supreme() ? GOLD : light, true);
+        AbilityRow.render(graphics, mc, hero, item, x + 19, y + 15, light, second, suited, i -> false);
         if (!suited) {
+            int keysY = AbilityRow.keysY(hero, y + 15);
             graphics.drawString(mc.font, Component.translatable("hud.greenlantern.engine_suit_hint", data.name(), KeyBindings.TOGGLE_UNIFORM.getTranslatedKeyMessage()),
-                    x + 19, keysY + 11, 0xFFA0A0A0, true);
-        } else if (AbilityFunctions.usesHold(chosen.data())) {
-            graphics.drawString(mc.font, Component.translatable("hud.greenlantern.engine_hold_hint", KeyBindings.HERO_POWER.getTranslatedKeyMessage()),
                     x + 19, keysY + 11, 0xFFA0A0A0, true);
         }
         if (suited && data.passive() == Passive.SEE_HEALTH) aimedHealth(graphics, mc, light);
-    }
-
-    /** A ring of dots around the icon that fills clockwise from the top as the cooldown runs out. */
-    private static void cooldownRing(GuiGraphics graphics, int cx, int cy, float progress, int color) {
-        int lit = Math.round(RING_SEGMENTS * Mth.clamp(progress, 0.0F, 1.0F));
-        for (int s = 0; s < RING_SEGMENTS; s++) {
-            float angle = (float) (s * Math.PI * 2 / RING_SEGMENTS - Math.PI / 2);
-            int px = cx + Math.round(Mth.cos(angle) * 7.0F);
-            int py = cy + Math.round(Mth.sin(angle) * 7.0F);
-            graphics.fill(px - 1, py - 1, px + 1, py + 1, s < lit ? color : 0x80000000);
-        }
     }
 
     /** The inventor's passive: the health of the creature aimed at, under the crosshair. */

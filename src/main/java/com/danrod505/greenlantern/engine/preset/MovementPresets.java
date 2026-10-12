@@ -3,13 +3,15 @@ package com.danrod505.greenlantern.engine.preset;
 import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.engine.CharacterData;
 import com.danrod505.greenlantern.engine.PresetContext;
-import com.danrod505.greenlantern.engine.Presets;
 import com.danrod505.greenlantern.engine.Presets.Outcome;
+import com.danrod505.greenlantern.engine.Presets;
 import com.danrod505.greenlantern.flight.FlightProfile;
 import com.danrod505.greenlantern.hero.power.Dash;
 import com.danrod505.greenlantern.hero.power.Fx;
 import com.danrod505.greenlantern.hero.power.Hits;
 import com.danrod505.greenlantern.hero.power.Targets;
+import java.util.List;
+import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
@@ -20,8 +22,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
-import java.util.List;
-import java.util.UUID;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -82,7 +82,7 @@ public final class MovementPresets {
     static Outcome flight(PresetContext c) {
         ServerPlayer player = c.player();
         ServerLevel level = c.level();
-        if (!player.isCreative() && c.hero().energy().get(c.item()).stored() <= 0) return Outcome.fail(Component.translatable("message.greenlantern.engine_flight_empty"));
+        if (!player.isCreative() && c.energy().get(c.item()).stored() <= 0) return Outcome.fail(Component.translatable("message.greenlantern.engine_flight_empty"));
         Abilities abilities = player.getAbilities();
         if (abilities.flying) {
             abilities.flying = false;
@@ -155,7 +155,7 @@ public final class MovementPresets {
     /** Takes class energy for a lasting preset; false when it ran out. */
     static boolean pay(PresetContext c, int amount) {
         ItemStack item = c.hero().findItem(c.player());
-        return !item.isEmpty() && c.hero().energy().tryConsume(item, amount);
+        return !item.isEmpty() && c.energy().tryConsume(item, amount);
     }
 
     // ---- planar ------------------------------------------------------------------------------------

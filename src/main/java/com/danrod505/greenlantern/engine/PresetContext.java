@@ -2,6 +2,7 @@ package com.danrod505.greenlantern.engine;
 
 import com.danrod505.greenlantern.engine.preset.PresetFx;
 import com.danrod505.greenlantern.engine.preset.Summons;
+import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.power.Hits;
 import com.danrod505.greenlantern.hero.power.Targets;
 import java.util.List;
@@ -20,10 +21,20 @@ import net.minecraft.world.phys.Vec3;
  * default, so {@code reach(4)} is the ability's {@code alcance} or 4 blocks. {@code chosen} is the
  * function of the ability that goes off: its numbers and settings are on top of the ability's.
  */
-public record PresetContext(ServerPlayer player, EngineHero hero, ItemStack item, EngineAbility ability, AbilityFunctions.Chosen chosen) {
+public record PresetContext(ServerPlayer player, HeroDefinition hero, ItemStack item, EngineAbility ability, AbilityFunctions.Chosen chosen) {
     /** A use of the ability's default function. */
-    public PresetContext(ServerPlayer player, EngineHero hero, ItemStack item, EngineAbility ability) {
+    public PresetContext(ServerPlayer player, HeroDefinition hero, ItemStack item, EngineAbility ability) {
         this(player, hero, item, ability, new AbilityFunctions.Chosen(0, ability.data().defaultFunction()));
+    }
+
+    /** The character's file. */
+    public CharacterData data() {
+        return hero.data();
+    }
+
+    /** The energy that pays for the character's abilities. */
+    public com.danrod505.greenlantern.hero.HeroEnergy energy() {
+        return hero.powers().energy();
     }
 
     public ServerLevel level() {

@@ -63,8 +63,27 @@ public final class GameTestKit {
         ConstructRegistry.select(player.getMainHandItem(), construct);
     }
 
+    /**
+     * Right click with the item in hand. With the suit on and not sneaking, a hero of before uses the power of its own
+     * chosen with {@code POWERS.select} (with the ring, the construct chosen with {@link #select}), as
+     * the ability of the wheel that uses it would since stage 3; the tests of the wheel itself are in
+     * the engine tests.
+     */
     public static void use(ServerPlayer player) {
-        player.getMainHandItem().getItem().use(player.level(), player, InteractionHand.MAIN_HAND);
+        ItemStack item = player.getMainHandItem();
+        if (com.danrod505.greenlantern.ring.RingHelper.isRing(item) && com.danrod505.greenlantern.ring.LanternHero.INSTANCE.isSuited(player)) {
+            com.danrod505.greenlantern.ring.LanternHero.INSTANCE.useOwnPower(player, item, ConstructRegistry.selected(item).id().getPath());
+            return;
+        }
+        for (com.danrod505.greenlantern.hero.HeroDefinition hero : com.danrod505.greenlantern.hero.HeroRegistry.all()) {
+            if (hero instanceof com.danrod505.greenlantern.engine.EngineHero || hero.ownPowers().isEmpty() || !hero.isActivator(item)
+                    || !hero.isSuited(player) || player.isShiftKeyDown()) continue;
+            Integer index = item.get(com.danrod505.greenlantern.registry.ModDataComponents.SELECTED_POWER.get());
+            int i = net.minecraft.util.Mth.clamp(index == null ? 0 : index, 0, hero.ownPowers().size() - 1);
+            hero.useOwnPower(player, item, hero.ownPowers().get(i).id());
+            return;
+        }
+        item.getItem().use(player.level(), player, InteractionHand.MAIN_HAND);
     }
 
     public static void remove(ServerPlayer player) {

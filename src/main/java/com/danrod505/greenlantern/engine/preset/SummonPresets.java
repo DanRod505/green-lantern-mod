@@ -1,14 +1,14 @@
 package com.danrod505.greenlantern.engine.preset;
 
 import com.danrod505.greenlantern.engine.CharacterData;
+import com.danrod505.greenlantern.engine.EngineServer;
 import com.danrod505.greenlantern.engine.PresetContext;
-import com.danrod505.greenlantern.engine.Presets;
 import com.danrod505.greenlantern.engine.Presets.Outcome;
+import com.danrod505.greenlantern.engine.Presets;
 import com.danrod505.greenlantern.hero.power.Bolts;
 import com.danrod505.greenlantern.hero.power.Fx;
 import com.danrod505.greenlantern.hero.power.Hits;
 import com.danrod505.greenlantern.hero.power.Targets;
-import com.danrod505.greenlantern.engine.EngineServer;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
 import java.util.ArrayList;
@@ -387,10 +387,11 @@ public final class SummonPresets {
         return Outcome.DONE;
     }
 
-    /** The look of a copy: the character's skin (the one chosen now) on the player's model. */
+    /** The look of a copy: the character's skin (the one chosen now) on the player's model; a hero of before has the player's own. */
     static ResolvableProfile look(PresetContext c) {
+        if (!(c.hero() instanceof com.danrod505.greenlantern.engine.EngineHero hero)) return ResolvableProfile.createResolved(c.player().getGameProfile());
         JsonObject json = new JsonObject();
-        String skin = EngineServer.skin(c.hero(), c.item()).selected();
+        String skin = EngineServer.skin(hero, c.item()).selected();
         json.addProperty("texture", "greenlantern:entity/skin/" + skin);
         json.addProperty("model", c.hero().data().skeleton().slim() ? "slim" : "wide");
         return ResolvableProfile.CODEC.parse(JsonOps.INSTANCE, json).result()

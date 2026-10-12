@@ -50,10 +50,7 @@ public final class EngineHero extends HeroDefinition {
         this.data = data;
         this.item = item;
         this.energy = new HeroEnergy(EngineContent.ENERGY, data::energy);
-        List<CharacterData.Ability> list = data.abilities();
-        EngineAbility[] abilities = new EngineAbility[list.size()];
-        for (int i = 0; i < abilities.length; i++) abilities[i] = new EngineAbility(list.get(i), i, list.get(i).kind().orElseThrow());
-        this.powers = new HeroPowers<>(new PowerSet<>(abilities), energy, ChatFormatting.AQUA, 0.8F, 0.08F, EngineServer::useAbility, wheel(data));
+        this.powers = AbilityWheel.build(this, data, energy, ChatFormatting.AQUA, 0.8F, 0.08F, wheel(data));
         this.flight = Traits.flight(data);
     }
 
@@ -87,6 +84,7 @@ public final class EngineHero extends HeroDefinition {
                 0xFFE8E8E8, 0xFFB0B0B0, 0xFF000000 | light, 0xFFB0B0B0);
     }
 
+    @Override
     public CharacterData data() {
         return data;
     }

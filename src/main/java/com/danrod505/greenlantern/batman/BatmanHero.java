@@ -4,7 +4,9 @@ import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
 import com.danrod505.greenlantern.client.batman.BatmanClient;
+import com.danrod505.greenlantern.engine.AbilityWheel;
 import com.danrod505.greenlantern.engine.Characters;
+import com.danrod505.greenlantern.engine.EngineAbility;
 import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.HeroEnergy;
 import com.danrod505.greenlantern.hero.HeroPowers;
@@ -15,13 +17,16 @@ import com.danrod505.greenlantern.item.UtilityBeltItem;
 import com.danrod505.greenlantern.registry.ModDataComponents;
 import com.danrod505.greenlantern.registry.ModItems;
 import com.danrod505.greenlantern.registry.ModSounds;
+import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Batman: the Utility Belt holds the charge of the gadgets and the batsuit: the cowl with its ears,
@@ -45,8 +50,8 @@ public final class BatmanHero extends HeroDefinition {
 
     public static final BatmanHero INSTANCE = new BatmanHero();
 
-    private final HeroPowers<BatPower> powers = new HeroPowers<>(BatPower.POWERS, BAT_CHARGE, ChatFormatting.YELLOW,
-            0.7F, 0.08F, BatmanServer::usePower, WHEEL);
+    /** The wheel of the new model (stage 3): the abilities of the file, using the powers of {@link BatPower} and the presets. */
+    private final HeroPowers<EngineAbility> powers = AbilityWheel.build(this, data(), BAT_CHARGE, ChatFormatting.YELLOW, 0.7F, 0.08F, AbilityWheel.style(WHEEL, data()));
 
     private BatmanHero() {
         super("batman", BatmanHelper::isBelt, new SuitSet(ModItems.BATMAN_COWL, ModItems.BATMAN_SUIT, ModItems.BATMAN_LEGGINGS, ModItems.BATMAN_BOOTS,
@@ -86,8 +91,23 @@ public final class BatmanHero extends HeroDefinition {
     }
 
     @Override
-    public HeroPowers<BatPower> powers() {
+    public HeroPowers<EngineAbility> powers() {
         return powers;
+    }
+
+    @Override
+    public List<BatPower> ownPowers() {
+        return List.of(BatPower.values());
+    }
+
+    @Override
+    public boolean useOwnPower(ServerPlayer player, ItemStack item, String id) {
+        return own(ownPowers(), id).map(power -> BatmanServer.usePower(player, item, power)).orElse(false);
+    }
+
+    @Override
+    public Identifier ownIcons() {
+        return WHEEL.icons();
     }
 
     @Override
