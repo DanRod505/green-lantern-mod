@@ -59,7 +59,8 @@ public final class SkinRenderHandler {
         state.showCape = false;
         // The first 9 heroes have suits drawn over the player: with the skin on they draw nothing
         // (the same stacks, so the hero's own layers, capes and hair, still find their pieces).
-        state.headEquipment = hidden(state.headEquipment);
+        // A suit without a helmet (Aquaman's) leaves the player's own helmet as it is.
+        if (look.hero().suit().head() != null) state.headEquipment = hidden(state.headEquipment);
         state.chestEquipment = hidden(state.chestEquipment);
         state.legsEquipment = hidden(state.legsEquipment);
         state.feetEquipment = hidden(state.feetEquipment);
