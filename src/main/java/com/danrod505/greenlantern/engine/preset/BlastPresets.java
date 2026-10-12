@@ -72,7 +72,7 @@ public final class BlastPresets {
         Fx.play(level, player, SoundEvents.GENERIC_EXPLODE.value(), 0.7F, 1.4F);
         Fx.play(level, player, SoundEvents.BREEZE_WIND_CHARGE_BURST.value(), 1.0F, 0.8F);
         PresetFx.shake(player, 0.3F, 8);
-        ParticleOptions particle = PresetFx.particle(c.element(), c.color());
+        ParticleOptions particle = PresetFx.particle(c);
         PresetRuntime.start(player, age -> {
             double r = radius * age / 6.0;
             Fx.ring(level, center.add(0, -0.5, 0), 0.1, ParticleTypes.CLOUD, 4);
@@ -106,7 +106,7 @@ public final class BlastPresets {
             c.hit(target, (float) (c.damage() * near));
             Hits.knockAway(target, at, 0.8 * near, 0.4);
         }
-        PresetFx.burst(level, at, c.element(), c.color(), 30, radius * 0.4);
+        PresetFx.burst(c, at, 30, radius * 0.4);
         if (player.position().distanceTo(at) < radius * 3) PresetFx.shake(player, 0.4F, 10);
         return Outcome.DONE;
     }
@@ -124,7 +124,7 @@ public final class BlastPresets {
         int ticks = c.durationTicks(1.0);
         int hits = Math.max(1, ticks / 5);
         float perHit = c.damage() / hits;
-        ParticleOptions particle = PresetFx.particle(c.element(), c.color());
+        ParticleOptions particle = PresetFx.particle(c);
         Fx.play(level, player, switch (c.element()) {
             case "fogo" -> SoundEvents.BLAZE_SHOOT;
             case "gelo" -> SoundEvents.POWDER_SNOW_STEP;
@@ -198,7 +198,7 @@ public final class BlastPresets {
         double radius = c.radius(4.0);
         int ticks = c.durationTicks(3.0);
         int every = Math.max(1, (int) Math.round(20.0 / Math.max(1.0, c.settings().number("golpes_por_segundo", 6.0))));
-        ParticleOptions particle = PresetFx.particle(c.element(), c.color());
+        ParticleOptions particle = PresetFx.particle(c);
         ParticleOptions streak = c.element().equals(PresetFx.ENERGY) ? ParticleTypes.END_ROD : particle;
         Fx.play(level, player, SoundEvents.TRIDENT_RIPTIDE_1.value(), 1.0F, 0.8F);
         PresetRuntime.start(player, age -> {
@@ -209,7 +209,7 @@ public final class BlastPresets {
                 Vec3 ground = center.add(Math.cos(a) * r, 0, Math.sin(a) * r);
                 Vec3 at = new Vec3(ground.x, Fx.groundBelow(level, ground.add(0, 3, 0)), ground.z);
                 Fx.line(level, at.add(1.5, 10, 0), at, streak, 1.5);
-                PresetFx.burst(level, at.add(0, 0.2, 0), c.element(), c.color(), 6, 0.25);
+                PresetFx.burst(c, at.add(0, 0.2, 0), 6, 0.25);
                 level.sendParticles(ParticleTypes.CRIT, at.x, at.y + 0.2, at.z, 4, 0.2, 0.1, 0.2, 0.2);
                 level.playSound(null, at.x, at.y, at.z, PresetFx.impactSound(c.element()), SoundSource.PLAYERS, 0.5F, 1.4F);
                 Set<Integer> hit = new HashSet<>();

@@ -164,7 +164,11 @@ public final class HeroContractTests {
                 int count = powers.set().count();
                 helper.assertTrue(count > 0, who + "a power wheel needs at least one power");
                 String icons = "assets/" + wheel.icons().getNamespace() + "/" + wheel.icons().getPath();
-                int width = pngWidth(icons);
+                // A character of the engine draws its icons while the game runs (engine.AbilityIcons).
+                int width = hero instanceof com.danrod505.greenlantern.engine.EngineHero drawn
+                        ? com.danrod505.greenlantern.engine.AbilityIcons.sheet(drawn.data(), drawn.data().abilities().stream()
+                                .map(a -> a.kind().orElseThrow()).toList()).length / com.danrod505.greenlantern.engine.AbilityIcons.SIZE
+                        : pngWidth(icons);
                 helper.assertTrue(width == wheel.iconsWidth(), who + icons + " is " + width + " pixels wide, the wheel says " + wheel.iconsWidth());
                 Set<String> powerIds = new HashSet<>();
                 for (int i = 0; i < count; i++) {

@@ -81,6 +81,9 @@ public final class Characters {
             }
         }
         if (data.skins().isEmpty()) problems.add("needs at least one skin");
+        if (!com.danrod505.greenlantern.engine.preset.Transformations.exists(data.transformation())) {
+            problems.add("unknown transformacao " + data.transformation() + " (one of " + com.danrod505.greenlantern.engine.preset.Transformations.IDS + " or padrao)");
+        }
         return problems;
     }
 

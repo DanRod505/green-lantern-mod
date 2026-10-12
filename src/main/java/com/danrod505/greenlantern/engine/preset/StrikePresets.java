@@ -69,7 +69,7 @@ public final class StrikePresets {
         Hits.fling(target, Targets.horizontal(player), s.number("empurrao", 1.5), s.number("altura", 0.35));
         level.sendParticles(ParticleTypes.EXPLOSION, at.x, at.y, at.z, 1, 0, 0, 0, 0);
         level.sendParticles(ParticleTypes.CRIT, at.x, at.y, at.z, 20, 0.3, 0.3, 0.3, 0.4);
-        PresetFx.burst(level, at, c.element(), c.color(), 16, 0.35);
+        PresetFx.burst(c, at, 16, 0.35);
         Fx.play(level, player, SoundEvents.PLAYER_ATTACK_STRONG, 1.0F, 0.8F);
         Fx.play(level, target, SoundEvents.GENERIC_EXPLODE.value(), 0.5F, 1.6F);
         PresetFx.shake(player, (float) s.number("tremor", 0.35), 8);
@@ -99,7 +99,7 @@ public final class StrikePresets {
                 Vec3 at = Targets.middle(target);
                 level.sendParticles(ParticleTypes.CRIT, at.x, at.y, at.z, 12, 0.3, 0.3, 0.3, 0.3);
             });
-            Fx.line(level, before.add(0, 1.0, 0), player.position().add(0, 1.0, 0), PresetFx.particle(c.element(), c.color()), 2.0);
+            Fx.line(level, before.add(0, 1.0, 0), player.position().add(0, 1.0, 0), PresetFx.particle(c), 2.0);
             level.sendParticles(ParticleTypes.CLOUD, player.getX(), player.getY() + 0.2, player.getZ(), 2, 0.2, 0.1, 0.2, 0.01);
             return going;
         });
@@ -152,7 +152,7 @@ public final class StrikePresets {
                 Vec3 at = player.getEyePosition().add(0, -0.5, 0).add(dir.scale(Math.min(reach, 2.4)));
                 level.sendParticles(ParticleTypes.SWEEP_ATTACK, at.x, at.y, at.z, 1, 0, 0, 0, 0);
                 level.sendParticles(bits, at.x, at.y, at.z, 2, 0.05, 0.05, 0.05, 0.05);
-                PresetFx.burst(level, at, c.element(), c.color(), 2, 0.1);
+                PresetFx.burst(c, at, 2, 0.1);
             }
             return age < 4;
         });
@@ -178,7 +178,7 @@ public final class StrikePresets {
                 stompNow(c);
                 return false;
             }
-            if (age % 2 == 0) PresetFx.burst(c.level(), player.position().add(0, 1, 0), c.element(), c.color(), 4, 0.3);
+            if (age % 2 == 0) PresetFx.burst(c, player.position().add(0, 1, 0), 4, 0.3);
             return age < 80;
         });
         return Outcome.DONE;
@@ -197,7 +197,7 @@ public final class StrikePresets {
         player.resetFallDistance();
         Fx.dust(level, center, radius, 50);
         Fx.ring(level, center.add(0, 0.15, 0), radius, ParticleTypes.CLOUD, 32);
-        Fx.ring(level, center.add(0, 0.3, 0), radius, PresetFx.particle(c.element(), c.color()), 24);
+        Fx.ring(level, center.add(0, 0.3, 0), radius, PresetFx.particle(c), 24);
         Fx.play(level, player, SoundEvents.GENERIC_EXPLODE.value(), 0.8F, 0.6F);
         Fx.play(level, player, SoundEvents.ANVIL_LAND, 0.5F, 0.5F);
         PresetFx.shake(player, 0.5F, 12);
@@ -267,7 +267,7 @@ public final class StrikePresets {
                 Fx.play(level, player, SoundEvents.PLAYER_ATTACK_STRONG, 1.0F, 0.7F);
                 return true;
             }
-            PresetFx.burst(level, Targets.middle(target), c.element(), c.color(), 2, 0.2);
+            PresetFx.burst(c, Targets.middle(target), 2, 0.2);
             boolean landed = age > hold + 3 && (target.onGround() || target.horizontalCollision || target.isInWater());
             if (landed || age > hold + 60) {
                 c.hit(target, c.damage());
@@ -315,7 +315,7 @@ public final class StrikePresets {
         }
         level.sendParticles(ParticleTypes.SWEEP_ATTACK, at.x, at.y, at.z, 1, 0, 0, 0, 0);
         level.sendParticles(ParticleTypes.CRIT, at.x, at.y, at.z, 6 * blow, 0.25, 0.25, 0.25, 0.3);
-        PresetFx.burst(level, at, c.element(), c.color(), 4 * blow, 0.25);
+        PresetFx.burst(c, at, 4 * blow, 0.25);
         Fx.play(level, player, finisher ? SoundEvents.PLAYER_ATTACK_STRONG : SoundEvents.PLAYER_ATTACK_WEAK, 1.0F, 0.9F + 0.15F * blow);
         if (finisher) {
             COMBOS.remove(player.getUUID());

@@ -1,6 +1,7 @@
 package com.danrod505.greenlantern.engine;
 
 import com.danrod505.greenlantern.GreenLantern;
+import com.danrod505.greenlantern.engine.preset.Transformations;
 import com.danrod505.greenlantern.item.SuitArmorItem;
 import com.danrod505.greenlantern.ring.RingEnergy;
 import net.minecraft.core.component.DataComponentType;
@@ -48,6 +49,10 @@ public final class EngineContent {
     public static final RegistryObject<SoundEvent> SUPREME_READY = sound("engine_supreme_ready");
     public static final RegistryObject<SoundEvent> NO_ENERGY = sound("engine_no_energy");
     public static final RegistryObject<SoundEvent> SKIN_CHANGE = sound("engine_skin_change");
+    /** The sound set of each class of ability (3 variations each, see tools/generate_engine_audio.py). */
+    public static final java.util.Map<AbilityKind, RegistryObject<SoundEvent>> CLASS_SOUNDS = classSounds();
+    /** The sound of each of the 15 transformations, by id. */
+    public static final java.util.Map<String, RegistryObject<SoundEvent>> TRANSFORM_SOUNDS = transformSounds();
 
     /** The Heroes' Wardrobe: with a character's item, using it changes to the next unlocked skin. */
     public static final RegistryObject<Block> WARDROBE = BLOCKS.register("heroes_wardrobe", () -> new WardrobeBlock(BlockBehaviour.Properties.of()
@@ -66,6 +71,18 @@ public final class EngineContent {
         COMPONENTS.register(modBus);
         BLOCKS.register(modBus);
         ITEMS.register(modBus);
+    }
+
+    private static java.util.Map<AbilityKind, RegistryObject<SoundEvent>> classSounds() {
+        java.util.Map<AbilityKind, RegistryObject<SoundEvent>> map = new java.util.EnumMap<>(AbilityKind.class);
+        for (AbilityKind kind : AbilityKind.values()) map.put(kind, sound("engine_class_" + kind.id()));
+        return map;
+    }
+
+    private static java.util.Map<String, RegistryObject<SoundEvent>> transformSounds() {
+        java.util.Map<String, RegistryObject<SoundEvent>> map = new java.util.LinkedHashMap<>();
+        for (String id : Transformations.IDS) map.put(id, sound("engine_transform_" + id));
+        return map;
     }
 
     private static RegistryObject<SoundEvent> sound(String name) {

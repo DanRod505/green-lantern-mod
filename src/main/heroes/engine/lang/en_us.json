@@ -88,5 +88,17 @@
   "message.greenlantern.engine_no_space": "There is no room for that here",
   "message.greenlantern.engine_nothing_here": "There is nothing to do here",
   "message.greenlantern.engine_no_blocks": "You have no blocks to build with",
-  "message.greenlantern.engine_no_put": "There is no room to put the block there"
+  "message.greenlantern.engine_no_put": "There is no room to put the block there",
+  "subtitles.greenlantern.engine_class_golpe": "Strike",
+  "subtitles.greenlantern.engine_class_disparo": "Shot",
+  "subtitles.greenlantern.engine_class_explosao": "Blast",
+  "subtitles.greenlantern.engine_class_movimento": "Movement",
+  "subtitles.greenlantern.engine_class_defesa": "Defense",
+  "subtitles.greenlantern.engine_class_controle": "Control",
+  "subtitles.greenlantern.engine_class_invocacao": "Summon",
+  "subtitles.greenlantern.engine_class_evasao": "Evasion",
+  "subtitles.greenlantern.engine_class_fortalecimento": "Empower",
+  "subtitles.greenlantern.engine_class_suprema": "Supreme",
+  "subtitles.greenlantern.engine_transform": "Transformation",
+  "transformation.greenlantern.oath": "By the light of the ring, I rise!"
 }

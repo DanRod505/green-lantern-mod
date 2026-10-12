@@ -3,6 +3,7 @@ package com.danrod505.greenlantern.engine;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
 import com.danrod505.greenlantern.engine.preset.MovementPresets;
+import com.danrod505.greenlantern.engine.preset.Transformations;
 import com.danrod505.greenlantern.flight.FlightProfile;
 import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.HeroEnergy;
@@ -35,8 +36,6 @@ import net.minecraftforge.registries.RegistryObject;
  * a preset exists the ability spends its energy, starts its cooldown and says it is not built yet.
  */
 public final class EngineHero extends HeroDefinition {
-    /** Shared icons of the 10 kinds of ability, then the generic emblem (16x16 each). */
-    public static final int ICONS_WIDTH = 16 * (AbilityKind.values().length + 1);
 
     private final CharacterData data;
     private final RegistryObject<CharacterItem> item;
@@ -83,7 +82,7 @@ public final class EngineHero extends HeroDefinition {
         int darker = ARGB.scaleRGB(main, 0.12F) & 0xFFFFFF;
         WheelTheme theme = new WheelTheme("engine_" + data.id() + "_wheel", dark, darker, second, ARGB.scaleRGB(main, 0.7F) & 0xFFFFFF, darker, dark,
                 ARGB.scaleRGB(main, 0.6F) & 0xFFFFFF, main, light, light, second);
-        return new WheelStyle(theme, GreenLantern.id("textures/gui/engine/abilities.png"), ICONS_WIDTH, "wheel.greenlantern.engine_cost",
+        return new WheelStyle(theme, GreenLantern.id("engine_icons/" + data.id()), AbilityIcons.SIZE * (data.abilities().size() + 1), "wheel.greenlantern.engine_cost",
                 "energy.greenlantern." + data.characterClass().id() + ".amount", 0x66000000 | darker, 0xFF000000 | light, 0xFF000000 | second,
                 0xFFE8E8E8, 0xFFB0B0B0, 0xFF000000 | light, 0xFFB0B0B0);
     }
@@ -127,6 +126,12 @@ public final class EngineHero extends HeroDefinition {
     @Override
     protected void onSuitEquipped(ServerPlayer player) {
         EngineServer.onSuitUp(player, this);
+    }
+
+    /** The character's transformation (see {@link Transformations}). */
+    @Override
+    protected void suitUpEffects(net.minecraft.server.level.ServerLevel level, ServerPlayer player) {
+        Transformations.play(player, this);
     }
 
     @Override

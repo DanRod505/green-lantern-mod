@@ -85,7 +85,7 @@ public final class MovementPresets {
             abilities.flying = false;
             player.onUpdateAbilities();
             Fx.play(level, player, SoundEvents.ELYTRA_FLYING, 0.3F, 0.6F);
-            PresetFx.burst(level, player.position().add(0, 0.5, 0), c.element(), c.color(), 10, 0.4);
+            PresetFx.burst(c, player.position().add(0, 0.5, 0), 10, 0.4);
             return Outcome.cooldown(10);
         }
         abilities.mayfly = true;
@@ -94,7 +94,7 @@ public final class MovementPresets {
         Vec3 look = Targets.horizontal(player);
         PresetBody.push(player, new Vec3(look.x * 0.3, c.settings().number("impulso", 0.9), look.z * 0.3));
         Fx.ring(level, player.position().add(0, 0.1, 0), 1.2, ParticleTypes.CLOUD, 16);
-        PresetFx.burst(level, player.position().add(0, 0.3, 0), c.element(), c.color(), 16, 0.4);
+        PresetFx.burst(c, player.position().add(0, 0.3, 0), 16, 0.4);
         Fx.play(level, player, SoundEvents.FIREWORK_ROCKET_LAUNCH, 1.0F, 0.7F);
         return Outcome.cooldown(10);
     }
@@ -219,7 +219,7 @@ public final class MovementPresets {
         Fx.play(level, player, SoundEvents.GENERIC_EXPLODE.value(), 0.3F, 1.8F);
         PresetRuntime.start(player, age -> {
             player.resetFallDistance();
-            if (age % 2 == 0) PresetFx.burst(level, player.position().add(0, 0.5, 0), c.element(), c.color(), 2, 0.2);
+            if (age % 2 == 0) PresetFx.burst(c, player.position().add(0, 0.5, 0), 2, 0.2);
             if (age > 4 && player.onGround()) {
                 land(c, radius);
                 return false;
@@ -239,7 +239,7 @@ public final class MovementPresets {
         }
         Fx.dust(level, at, radius, 40);
         Fx.ring(level, at.add(0, 0.1, 0), radius, ParticleTypes.CLOUD, 30);
-        PresetFx.burst(level, at.add(0, 0.3, 0), c.element(), c.color(), 20, radius * 0.3);
+        PresetFx.burst(c, at.add(0, 0.3, 0), 20, radius * 0.3);
         Fx.play(level, player, SoundEvents.MACE_SMASH_GROUND_HEAVY, 1.0F, 0.9F);
         PresetFx.shake(player, 0.4F, 8);
     }
@@ -269,7 +269,7 @@ public final class MovementPresets {
         if (distance > 1.0) {
             Dash dash = new Dash();
             dash.start(player, path, distance, Math.max(2, Math.min(80, (int) Math.ceil(distance / speed))));
-            ParticleOptions line = PresetFx.particle(c.element(), c.color());
+            ParticleOptions line = PresetFx.particle(c);
             PresetRuntime.start(player, age -> {
                 boolean going = dash.tick(player, level, (target, direction) -> {
                     if (c.damage() > 0) c.hit(target, c.damage());

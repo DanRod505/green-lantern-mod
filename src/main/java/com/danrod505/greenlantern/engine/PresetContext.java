@@ -61,9 +61,19 @@ public record PresetContext(ServerPlayer player, EngineHero hero, ItemStack item
         return settings().text("elemento", PresetFx.ENERGY);
     }
 
-    /** The main colour of the character, for the energy look. */
+    /** The colour of the ability's look: its own ({@code "cor"}), or else the main colour of the character. */
     public int color() {
-        return hero.data().colors().main();
+        return settings().color("cor", hero.data().colors().main());
+    }
+
+    /** The size of the ability's particles ({@code "particula_tamanho"}, 1 is normal). */
+    public float particleSize() {
+        return (float) Math.max(0.2, Math.min(4.0, settings().number("particula_tamanho", 1.0)));
+    }
+
+    /** How many particles the ability makes ({@code "particula_quantidade"}, 1 is normal, 0 none). */
+    public double particleAmount() {
+        return Math.max(0.0, Math.min(5.0, settings().number("particula_quantidade", 1.0)));
     }
 
     public int lightColor() {
