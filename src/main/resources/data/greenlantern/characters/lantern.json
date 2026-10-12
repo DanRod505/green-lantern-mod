@@ -1,0 +1,47 @@
+{
+  "_comentario": "Um dos 9 heróis que já existiam: os poderes e a energia continuam no código dele. O traje, os bônus e a ordem da roda vêm daqui, com os mesmos números de antes.",
+  "id": "lantern",
+  "nome": "Lanterna Verde",
+  "classe": "anel",
+  "nivel": 3,
+  "esqueleto": "masculino",
+  "transformacao": "anel",
+  "trilha": "tropa",
+  "legado": true,
+  "stats": {
+    "coracoes": 10,
+    "dano": 0,
+    "defesa": 20,
+    "velocidade": 0,
+    "firmeza": 0,
+    "energia": 5000,
+    "voo": 4.0
+  },
+  "traje": {
+    "visual": "greenlantern:green_lantern",
+    "defesa": {
+      "cabeca": 3,
+      "peito": 8,
+      "pernas": 6,
+      "pes": 3
+    },
+    "resistencia": 2.0,
+    "resistencia_a_empurrao": 0.1,
+    "som": "minecraft:item.armor.equip_generic",
+    "conserto": "minecraft:repairs_netherite_armor",
+    "atributos": []
+  },
+  "habilidades": [],
+  "skins": [
+    {
+      "id": "lantern",
+      "nome": "Traje de hoje"
+    }
+  ],
+  "fraquezas": [
+    {
+      "tipo": "descricao",
+      "descricao": "Medo (efeitos de Espantalho e Sinestro) drena a carga duas vezes mais rápido."
+    }
+  ]
+}

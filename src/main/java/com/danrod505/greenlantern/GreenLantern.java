@@ -1,6 +1,8 @@
 package com.danrod505.greenlantern;
 
 import com.danrod505.greenlantern.construct.ConstructRegistry;
+import com.danrod505.greenlantern.engine.EngineContent;
+import com.danrod505.greenlantern.engine.EngineServer;
 import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.HeroRegistry;
 import com.danrod505.greenlantern.network.ModNetwork;
@@ -45,6 +47,7 @@ public final class GreenLantern {
         ModBlockEntities.BLOCK_ENTITIES.register(modBus);
         ModEntities.ENTITIES.register(modBus);
         ModCreativeTabs.TABS.register(modBus);
+        EngineContent.register(modBus);
         // Each hero registers its own content (the first heroes still keep theirs in the registries above).
         for (HeroDefinition hero : HeroRegistry.all()) hero.register(context);
 
@@ -54,6 +57,7 @@ public final class GreenLantern {
         ModNetwork.register();
         ConstructRegistry.bootstrap();
         CommonEvents.register();
+        EngineServer.register();
 
         net.minecraftforge.event.entity.EntityAttributeCreationEvent.getBus(modBus).addListener(event -> {
             event.put(ModEntities.OA_GUARDIAN.get(), com.danrod505.greenlantern.entity.OaGuardianEntity.createAttributes().build());

@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
  * @param pitchBase pitch of the selection click for the first power
  * @param pitchStep pitch added for each next power
  */
-public record HeroPowers<P extends Enum<P> & HeroPower>(PowerSet<P> set, HeroEnergy energy, ChatFormatting selectColor,
+public record HeroPowers<P extends HeroPower>(PowerSet<P> set, HeroEnergy energy, ChatFormatting selectColor,
                                                        float pitchBase, float pitchStep, PowerAction<P> action, WheelStyle wheel) {
     /** Uses a power with the hero's item; returns whether it went off. */
     @FunctionalInterface

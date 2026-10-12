@@ -1,12 +1,10 @@
 package com.danrod505.greenlantern.item;
 
 import com.danrod505.greenlantern.GreenLantern;
-import java.util.Map;
+import com.danrod505.greenlantern.engine.Characters;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Unit;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -23,7 +21,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * A piece of a hero suit (the hard-light Green Lantern uniform, the Flash suit, the armor of Atlantis, the batsuit, Superman's suit or Wonder Woman's armor). Pieces are
  * created by a ring, can't be taken off (Curse of Binding) and disappear as soon as they leave an
- * armor slot.
+ * armor slot. The armor of each suit comes from the hero's file in {@code data/greenlantern/characters}.
  */
 public class SuitArmorItem extends Item {
     public static final ResourceKey<EquipmentAsset> ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, GreenLantern.id("green_lantern"));
@@ -33,70 +31,22 @@ public class SuitArmorItem extends Item {
     public static final ResourceKey<EquipmentAsset> SUPERMAN_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, GreenLantern.id("superman"));
     public static final ResourceKey<EquipmentAsset> WONDER_WOMAN_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, GreenLantern.id("wonder_woman"));
 
-    public static final ArmorMaterial MATERIAL = new ArmorMaterial(
-            1000,
-            Map.of(ArmorType.HELMET, 3, ArmorType.CHESTPLATE, 8, ArmorType.LEGGINGS, 6, ArmorType.BOOTS, 3, ArmorType.BODY, 8),
-            1, // enchantability must be positive; the uniform can't reach an enchanting table anyway
-            SoundEvents.ARMOR_EQUIP_GENERIC,
-            2.0F,
-            0.1F,
-            ItemTags.REPAIRS_NETHERITE_ARMOR,
-            ASSET);
+    public static final ArmorMaterial MATERIAL = Characters.armorMaterial("lantern", ASSET);
 
     /** The Flash suit: friction-proof fabric, lighter than hard light. */
-    public static final ArmorMaterial FLASH_MATERIAL = new ArmorMaterial(
-            1000,
-            Map.of(ArmorType.HELMET, 2, ArmorType.CHESTPLATE, 7, ArmorType.LEGGINGS, 5, ArmorType.BOOTS, 3, ArmorType.BODY, 7),
-            1,
-            SoundEvents.ARMOR_EQUIP_LEATHER,
-            1.0F,
-            0.0F,
-            ItemTags.REPAIRS_LEATHER_ARMOR,
-            FLASH_ASSET);
+    public static final ArmorMaterial FLASH_MATERIAL = Characters.armorMaterial("flash", FLASH_ASSET);
 
     /** The armor of Atlantis: orichalcum scales, as tough as diamond. */
-    public static final ArmorMaterial AQUAMAN_MATERIAL = new ArmorMaterial(
-            1000,
-            Map.of(ArmorType.HELMET, 3, ArmorType.CHESTPLATE, 8, ArmorType.LEGGINGS, 6, ArmorType.BOOTS, 3, ArmorType.BODY, 8),
-            1,
-            SoundEvents.ARMOR_EQUIP_TURTLE,
-            2.0F,
-            0.0F,
-            ItemTags.REPAIRS_TURTLE_HELMET,
-            AQUAMAN_ASSET);
+    public static final ArmorMaterial AQUAMAN_MATERIAL = Characters.armorMaterial("aquaman", AQUAMAN_ASSET);
 
     /** The batsuit: Kevlar weave over armor plates, as tough as diamond and a little tougher. */
-    public static final ArmorMaterial BATMAN_MATERIAL = new ArmorMaterial(
-            1000,
-            Map.of(ArmorType.HELMET, 3, ArmorType.CHESTPLATE, 8, ArmorType.LEGGINGS, 6, ArmorType.BOOTS, 3, ArmorType.BODY, 8),
-            1,
-            SoundEvents.ARMOR_EQUIP_LEATHER,
-            2.5F,
-            0.1F,
-            ItemTags.REPAIRS_LEATHER_ARMOR,
-            BATMAN_ASSET);
+    public static final ArmorMaterial BATMAN_MATERIAL = Characters.armorMaterial("batman", BATMAN_ASSET);
 
     /** Superman's suit: Kryptonian weave, tougher than netherite (the Man of Steel himself is tougher still). */
-    public static final ArmorMaterial SUPERMAN_MATERIAL = new ArmorMaterial(
-            1000,
-            Map.of(ArmorType.HELMET, 4, ArmorType.CHESTPLATE, 9, ArmorType.LEGGINGS, 7, ArmorType.BOOTS, 4, ArmorType.BODY, 9),
-            1,
-            SoundEvents.ARMOR_EQUIP_NETHERITE,
-            4.0F,
-            0.2F,
-            ItemTags.REPAIRS_NETHERITE_ARMOR,
-            SUPERMAN_ASSET);
+    public static final ArmorMaterial SUPERMAN_MATERIAL = Characters.armorMaterial("superman", SUPERMAN_ASSET);
 
     /** Wonder Woman's armor: forged on Themyscira, as tough as netherite. */
-    public static final ArmorMaterial WONDER_WOMAN_MATERIAL = new ArmorMaterial(
-            1000,
-            Map.of(ArmorType.HELMET, 3, ArmorType.CHESTPLATE, 8, ArmorType.LEGGINGS, 6, ArmorType.BOOTS, 3, ArmorType.BODY, 8),
-            1,
-            SoundEvents.ARMOR_EQUIP_GOLD,
-            3.0F,
-            0.1F,
-            ItemTags.REPAIRS_GOLD_ARMOR,
-            WONDER_WOMAN_ASSET);
+    public static final ArmorMaterial WONDER_WOMAN_MATERIAL = Characters.armorMaterial("wonder_woman", WONDER_WOMAN_ASSET);
 
     private final ArmorType type;
 

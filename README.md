@@ -5,6 +5,18 @@
 Mod de heróis do **Universo DC** para **Minecraft Java 1.21.11** com **Forge 61.2.0** (compilado com **Java 25**).
 Começou como o mod do Lanterna Verde e agora traz também **o Flash** (v1.7.0) **o Aquaman** (v1.8.0), **Atlântida** (v1.9.0) **o Kraken do Aquaman** (v1.10.0), **o Batman** (v1.11.0), **as criaturas de Atlântida** (v1.12.0) **o Fosso**, os inimigos do Aquaman (v1.13.0), **o Superman** (v1.14.0), **a Mulher Maravilha** (v1.15.0) **o Ciborgue** (v1.16.0), o primeiro herói feito com o kit de herói, e **a Supergirl com o Krypto, o Supercão** (v1.17.0). O id do mod continua `greenlantern`, então mundos e configurações antigas continuam funcionando.
 
+## A engine de personagens (novo na 2.0.0)
+
+A base para os próximos heróis do Universo DC. **Nada muda nos 9 heróis de hoje**: os mesmos poderes, números, trajes, receitas e teclas. Mundos salvos, itens antigos e configurações continuam funcionando.
+
+* **Personagem como arquivo de dados:** cada personagem é uma ficha em `data/greenlantern/characters/<id>.json` com classe, nível de poder (1 a 4), esqueleto, as 6 habilidades (3 principais, 2 secundárias e a Suprema), skins, fraquezas e cores. Os 9 heróis já têm a ficha deles, com o traje e os bônus de antes; os poderes continuam no código de cada um.
+* **10 classes com energia própria:** Carga do Anel, Reserva de Poder, Força de Aceleração, Carga do Equipamento, Munição, Mana, Fúria, Bateria, Afinidade e Instinto, cada uma com o seu jeito de recarregar e uma passiva de classe. Vida, dano, defesa e velocidade saem da classe e do nível (o nível 4, Lendário, tem defesa 24 e velocidade 35%).
+* **Teclas novas:** **B** usa a Suprema (a barra dourada enche lutando), **K** troca de skin, **agachar + V** usa a habilidade no mundo e **1 a 6** (sem tecla de fábrica, em Opções > Controles) usam cada habilidade direto. G, R e V continuam como antes.
+* **Tela nova:** a barra da energia da classe, os 6 ícones com custo e recarga, e a barra da Suprema.
+* **O traje vira skin:** com o traje completo, o personagem aparece com a skin dele, num dos 6 esqueletos (masculino, feminino, jovem, brutamontes, criatura e alado, com asas que abrem no ar), com camada que brilha no escuro. Todo mundo no servidor vê a mesma skin.
+* **Guarda-Roupa dos Heróis:** bloco novo (tábuas, lã e suporte de armadura). Clique direito com o item do personagem troca para a próxima skin liberada; no criativo, todas estão liberadas.
+* As habilidades dos personagens novos chegam nas próximas etapas, com a biblioteca de presets.
+
 ## O Shazam (novo na 1.18.0)
 
 * **Raio do Mago:** o item do herói (ouro, pérola do End, ferro e diamante). Clique direito (ou **G**) diz a palavra mágica: um relâmpago cai do céu nele e forma o traje vermelho com o raio dourado no peito, a faixa e as botas douradas e a capa branca curta. O raio não fere o herói, mas fere e empurra os inimigos colados nele. **Agachado + clique direito** (ou **G** de novo): outro raio e ele volta a ser Billy. Não toma dano de queda.

@@ -1,0 +1,42 @@
+{
+  "_comentario": "As 10 classes de personagem (catálogo, etapas 2, 5 e 12). Cada personagem usa a energia, a regra de stats e a passiva da sua classe. Os 9 heróis que já existiam (\"legado\": true na ficha) mantêm a energia e os números de hoje.",
+  "niveis": [
+    {"nivel": 1, "nome": "Rua", "coracoes": 0, "dano": 2},
+    {"nivel": 2, "nome": "Herói", "coracoes": 2, "dano": 3},
+    {"nivel": 3, "nome": "Poderoso", "coracoes": 4, "dano": 4},
+    {"nivel": 4, "nome": "Lendário", "coracoes": 10, "dano": 10}
+  ],
+  "lendario": {"defesa": 24, "velocidade": 35, "energia": 1.5},
+  "classes": [
+    {"id": "anel", "vida": 0, "dano": 0, "defesa": 20, "velocidade": 0, "firmeza": 0,
+     "energia": {"capacidade": 5000, "recarga": 0, "condicao": "nunca", "multiplicador": 1, "ao_acertar": 0},
+     "passiva": "escudo_de_luz"},
+    {"id": "colosso", "vida": 1, "dano": 1, "defesa": 20, "velocidade": 15, "firmeza": 0.5,
+     "energia": {"capacidade": 1000, "recarga": 1, "condicao": "fonte", "multiplicador": 4, "ao_acertar": 2},
+     "passiva": "inabalavel"},
+    {"id": "velocista", "vida": 0, "dano": 0, "defesa": 17, "velocidade": 35, "firmeza": 0,
+     "energia": {"capacidade": 1000, "recarga": 1, "condicao": "correndo", "multiplicador": 6, "ao_acertar": 0},
+     "passiva": "passo_rapido"},
+    {"id": "vigilante", "vida": 0, "dano": 1.5, "defesa": 20, "velocidade": 10, "firmeza": 0.3,
+     "energia": {"capacidade": 1000, "recarga": 2, "condicao": "escuro", "multiplicador": 1.5, "ao_acertar": 0},
+     "passiva": "olhos_da_noite"},
+    {"id": "atirador", "vida": 0, "dano": 1, "defesa": 20, "velocidade": 10, "firmeza": 0.1,
+     "energia": {"capacidade": 1000, "recarga": 20, "condicao": "pausa", "multiplicador": 1, "ao_acertar": 0},
+     "passiva": "mira_firme"},
+    {"id": "mistico", "vida": 0.5, "dano": 0.5, "defesa": 17, "velocidade": 5, "firmeza": 0,
+     "energia": {"capacidade": 1000, "recarga": 1, "condicao": "noite", "multiplicador": 2, "ao_acertar": 0},
+     "passiva": "ver_o_oculto"},
+    {"id": "guerreiro", "vida": 2, "dano": 1.75, "defesa": 20, "velocidade": 15, "firmeza": 0.8,
+     "energia": {"capacidade": 1000, "recarga": 1, "condicao": "sempre", "multiplicador": 1, "ao_acertar": 5},
+     "passiva": "bloqueio_da_furia"},
+    {"id": "inventor", "vida": 1, "dano": 0.75, "defesa": 20, "velocidade": 15, "firmeza": 0,
+     "energia": {"capacidade": 1200, "recarga": 1, "condicao": "redstone", "multiplicador": 5, "ao_acertar": 0},
+     "passiva": "ver_a_vida"},
+    {"id": "elemental", "vida": 1, "dano": 1, "defesa": 17, "velocidade": 10, "firmeza": 0,
+     "energia": {"capacidade": 1000, "recarga": 0.5, "condicao": "elemento", "multiplicador": 6, "ao_acertar": 0},
+     "passiva": "imune_ao_elemento"},
+    {"id": "metamorfo", "vida": 1.5, "dano": 1, "defesa": 17, "velocidade": 15, "firmeza": 0.2,
+     "energia": {"capacidade": 1000, "recarga": 1, "condicao": "fome_cheia", "multiplicador": 1, "ao_acertar": 0},
+     "passiva": "comida_reforcada"}
+  ]
+}

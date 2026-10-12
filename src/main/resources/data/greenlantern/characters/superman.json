@@ -1,0 +1,124 @@
+{
+  "_comentario": "Um dos 9 heróis que já existiam: os poderes e a energia continuam no código dele. O traje, os bônus e a ordem da roda vêm daqui, com os mesmos números de antes.",
+  "id": "superman",
+  "nome": "Superman",
+  "classe": "colosso",
+  "nivel": 4,
+  "esqueleto": "masculino",
+  "transformacao": "sol",
+  "trilha": "krypton",
+  "legado": true,
+  "fonte": "sol",
+  "stats": {
+    "coracoes": 20,
+    "dano": 10,
+    "defesa": 24,
+    "velocidade": 35,
+    "firmeza": 1.0,
+    "energia": 6000,
+    "voo": 7.5
+  },
+  "traje": {
+    "visual": "greenlantern:superman",
+    "defesa": {
+      "cabeca": 4,
+      "peito": 9,
+      "pernas": 7,
+      "pes": 4
+    },
+    "resistencia": 4.0,
+    "resistencia_a_empurrao": 0.2,
+    "som": "minecraft:item.armor.equip_netherite",
+    "conserto": "minecraft:repairs_netherite_armor",
+    "atributos": [
+      {
+        "atributo": "minecraft:attack_damage",
+        "id": "superman_strength",
+        "valor": 10.0
+      },
+      {
+        "atributo": "minecraft:attack_knockback",
+        "id": "superman_punch_knockback",
+        "valor": 2.0
+      },
+      {
+        "atributo": "minecraft:max_health",
+        "id": "superman_health",
+        "valor": 20.0
+      },
+      {
+        "atributo": "minecraft:movement_speed",
+        "id": "superman_speed",
+        "valor": 0.35,
+        "operacao": "multiplicar"
+      },
+      {
+        "atributo": "minecraft:knockback_resistance",
+        "id": "superman_steady",
+        "valor": 1.0
+      },
+      {
+        "atributo": "minecraft:explosion_knockback_resistance",
+        "id": "superman_blast_proof",
+        "valor": 1.0
+      },
+      {
+        "atributo": "minecraft:step_height",
+        "id": "superman_step",
+        "valor": 0.65
+      },
+      {
+        "atributo": "minecraft:jump_strength",
+        "id": "superman_jump",
+        "valor": 0.25
+      },
+      {
+        "atributo": "minecraft:block_break_speed",
+        "id": "superman_mining",
+        "valor": 1.5,
+        "operacao": "multiplicar"
+      },
+      {
+        "atributo": "minecraft:entity_interaction_range",
+        "id": "superman_reach",
+        "valor": 1.5
+      },
+      {
+        "atributo": "minecraft:block_interaction_range",
+        "id": "superman_block_reach",
+        "valor": 1.5
+      },
+      {
+        "atributo": "minecraft:oxygen_bonus",
+        "id": "superman_breath",
+        "valor": 8.0
+      }
+    ]
+  },
+  "habilidades": [
+    {
+      "id": "heat_vision"
+    },
+    {
+      "id": "super_punch"
+    },
+    {
+      "id": "super_breath"
+    },
+    {
+      "id": "xray_vision"
+    }
+  ],
+  "skins": [
+    {
+      "id": "superman",
+      "nome": "Traje de hoje"
+    }
+  ],
+  "fraquezas": [
+    {
+      "tipo": "descricao",
+      "descricao": "Kryptonita verde por perto tira força e vida."
+    }
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "_comentario": "Um dos 9 heróis que já existiam: os poderes e a energia continuam no código dele. O traje, os bônus e a ordem da roda vêm daqui, com os mesmos números de antes.",
+  "id": "wonder_woman",
+  "nome": "Mulher-Maravilha",
+  "classe": "guerreiro",
+  "nivel": 3,
+  "esqueleto": "feminino",
+  "transformacao": "divino",
+  "trilha": "amazonas",
+  "legado": true,
+  "stats": {
+    "coracoes": 18,
+    "dano": 7,
+    "defesa": 20,
+    "velocidade": 25,
+    "firmeza": 0.8,
+    "energia": 1000,
+    "voo": 2.3
+  },
+  "traje": {
+    "visual": "greenlantern:wonder_woman",
+    "defesa": {
+      "cabeca": 3,
+      "peito": 8,
+      "pernas": 6,
+      "pes": 3
+    },
+    "resistencia": 3.0,
+    "resistencia_a_empurrao": 0.1,
+    "som": "minecraft:item.armor.equip_gold",
+    "conserto": "minecraft:repairs_gold_armor",
+    "atributos": [
+      {
+        "atributo": "minecraft:attack_damage",
+        "id": "wonder_woman_strength",
+        "valor": 7.0
+      },
+      {
+        "atributo": "minecraft:max_health",
+        "id": "wonder_woman_health",
+        "valor": 16.0
+      },
+      {
+        "atributo": "minecraft:movement_speed",
+        "id": "wonder_woman_speed",
+        "valor": 0.25,
+        "operacao": "multiplicar"
+      },
+      {
+        "atributo": "minecraft:attack_speed",
+        "id": "wonder_woman_attack_speed",
+        "valor": 0.3,
+        "operacao": "multiplicar"
+      },
+      {
+        "atributo": "minecraft:knockback_resistance",
+        "id": "wonder_woman_steady",
+        "valor": 0.8
+      },
+      {
+        "atributo": "minecraft:step_height",
+        "id": "wonder_woman_step",
+        "valor": 0.5
+      },
+      {
+        "atributo": "minecraft:jump_strength",
+        "id": "wonder_woman_jump",
+        "valor": 0.2
+      },
+      {
+        "atributo": "minecraft:entity_interaction_range",
+        "id": "wonder_woman_reach",
+        "valor": 1.0
+      },
+      {
+        "atributo": "minecraft:oxygen_bonus",
+        "id": "wonder_woman_breath",
+        "valor": 4.0
+      }
+    ]
+  },
+  "habilidades": [
+    {
+      "id": "lasso_capture"
+    },
+    {
+      "id": "lasso_pull"
+    },
+    {
+      "id": "lasso_spin"
+    },
+    {
+      "id": "bracelet_guard"
+    },
+    {
+      "id": "bracelet_shockwave"
+    },
+    {
+      "id": "sword_and_shield"
+    },
+    {
+      "id": "shield_throw"
+    },
+    {
+      "id": "invisible_jet"
+    }
+  ],
+  "skins": [
+    {
+      "id": "wonder_woman",
+      "nome": "Traje de hoje"
+    }
+  ]
+}

@@ -6,9 +6,10 @@ import net.minecraft.world.item.ItemStack;
 
 /**
  * The powers of one hero, in wheel order, and which one is selected on the hero's item (kept in the
- * {@code selected_power} data component).
+ * {@code selected_power} data component). The first heroes keep their powers in an enum; characters
+ * of the engine build theirs from their data file (see {@code engine.EngineAbility}).
  */
-public final class PowerSet<P extends Enum<P> & HeroPower> {
+public final class PowerSet<P extends HeroPower> {
     private final P[] values;
 
     public PowerSet(P[] values) {

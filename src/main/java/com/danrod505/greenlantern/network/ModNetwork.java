@@ -10,7 +10,7 @@ import net.minecraftforge.network.SimpleChannel;
 
 /** Network channel of the mod. Bump {@link #PROTOCOL} whenever a packet format changes. */
 public final class ModNetwork {
-    public static final int PROTOCOL = 9;
+    public static final int PROTOCOL = 10;
 
     public static final SimpleChannel CHANNEL = ChannelBuilder.named(GreenLantern.id("main"))
             .networkProtocolVersion(PROTOCOL)
@@ -97,6 +97,11 @@ public final class ModNetwork {
                 .add();
         // Packets of newer heroes come last, in hero order.
         for (HeroDefinition hero : HeroRegistry.all()) hero.registerPackets(CHANNEL);
+        // The engine's keys, after every hero's packets.
+        CHANNEL.messageBuilder(EnginePacket.class, NetworkDirection.PLAY_TO_SERVER)
+                .codec(EnginePacket.STREAM_CODEC)
+                .consumerMainThread(EnginePacket::handle)
+                .add();
     }
 
     /** Sends a packet to every player tracking (seeing) the given entity, excluding the entity itself. */

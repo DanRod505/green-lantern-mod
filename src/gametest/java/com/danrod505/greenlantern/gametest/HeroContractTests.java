@@ -3,6 +3,7 @@ package com.danrod505.greenlantern.gametest;
 import static com.danrod505.greenlantern.gametest.GameTestKit.*;
 
 import com.danrod505.greenlantern.GreenLantern;
+import com.danrod505.greenlantern.engine.EngineHero;
 import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.HeroPower;
 import com.danrod505.greenlantern.hero.HeroPowers;
@@ -42,7 +43,8 @@ import net.minecraftforge.registries.DeferredRegister;
  * <ul>
  *     <li>{@code hero_contracts}: unique id, the charged item first in the creative tab, names in
  *     English and Portuguese for the item, the suit and every power, the wheel icon sheet wide enough
- *     for every power, and the suit sounds declared in {@code sounds.json}.</li>
+ *     for every power, and the suit sounds declared in {@code sounds.json}. A character of the
+ *     engine names its item, suit and abilities in its file instead.</li>
  *     <li>{@code hero_suits_contract}: the suit goes on with the hero's item (taking off the
  *     previous hero's), the shared keys talk to this hero, and taking it off gives the old armor back.</li>
  *     <li>{@code hero_powers_contract}: every power can be selected and used without errors, and
@@ -134,10 +136,19 @@ public final class HeroContractTests {
 
             ItemStack item = chargedItem(hero);
             helper.assertTrue(!item.isEmpty(), who + "the creative tab must hand out the hero's item");
+            // A character of the engine takes the names of its item, suit and abilities from its file.
+            boolean engine = hero instanceof EngineHero;
             List<String> keys = new ArrayList<>();
-            keys.add(item.getItem().getDescriptionId());
             keys.add(hero.suit().missingItemKey());
-            for (Item piece : suitPieces(hero.suit())) keys.add(piece.getDescriptionId());
+            if (engine) {
+                helper.assertFalse(item.getHoverName().getString().startsWith("item."), who + "the item has no name");
+                for (Item piece : suitPieces(hero.suit())) {
+                    helper.assertFalse(new ItemStack(piece).getHoverName().getString().startsWith("item."), who + "a suit piece has no name");
+                }
+            } else {
+                keys.add(item.getItem().getDescriptionId());
+                for (Item piece : suitPieces(hero.suit())) keys.add(piece.getDescriptionId());
+            }
 
             for (var sound : List.of(hero.suit().upSound(), hero.suit().downSound())) {
                 var id = BuiltInRegistries.SOUND_EVENT.getKey(sound.get());
@@ -161,8 +172,12 @@ public final class HeroContractTests {
                     helper.assertTrue(powerIds.add(power.id()), who + "two powers with the id " + power.id());
                     helper.assertTrue(power.cost() >= 0, who + "power " + power.id() + " has a negative cost");
                     helper.assertTrue((power.iconIndex() + 1) * 16 <= wheel.iconsWidth(), who + "no icon for power " + power.id());
-                    keys.add("power." + GreenLantern.MODID + "." + power.id());
-                    keys.add("power." + GreenLantern.MODID + "." + power.id() + ".desc");
+                    if (engine) {
+                        helper.assertFalse(power.displayName().getString().startsWith("power."), who + "power " + power.id() + " has no name");
+                    } else {
+                        keys.add("power." + GreenLantern.MODID + "." + power.id());
+                        keys.add("power." + GreenLantern.MODID + "." + power.id() + ".desc");
+                    }
                 }
             }
 

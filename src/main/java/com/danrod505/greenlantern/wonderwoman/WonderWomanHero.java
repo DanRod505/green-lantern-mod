@@ -4,12 +4,12 @@ import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
 import com.danrod505.greenlantern.client.wonderwoman.WonderWomanClient;
+import com.danrod505.greenlantern.engine.Characters;
 import com.danrod505.greenlantern.flight.FlightProfile;
 import com.danrod505.greenlantern.flight.FlightStyle;
 import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.HeroEnergy;
 import com.danrod505.greenlantern.hero.HeroPowers;
-import com.danrod505.greenlantern.hero.SuitModifier;
 import com.danrod505.greenlantern.hero.SuitSet;
 import com.danrod505.greenlantern.hero.WheelStyle;
 import com.danrod505.greenlantern.hero.WheelTheme;
@@ -20,7 +20,6 @@ import com.danrod505.greenlantern.registry.ModItems;
 import com.danrod505.greenlantern.registry.ModParticles;
 import com.danrod505.greenlantern.registry.ModSounds;
 import com.danrod505.greenlantern.ring.FlightHandler;
-import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
@@ -28,7 +27,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -68,16 +66,7 @@ public final class WonderWomanHero extends HeroDefinition {
 
     private WonderWomanHero() {
         super("wonder_woman", WonderWomanHelper::isTiara, new SuitSet(ModItems.WONDER_WOMAN_HAIR, ModItems.WONDER_WOMAN_SUIT, ModItems.WONDER_WOMAN_LEGGINGS,
-                ModItems.WONDER_WOMAN_BOOTS, "message.greenlantern.no_tiara", ModSounds.WONDER_WOMAN_SUIT_UP, ModSounds.WONDER_WOMAN_SUIT_DOWN, List.of(
-                        SuitModifier.add(Attributes.ATTACK_DAMAGE, "wonder_woman_strength", 7.0),
-                        SuitModifier.add(Attributes.MAX_HEALTH, "wonder_woman_health", 16.0),
-                        SuitModifier.multiply(Attributes.MOVEMENT_SPEED, "wonder_woman_speed", 0.25),
-                        SuitModifier.multiply(Attributes.ATTACK_SPEED, "wonder_woman_attack_speed", 0.3),
-                        SuitModifier.add(Attributes.KNOCKBACK_RESISTANCE, "wonder_woman_steady", 0.8),
-                        SuitModifier.add(Attributes.STEP_HEIGHT, "wonder_woman_step", 0.5),
-                        SuitModifier.add(Attributes.JUMP_STRENGTH, "wonder_woman_jump", 0.2),
-                        SuitModifier.add(Attributes.ENTITY_INTERACTION_RANGE, "wonder_woman_reach", 1.0),
-                        SuitModifier.add(Attributes.OXYGEN_BONUS, "wonder_woman_breath", 4.0))));
+                ModItems.WONDER_WOMAN_BOOTS, "message.greenlantern.no_tiara", ModSounds.WONDER_WOMAN_SUIT_UP, ModSounds.WONDER_WOMAN_SUIT_DOWN, Characters.suitModifiers("wonder_woman")));
     }
 
     @Override

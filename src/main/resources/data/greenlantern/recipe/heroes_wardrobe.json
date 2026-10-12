@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "PWP",
+    "PAP",
+    "PPP"
+  ],
+  "key": {
+    "P": "#minecraft:planks",
+    "W": "#minecraft:wool",
+    "A": "minecraft:armor_stand"
+  },
+  "result": {
+    "id": "greenlantern:heroes_wardrobe",
+    "count": 1
+  }
+}

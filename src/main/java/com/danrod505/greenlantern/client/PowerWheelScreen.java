@@ -181,7 +181,7 @@ public class PowerWheelScreen extends Screen {
             graphics.pose().translate(ix, iy);
             graphics.pose().scale(scale, scale);
             int iconTint = i == hovered || i == current ? 0xFFFFFF : style.dimIcon();
-            graphics.blit(RenderPipelines.GUI_TEXTURED, style.icons(), -8, -8, i * 16, 0, 16, 16, style.iconsWidth(), WheelStyle.ICONS_HEIGHT, argb(alpha, iconTint));
+            graphics.blit(RenderPipelines.GUI_TEXTURED, style.icons(), -8, -8, powers.power(i).iconIndex() * 16, 0, 16, 16, style.iconsWidth(), WheelStyle.ICONS_HEIGHT, argb(alpha, iconTint));
             graphics.pose().popMatrix();
             float lx = cx + Mth.cos(centerAngle * Mth.DEG_TO_RAD) * (outer * grow - 11);
             float ly = cy + Mth.sin(centerAngle * Mth.DEG_TO_RAD) * (outer * grow - 11);

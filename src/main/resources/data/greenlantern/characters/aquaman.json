@@ -1,0 +1,77 @@
+{
+  "_comentario": "Um dos 9 heróis que já existiam: os poderes e a energia continuam no código dele. O traje, os bônus e a ordem da roda vêm daqui, com os mesmos números de antes.",
+  "id": "aquaman",
+  "nome": "Aquaman",
+  "classe": "guerreiro",
+  "nivel": 2,
+  "esqueleto": "masculino",
+  "transformacao": "mare",
+  "trilha": "atlantida",
+  "legado": true,
+  "stats": {
+    "coracoes": 10,
+    "dano": 2,
+    "defesa": 20,
+    "velocidade": 0,
+    "firmeza": 0.4,
+    "energia": 1000
+  },
+  "traje": {
+    "visual": "greenlantern:aquaman",
+    "defesa": {
+      "cabeca": 3,
+      "peito": 8,
+      "pernas": 6,
+      "pes": 3
+    },
+    "resistencia": 2.0,
+    "resistencia_a_empurrao": 0.0,
+    "som": "minecraft:item.armor.equip_turtle",
+    "conserto": "minecraft:repairs_turtle_helmet",
+    "atributos": [
+      {
+        "atributo": "minecraft:water_movement_efficiency",
+        "id": "aquaman_water",
+        "valor": 1.0
+      },
+      {
+        "atributo": "minecraft:submerged_mining_speed",
+        "id": "aquaman_mining",
+        "valor": 4.0
+      },
+      {
+        "atributo": "minecraft:attack_damage",
+        "id": "aquaman_strength",
+        "valor": 2.0
+      },
+      {
+        "atributo": "minecraft:knockback_resistance",
+        "id": "aquaman_knockback",
+        "valor": 0.4
+      }
+    ]
+  },
+  "habilidades": [
+    {
+      "id": "trident"
+    },
+    {
+      "id": "shark"
+    },
+    {
+      "id": "sea_call"
+    },
+    {
+      "id": "atlantis_portal"
+    },
+    {
+      "id": "kraken"
+    }
+  ],
+  "skins": [
+    {
+      "id": "aquaman",
+      "nome": "Traje de hoje"
+    }
+  ]
+}

@@ -4,10 +4,10 @@ import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
 import com.danrod505.greenlantern.client.aqua.AquamanClient;
+import com.danrod505.greenlantern.engine.Characters;
 import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.HeroEnergy;
 import com.danrod505.greenlantern.hero.HeroPowers;
-import com.danrod505.greenlantern.hero.SuitModifier;
 import com.danrod505.greenlantern.hero.SuitSet;
 import com.danrod505.greenlantern.hero.WheelStyle;
 import com.danrod505.greenlantern.hero.WheelTheme;
@@ -15,13 +15,11 @@ import com.danrod505.greenlantern.item.AquamanEmblemItem;
 import com.danrod505.greenlantern.registry.ModDataComponents;
 import com.danrod505.greenlantern.registry.ModItems;
 import com.danrod505.greenlantern.registry.ModSounds;
-import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -53,11 +51,7 @@ public final class AquamanHero extends HeroDefinition {
 
     private AquamanHero() {
         super("aquaman", AquamanHelper::isEmblem, new SuitSet(null, ModItems.AQUAMAN_SUIT, ModItems.AQUAMAN_LEGGINGS, ModItems.AQUAMAN_BOOTS,
-                "message.greenlantern.no_emblem", ModSounds.AQUAMAN_SUIT_UP, ModSounds.AQUAMAN_SUIT_DOWN, List.of(
-                        SuitModifier.add(Attributes.WATER_MOVEMENT_EFFICIENCY, "aquaman_water", 1.0),
-                        SuitModifier.add(Attributes.SUBMERGED_MINING_SPEED, "aquaman_mining", 4.0),
-                        SuitModifier.add(Attributes.ATTACK_DAMAGE, "aquaman_strength", 2.0),
-                        SuitModifier.add(Attributes.KNOCKBACK_RESISTANCE, "aquaman_knockback", 0.4))));
+                "message.greenlantern.no_emblem", ModSounds.AQUAMAN_SUIT_UP, ModSounds.AQUAMAN_SUIT_DOWN, Characters.suitModifiers("aquaman")));
     }
 
     /** The emblem, then Atlantis and the Trench (the gate, the respirator and the eggs of their creatures). */

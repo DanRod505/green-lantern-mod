@@ -1,0 +1,29 @@
+{
+  "engine_supreme_ready": {
+    "subtitle": "subtitles.greenlantern.engine_supreme_ready",
+    "sounds": [
+      {
+        "name": "minecraft:block.beacon.power_select",
+        "type": "event"
+      }
+    ]
+  },
+  "engine_no_energy": {
+    "subtitle": "subtitles.greenlantern.engine_no_energy",
+    "sounds": [
+      {
+        "name": "minecraft:block.dispenser.fail",
+        "type": "event"
+      }
+    ]
+  },
+  "engine_skin_change": {
+    "subtitle": "subtitles.greenlantern.engine_skin_change",
+    "sounds": [
+      {
+        "name": "minecraft:item.armor.equip_leather",
+        "type": "event"
+      }
+    ]
+  }
+}

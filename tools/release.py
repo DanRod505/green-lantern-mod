@@ -2,7 +2,7 @@
 """Versions and releases of the mod.
 
   python3 tools/release.py version              prints mod_version from gradle.properties
-  python3 tools/release.py bump minor|patch     raises mod_version (a new hero is minor, a fix is patch)
+  python3 tools/release.py bump major|minor|patch  raises mod_version (a new hero is minor, a fix is patch, a new engine is major)
   python3 tools/release.py notes [version]      prints the release notes: the README section "(novo na <version>)"
   python3 tools/release.py check                every hero with a sheet in docs/heroes is in the mod description
                                                 and has its README section
@@ -59,7 +59,12 @@ def version():
 
 def bump(part):
     major, minor, patch = (int(x) for x in version().split('.'))
-    new = f'{major}.{minor + 1}.0' if part == 'minor' else f'{major}.{minor}.{patch + 1}'
+    if part == 'major':
+        new = f'{major + 1}.0.0'
+    elif part == 'minor':
+        new = f'{major}.{minor + 1}.0'
+    else:
+        new = f'{major}.{minor}.{patch + 1}'
     set_prop('mod_version', new)
     return new
 
@@ -132,7 +137,7 @@ def main():
     args = sys.argv[1:]
     if args == ['version']:
         print(version())
-    elif len(args) == 2 and args[0] == 'bump' and args[1] in ('minor', 'patch'):
+    elif len(args) == 2 and args[0] == 'bump' and args[1] in ('major', 'minor', 'patch'):
         print(bump(args[1]))
     elif args[:1] == ['notes'] and len(args) <= 2:
         sys.stdout.write(notes(args[1] if len(args) == 2 else version()))

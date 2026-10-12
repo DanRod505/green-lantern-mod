@@ -320,10 +320,10 @@ def insert_before_marker(path, line, import_line):
 def add_to_registry(hero):
     path = os.path.join(JAVA, 'hero/HeroRegistry.java')
     text = open(path, encoding='utf-8').read()
-    m = re.search(r'(List\.of\(\n(?:\s+\w+\.INSTANCE,\n)*\s+\w+\.INSTANCE)\);', text)
+    m = re.search(r'(List\.of\(\n(?:\s+\w+\.INSTANCE,\n)*(\s+)\w+\.INSTANCE)\)\)?;', text)
     if not m:
         fail('could not find the hero list in HeroRegistry.java')
-    text = text[:m.end(1)] + f',\n            {hero["cls"]}Hero.INSTANCE' + text[m.end(1):]
+    text = text[:m.end(1)] + f',{m.group(2)}{hero["cls"]}Hero.INSTANCE' + text[m.end(1):]
     with open(path, 'w', encoding='utf-8', newline='\n') as f:
         f.write(add_import(text, f'import com.danrod505.greenlantern.{hero["pkg"]}.{hero["cls"]}Hero;'))
     written.append('src/main/java/com/danrod505/greenlantern/hero/HeroRegistry.java (+1 line)')

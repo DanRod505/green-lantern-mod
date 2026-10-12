@@ -1,0 +1,102 @@
+{
+  "_comentario": "Personagem de teste dos gametests e dos prints da Fundação: não vai no .jar do mod.",
+  "id": "prototipo_alado",
+  "nome": "Protótipo Alado",
+  "classe": "mistico",
+  "nivel": 3,
+  "esqueleto": "alado",
+  "transformacao": "padrao",
+  "trilha": "padrao",
+  "habilidades": [
+    {
+      "id": "teste_golpe",
+      "nome": "Golpe de Teste",
+      "classe": "golpe",
+      "tipo": "principal",
+      "preset": "golpe_forte",
+      "uso_no_mundo": "quebrar_bloco",
+      "numeros": {
+        "dano": 6,
+        "custo": 10,
+        "recarga": 1
+      }
+    },
+    {
+      "id": "teste_disparo",
+      "nome": "Disparo de Teste",
+      "classe": "disparo",
+      "tipo": "principal",
+      "preset": "projetil",
+      "uso_no_mundo": "acender",
+      "numeros": {
+        "dano": 5,
+        "custo": 15,
+        "recarga": 2,
+        "alcance": 24
+      }
+    },
+    {
+      "id": "teste_explosao",
+      "nome": "Explosão de Teste",
+      "classe": "explosao",
+      "tipo": "principal",
+      "preset": "onda_de_choque",
+      "uso_no_mundo": "limpar_area",
+      "numeros": {
+        "dano": 8,
+        "custo": 30,
+        "recarga": 6,
+        "raio": 4
+      }
+    },
+    {
+      "id": "teste_movimento",
+      "nome": "Salto de Teste",
+      "classe": "movimento",
+      "tipo": "secundaria",
+      "preset": "salto",
+      "uso_no_mundo": "subir",
+      "numeros": {
+        "custo": 10,
+        "recarga": 3
+      }
+    },
+    {
+      "id": "teste_defesa",
+      "nome": "Escudo de Teste",
+      "classe": "defesa",
+      "tipo": "secundaria",
+      "preset": "escudo",
+      "uso_no_mundo": "abrigo",
+      "numeros": {
+        "custo": 20,
+        "recarga": 8,
+        "duracao": 5
+      }
+    },
+    {
+      "id": "teste_suprema",
+      "nome": "Suprema de Teste",
+      "classe": "suprema",
+      "tipo": "suprema",
+      "preset": "suprema_onda",
+      "uso_no_mundo": "grande_obra",
+      "numeros": {
+        "dano": 20,
+        "recarga": 60,
+        "raio": 8
+      }
+    }
+  ],
+  "skins": [
+    {
+      "id": "prototipo_alado",
+      "nome": "Traje de teste"
+    }
+  ],
+  "cores": {
+    "principal": "#D8D8E8",
+    "secundaria": "#3C6EB4",
+    "brilho": "#FFF4A0"
+  }
+}

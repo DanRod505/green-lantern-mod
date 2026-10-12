@@ -2,6 +2,9 @@ package com.danrod505.greenlantern.client;
 
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.SidedHooks;
+import com.danrod505.greenlantern.client.engine.SkinGlowLayer;
+import com.danrod505.greenlantern.client.engine.SkinRenderHandler;
+import com.danrod505.greenlantern.client.engine.WingsLayer;
 import com.danrod505.greenlantern.client.flight.FlightAudio;
 import com.danrod505.greenlantern.client.flight.FlightCamera;
 import com.danrod505.greenlantern.client.flight.FlightController;
@@ -67,6 +70,7 @@ public final class ClientSetup {
         ComputeFovModifierEvent.BUS.addListener(FlightCamera::onFov);
         ViewportEvent.ComputeCameraAngles.BUS.addListener(FlightCamera::onAngles);
         FlightRenderHandler.register();
+        SkinRenderHandler.register();
         InputEvent.MouseScrollingEvent.BUS.addListener(ClientEvents::onMouseScroll);
         for (HeroClient hero : heroes()) hero.registerEvents();
         ViewportEvent.ComputeCameraAngles.BUS.addListener(CameraShake::onCameraAngles);
@@ -91,6 +95,9 @@ public final class ClientSetup {
         event.register(KeyBindings.TOGGLE_UNIFORM);
         event.register(KeyBindings.CONSTRUCT_WHEEL);
         event.register(KeyBindings.HERO_POWER);
+        event.register(KeyBindings.SUPREME);
+        event.register(KeyBindings.SKIN);
+        for (var key : KeyBindings.ABILITIES) event.register(key);
     }
 
     private static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
@@ -131,6 +138,8 @@ public final class ClientSetup {
         for (PlayerModelType type : event.getModelTypes()) {
             AvatarRenderer<AbstractClientPlayer> renderer = event.getPlayerRenderer(type);
             if (renderer != null) {
+                renderer.addLayer(new SkinGlowLayer(renderer));
+                renderer.addLayer(new WingsLayer(renderer));
                 for (HeroClient hero : heroes()) hero.addPlayerLayers(renderer, event);
             }
         }
