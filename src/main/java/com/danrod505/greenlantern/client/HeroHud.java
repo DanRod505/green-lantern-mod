@@ -1,5 +1,7 @@
 package com.danrod505.greenlantern.client;
 
+import com.danrod505.greenlantern.client.engine.AbilityRow;
+import com.danrod505.greenlantern.engine.AbilityHero;
 import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.HeroPower;
 import com.danrod505.greenlantern.hero.HeroPowers;
@@ -26,7 +28,8 @@ import net.minecraft.world.item.ItemStack;
  * @param barFull  colour (RGB) of the bar's end
  * @param border   colour (ARGB) of the frame and of the selected power
  * @param text     colour (ARGB) of the numbers and the power line
- * @param active   which powers are running right now (lit with a line under the icon), or null
+ * @param active   which powers are running right now (lit with a line under the icon), or null; for a
+ *                 hero in the new model of abilities it is asked about the powers of before by id
  */
 public record HeroHud(HeroDefinition hero, int barEmpty, int barFull, int border, int text, BiPredicate<Player, HeroPower> active) {
     /** Where the HUD of {@code hero} starts: below every HUD of an earlier hero that is showing. */
@@ -55,7 +58,13 @@ public record HeroHud(HeroDefinition hero, int barEmpty, int barFull, int border
 
         int x = 8;
         int y = top(player, hero);
-        graphics.blit(RenderPipelines.GUI_TEXTURED, wheel.icons(), x, y - 2, count * 16, 0, 16, 16, wheel.iconsWidth(), WheelStyle.ICONS_HEIGHT);
+        AbilityHero abilities = hero instanceof AbilityHero a && a.ownWheel() != null ? a : null;
+        if (abilities != null) {
+            WheelStyle own = abilities.ownWheel();
+            graphics.blit(RenderPipelines.GUI_TEXTURED, own.icons(), x, y - 2, own.iconsWidth() - 16, 0, 16, 16, own.iconsWidth(), WheelStyle.ICONS_HEIGHT);
+        } else {
+            graphics.blit(RenderPipelines.GUI_TEXTURED, wheel.icons(), x, y - 2, count * 16, 0, 16, 16, wheel.iconsWidth(), WheelStyle.ICONS_HEIGHT);
+        }
         int barX = x + 19;
         int barY = y + 2;
         int barW = 100;
@@ -74,8 +83,15 @@ public record HeroHud(HeroDefinition hero, int barEmpty, int barFull, int border
         graphics.fill(barX, barY, barX + fill, barY + 1, 0x90FFFFFF);
         graphics.drawString(mc.font, energy.stored() + " / " + energy.capacity(), barX + barW + 4, barY, low ? 0xFFFF5555 : text, true);
 
-        int selected = powers.selectedIndex(item);
         int iconsY = y + 15;
+        if (abilities != null) {
+            // The new model of abilities (stage 3): the row of abilities with the function that goes off.
+            AbilityRow.render(graphics, abilities, item, player, x + 19, iconsY, border, text,
+                    active == null ? null : (p, power) -> active.test(p, new Running(power)));
+            suitHint(graphics, mc, suited, x + 19, iconsY + 32);
+            return;
+        }
+        int selected = powers.selectedIndex(item);
         for (int i = 0; i < count; i++) {
             HeroPower power = powers.power(i);
             int ix = x + 19 + i * 20;
@@ -88,9 +104,26 @@ public record HeroHud(HeroDefinition hero, int barEmpty, int barFull, int border
         }
         graphics.drawString(mc.font, Component.translatable("hud.greenlantern.power_key", powers.power(selected).displayName(),
                 KeyBindings.HERO_POWER.getTranslatedKeyMessage()), x + 19, iconsY + 21, text, true);
+        suitHint(graphics, mc, suited, x + 19, iconsY + 32);
+    }
+
+    private void suitHint(GuiGraphics graphics, Minecraft mc, boolean suited, int x, int y) {
         if (!suited) {
             graphics.drawString(mc.font, Component.translatable("hud.greenlantern." + hero.id() + "_suit_hint", KeyBindings.TOGGLE_UNIFORM.getTranslatedKeyMessage()),
-                    x + 19, iconsY + 32, 0xFFA0A0A0, true);
+                    x, y, 0xFFA0A0A0, true);
+        }
+    }
+
+    /** A power of before by its id, for the {@code active} test of a hero in the new model. */
+    private record Running(String id) implements HeroPower {
+        @Override
+        public int ordinal() {
+            return 0;
+        }
+
+        @Override
+        public int cost() {
+            return 0;
         }
     }
 }

@@ -1,5 +1,5 @@
 {
-  "_comentario": "Um dos 9 heróis que já existiam: os poderes e a energia continuam no código dele. O traje, os bônus e a ordem da roda vêm daqui, com os mesmos números de antes.",
+  "_comentario": "Um dos 9 heróis que já existiam, no modelo novo de habilidades (etapa 3, lote 1): as habilidades do catálogo com as funções por contexto e a suprema por último na roda. Uma função com o preset poder_de_hoje usa um poder de antes (ajuste \"poder\"), com a energia e a recarga de sempre. O item, a energia, o traje e o voo continuam no código dele.",
   "id": "flash",
   "nome": "Flash",
   "classe": "velocista",
@@ -44,15 +44,174 @@
   },
   "habilidades": [
     {
-      "id": "tornado"
+      "id": "flash_socos",
+      "nome": "Rajada de Socos",
+      "classe": "golpe",
+      "preset": "sequencia",
+      "numeros": {
+        "dano": 12,
+        "custo": 6,
+        "recarga": 3,
+        "alcance": 4
+      },
+      "ajustes": {
+        "golpes": 5,
+        "intervalo": 0.15
+      },
+      "funcoes": [
+        {
+          "preset": "minerar_area",
+          "ajustes": {
+            "tamanho": 3,
+            "profundidade": 3
+          },
+          "quando": {
+            "mira": "pedra"
+          }
+        }
+      ]
     },
     {
-      "id": "phase"
+      "id": "flash_vibrar",
+      "nome": "Vibrar",
+      "classe": "evasao",
+      "preset": "poder_de_hoje",
+      "numeros": {
+        "custo": 4,
+        "recarga": 5,
+        "alcance": 8,
+        "duracao": 0.5
+      },
+      "ajustes": {
+        "poder": "phase",
+        "icone": "fantasma"
+      },
+      "funcoes": [
+        {
+          "preset": "atravessar",
+          "ajustes": {
+            "visual": "vibrar"
+          },
+          "quando": {
+            "mira": "bloco"
+          }
+        }
+      ]
     },
     {
-      "id": "lightning"
+      "id": "flash_tornado",
+      "nome": "Tornado de Braços",
+      "classe": "controle",
+      "preset": "poder_de_hoje",
+      "numeros": {
+        "dano": 2.5,
+        "custo": 8,
+        "recarga": 12,
+        "alcance": 24,
+        "duracao": 4
+      },
+      "ajustes": {
+        "poder": "tornado",
+        "icone": "espiral"
+      },
+      "funcoes": [
+        {
+          "preset": "ima_de_itens",
+          "quando": {
+            "aperto": "segurar"
+          }
+        }
+      ]
+    },
+    {
+      "id": "flash_forca",
+      "nome": "Força de Aceleração",
+      "classe": "fortalecimento",
+      "preset": "cura",
+      "numeros": {
+        "custo": 15,
+        "recarga": 40,
+        "duracao": 15
+      },
+      "ajustes": {
+        "quanto": 6
+      },
+      "funcoes": [
+        {
+          "preset": "plantar_e_colher",
+          "quando": {
+            "aperto": "segurar"
+          }
+        }
+      ]
+    },
+    {
+      "id": "flash_mapa",
+      "nome": "Mapa Relâmpago",
+      "classe": "mobilidade",
+      "preset": "teleporte",
+      "numeros": {
+        "custo": 5,
+        "recarga": 4,
+        "alcance": 24
+      },
+      "ajustes": {
+        "visual": "energia"
+      },
+      "funcoes": [
+        {
+          "preset": "rastro",
+          "ajustes": {
+            "alvo": "casa"
+          },
+          "quando": {
+            "aperto": "segurar"
+          }
+        }
+      ]
+    },
+    {
+      "id": "flash_corrida",
+      "nome": "Corrida no Tempo",
+      "classe": "natureza",
+      "suprema": true,
+      "preset": "poder_de_hoje",
+      "numeros": {
+        "custo": 40,
+        "recarga": 90,
+        "raio": 9,
+        "duracao": 60
+      },
+      "ajustes": {
+        "poder": "lightning",
+        "icone": "raio"
+      },
+      "funcoes": [
+        {
+          "preset": "clima",
+          "ajustes": {
+            "tipo": "dia"
+          },
+          "quando": {
+            "aperto": "segurar"
+          }
+        }
+      ]
     }
   ],
+  "passivas": [
+    {
+      "tipo": "supervelocidade",
+      "ajustes": {
+        "do_heroi": true
+      }
+    }
+  ],
+  "cores": {
+    "principal": "#C8301A",
+    "secundaria": "#FFD24A",
+    "brilho": "#FFF0B0"
+  },
   "skins": [
     {
       "id": "flash",

@@ -100,7 +100,7 @@ public final class AquamanTests {
         ServerPlayer player = player(helper, 7.5, 1, 2.5, 0, 0);
         ItemStack emblem = giveEmblem(player, 1000);
         AquamanHero.INSTANCE.summonSuit(player);
-        AquaPower.POWERS.select(emblem, AquaPower.TRIDENT);
+        choose(player, AquamanHero.INSTANCE, AquaPower.TRIDENT);
         Zombie zombie = dummy(helper, 7.5, 1, 7.5);
         float health = zombie.getHealth();
         use(player);
@@ -130,7 +130,7 @@ public final class AquamanTests {
         ServerPlayer player = player(helper, 7.5, 2, 3.5, 0, 0);
         ItemStack emblem = giveEmblem(player, 1000);
         AquamanHero.INSTANCE.summonSuit(player);
-        AquaPower.POWERS.select(emblem, AquaPower.SHARK);
+        choose(player, AquamanHero.INSTANCE, AquaPower.SHARK);
         helper.startSequence()
                 .thenExecuteFor(3, player::doTick) // notice the water
                 .thenExecute(() -> {
@@ -216,7 +216,7 @@ public final class AquamanTests {
         ServerPlayer player = player(helper, 7.5, 2, 7.5, 0, 0);
         ItemStack emblem = giveEmblem(player, 1000);
         AquamanHero.INSTANCE.summonSuit(player);
-        AquaPower.POWERS.select(emblem, AquaPower.KRAKEN);
+        choose(player, AquamanHero.INSTANCE, AquaPower.KRAKEN);
         helper.startSequence()
                 .thenExecuteFor(3, player::doTick) // notice the water
                 .thenExecute(() -> {
@@ -301,7 +301,7 @@ public final class AquamanTests {
                 .thenExecuteFor(KrakenEntity.DEATH_TICKS + 5, player::doTick)
                 .thenExecute(() -> {
                     helper.assertTrue(kraken.isRemoved(), "the dead Kraken is gone after its death throes");
-                    AquaPower.POWERS.select(emblem, AquaPower.KRAKEN);
+                    choose(player, AquamanHero.INSTANCE, AquaPower.KRAKEN);
                     helper.assertFalse(AquamanServer.usePower(player, emblem, AquaPower.KRAKEN), "it cannot be called while recovering");
                     KrakenEntity.clearRecovery(player);
                     remove(player);
@@ -314,7 +314,7 @@ public final class AquamanTests {
         ServerPlayer player = player(helper, 7.5, 2, 3.5, 0, 0);
         ItemStack emblem = giveEmblem(player, 1000);
         AquamanHero.INSTANCE.summonSuit(player);
-        AquaPower.POWERS.select(emblem, AquaPower.SEA_CALL);
+        choose(player, AquamanHero.INSTANCE, AquaPower.SEA_CALL);
         helper.spawn(EntityType.COD, new Vec3(5.5, 3, 4.5));
         helper.spawn(EntityType.SQUID, new Vec3(9.5, 3, 4.5));
         Zombie zombie = dummy(helper, 7.5, 2, 9.5);

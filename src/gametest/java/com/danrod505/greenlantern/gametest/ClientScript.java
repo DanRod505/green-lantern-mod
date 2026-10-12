@@ -84,12 +84,34 @@ public final class ClientScript {
         mc().options.setCameraType(type);
     }
 
+    /** The construct {@link #use} makes once suited (the constructs are functions of the Lantern's abilities now). */
+    private static volatile String construct;
+
     public static void select(Construct construct) {
+        ClientScript.construct = construct.id().getPath();
         server(sp -> ConstructRegistry.select(sp.getMainHandItem(), construct));
     }
 
+    /** Selects on the wheel of a hero of before the ability whose tap runs its power {@code power}. */
+    public static void selectAbility(com.danrod505.greenlantern.engine.AbilityHero hero, net.minecraft.world.item.ItemStack item, String power) {
+        int index = hero.abilityOf(power);
+        if (index >= 0) hero.powers().set().select(item, hero.powers().set().byIndex(index));
+    }
+
+    /** The id of the ability selected on the wheel of a hero of before. */
+    public static String selectedAbility(com.danrod505.greenlantern.engine.AbilityHero hero, net.minecraft.world.item.ItemStack item) {
+        return hero.powers().power(hero.powers().selectedIndex(item)).id();
+    }
+
     public static void use() {
-        server(sp -> sp.getMainHandItem().getItem().use(sp.level(), sp, InteractionHand.MAIN_HAND));
+        server(sp -> {
+            String chosen = construct;
+            if (chosen != null && com.danrod505.greenlantern.ring.LanternHero.INSTANCE.isSuited(sp)) {
+                com.danrod505.greenlantern.ring.LanternHero.INSTANCE.ownPowers().use(sp, sp.getMainHandItem(), chosen);
+            } else {
+                sp.getMainHandItem().getItem().use(sp.level(), sp, InteractionHand.MAIN_HAND);
+            }
+        });
     }
 
     public static void step(int delay, Runnable action) {

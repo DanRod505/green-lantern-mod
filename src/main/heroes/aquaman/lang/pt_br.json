@@ -144,5 +144,19 @@
   "subtitles.greenlantern.atlantean_dolphin_ambient": "Golfinho atlante assobia",
   "subtitles.greenlantern.atlantean_dolphin_hurt": "Golfinho atlante se machuca",
   "subtitles.greenlantern.atlantean_dolphin_leap": "Golfinho atlante salta",
-  "subtitles.greenlantern.atlantean_mount_saddle": "Montaria atlante aceita o cavaleiro"
+  "subtitles.greenlantern.atlantean_mount_saddle": "Montaria atlante aceita o cavaleiro",
+  "power.greenlantern.aquaman_tridente": "Tridente",
+  "power.greenlantern.aquaman_tridente.desc": "O tridente de Atlântida na mão: arma pesada que pode ser arremessada e volta. Mirando a água: pesca peixes e tesouros.",
+  "power.greenlantern.aquaman_pele": "Pele Atlante",
+  "power.greenlantern.aquaman_pele.desc": "A pele atlante aguenta a pressão do fundo do mar: muito menos dano por alguns segundos.",
+  "power.greenlantern.aquaman_chamado": "Chamado do Mar",
+  "power.greenlantern.aquaman_chamado.desc": "Toque: as criaturas do mar por perto seguem e defendem você. Segurar: um tubarão-branco atende para montar.",
+  "power.greenlantern.aquaman_furia": "Fúria do Oceano",
+  "power.greenlantern.aquaman_furia.desc": "Toque: a fúria do oceano aumenta o dano que você dá (e o que recebe). Segurar: as plantações em volta crescem.",
+  "power.greenlantern.aquaman_corrente": "Corrente Marinha",
+  "power.greenlantern.aquaman_corrente.desc": "Uma corrente leva você longe e rápido pela água.",
+  "power.greenlantern.aquaman_tesouros": "Tesouros do Mar",
+  "power.greenlantern.aquaman_tesouros.desc": "Mostra os baús e tesouros por perto através das paredes.",
+  "power.greenlantern.aquaman_kraken": "Kraken",
+  "power.greenlantern.aquaman_kraken.desc": "Suprema. Toque: um Kraken de 15 blocos sobe do fundo e leva você na cabeça. Segurar: abre o caminho para Atlântida."
 }

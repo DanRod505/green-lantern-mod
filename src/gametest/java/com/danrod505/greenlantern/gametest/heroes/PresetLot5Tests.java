@@ -166,6 +166,8 @@ public final class PresetLot5Tests {
     public static void wheelIcons(GameTestHelper helper) {
         List<String> presets = new ArrayList<>(Presets.fightIds());
         presets.addAll(PresetLot4Tests.BATCH_4);
+        // A power of before takes the shape its ability picks with icone, or its class's.
+        presets.remove(com.danrod505.greenlantern.engine.OwnPowers.PRESET);
         for (String preset : presets) {
             String shape = AbilityIcons.presetShape(preset);
             helper.assertTrue(shape != null && AbilityIcons.hasShape(shape), "preset " + preset + " has an icon");

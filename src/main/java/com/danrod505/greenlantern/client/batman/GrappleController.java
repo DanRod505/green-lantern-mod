@@ -73,12 +73,12 @@ public final class GrappleController {
         lastTo = to;
         if (dist < GrappleHookEntity.ARRIVED) {
             hop(player, to);
-            ModNetwork.sendToServer(new UsePowerPacket(BatPower.GRAPPLE.ordinal()));
+            ModNetwork.sendToServer(new UsePowerPacket(com.danrod505.greenlantern.batman.BatmanHero.INSTANCE.abilityOf(BatPower.GRAPPLE.id())));
             letGo();
             return;
         }
         if (jumpPressed && pullTicks > 5) {
-            ModNetwork.sendToServer(new UsePowerPacket(BatPower.GRAPPLE.ordinal()));
+            ModNetwork.sendToServer(new UsePowerPacket(com.danrod505.greenlantern.batman.BatmanHero.INSTANCE.abilityOf(BatPower.GRAPPLE.id())));
             letGo();
             return;
         }

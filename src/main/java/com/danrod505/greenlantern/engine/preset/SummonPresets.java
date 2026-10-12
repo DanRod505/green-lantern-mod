@@ -389,8 +389,10 @@ public final class SummonPresets {
 
     /** The look of a copy: the character's skin (the one chosen now) on the player's model. */
     static ResolvableProfile look(PresetContext c) {
+        // The heroes of before still draw their suit over the player's own skin.
+        if (!(c.hero() instanceof com.danrod505.greenlantern.engine.EngineHero hero)) return ResolvableProfile.createResolved(c.player().getGameProfile());
         JsonObject json = new JsonObject();
-        String skin = EngineServer.skin(c.hero(), c.item()).selected();
+        String skin = EngineServer.skin(hero, c.item()).selected();
         json.addProperty("texture", "greenlantern:entity/skin/" + skin);
         json.addProperty("model", c.hero().data().skeleton().slim() ? "slim" : "wide");
         return ResolvableProfile.CODEC.parse(JsonOps.INSTANCE, json).result()

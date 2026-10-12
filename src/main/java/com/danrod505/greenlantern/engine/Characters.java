@@ -57,7 +57,7 @@ public final class Characters {
 
     /**
      * What is wrong with a character file (empty when it is right): the id must be the file name, and
-     * a character of the engine has 5 to 8 abilities, each with a class, at least 3 for fighting and
+     * a character (of the engine or one of the 9 heroes of before) has 5 to 8 abilities, each with a class, at least 3 for fighting and
      * 2 for the world (by main class) within its class's arsenal, the fighting ones first, then the
      * world ones, and exactly 1 supreme, the last; each ability has up to 2 more functions, each with
      * a condition the game knows; up to 4 known traits; at least one skin; a known transformation.
@@ -66,10 +66,8 @@ public final class Characters {
         List<String> problems = new ArrayList<>();
         if (!data.id().equals(fileName)) problems.add("id " + data.id() + " is not the file name " + fileName);
         if (!data.id().matches("[a-z0-9_]+")) problems.add("id must be lowercase letters, digits and _");
-        if (data.legacy()) {
-            if (data.suit().isEmpty()) problems.add("a legacy hero keeps its suit in the file (traje)");
-            return problems;
-        }
+        // The 9 heroes of before keep their suit in the file; since stage 3 their wheel follows the same rules.
+        if (data.legacy() && data.suit().isEmpty()) problems.add("a legacy hero keeps its suit in the file (traje)");
         List<CharacterData.Ability> abilities = data.abilities();
         ClassRules.Arsenal arsenal = data.classRule().arsenal();
         int fight = 0;

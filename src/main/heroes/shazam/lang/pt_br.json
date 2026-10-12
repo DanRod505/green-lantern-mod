@@ -50,5 +50,17 @@
   "message.greenlantern.shazam_solomon_on": "Sabedoria de Salomão: os inimigos aparecem",
   "message.greenlantern.shazam_solomon_off": "Sabedoria de Salomão desligada",
   "message.greenlantern.shazam_lightning": "O raio enche a Magia de Shazam!",
-  "hud.greenlantern.shazam_solomon_target": "%s: %s / %s ❤"
+  "hud.greenlantern.shazam_solomon_target": "%s: %s / %s ❤",
+  "power.greenlantern.shazam_hercules": "Força de Hércules",
+  "power.greenlantern.shazam_hercules.desc": "Soca o chão numa onda de choque que arremessa os inimigos. Mirando pedra: minera rápido em área.",
+  "power.greenlantern.shazam_zeus": "Raio de Zeus",
+  "power.greenlantern.shazam_zeus.desc": "Um raio dourado persegue o alvo e salta para mais dois. Mirando redstone: carrega como um raio de verdade.",
+  "power.greenlantern.shazam_atlas": "Vigor de Atlas",
+  "power.greenlantern.shazam_atlas.desc": "Toque: pesado como uma montanha, metade do dano e sem fome. Segurar: o grito da Coragem de Aquiles atordoa à frente.",
+  "power.greenlantern.shazam_salomao": "Sabedoria de Salomão",
+  "power.greenlantern.shazam_salomao.desc": "Ligada, as criaturas hostis brilham através das paredes. Mirando uma criatura: uma onda de impacto.",
+  "power.greenlantern.shazam_mercurio": "Velocidade de Mercúrio",
+  "power.greenlantern.shazam_mercurio.desc": "Toque: uma disparada de 14 blocos no chão ou no ar. Segurar: leva os amigos por perto junto.",
+  "power.greenlantern.shazam_shazam": "SHAZAM!",
+  "power.greenlantern.shazam_shazam.desc": "Suprema. Toque: o raio cai do céu onde mira e arremessa os inimigos. Segurar: chama uma tempestade."
 }

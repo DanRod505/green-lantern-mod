@@ -121,13 +121,18 @@ public final class Traits {
         GLIDING.remove(player.getUUID());
     }
 
-    /** Every tick with the suit on. */
-    static void tick(ServerPlayer player, EngineHero hero) {
+    /**
+     * Every tick with the suit on. A trait a hero of before already had in its own code (the flight,
+     * the Flash's running, Aquaman's swimming, Batman's cape) is marked {@code "do_heroi": true} and
+     * left to that code.
+     */
+    static void tick(ServerPlayer player, AbilityHero hero) {
         CharacterData data = hero.data();
         if (data.traits().isEmpty()) return;
         boolean second = player.tickCount % 20 == 0;
         for (CharacterData.Trait trait : data.traits()) {
             CharacterData.Settings s = trait.settings();
+            if (own(trait)) continue;
             switch (trait.type()) {
                 case "supervelocidade" -> superSpeed(player, hero, s);
                 case "planar" -> glide(player, s);
@@ -174,6 +179,11 @@ public final class Traits {
         }
     }
 
+    /** Whether the hero's own code does this trait (a hero of before), not the engine. */
+    public static boolean own(CharacterData.Trait trait) {
+        return trait.settings().flag("do_heroi", false);
+    }
+
     private static final List<Holder<MobEffect>> POISONS = List.of(MobEffects.POISON, MobEffects.HUNGER, MobEffects.NAUSEA);
 
     /** Whether an effect may not take the player (poison and the like, with imune_a_veneno). */
@@ -182,7 +192,7 @@ public final class Traits {
     }
 
     /** Running speeds up by itself while the player sprints. */
-    private static void superSpeed(ServerPlayer player, EngineHero hero, CharacterData.Settings s) {
+    private static void superSpeed(ServerPlayer player, AbilityHero hero, CharacterData.Settings s) {
         UUID uuid = player.getUUID();
         if (!player.isSprinting() || player.getAbilities().flying) {
             if (SPRINT.remove(uuid) != null) {

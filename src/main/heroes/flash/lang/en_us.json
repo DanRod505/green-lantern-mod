@@ -49,5 +49,17 @@
   "guide.greenlantern.recipe.flash_ring": "Redstone in the corners, gold ingots on the sides and a lightning rod in the center. The ring starts without Speed Force: put on the suit and run to charge it.",
   "guide.greenlantern.controls_flash": "§eSprint§r (suit on): start running.\n§eR§r (hold / tap): power wheel / next power.\n§eV§r: use the selected power.\n§eShift + mouse wheel§r (Flash ring in hand): switch power.",
   "guide.greenlantern.section.flash": "The Flash",
-  "guide.greenlantern.controls_flash.title": "Controls"
+  "guide.greenlantern.controls_flash.title": "Controls",
+  "power.greenlantern.flash_socos": "Punch Flurry",
+  "power.greenlantern.flash_socos.desc": "Dozens of punches in a second. Aiming at stone: mines a 3 by 3 by 3 block in an instant.",
+  "power.greenlantern.flash_vibrar": "Vibrate",
+  "power.greenlantern.flash_vibrar.desc": "Vibrates your molecules to become intangible. Aiming at a wall: passes through up to 3 blocks.",
+  "power.greenlantern.flash_tornado": "Arm Tornado",
+  "power.greenlantern.flash_tornado.desc": "Tap: a tornado lifts the enemies around. Hold: gathers the loose items around.",
+  "power.greenlantern.flash_forca": "Speed Force",
+  "power.greenlantern.flash_forca.desc": "Tap: the Speed Force heals you. Hold: the crops around grow faster.",
+  "power.greenlantern.flash_mapa": "Lightning Map",
+  "power.greenlantern.flash_mapa.desc": "Tap: runs in a flash to where you aim. Hold: a trail of lightning shows the way home.",
+  "power.greenlantern.flash_corrida": "Time Run",
+  "power.greenlantern.flash_corrida.desc": "Supreme. Tap: the Speed Force Lightning. Hold: runs so fast the night is skipped and the day dawns at once."
 }

@@ -1,5 +1,9 @@
 package com.danrod505.greenlantern.batman;
 
+import com.danrod505.greenlantern.engine.OwnPowers;
+import com.danrod505.greenlantern.engine.EngineAbility;
+import com.danrod505.greenlantern.engine.CharacterData;
+import com.danrod505.greenlantern.engine.AbilityHero;
 import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
@@ -29,7 +33,7 @@ import net.minecraft.world.item.CreativeModeTab;
  * Batman sees in the dark (the cowl's lenses), hits harder (years of training), takes knocks better
  * and glides with the cape.
  */
-public final class BatmanHero extends HeroDefinition {
+public final class BatmanHero extends AbilityHero {
     /**
      * Charge of the Utility Belt's power cells. It refills steadily while the batsuit is worn (faster
      * in the dark: the night belongs to Batman) and pays for the gadgets and the Batmobile's boost.
@@ -45,8 +49,11 @@ public final class BatmanHero extends HeroDefinition {
 
     public static final BatmanHero INSTANCE = new BatmanHero();
 
-    private final HeroPowers<BatPower> powers = new HeroPowers<>(BatPower.POWERS, BAT_CHARGE, ChatFormatting.YELLOW,
-            0.7F, 0.08F, BatmanServer::usePower, WHEEL);
+    private final CharacterData data = Characters.get("batman");
+    /** The powers of before, run by the functions of the abilities (see {@link OwnPowers}). */
+    private final OwnPowers own = OwnPowers.of(BatPower.values(), BatmanServer::usePower);
+    /** The wheel in the new model: the abilities of the catalog from the file. */
+    private final HeroPowers<EngineAbility> powers = wheel(data, own, BAT_CHARGE, ChatFormatting.YELLOW, 0.7F, 0.08F, WHEEL);
 
     private BatmanHero() {
         super("batman", BatmanHelper::isBelt, new SuitSet(ModItems.BATMAN_COWL, ModItems.BATMAN_SUIT, ModItems.BATMAN_LEGGINGS, ModItems.BATMAN_BOOTS,
@@ -86,7 +93,22 @@ public final class BatmanHero extends HeroDefinition {
     }
 
     @Override
-    public HeroPowers<BatPower> powers() {
+    public CharacterData data() {
+        return data;
+    }
+
+    @Override
+    public HeroEnergy energy() {
+        return BAT_CHARGE;
+    }
+
+    @Override
+    public OwnPowers ownPowers() {
+        return own;
+    }
+
+    @Override
+    public HeroPowers<EngineAbility> powers() {
         return powers;
     }
 

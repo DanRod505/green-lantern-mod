@@ -91,7 +91,7 @@ public final class FlashTests {
         ServerPlayer player = player(helper, 7.5, 1, 2.5, 0, 0);
         ItemStack ring = giveFlashRing(player, 1000);
         FlashHero.INSTANCE.summonSuit(player);
-        SpeedsterPower.POWERS.select(ring, SpeedsterPower.LIGHTNING);
+        choose(player, FlashHero.INSTANCE, SpeedsterPower.LIGHTNING);
         Zombie zombie = dummy(helper, 7.5, 1, 9.5);
         float health = zombie.getHealth();
         use(player);
@@ -107,7 +107,7 @@ public final class FlashTests {
         ServerPlayer player = player(helper, 7.5, 1, 4.5, 0, 0);
         ItemStack ring = giveFlashRing(player, 1000);
         FlashHero.INSTANCE.summonSuit(player);
-        SpeedsterPower.POWERS.select(ring, SpeedsterPower.TORNADO);
+        choose(player, FlashHero.INSTANCE, SpeedsterPower.TORNADO);
         Zombie zombie = dummy(helper, 8.5, 1, 7.5);
         float health = zombie.getHealth();
         use(player);
@@ -131,7 +131,7 @@ public final class FlashTests {
         ServerPlayer player = player(helper, 7.5, 1, 7.5, 0, 0);
         ItemStack ring = giveFlashRing(player, 1000);
         FlashHero.INSTANCE.summonSuit(player);
-        SpeedsterPower.POWERS.select(ring, SpeedsterPower.PHASE);
+        choose(player, FlashHero.INSTANCE, SpeedsterPower.PHASE);
         use(player);
         helper.assertTrue(SpeedsterServer.isPhasing(player), "should be phasing");
         // Sink into the stone floor, like phasing through the ground.

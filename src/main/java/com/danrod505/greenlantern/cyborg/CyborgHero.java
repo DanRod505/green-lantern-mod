@@ -1,5 +1,9 @@
 package com.danrod505.greenlantern.cyborg;
 
+import com.danrod505.greenlantern.engine.OwnPowers;
+import com.danrod505.greenlantern.engine.EngineAbility;
+import com.danrod505.greenlantern.engine.CharacterData;
+import com.danrod505.greenlantern.engine.AbilityHero;
 import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
@@ -34,7 +38,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
  * eye and core, thrusters in the back and feet, the sonic cannon in the arm and a missile pod on the
  * shoulder. Made with the hero kit from {@code docs/heroes/cyborg.md}.
  */
-public final class CyborgHero extends HeroDefinition {
+public final class CyborgHero extends AbilityHero {
     /** The Cyborg Battery, kept in the Mother Box: it pays for the powers and comes back on its own. */
     public static final HeroEnergy ENERGY = new HeroEnergy(CyborgContent.ENERGY, () -> CyborgConfig.CAPACITY.get());
 
@@ -53,8 +57,11 @@ public final class CyborgHero extends HeroDefinition {
 
     public static final CyborgHero INSTANCE = new CyborgHero();
 
-    private final HeroPowers<CyborgPower> powers = new HeroPowers<>(CyborgPower.POWERS, ENERGY, ChatFormatting.GOLD,
-            0.85F, 0.06F, CyborgServer::usePower, WHEEL);
+    private final CharacterData data = Characters.get("cyborg");
+    /** The powers of before, run by the functions of the abilities (see {@link OwnPowers}). */
+    private final OwnPowers own = OwnPowers.of(CyborgPower.values(), CyborgServer::usePower);
+    /** The wheel in the new model: the abilities of the catalog from the file. */
+    private final HeroPowers<EngineAbility> powers = wheel(data, own, ENERGY, ChatFormatting.GOLD, 0.85F, 0.06F, WHEEL);
 
     private CyborgHero() {
         super("cyborg", stack -> stack.is(CyborgContent.ITEM.get()), new SuitSet(CyborgContent.MASK, CyborgContent.SUIT, CyborgContent.LEGGINGS,
@@ -99,7 +106,27 @@ public final class CyborgHero extends HeroDefinition {
     }
 
     @Override
-    public HeroPowers<CyborgPower> powers() {
+    public CharacterData data() {
+        return data;
+    }
+
+    @Override
+    public HeroEnergy energy() {
+        return ENERGY;
+    }
+
+    @Override
+    public WheelStyle ownWheel() {
+        return WHEEL;
+    }
+
+    @Override
+    public OwnPowers ownPowers() {
+        return own;
+    }
+
+    @Override
+    public HeroPowers<EngineAbility> powers() {
         return powers;
     }
 

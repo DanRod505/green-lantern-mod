@@ -481,7 +481,7 @@ public final class SpeedController {
     private static void orbit(LocalPlayer player, SpeedTornadoEntity tornado, boolean shiftEdge) {
         if (shiftEdge) {
             // Sneak stops the tornado.
-            ModNetwork.sendToServer(new UsePowerPacket(SpeedsterPower.TORNADO.ordinal()));
+            ModNetwork.sendToServer(new UsePowerPacket(com.danrod505.greenlantern.flash.FlashHero.INSTANCE.abilityOf(SpeedsterPower.TORNADO.id())));
         }
         Vec3 c = tornado.position();
         if (Double.isNaN(orbitAngle)) orbitAngle = Math.atan2(player.getZ() - c.z, player.getX() - c.x);

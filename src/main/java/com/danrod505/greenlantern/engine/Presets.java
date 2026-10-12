@@ -79,6 +79,17 @@ public final class Presets {
         CraftPresets.register();
         NaturePresets.register();
         LogisticsPresets.register();
+        // A power of before of one of the first 9 heroes (see OwnPowers): its own energy and recharge.
+        registerFight(OwnPowers.PRESET, Presets::ownPower);
+    }
+
+    private static Outcome ownPower(PresetContext c) {
+        String power = OwnPowers.power(c.chosen().function(), c.ability().data());
+        if (power == null || !c.hero().ownPowers().has(power)) {
+            return Outcome.fail(Component.translatable("message.greenlantern.engine_not_built", c.ability().displayName()));
+        }
+        c.hero().ownPowers().use(c.player(), c.item(), power);
+        return Outcome.cooldown(1);
     }
 
     private Presets() {}
@@ -117,7 +128,7 @@ public final class Presets {
     }
 
     /** Runs the function {@code chosen} of the ability. */
-    static Outcome use(ServerPlayer player, EngineHero hero, ItemStack item, EngineAbility ability, AbilityFunctions.Chosen chosen) {
+    static Outcome use(ServerPlayer player, AbilityHero hero, ItemStack item, EngineAbility ability, AbilityFunctions.Chosen chosen) {
         String id = chosen.function().preset();
         Preset preset = FIGHT.containsKey(id) ? FIGHT.get(id) : WORLD.get(id);
         if (preset == null) return notBuilt(player, hero, ability, "message.greenlantern.engine_not_built");
@@ -128,7 +139,7 @@ public final class Presets {
      * Runs function {@code index} of the ability (0 is the default one) with nothing in the way: no
      * cooldown, energy or condition. For the automatic test of every character (lot 7).
      */
-    public static Outcome tryFunction(ServerPlayer player, EngineHero hero, ItemStack item, EngineAbility ability, int index) {
+    public static Outcome tryFunction(ServerPlayer player, AbilityHero hero, ItemStack item, EngineAbility ability, int index) {
         CharacterData.Ability data = ability.data();
         CharacterData.Function function = index == 0 ? data.defaultFunction() : data.functions().get(index - 1);
         return use(player, hero, item, ability, new AbilityFunctions.Chosen(index, function));
@@ -137,14 +148,14 @@ public final class Presets {
     /** Runs a preset; when it went off, the sound of its class (and of a supreme ability) and the camera of its settings follow. */
     private static Outcome afterUse(Preset preset, PresetContext context) {
         Outcome outcome = preset.use(context);
-        if (outcome.went()) {
+        if (outcome.went() && !OwnPowers.PRESET.equals(context.preset())) {
             PresetFx.classSound(context);
             PresetFx.camera(context);
         }
         return outcome;
     }
 
-    private static Outcome notBuilt(ServerPlayer player, EngineHero hero, EngineAbility ability, String key) {
+    private static Outcome notBuilt(ServerPlayer player, AbilityHero hero, EngineAbility ability, String key) {
         EngineServer.puff(player, hero);
         EngineServer.play(player, SoundEvents.AMETHYST_BLOCK_CHIME, 1.0F, 0.8F + 0.1F * ability.ordinal());
         player.displayClientMessage(Component.translatable(key, ability.displayName()), true);

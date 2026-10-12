@@ -4,7 +4,9 @@ import com.danrod505.greenlantern.aquaman.AquamanHero;
 import com.danrod505.greenlantern.batman.BatmanHero;
 import com.danrod505.greenlantern.construct.Construct;
 import com.danrod505.greenlantern.construct.ConstructRegistry;
+import com.danrod505.greenlantern.engine.AbilityHero;
 import com.danrod505.greenlantern.flash.FlashHero;
+import com.danrod505.greenlantern.hero.HeroPower;
 import com.danrod505.greenlantern.registry.ModItems;
 import com.danrod505.greenlantern.ring.RingEnergy;
 import com.danrod505.greenlantern.superman.SupermanHero;
@@ -12,7 +14,9 @@ import com.danrod505.greenlantern.wonderwoman.WonderWomanHero;
 import com.mojang.authlib.GameProfile;
 import io.netty.channel.embedded.EmbeddedChannel;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.PacketFlow;
@@ -61,11 +65,31 @@ public final class GameTestKit {
 
     public static void select(ServerPlayer player, Construct construct) {
         ConstructRegistry.select(player.getMainHandItem(), construct);
+        CHOSEN.put(player.getUUID(), new Chosen(com.danrod505.greenlantern.ring.LanternHero.INSTANCE, construct.id().getPath()));
     }
 
+    /**
+     * Picks a power of before for {@link #use}: these tests check the powers themselves, which since
+     * the new model of abilities (stage 3, lot 1) are functions of abilities that depend on the aim and
+     * the place. The wheel and right click are checked on their own in {@code AdaptationTests}.
+     */
+    public static void choose(ServerPlayer player, AbilityHero hero, HeroPower power) {
+        CHOSEN.put(player.getUUID(), new Chosen(hero, power.id()));
+    }
+
+    /** Right click with the hero item; once suited, the power picked with {@link #select} or {@link #choose}. */
     public static void use(ServerPlayer player) {
+        Chosen chosen = CHOSEN.get(player.getUUID());
+        if (chosen != null && chosen.hero().isSuited(player)) {
+            chosen.hero().ownPowers().use(player, player.getMainHandItem(), chosen.power());
+            return;
+        }
         player.getMainHandItem().getItem().use(player.level(), player, InteractionHand.MAIN_HAND);
     }
+
+    private record Chosen(AbilityHero hero, String power) {}
+
+    private static final Map<UUID, Chosen> CHOSEN = new ConcurrentHashMap<>();
 
     public static void remove(ServerPlayer player) {
         player.level().getServer().getPlayerList().remove(player);

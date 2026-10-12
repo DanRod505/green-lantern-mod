@@ -5,7 +5,6 @@ import com.danrod505.greenlantern.client.HeroClient;
 import com.danrod505.greenlantern.engine.preset.MovementPresets;
 import com.danrod505.greenlantern.engine.preset.Transformations;
 import com.danrod505.greenlantern.flight.FlightProfile;
-import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.HeroEnergy;
 import com.danrod505.greenlantern.hero.HeroPowers;
 import com.danrod505.greenlantern.hero.PowerSet;
@@ -36,7 +35,7 @@ import net.minecraftforge.registries.RegistryObject;
  * (stage 2); until a preset exists the ability spends its energy, starts its cooldown and says it is
  * not built yet.
  */
-public final class EngineHero extends HeroDefinition {
+public final class EngineHero extends AbilityHero {
 
     private final CharacterData data;
     private final RegistryObject<CharacterItem> item;
@@ -87,6 +86,7 @@ public final class EngineHero extends HeroDefinition {
                 0xFFE8E8E8, 0xFFB0B0B0, 0xFF000000 | light, 0xFFB0B0B0);
     }
 
+    @Override
     public CharacterData data() {
         return data;
     }
@@ -95,8 +95,23 @@ public final class EngineHero extends HeroDefinition {
         return item.get();
     }
 
+    @Override
     public HeroEnergy energy() {
         return energy;
+    }
+
+    /** The engine runs the traits, the suit coming off and the damage of a character itself (see {@link EngineServer}). */
+    @Override
+    public void engineTick(ServerPlayer player) {
+    }
+
+    @Override
+    public void engineSuitDown(ServerPlayer player) {
+    }
+
+    @Override
+    public float traitDamage(ServerPlayer player, DamageSource source) {
+        return 1.0F;
     }
 
     @Override

@@ -80,25 +80,15 @@ public final class BatHud {
         String text = charge.stored() + " / " + charge.capacity();
         graphics.drawString(mc.font, text, barX + 104, barY + 2, low ? 0xFFFF5555 : 0xFFF2D03A, true);
 
-        BatPower selected = BatPower.POWERS.selected(belt);
         int iconsY = y + 17;
-        for (int i = 0; i < BatPower.POWERS.count(); i++) {
-            BatPower power = BatPower.POWERS.byIndex(i);
-            int ix = x + 19 + i * 20;
-            boolean isSelected = power == selected;
-            if (isSelected) graphics.fill(ix - 1, iconsY - 1, ix + 17, iconsY + 17, 0xC0F2D03A);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, BatmanHero.WHEEL.icons(), ix, iconsY, power.iconIndex() * 16, 0, 16, 16,
-                    iconsW, WheelStyle.ICONS_HEIGHT, isSelected ? 0xFFFFFFFF : 0x90FFFFFF);
-        }
-        graphics.drawString(mc.font, Component.translatable("hud.greenlantern.power_key", selected.displayName(), KeyBindings.HERO_POWER.getTranslatedKeyMessage()),
-                x + 19, iconsY + 19, 0xFFE0E0E6, true);
+        com.danrod505.greenlantern.client.engine.AbilityRow.render(graphics, BatmanHero.INSTANCE, belt, player, x + 19, iconsY, 0xC0F2D03A, 0xFFE0E0E6, null);
         if (!suited) {
             graphics.drawString(mc.font, Component.translatable("hud.greenlantern.batman_suit_hint", KeyBindings.TOGGLE_UNIFORM.getTranslatedKeyMessage()),
-                    x + 19, iconsY + 30, 0xFFA0A0A0, true);
+                    x + 19, iconsY + 32, 0xFFA0A0A0, true);
         } else if (player.getVehicle() instanceof BatmobileEntity car) {
             Component boost = car.isBoosting() ? Component.translatable("hud.greenlantern.batmobile_boosting") : Component.translatable("hud.greenlantern.batmobile_controls",
                     mc.options.keySprint.getTranslatedKeyMessage(), mc.options.keyAttack.getTranslatedKeyMessage());
-            graphics.drawString(mc.font, boost, x + 19, iconsY + 30, car.isBoosting() ? 0xFFFFA040 : 0xFFC8C8D0, true);
+            graphics.drawString(mc.font, boost, x + 19, iconsY + 32, car.isBoosting() ? 0xFFFFA040 : 0xFFC8C8D0, true);
         }
     }
 }

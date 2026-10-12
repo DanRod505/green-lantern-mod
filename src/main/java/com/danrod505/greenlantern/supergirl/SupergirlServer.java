@@ -936,6 +936,18 @@ public final class SupergirlServer {
         return krypto;
     }
 
+    /**
+     * Krypto, Attack! (her supreme ability since the new model): she whistles, Krypto comes and the
+     * two of them attack together, ending in the Solar Flare.
+     */
+    public static boolean kryptoAttack(ServerPlayer player, ItemStack item) {
+        if (!SupergirlHero.INSTANCE.isSuited(player) || player.isSpectator()) return false;
+        State state = get(player);
+        whistle(player, item, state);
+        if (player.isShiftKeyDown()) return true;
+        return usePower(player, item, SupergirlPower.SOLAR_FLARE);
+    }
+
     /** Sneaking and using the pendant: she whistles and he comes, wherever he is. */
     private static void whistle(ServerPlayer player, ItemStack item, State state) {
         ServerLevel level = player.level();

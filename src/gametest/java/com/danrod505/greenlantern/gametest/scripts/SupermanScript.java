@@ -28,7 +28,7 @@ public final class SupermanScript {
     public static void supPower(com.danrod505.greenlantern.superman.SuperPower power) {
         server(sp -> {
             ItemStack crystal = com.danrod505.greenlantern.superman.SupermanHelper.findCrystal(sp);
-            com.danrod505.greenlantern.superman.SuperPower.POWERS.select(crystal, power);
+            ClientScript.selectAbility(com.danrod505.greenlantern.superman.SupermanHero.INSTANCE, crystal, power.id());
             sp.getCooldowns().removeCooldown(sp.getCooldowns().getCooldownGroup(crystal));
             com.danrod505.greenlantern.superman.SupermanServer.usePower(sp, crystal, power);
         });
@@ -265,7 +265,7 @@ public final class SupermanScript {
             if (mc().screen != null) mc().screen.keyReleased(new net.minecraft.client.input.KeyEvent(org.lwjgl.glfw.GLFW.GLFW_KEY_R, 0, 0));
         });
         step(10, () -> com.danrod505.greenlantern.GreenLantern.LOGGER.info("CLIENTSCRIPT power selected={}",
-                com.danrod505.greenlantern.superman.SuperPower.POWERS.selected(com.danrod505.greenlantern.superman.SupermanHelper.findCrystal(mc().player)).id()));
+                ClientScript.selectedAbility(com.danrod505.greenlantern.superman.SupermanHero.INSTANCE, com.danrod505.greenlantern.superman.SupermanHelper.findCrystal(mc().player))));
         // The guide.
         step(5, () -> mc().setScreen(com.danrod505.greenlantern.client.GuideScreen.atChapter("superman")));
         step(10, () -> shot("sup13_guide"));

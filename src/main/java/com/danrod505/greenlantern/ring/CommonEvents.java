@@ -62,6 +62,9 @@ public final class CommonEvents {
             Uniform.removeStrayPieces(player);
         }
         for (HeroDefinition hero : HeroRegistry.all()) hero.tick(player);
+        for (HeroDefinition hero : HeroRegistry.all()) {
+            if (hero instanceof com.danrod505.greenlantern.engine.AbilityHero abilities) abilities.engineTick(player);
+        }
         com.danrod505.greenlantern.aquaman.Respirator.tick(player);
         if (player.tickCount % 5 == 0) {
             chargeFromCentralBattery(player);
@@ -152,6 +155,8 @@ public final class CommonEvents {
         for (HeroDefinition hero : HeroRegistry.all()) {
             // Tough heroes (Superman, Wonder Woman) shrug off part of every blow.
             float multiplier = hero.damageTakenMultiplier(player, event.getSource());
+            // The traits of the new model (invulneravel) for the heroes of before.
+            if (hero instanceof com.danrod505.greenlantern.engine.AbilityHero abilities) multiplier *= abilities.traitDamage(player, event.getSource());
             if (multiplier != 1.0F) event.setAmount(event.getAmount() * multiplier);
         }
         BubbleConstructEntity bubble = BubbleConstructEntity.find(player);

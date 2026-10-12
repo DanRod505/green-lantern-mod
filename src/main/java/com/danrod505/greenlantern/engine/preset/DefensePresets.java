@@ -57,7 +57,7 @@ public final class DefensePresets {
      * Bolha: a shield all around that takes away {@code reducao} (0.6) of every hit while it lasts,
      * up to {@code duracao} seconds (20), paying {@code gasto_por_segundo} (2) of the class energy;
      * the key turns it off. {@code raio} is its size (1.6). Settings: {@code devolve} (it also sends
-     * projectiles back, false).
+     * projectiles back, false), {@code respirar} (a bubble of air: breathing under water, false).
      */
     static Outcome bubble(PresetContext c) {
         ServerPlayer player = c.player();
@@ -67,6 +67,7 @@ public final class DefensePresets {
         double radius = c.radius(1.6);
         int drain = (int) Math.ceil(Math.max(0.0, s.number("gasto_por_segundo", 2.0)));
         Guards.Guard guard = new Guards.Guard(reduction(c, 0.6), 180.0, s.flag("devolve", false), 1.0);
+        boolean air = s.flag("respirar", false);
         Guards.add(player, guard);
         ParticleOptions particle = PresetFx.particle(c.element(), c.lightColor());
         ParticleOptions edge = PresetFx.particle(c);
@@ -75,6 +76,7 @@ public final class DefensePresets {
         return PresetRuntime.lasting(c, PresetRuntime.Task.ending(age -> {
             if (drain > 0 && age % 20 == 0 && !player.isCreative() && !MovementPresets.pay(c, drain)) return false;
             Guards.deflect(player, guard, seen);
+            if (air) player.setAirSupply(player.getMaxAirSupply());
             if (age % 2 == 0) sphere(level, player.position().add(0, 0.9, 0), radius, age % 4 == 0 ? particle : edge, 24, age);
             if (age % 40 == 0) Fx.play(level, player, SoundEvents.BEACON_AMBIENT, 0.4F, 1.6F);
             return age < ticks;

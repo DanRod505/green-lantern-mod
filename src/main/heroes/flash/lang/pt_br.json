@@ -49,5 +49,17 @@
   "guide.greenlantern.recipe.flash_ring": "Redstone nos cantos, barras de ouro nos lados e um para-raios no centro. O anel vem sem Força de Aceleração: vista o traje e corra para carregá-lo.",
   "guide.greenlantern.controls_flash": "§eCorrer (sprint)§r com o traje: começa a supercorrida.\n§eR§r (segurar / tocar): menu de poderes / próximo poder.\n§eV§r: usa o poder escolhido.\n§eShift + rodinha§r (anel do Flash na mão): troca o poder.",
   "guide.greenlantern.section.flash": "Flash",
-  "guide.greenlantern.controls_flash.title": "Controles"
+  "guide.greenlantern.controls_flash.title": "Controles",
+  "power.greenlantern.flash_socos": "Rajada de Socos",
+  "power.greenlantern.flash_socos.desc": "Dezenas de socos em um segundo. Mirando pedra: minera um bloco de 3 por 3 por 3 num instante.",
+  "power.greenlantern.flash_vibrar": "Vibrar",
+  "power.greenlantern.flash_vibrar.desc": "Vibra as moléculas e fica intangível. Mirando uma parede: atravessa até 3 blocos.",
+  "power.greenlantern.flash_tornado": "Tornado de Braços",
+  "power.greenlantern.flash_tornado.desc": "Toque: um tornado levanta os inimigos em volta. Segurar: junta os itens soltos em volta.",
+  "power.greenlantern.flash_forca": "Força de Aceleração",
+  "power.greenlantern.flash_forca.desc": "Toque: a Força de Aceleração cura. Segurar: as plantações em volta crescem mais rápido.",
+  "power.greenlantern.flash_mapa": "Mapa Relâmpago",
+  "power.greenlantern.flash_mapa.desc": "Toque: corre num relâmpago até onde mira. Segurar: um rastro de raios mostra o caminho de casa.",
+  "power.greenlantern.flash_corrida": "Corrida no Tempo",
+  "power.greenlantern.flash_corrida.desc": "Suprema. Toque: o Raio da Força de Aceleração. Segurar: corre tão rápido que pula a noite e o dia amanhece na hora."
 }

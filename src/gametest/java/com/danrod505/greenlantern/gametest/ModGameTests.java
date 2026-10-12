@@ -11,6 +11,7 @@ import com.danrod505.greenlantern.gametest.heroes.PresetLot2Tests;
 import com.danrod505.greenlantern.gametest.heroes.PresetLot3Tests;
 import com.danrod505.greenlantern.gametest.heroes.PresetLot4Tests;
 import com.danrod505.greenlantern.gametest.heroes.PresetLot5Tests;
+import com.danrod505.greenlantern.gametest.heroes.AdaptationTests;
 import com.danrod505.greenlantern.gametest.heroes.PresetLot6Tests;
 import com.danrod505.greenlantern.gametest.heroes.PresetTests;
 import com.danrod505.greenlantern.gametest.heroes.SharedTests;
@@ -57,6 +58,7 @@ public final class ModGameTests {
         PresetLot4Tests.register(TESTS);
         PresetLot5Tests.register(TESTS);
         PresetLot6Tests.register(TESTS);
+        AdaptationTests.register(TESTS);
         // tools/new_hero.py adds new heroes above this line
     }
 

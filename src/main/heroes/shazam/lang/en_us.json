@@ -50,5 +50,17 @@
   "message.greenlantern.shazam_solomon_on": "Wisdom of Solomon: the enemies show",
   "message.greenlantern.shazam_solomon_off": "Wisdom of Solomon off",
   "message.greenlantern.shazam_lightning": "The lightning fills Shazam's Magic!",
-  "hud.greenlantern.shazam_solomon_target": "%s: %s / %s ❤"
+  "hud.greenlantern.shazam_solomon_target": "%s: %s / %s ❤",
+  "power.greenlantern.shazam_hercules": "Strength of Hercules",
+  "power.greenlantern.shazam_hercules.desc": "Punches the ground in a shockwave that throws the enemies away. Aiming at stone: mines fast in an area.",
+  "power.greenlantern.shazam_zeus": "Zeus's Lightning",
+  "power.greenlantern.shazam_zeus.desc": "A golden bolt chases the target and jumps to two more. Aiming at redstone: charges it like a real bolt.",
+  "power.greenlantern.shazam_atlas": "Stamina of Atlas",
+  "power.greenlantern.shazam_atlas.desc": "Tap: as heavy as a mountain, half damage and no hunger. Hold: the cry of the Courage of Achilles stuns those ahead.",
+  "power.greenlantern.shazam_salomao": "Wisdom of Solomon",
+  "power.greenlantern.shazam_salomao.desc": "While on, hostile creatures glow through walls. Aiming at a creature: an impact wave.",
+  "power.greenlantern.shazam_mercurio": "Speed of Mercury",
+  "power.greenlantern.shazam_mercurio.desc": "Tap: a 14 block dash on the ground or in the air. Hold: takes the friends nearby along.",
+  "power.greenlantern.shazam_shazam": "SHAZAM!",
+  "power.greenlantern.shazam_shazam.desc": "Supreme. Tap: lightning falls from the sky where you aim and throws the enemies away. Hold: calls a storm."
 }
