@@ -1,5 +1,12 @@
 package com.danrod505.greenlantern.gametest;
 
+import com.danrod505.greenlantern.hero.HeroRegistry;
+import com.danrod505.greenlantern.hero.HeroDefinition;
+import com.danrod505.greenlantern.engine.Presets;
+import com.danrod505.greenlantern.engine.EngineHero;
+import com.danrod505.greenlantern.engine.EngineAbility;
+import com.danrod505.greenlantern.engine.CharacterData;
+import com.danrod505.greenlantern.engine.AbilityHero;
 import com.danrod505.greenlantern.aquaman.AquamanHero;
 import com.danrod505.greenlantern.batman.BatmanHero;
 import com.danrod505.greenlantern.construct.Construct;
@@ -63,8 +70,41 @@ public final class GameTestKit {
         ConstructRegistry.select(player.getMainHandItem(), construct);
     }
 
+    /**
+     * A right click with the item in hand. For one of the 9 heroes with the suit on, the power of
+     * today chosen with {@code POWERS.select} (the construct chosen with {@link #select}, for the
+     * ring) goes off through the ability of the new wheel that holds it (stage 3, lot 1): the tests
+     * of the powers of today keep proving them, now inside the abilities of the catalog.
+     */
     public static void use(ServerPlayer player) {
-        player.getMainHandItem().getItem().use(player.level(), player, InteractionHand.MAIN_HAND);
+        ItemStack item = player.getMainHandItem();
+        for (HeroDefinition hero : HeroRegistry.all()) {
+            if (hero instanceof AbilityHero abilities && !(hero instanceof EngineHero) && hero.isActivator(item) && hero.isSuited(player) && !player.isShiftKeyDown()
+                    && usePowerOfToday(player, abilities, hero, item)) {
+                return;
+            }
+        }
+        item.getItem().use(player.level(), player, InteractionHand.MAIN_HAND);
+    }
+
+    /** Uses the power of today chosen on the item through the function of the new wheel that holds it; false when none does. */
+    public static boolean usePowerOfToday(ServerPlayer player, AbilityHero abilities, HeroDefinition hero, ItemStack item) {
+        boolean ring = hero == com.danrod505.greenlantern.ring.LanternHero.INSTANCE;
+        String preset = ring ? "construto_de_hoje" : "poder_de_hoje";
+        String setting = ring ? "construto" : "poder";
+        String id = ring ? ConstructRegistry.selected(item).id().getPath() : hero.legacyPowers().power(hero.legacyPowers().selectedIndex(item)).id();
+        for (int a = 0; a < abilities.powers().set().count(); a++) {
+            EngineAbility ability = abilities.powers().set().byIndex(a);
+            List<CharacterData.Function> all = ability.data().allFunctions();
+            for (int f = 0; f < all.size(); f++) {
+                CharacterData.Settings settings = ability.data().settings(all.get(f));
+                if (all.get(f).preset().equals(preset) && settings.text(setting, "").equals(id)) {
+                    Presets.tryFunction(player, abilities, item, ability, f);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public static void remove(ServerPlayer player) {

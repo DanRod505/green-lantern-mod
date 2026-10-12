@@ -43,7 +43,9 @@ import net.minecraftforge.eventbus.api.listener.Priority;
  * (energy, cooldown, which function goes off), the skins, the class passive, the traits and the
  * weaknesses. Everything is decided here; the client only draws.
  * <p>
- * None of this touches the first 9 heroes: they are not {@link EngineHero}s.
+ * The first 9 heroes are not {@link EngineHero}s: since stage 3 their wheel goes through
+ * {@link #useAbility} too, and {@link #legacyTick} gives them their traits; their energy, passives
+ * and weaknesses are still their own code.
  */
 public final class EngineServer {
     /** Hearts of damage the ring bearer's light shield takes in each fight. */
@@ -93,7 +95,7 @@ public final class EngineServer {
      * one that left something to take back (a carried block) takes it back. Returns whether it went off.
      */
     public static boolean useAbility(ServerPlayer player, ItemStack item, EngineAbility ability, AbilityFunctions.Press press) {
-        EngineHero hero = owner(item);
+        AbilityHero hero = owner(item);
         if (hero == null) return false;
         if (!hero.isSuited(player)) {
             player.displayClientMessage(Component.translatable("message.greenlantern.engine_need_suit"), true);
@@ -105,11 +107,17 @@ public final class EngineServer {
             if (PresetRuntime.stop(player, key) || PresetRuntime.undo(player, key)) return true;
         }
         AbilityFunctions.Chosen chosen = AbilityFunctions.choose(ability.data(), press, player);
-        if (!ready(player, hero, item, ability)) return false;
-        return finish(player, hero, item, ability, Presets.use(player, hero, item, ability, chosen));
+        int cost = cost(ability, chosen);
+        if (!ready(player, hero, item, ability, cost)) return false;
+        return finish(player, hero, item, ability, cost, Presets.use(player, hero, item, ability, chosen));
     }
 
-    private static boolean ready(ServerPlayer player, EngineHero hero, ItemStack item, EngineAbility ability) {
+    /** The energy a use costs: the ability's, but a power of today pays its own way (stage 3: the 9 heroes). */
+    private static int cost(EngineAbility ability, AbilityFunctions.Chosen chosen) {
+        return Presets.paysItself(chosen.function().preset()) ? 0 : ability.cost();
+    }
+
+    private static boolean ready(ServerPlayer player, AbilityHero hero, ItemStack item, EngineAbility ability, int cost) {
         AbilityState state = state(item);
         long now = player.level().getGameTime();
         long left = state.remaining(ability.ordinal(), now);
@@ -117,7 +125,7 @@ public final class EngineServer {
             refuse(player, Component.translatable("message.greenlantern.engine_cooldown", ability.displayName(), String.format("%.1f", left / 20.0)));
             return false;
         }
-        if (!player.isCreative() && !hero.energy().tryConsume(item, ability.cost())) {
+        if (!player.isCreative() && !hero.energy().tryConsume(item, cost)) {
             refuse(player, Component.translatable("message.greenlantern.engine_no_energy", hero.data().characterClass().energyName()));
             return false;
         }
@@ -128,10 +136,10 @@ public final class EngineServer {
      * After the preset: the cooldown (the ability's, or the one the preset asked for). A use that
      * could not go off gives the energy back and says why.
      */
-    private static boolean finish(ServerPlayer player, EngineHero hero, ItemStack item, EngineAbility ability, Presets.Outcome outcome) {
+    private static boolean finish(ServerPlayer player, AbilityHero hero, ItemStack item, EngineAbility ability, int cost, Presets.Outcome outcome) {
         if (!outcome.went()) {
-            if (!player.isCreative()) hero.energy().add(item, ability.cost());
-            refuse(player, outcome.reason());
+            if (!player.isCreative()) hero.energy().add(item, cost);
+            if (outcome.reason() != null) refuse(player, outcome.reason());
             return false;
         }
         long now = player.level().getGameTime();
@@ -141,7 +149,7 @@ public final class EngineServer {
     }
 
     /** Starts the ability's cooldown now: a lasting preset (a bubble, super speed) just ended. */
-    public static void startCooldown(ServerPlayer player, EngineHero hero, EngineAbility ability) {
+    public static void startCooldown(ServerPlayer player, AbilityHero hero, EngineAbility ability) {
         ItemStack item = hero.findItem(player);
         if (item.isEmpty()) return;
         long now = player.level().getGameTime();
@@ -154,8 +162,13 @@ public final class EngineServer {
         play(player, EngineContent.NO_ENERGY.get(), 0.6F, 0.8F);
     }
 
-    private static EngineHero owner(ItemStack item) {
-        return item.getItem() instanceof CharacterItem characterItem ? characterItem.hero() : null;
+    /** The hero of the item: a character of the engine, or one of the 9 heroes (their wheel is the engine's since stage 3). */
+    private static AbilityHero owner(ItemStack item) {
+        if (item.getItem() instanceof CharacterItem characterItem) return characterItem.hero();
+        for (var hero : HeroRegistry.all()) {
+            if (hero instanceof AbilityHero abilities && hero.isActivator(item)) return abilities;
+        }
+        return null;
     }
 
     // ---- skins -------------------------------------------------------------------------------------
@@ -224,6 +237,23 @@ public final class EngineServer {
         weaknesses(player, hero, item);
     }
 
+    /**
+     * The tick of one of the 9 heroes (stage 3, lot 1): its energy, look and passives are still its
+     * own code; the engine adds the traits of its file and the supreme ability's "ready" line.
+     */
+    public static void legacyTick(ServerPlayer player, AbilityHero hero) {
+        if (!hero.isSuited(player)) return;
+        Traits.tick(player, hero);
+        ItemStack item = hero.findItem(player);
+        if (!item.isEmpty()) supremeReady(player, hero, item);
+    }
+
+    /** One of the 9 heroes takes the suit off: what its abilities and traits left goes away. */
+    public static void legacySuitDown(ServerPlayer player) {
+        PresetRuntime.stopLasting(player);
+        Traits.suitDown(player);
+    }
+
     private static void recharge(ServerPlayer player, EngineHero hero, ItemStack item) {
         RingEnergy energy = hero.energy().get(item);
         if (energy.capacity() != hero.energy().capacity()) hero.energy().set(item, energy.stored());
@@ -287,7 +317,7 @@ public final class EngineServer {
     }
 
     /** The supreme ability is ready again: a sound and a gold line, the tick its cooldown ends. */
-    private static void supremeReady(ServerPlayer player, EngineHero hero, ItemStack item) {
+    private static void supremeReady(ServerPlayer player, AbilityHero hero, ItemStack item) {
         AbilityState state = state(item);
         long now = player.level().getGameTime();
         for (int i = 0; i < hero.powers().set().count(); i++) {
@@ -452,7 +482,7 @@ public final class EngineServer {
     }
 
     /** A puff of the character's colours around the player (the provisional look of an ability without a preset). */
-    static void puff(ServerPlayer player, EngineHero hero) {
+    static void puff(ServerPlayer player, AbilityHero hero) {
         CharacterData.Colors colors = hero.data().colors();
         ServerLevel level = player.level();
         for (int color : new int[]{colors.main(), colors.second()}) {

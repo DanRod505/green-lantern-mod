@@ -1,5 +1,5 @@
 {
-  "_comentario": "Um dos 9 heróis que já existiam: os poderes e a energia continuam no código dele. O traje, os bônus e a ordem da roda vêm daqui, com os mesmos números de antes.",
+  "_comentario": "Um dos 9 heróis que já existiam. Desde a etapa 3 (lote 1) a roda tem as habilidades do catálogo no modelo novo: os poderes de hoje viraram funções delas (preset poder_de_hoje ou construto_de_hoje) e pagam a própria energia. O traje, os stats e a energia continuam os de hoje até os lotes 2 e 3.",
   "id": "flash",
   "nome": "Flash",
   "classe": "velocista",
@@ -44,13 +44,138 @@
   },
   "habilidades": [
     {
-      "id": "tornado"
+      "id": "rajada_de_socos",
+      "nome": "Rajada de Socos",
+      "classe": "golpe",
+      "preset": "soco_forte",
+      "numeros": {
+        "dano": 12,
+        "custo": 6,
+        "recarga": 3,
+        "alcance": 4
+      },
+      "funcoes": [
+        {
+          "preset": "minerar_area",
+          "quando": {
+            "mira": "pedra"
+          }
+        }
+      ]
     },
     {
-      "id": "phase"
+      "id": "vibrar",
+      "nome": "Vibrar",
+      "classe": "evasao",
+      "preset": "poder_de_hoje",
+      "ajustes": {
+        "poder": "phase"
+      },
+      "numeros": {
+        "custo": 4,
+        "recarga": 5,
+        "alcance": 8,
+        "duracao": 0.5
+      },
+      "funcoes": [
+        {
+          "preset": "atravessar",
+          "quando": {
+            "mira": "bloco"
+          }
+        }
+      ]
     },
     {
-      "id": "lightning"
+      "id": "tornado_de_bracos",
+      "nome": "Tornado de Braços",
+      "classe": "controle",
+      "preset": "poder_de_hoje",
+      "ajustes": {
+        "poder": "tornado"
+      },
+      "numeros": {
+        "dano": 2.5,
+        "custo": 8,
+        "recarga": 12,
+        "alcance": 24,
+        "duracao": 4
+      },
+      "funcoes": [
+        {
+          "preset": "ima_de_itens",
+          "quando": {
+            "aperto": "segurar"
+          }
+        }
+      ]
+    },
+    {
+      "id": "forca_de_aceleracao",
+      "nome": "Força de Aceleração",
+      "classe": "fortalecimento",
+      "preset": "cura",
+      "numeros": {
+        "custo": 15,
+        "recarga": 40,
+        "duracao": 15
+      },
+      "funcoes": [
+        {
+          "preset": "plantar_e_colher",
+          "quando": {
+            "aperto": "segurar"
+          }
+        }
+      ]
+    },
+    {
+      "id": "mapa_relampago",
+      "nome": "Mapa Relâmpago",
+      "classe": "mobilidade",
+      "preset": "teleporte",
+      "numeros": {
+        "custo": 5,
+        "recarga": 4,
+        "alcance": 24
+      },
+      "funcoes": [
+        {
+          "preset": "supervelocidade",
+          "quando": {
+            "aperto": "segurar"
+          }
+        }
+      ]
+    },
+    {
+      "id": "corrida_no_tempo",
+      "nome": "Corrida no Tempo",
+      "classe": "natureza",
+      "suprema": true,
+      "preset": "poder_de_hoje",
+      "ajustes": {
+        "poder": "lightning"
+      },
+      "numeros": {
+        "custo": 40,
+        "recarga": 90,
+        "raio": 9,
+        "duracao": 60
+      },
+      "funcoes": [
+        {
+          "preset": "plantar_e_colher",
+          "quando": {
+            "aperto": "segurar"
+          }
+        }
+      ]
+    }
+  ],
+  "passivas": [
+    {
+      "tipo": "supervelocidade"
     }
   ],
   "skins": [
@@ -58,5 +183,10 @@
       "id": "flash",
       "nome": "Traje de hoje"
     }
-  ]
+  ],
+  "cores": {
+    "principal": "#C8102E",
+    "secundaria": "#F2C200",
+    "brilho": "#FFE066"
+  }
 }

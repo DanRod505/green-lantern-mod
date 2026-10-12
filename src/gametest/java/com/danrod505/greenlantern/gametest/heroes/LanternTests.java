@@ -1,5 +1,6 @@
 package com.danrod505.greenlantern.gametest.heroes;
 
+import com.danrod505.greenlantern.engine.preset.PresetRuntime;
 import static com.danrod505.greenlantern.gametest.GameTestKit.*;
 
 import com.danrod505.greenlantern.block.PowerBatteryBlockEntity;
@@ -128,18 +129,18 @@ public final class LanternTests {
         Zombie zombie = dummy(helper, 7.5, 1, 9.5);
         float health = zombie.getHealth();
         use(player);
-        helper.assertTrue(player.isUsingItem(), "minigun is used while holding the button");
+        // Since stage 3 the minigun is the "segurar" function of Construtos da Vontade: it fires by itself for 3 seconds.
+        helper.assertTrue(PresetRuntime.running(player) > 0, "the minigun should fire by itself");
         helper.startSequence()
                 .thenExecuteFor(30, player::doTick)
                 .thenExecute(() -> {
                     helper.assertTrue(!around(player, GunConstructEntity.class, 4).isEmpty(), "gun construct should float next to the player");
                     helper.assertTrue(RingEnergy.get(ring).stored() < 1000, "shots should cost energy");
                     helper.assertTrue(zombie.getHealth() < health || zombie.isDeadOrDying(), "zombie should be shot");
-                    player.releaseUsingItem();
                 })
-                .thenExecuteFor(3, player::doTick)
+                .thenExecuteFor(40, player::doTick)
                 .thenExecute(() -> {
-                    helper.assertTrue(around(player, GunConstructEntity.class, 4).isEmpty(), "gun should vanish on release");
+                    helper.assertTrue(around(player, GunConstructEntity.class, 4).isEmpty(), "gun should vanish when its 3 seconds are up");
                     remove(player);
                 })
                 .thenSucceed();

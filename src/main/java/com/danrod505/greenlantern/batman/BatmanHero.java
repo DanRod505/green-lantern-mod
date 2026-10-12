@@ -1,5 +1,11 @@
 package com.danrod505.greenlantern.batman;
 
+import java.util.Set;
+import com.danrod505.greenlantern.engine.LegacyWheel;
+import com.danrod505.greenlantern.engine.EngineServer;
+import com.danrod505.greenlantern.engine.EngineAbility;
+import com.danrod505.greenlantern.engine.CharacterData;
+import com.danrod505.greenlantern.engine.AbilityHero;
 import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
@@ -29,7 +35,7 @@ import net.minecraft.world.item.CreativeModeTab;
  * Batman sees in the dark (the cowl's lenses), hits harder (years of training), takes knocks better
  * and glides with the cape.
  */
-public final class BatmanHero extends HeroDefinition {
+public final class BatmanHero extends HeroDefinition implements AbilityHero {
     /**
      * Charge of the Utility Belt's power cells. It refills steadily while the batsuit is worn (faster
      * in the dark: the night belongs to Batman) and pays for the gadgets and the Batmobile's boost.
@@ -45,8 +51,11 @@ public final class BatmanHero extends HeroDefinition {
 
     public static final BatmanHero INSTANCE = new BatmanHero();
 
-    private final HeroPowers<BatPower> powers = new HeroPowers<>(BatPower.POWERS, BAT_CHARGE, ChatFormatting.YELLOW,
+    /** The powers of today: the abilities of the new wheel call them by name (preset poder_de_hoje). */
+    private final HeroPowers<BatPower> legacy = new HeroPowers<>(BatPower.POWERS, BAT_CHARGE, ChatFormatting.YELLOW,
             0.7F, 0.08F, BatmanServer::usePower, WHEEL);
+    /** The wheel in the new model (stage 3): the abilities of the catalog, with the powers of today inside them. */
+    private final LegacyWheel wheel = new LegacyWheel("batman", BAT_CHARGE, WHEEL, ChatFormatting.YELLOW, 0.7F, 0.08F, legacy);
 
     private BatmanHero() {
         super("batman", BatmanHelper::isBelt, new SuitSet(ModItems.BATMAN_COWL, ModItems.BATMAN_SUIT, ModItems.BATMAN_LEGGINGS, ModItems.BATMAN_BOOTS,
@@ -71,6 +80,7 @@ public final class BatmanHero extends HeroDefinition {
 
     @Override
     protected void onSuitRemoving(ServerPlayer player) {
+        EngineServer.legacySuitDown(player);
         BatmanServer.onSuitRemoved(player);
     }
 
@@ -86,13 +96,39 @@ public final class BatmanHero extends HeroDefinition {
     }
 
     @Override
-    public HeroPowers<BatPower> powers() {
-        return powers;
+    public HeroPowers<EngineAbility> powers() {
+        return wheel.powers();
+    }
+
+    @Override
+    public HeroPowers<BatPower> legacyPowers() {
+        return legacy;
+    }
+
+    @Override
+    public CharacterData data() {
+        return wheel.data();
+    }
+
+    @Override
+    public HeroEnergy energy() {
+        return BAT_CHARGE;
+    }
+
+    @Override
+    public Set<String> ownTraits() {
+        return LegacyWheel.OWN_TRAITS;
+    }
+
+    @Override
+    public int hudHeight() {
+        return LegacyWheel.HUD_HEIGHT;
     }
 
     @Override
     public void tick(ServerPlayer player) {
         BatmanServer.tick(player);
+        EngineServer.legacyTick(player, this);
     }
 
     @Override

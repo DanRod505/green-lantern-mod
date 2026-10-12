@@ -1,6 +1,6 @@
 package com.danrod505.greenlantern.client;
 
-import com.danrod505.greenlantern.engine.EngineHero;
+import com.danrod505.greenlantern.engine.AbilityHero;
 import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.HeroRegistry;
 import com.danrod505.greenlantern.network.CycleConstructPacket;
@@ -31,9 +31,10 @@ public final class ClientEvents {
             if (HeroRegistry.context(player).isPresent()) ModNetwork.sendToServer(new ToggleUniformPacket());
         }
         HeroDefinition context = HeroRegistry.context(player).orElse(null);
-        if (context instanceof EngineHero engine) com.danrod505.greenlantern.client.engine.EngineIcons.ensure(engine);
-        if (context instanceof EngineHero engine) {
-            // Engine characters: the function of the ability depends on how V is pressed (see EngineKeys).
+        if (context instanceof AbilityHero engine) com.danrod505.greenlantern.client.engine.EngineIcons.ensure(engine);
+        if (context instanceof AbilityHero engine) {
+            // The wheel of the new model (the characters of the engine and, since stage 3, the 9 heroes):
+            // the function of the ability depends on how V is pressed (see EngineKeys).
             com.danrod505.greenlantern.client.engine.EngineKeys.tick(mc, engine);
         } else {
             while (KeyBindings.HERO_POWER.consumeClick()) {

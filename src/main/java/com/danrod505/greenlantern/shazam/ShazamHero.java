@@ -1,5 +1,11 @@
 package com.danrod505.greenlantern.shazam;
 
+import java.util.Set;
+import com.danrod505.greenlantern.engine.LegacyWheel;
+import com.danrod505.greenlantern.engine.EngineServer;
+import com.danrod505.greenlantern.engine.EngineAbility;
+import com.danrod505.greenlantern.engine.CharacterData;
+import com.danrod505.greenlantern.engine.AbilityHero;
 import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
@@ -34,7 +40,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
  * powers, one for each elder of the name, built from the power blocks in {@code hero/power}, and
  * flight between the Lantern's and Supergirl's. Made with the hero kit from {@code docs/heroes/shazam.md}.
  */
-public final class ShazamHero extends HeroDefinition {
+public final class ShazamHero extends HeroDefinition implements AbilityHero {
     /** The Shazam's Magic, kept in the Wizard's Bolt: it pays for the powers and comes back on its own. */
     public static final HeroEnergy ENERGY = new HeroEnergy(ShazamContent.ENERGY, () -> ShazamConfig.CAPACITY.get());
 
@@ -53,8 +59,11 @@ public final class ShazamHero extends HeroDefinition {
 
     public static final ShazamHero INSTANCE = new ShazamHero();
 
-    private final HeroPowers<ShazamPower> powers = new HeroPowers<>(ShazamPower.POWERS, ENERGY, ChatFormatting.GOLD,
+    /** The powers of today: the abilities of the new wheel call them by name (preset poder_de_hoje). */
+    private final HeroPowers<ShazamPower> legacy = new HeroPowers<>(ShazamPower.POWERS, ENERGY, ChatFormatting.GOLD,
             0.85F, 0.06F, ShazamServer::usePower, WHEEL);
+    /** The wheel in the new model (stage 3): the abilities of the catalog, with the powers of today inside them. */
+    private final LegacyWheel wheel = new LegacyWheel("shazam", ENERGY, WHEEL, ChatFormatting.GOLD, 0.85F, 0.06F, legacy);
 
     private ShazamHero() {
         super("shazam", stack -> stack.is(ShazamContent.ITEM.get()), new SuitSet(ShazamContent.MASK, ShazamContent.SUIT, ShazamContent.LEGGINGS,
@@ -74,6 +83,7 @@ public final class ShazamHero extends HeroDefinition {
 
     @Override
     protected void onSuitRemoving(ServerPlayer player) {
+        EngineServer.legacySuitDown(player);
         ShazamServer.remove(player);
     }
 
@@ -101,13 +111,39 @@ public final class ShazamHero extends HeroDefinition {
     }
 
     @Override
-    public HeroPowers<ShazamPower> powers() {
-        return powers;
+    public HeroPowers<EngineAbility> powers() {
+        return wheel.powers();
+    }
+
+    @Override
+    public HeroPowers<ShazamPower> legacyPowers() {
+        return legacy;
+    }
+
+    @Override
+    public CharacterData data() {
+        return wheel.data();
+    }
+
+    @Override
+    public HeroEnergy energy() {
+        return ENERGY;
+    }
+
+    @Override
+    public Set<String> ownTraits() {
+        return LegacyWheel.OWN_TRAITS;
+    }
+
+    @Override
+    public int hudHeight() {
+        return LegacyWheel.HUD_HEIGHT;
     }
 
     @Override
     public void tick(ServerPlayer player) {
         ShazamServer.tick(player);
+        EngineServer.legacyTick(player, this);
     }
 
     @Override

@@ -1,5 +1,5 @@
 {
-  "_comentario": "Um dos 9 heróis que já existiam: os poderes e a energia continuam no código dele. O traje, os bônus e a ordem da roda vêm daqui, com os mesmos números de antes.",
+  "_comentario": "Um dos 9 heróis que já existiam. Desde a etapa 3 (lote 1) a roda tem as habilidades do catálogo no modelo novo: os poderes de hoje viraram funções delas (preset poder_de_hoje ou construto_de_hoje) e pagam a própria energia. O traje, os stats e a energia continuam os de hoje até os lotes 2 e 3.",
   "id": "batman",
   "nome": "Batman",
   "classe": "vigilante",
@@ -49,16 +49,141 @@
   },
   "habilidades": [
     {
-      "id": "batarang"
+      "id": "combate_de_gotham",
+      "nome": "Combate de Gotham",
+      "classe": "golpe",
+      "preset": "sequencia",
+      "numeros": {
+        "dano": 8,
+        "custo": 6,
+        "recarga": 3,
+        "alcance": 4
+      },
+      "funcoes": [
+        {
+          "preset": "golpe_de_arma",
+          "quando": {
+            "mira": "maquina"
+          }
+        }
+      ]
     },
     {
-      "id": "grapple"
+      "id": "batarangue",
+      "nome": "Batarangue",
+      "classe": "disparo",
+      "preset": "poder_de_hoje",
+      "ajustes": {
+        "poder": "batarang"
+      },
+      "numeros": {
+        "dano": 5.5,
+        "custo": 3,
+        "recarga": 1,
+        "alcance": 48
+      },
+      "funcoes": [
+        {
+          "preset": "trocar_bloco",
+          "quando": {
+            "mira": "folhas"
+          }
+        }
+      ]
     },
     {
-      "id": "bat_swarm"
+      "id": "enxame_de_morcegos",
+      "nome": "Enxame de Morcegos",
+      "classe": "controle",
+      "preset": "poder_de_hoje",
+      "ajustes": {
+        "poder": "bat_swarm"
+      },
+      "numeros": {
+        "dano": 1.5,
+        "custo": 8,
+        "recarga": 12,
+        "alcance": 24,
+        "duracao": 4
+      },
+      "funcoes": [
+        {
+          "preset": "procurar",
+          "quando": {
+            "aperto": "segurar"
+          }
+        }
+      ]
     },
     {
-      "id": "batmobile"
+      "id": "bomba_de_fumaca",
+      "nome": "Bomba de Fumaça",
+      "classe": "evasao",
+      "preset": "fumaca",
+      "numeros": {
+        "custo": 4,
+        "recarga": 5,
+        "alcance": 8,
+        "duracao": 0.5
+      }
+    },
+    {
+      "id": "gancho",
+      "nome": "Gancho",
+      "classe": "mobilidade",
+      "preset": "poder_de_hoje",
+      "ajustes": {
+        "poder": "grapple"
+      },
+      "numeros": {
+        "custo": 5,
+        "recarga": 4,
+        "alcance": 24
+      }
+    },
+    {
+      "id": "modo_detetive",
+      "nome": "Modo Detetive",
+      "classe": "deteccao",
+      "preset": "procurar",
+      "numeros": {
+        "custo": 5,
+        "recarga": 15,
+        "raio": 24,
+        "duracao": 20
+      }
+    },
+    {
+      "id": "batcaverna",
+      "nome": "Batcaverna",
+      "classe": "construcao",
+      "suprema": true,
+      "preset": "poder_de_hoje",
+      "ajustes": {
+        "poder": "batmobile"
+      },
+      "numeros": {
+        "custo": 40,
+        "recarga": 90,
+        "alcance": 24,
+        "duracao": 30
+      },
+      "funcoes": [
+        {
+          "preset": "grande_obra",
+          "quando": {
+            "aperto": "segurar"
+          }
+        }
+      ]
+    }
+  ],
+  "passivas": [
+    {
+      "tipo": "visao_no_escuro"
+    },
+    {
+      "tipo": "planar"
     }
   ],
   "skins": [
@@ -66,5 +191,10 @@
       "id": "batman",
       "nome": "Traje de hoje"
     }
-  ]
+  ],
+  "cores": {
+    "principal": "#3A3A42",
+    "secundaria": "#F2D03A",
+    "brilho": "#FFF4B0"
+  }
 }

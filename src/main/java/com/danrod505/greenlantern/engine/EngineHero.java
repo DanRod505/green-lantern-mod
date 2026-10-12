@@ -36,7 +36,7 @@ import net.minecraftforge.registries.RegistryObject;
  * (stage 2); until a preset exists the ability spends its energy, starts its cooldown and says it is
  * not built yet.
  */
-public final class EngineHero extends HeroDefinition {
+public final class EngineHero extends HeroDefinition implements AbilityHero {
 
     private final CharacterData data;
     private final RegistryObject<CharacterItem> item;

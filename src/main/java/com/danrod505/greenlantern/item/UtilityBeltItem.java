@@ -45,7 +45,7 @@ public class UtilityBeltItem extends Item {
             return InteractionResult.SUCCESS;
         }
         if (player instanceof ServerPlayer serverPlayer) {
-            BatmanServer.usePower(serverPlayer, belt, BatPower.POWERS.selected(belt));
+            BatmanHero.INSTANCE.powers().use(serverPlayer, belt, -1);
         }
         return InteractionResult.SUCCESS;
     }
@@ -74,7 +74,7 @@ public class UtilityBeltItem extends Item {
         RingEnergy charge = BatmanHero.BAT_CHARGE.get(belt);
         tooltip.accept(Component.translatable("tooltip.greenlantern.bat_charge", charge.stored(), charge.capacity())
                 .withStyle(charge.fraction() < 0.2F ? ChatFormatting.RED : ChatFormatting.YELLOW));
-        tooltip.accept(Component.translatable("tooltip.greenlantern.gadget", BatPower.POWERS.selected(belt).displayName()).withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.translatable("tooltip.greenlantern.gadget", BatmanHero.INSTANCE.powers().power(BatmanHero.INSTANCE.powers().selectedIndex(belt)).displayName()).withStyle(ChatFormatting.GRAY));
         tooltip.accept(Component.translatable("tooltip.greenlantern.utility_belt_hint").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
     }
 }

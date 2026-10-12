@@ -47,6 +47,7 @@
   "message.greenlantern.engine_no_energy": "Sem %s suficiente",
   "message.greenlantern.engine_no_item": "Você precisa do item do personagem",
   "message.greenlantern.engine_not_built": "%s chega numa próxima versão",
+  "message.greenlantern.engine_no_power": "%s: este herói não tem um poder de hoje com esse nome",
   "message.greenlantern.engine_one_skin": "%s é a única skin liberada",
   "message.greenlantern.engine_skin": "Skin: %s",
   "message.greenlantern.engine_weakness": "Fraqueza: %s",

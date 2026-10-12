@@ -139,6 +139,8 @@ public final class HeroContractTests {
             helper.assertTrue(!item.isEmpty(), who + "the creative tab must hand out the hero's item");
             // A character of the engine takes the names of its item, suit and abilities from its file.
             boolean engine = hero instanceof EngineHero;
+            // The wheel of the new model (the characters of the engine and, since stage 3, the 9 heroes): names from the file, icons drawn.
+            boolean newWheel = hero instanceof com.danrod505.greenlantern.engine.AbilityHero;
             List<String> keys = new ArrayList<>();
             keys.add(hero.suit().missingItemKey());
             if (engine) {
@@ -166,7 +168,7 @@ public final class HeroContractTests {
                 helper.assertTrue(count > 0, who + "a power wheel needs at least one power");
                 String icons = "assets/" + wheel.icons().getNamespace() + "/" + wheel.icons().getPath();
                 // A character of the engine draws its icons while the game runs (engine.AbilityIcons).
-                int width = hero instanceof com.danrod505.greenlantern.engine.EngineHero drawn
+                int width = hero instanceof com.danrod505.greenlantern.engine.AbilityHero drawn
                         ? com.danrod505.greenlantern.engine.AbilityIcons.sheet(drawn.data(), drawn.data().abilities().stream()
                                 .map(a -> a.kind().orElseThrow()).toList()).length / com.danrod505.greenlantern.engine.AbilityIcons.SIZE
                         : pngWidth(icons);
@@ -177,7 +179,7 @@ public final class HeroContractTests {
                     helper.assertTrue(powerIds.add(power.id()), who + "two powers with the id " + power.id());
                     helper.assertTrue(power.cost() >= 0, who + "power " + power.id() + " has a negative cost");
                     helper.assertTrue((power.iconIndex() + 1) * 16 <= wheel.iconsWidth(), who + "no icon for power " + power.id());
-                    if (engine) {
+                    if (newWheel) {
                         helper.assertFalse(power.displayName().getString().startsWith("power."), who + "power " + power.id() + " has no name");
                     } else {
                         keys.add("power." + GreenLantern.MODID + "." + power.id());
@@ -225,8 +227,10 @@ public final class HeroContractTests {
     public static void heroPowersContract(GameTestHelper helper) {
         GameTestSequence sequence = helper.startSequence();
         for (HeroDefinition hero : HeroRegistry.all()) {
-            HeroPowers<?> powers = hero.powers();
-            if (powers == null || EveryCharacterTests.covers(hero)) continue;
+            // The powers of today: since stage 3 those of the 9 heroes run inside the abilities of the new
+            // wheel, which engine_every_character uses one function at a time; here each one goes off as before.
+            HeroPowers<?> powers = hero.legacyPowers();
+            if (powers == null || EveryCharacterTests.covers(hero) && powers == hero.powers()) continue;
             for (int i = 0; i < powers.set().count(); i++) {
                 int index = i;
                 String who = "hero " + hero.id() + ", power " + powers.power(index).id() + ": ";

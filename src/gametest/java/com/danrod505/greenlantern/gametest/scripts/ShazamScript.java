@@ -43,7 +43,7 @@ public final class ShazamScript {
         server(sp -> {
             ItemStack item = ShazamHero.INSTANCE.findItem(sp);
             sp.getCooldowns().removeCooldown(sp.getCooldowns().getCooldownGroup(item));
-            boolean used = ShazamHero.INSTANCE.powers().use(sp, item, power.ordinal());
+            boolean used = ShazamHero.INSTANCE.legacyPowers().use(sp, item, power.ordinal());
             GreenLantern.LOGGER.info("CLIENTSCRIPT power {} used={}", power.id(), used);
         });
     }

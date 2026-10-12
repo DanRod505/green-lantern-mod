@@ -1,5 +1,6 @@
 package com.danrod505.greenlantern.client;
 
+import com.danrod505.greenlantern.client.engine.EngineHud;
 import com.danrod505.greenlantern.aquaman.AquamanHelper;
 import com.danrod505.greenlantern.batman.BatmanHelper;
 import com.danrod505.greenlantern.client.wonderwoman.WonderWomanVisuals;
@@ -52,12 +53,7 @@ public final class WonderWomanHud {
 
         int x = 8;
         // Below the other heroes' HUDs when those are showing too.
-        int y = 8;
-        if (!RingHelper.findRing(player).isEmpty() && (!RingHelper.heldRing(player).isEmpty() || RingHelper.isSuited(player))) y += 58;
-        if (!FlashHelper.findRing(player).isEmpty() && (!FlashHelper.heldRing(player).isEmpty() || FlashHelper.isSuited(player))) y += 58;
-        if (!AquamanHelper.findEmblem(player).isEmpty() && (!AquamanHelper.heldEmblem(player).isEmpty() || AquamanHelper.isSuited(player))) y += 70;
-        if (!BatmanHelper.findBelt(player).isEmpty() && (!BatmanHelper.heldBelt(player).isEmpty() || BatmanHelper.isSuited(player))) y += 58;
-        if (!SupermanHelper.findCrystal(player).isEmpty() && (!SupermanHelper.heldCrystal(player).isEmpty() || SupermanHelper.isSuited(player))) y += 58;
+        int y = HeroHud.top(player, WonderWomanHero.INSTANCE);
 
         // The golden eagle emblem (last icon of the strip).
         int iconsW = WonderWomanHero.WHEEL.iconsWidth();
@@ -82,36 +78,16 @@ public final class WonderWomanHud {
         graphics.fill(barX, barY, barX + fill, barY + 1, 0x90FFFFFF);
         graphics.drawString(mc.font, energy.stored() + " / " + energy.capacity(), barX + barW + 4, barY, low ? 0xFFFF5555 : 0xFFFFD24A, true);
 
-        AmazonPower selected = AmazonPower.POWERS.selected(tiara);
+        // The wheel of the new model (stage 3): the abilities, the function that goes off and the traits.
         int iconsY = y + 15;
-        int flags = WonderWomanVisuals.flags(player.getId());
-        LassoEntity lasso = LassoEntity.find(player);
-        for (int i = 0; i < AmazonPower.POWERS.count(); i++) {
-            AmazonPower power = AmazonPower.POWERS.byIndex(i);
-            int ix = x + 19 + i * 20;
-            boolean isSelected = power == selected;
-            boolean active = switch (power) {
-                case LASSO_CAPTURE -> lasso != null && lasso.boundTarget() != null;
-                case LASSO_SPIN -> AmazonFlags.has(flags, AmazonFlags.SPIN);
-                case BRACELET_GUARD -> AmazonFlags.has(flags, AmazonFlags.GUARD);
-                case SWORD_AND_SHIELD -> WonderWomanHelper.swordSlot(player) >= 0;
-                case INVISIBLE_JET -> player.getVehicle() instanceof InvisibleJetEntity;
-                default -> false;
-            };
-            if (isSelected) graphics.fill(ix - 1, iconsY - 1, ix + 17, iconsY + 17, 0xC0C8102E);
-            if (active) graphics.fill(ix - 1, iconsY + 17, ix + 17, iconsY + 19, 0xFFF2B71C);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, WonderWomanHero.WHEEL.icons(), ix, iconsY, power.iconIndex() * 16, 0, 16, 16,
-                    iconsW, WheelStyle.ICONS_HEIGHT, isSelected || active ? 0xFFFFFFFF : 0x90FFFFFF);
-        }
-        graphics.drawString(mc.font, Component.translatable("hud.greenlantern.power_key", selected.displayName(), KeyBindings.HERO_POWER.getTranslatedKeyMessage()),
-                x + 19, iconsY + 21, 0xFFFFECE0, true);
+        int next = EngineHud.abilities(graphics, WonderWomanHero.INSTANCE, player, tiara, x + 19, iconsY, 0xFFFFECE0, 0xC0C8102E);
         if (!suited) {
             graphics.drawString(mc.font, Component.translatable("hud.greenlantern.wonder_woman_suit_hint", KeyBindings.TOGGLE_UNIFORM.getTranslatedKeyMessage()),
-                    x + 19, iconsY + 32, 0xFFA0A0A0, true);
+                    x + 19, next, 0xFFA0A0A0, true);
         } else if (player.getVehicle() instanceof InvisibleJetEntity jet) {
             Component controls = jet.isBoosting() ? Component.translatable("hud.greenlantern.jet_afterburner")
                     : Component.translatable(jet.isCloaked() ? "hud.greenlantern.jet_controls_cloaked" : "hud.greenlantern.jet_controls");
-            graphics.drawString(mc.font, controls, x + 19, iconsY + 32, 0xFFFFD24A, true);
+            graphics.drawString(mc.font, controls, x + 19, next, 0xFFFFD24A, true);
         }
     }
 }

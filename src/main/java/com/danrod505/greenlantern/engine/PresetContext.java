@@ -20,9 +20,9 @@ import net.minecraft.world.phys.Vec3;
  * default, so {@code reach(4)} is the ability's {@code alcance} or 4 blocks. {@code chosen} is the
  * function of the ability that goes off: its numbers and settings are on top of the ability's.
  */
-public record PresetContext(ServerPlayer player, EngineHero hero, ItemStack item, EngineAbility ability, AbilityFunctions.Chosen chosen) {
+public record PresetContext(ServerPlayer player, AbilityHero hero, ItemStack item, EngineAbility ability, AbilityFunctions.Chosen chosen) {
     /** A use of the ability's default function. */
-    public PresetContext(ServerPlayer player, EngineHero hero, ItemStack item, EngineAbility ability) {
+    public PresetContext(ServerPlayer player, AbilityHero hero, ItemStack item, EngineAbility ability) {
         this(player, hero, item, ability, new AbilityFunctions.Chosen(0, ability.data().defaultFunction()));
     }
 

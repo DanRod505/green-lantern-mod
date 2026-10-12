@@ -1,5 +1,6 @@
 package com.danrod505.greenlantern.client;
 
+import com.danrod505.greenlantern.client.engine.EngineHud;
 import com.danrod505.greenlantern.aquaman.AquamanHelper;
 import com.danrod505.greenlantern.batman.BatPower;
 import com.danrod505.greenlantern.batman.BatmanHelper;
@@ -45,10 +46,7 @@ public final class BatHud {
 
         int x = 8;
         // Below the other heroes' HUDs when those are showing too.
-        int y = 8;
-        if (!RingHelper.findRing(player).isEmpty() && (!RingHelper.heldRing(player).isEmpty() || RingHelper.isSuited(player))) y += 58;
-        if (!FlashHelper.findRing(player).isEmpty() && (!FlashHelper.heldRing(player).isEmpty() || FlashHelper.isSuited(player))) y += 58;
-        if (!AquamanHelper.findEmblem(player).isEmpty() && (!AquamanHelper.heldEmblem(player).isEmpty() || AquamanHelper.isSuited(player))) y += 70;
+        int y = HeroHud.top(player, BatmanHero.INSTANCE);
 
         // The belt buckle (last icon of the strip).
         int iconsW = BatmanHero.WHEEL.iconsWidth();
@@ -80,25 +78,16 @@ public final class BatHud {
         String text = charge.stored() + " / " + charge.capacity();
         graphics.drawString(mc.font, text, barX + 104, barY + 2, low ? 0xFFFF5555 : 0xFFF2D03A, true);
 
-        BatPower selected = BatPower.POWERS.selected(belt);
+        // The wheel of the new model (stage 3): the abilities, the function that goes off and the traits.
         int iconsY = y + 17;
-        for (int i = 0; i < BatPower.POWERS.count(); i++) {
-            BatPower power = BatPower.POWERS.byIndex(i);
-            int ix = x + 19 + i * 20;
-            boolean isSelected = power == selected;
-            if (isSelected) graphics.fill(ix - 1, iconsY - 1, ix + 17, iconsY + 17, 0xC0F2D03A);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, BatmanHero.WHEEL.icons(), ix, iconsY, power.iconIndex() * 16, 0, 16, 16,
-                    iconsW, WheelStyle.ICONS_HEIGHT, isSelected ? 0xFFFFFFFF : 0x90FFFFFF);
-        }
-        graphics.drawString(mc.font, Component.translatable("hud.greenlantern.power_key", selected.displayName(), KeyBindings.HERO_POWER.getTranslatedKeyMessage()),
-                x + 19, iconsY + 19, 0xFFE0E0E6, true);
+        int next = EngineHud.abilities(graphics, BatmanHero.INSTANCE, player, belt, x + 19, iconsY, 0xFFE0E0E6, 0xC0F2D03A);
         if (!suited) {
             graphics.drawString(mc.font, Component.translatable("hud.greenlantern.batman_suit_hint", KeyBindings.TOGGLE_UNIFORM.getTranslatedKeyMessage()),
-                    x + 19, iconsY + 30, 0xFFA0A0A0, true);
+                    x + 19, next, 0xFFA0A0A0, true);
         } else if (player.getVehicle() instanceof BatmobileEntity car) {
             Component boost = car.isBoosting() ? Component.translatable("hud.greenlantern.batmobile_boosting") : Component.translatable("hud.greenlantern.batmobile_controls",
                     mc.options.keySprint.getTranslatedKeyMessage(), mc.options.keyAttack.getTranslatedKeyMessage());
-            graphics.drawString(mc.font, boost, x + 19, iconsY + 30, car.isBoosting() ? 0xFFFFA040 : 0xFFC8C8D0, true);
+            graphics.drawString(mc.font, boost, x + 19, next, car.isBoosting() ? 0xFFFFA040 : 0xFFC8C8D0, true);
         }
     }
 }

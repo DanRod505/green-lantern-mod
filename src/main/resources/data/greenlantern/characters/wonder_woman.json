@@ -1,5 +1,5 @@
 {
-  "_comentario": "Um dos 9 heróis que já existiam: os poderes e a energia continuam no código dele. O traje, os bônus e a ordem da roda vêm daqui, com os mesmos números de antes.",
+  "_comentario": "Um dos 9 heróis que já existiam. Desde a etapa 3 (lote 1) a roda tem as habilidades do catálogo no modelo novo: os poderes de hoje viraram funções delas (preset poder_de_hoje ou construto_de_hoje) e pagam a própria energia. O traje, os stats e a energia continuam os de hoje até os lotes 2 e 3.",
   "id": "wonder_woman",
   "nome": "Mulher-Maravilha",
   "classe": "guerreiro",
@@ -81,28 +81,167 @@
   },
   "habilidades": [
     {
-      "id": "lasso_capture"
+      "id": "espada_e_escudo",
+      "nome": "Espada e Escudo",
+      "classe": "golpe",
+      "preset": "poder_de_hoje",
+      "ajustes": {
+        "poder": "sword_and_shield"
+      },
+      "numeros": {
+        "dano": 12,
+        "custo": 6,
+        "recarga": 3,
+        "alcance": 4
+      },
+      "funcoes": [
+        {
+          "preset": "poder_de_hoje",
+          "ajustes": {
+            "poder": "shield_throw"
+          },
+          "quando": {
+            "aperto": "segurar"
+          }
+        },
+        {
+          "preset": "cortar_arvore",
+          "quando": {
+            "mira": "madeira"
+          }
+        }
+      ]
     },
     {
-      "id": "lasso_pull"
+      "id": "braceletes_da_vitoria",
+      "nome": "Braceletes da Vitória",
+      "classe": "defesa",
+      "preset": "poder_de_hoje",
+      "ajustes": {
+        "poder": "bracelet_guard"
+      },
+      "numeros": {
+        "custo": 5,
+        "recarga": 6,
+        "raio": 3,
+        "duracao": 10
+      },
+      "funcoes": [
+        {
+          "preset": "gelo_e_calor",
+          "quando": {
+            "mira": "#minecraft:campfires"
+          },
+          "ajustes": {
+            "efeito": "calor"
+          }
+        }
+      ]
     },
     {
-      "id": "lasso_spin"
+      "id": "laco_da_verdade",
+      "nome": "Laço da Verdade",
+      "classe": "controle",
+      "preset": "poder_de_hoje",
+      "ajustes": {
+        "poder": "lasso_pull"
+      },
+      "numeros": {
+        "dano": 2.5,
+        "custo": 8,
+        "recarga": 12,
+        "alcance": 24,
+        "duracao": 4
+      },
+      "funcoes": [
+        {
+          "preset": "poder_de_hoje",
+          "ajustes": {
+            "poder": "lasso_capture"
+          },
+          "quando": {
+            "aperto": "segurar"
+          }
+        },
+        {
+          "preset": "poder_de_hoje",
+          "ajustes": {
+            "poder": "lasso_spin"
+          },
+          "quando": {
+            "aperto": "soltar"
+          }
+        }
+      ]
     },
     {
-      "id": "bracelet_guard"
+      "id": "bencao_dos_deuses",
+      "nome": "Bênção dos Deuses",
+      "classe": "natureza",
+      "preset": "aura",
+      "numeros": {
+        "custo": 8,
+        "recarga": 10,
+        "raio": 6,
+        "duracao": 60
+      },
+      "funcoes": [
+        {
+          "preset": "plantar_e_colher",
+          "quando": {
+            "aperto": "segurar"
+          }
+        }
+      ]
     },
     {
-      "id": "bracelet_shockwave"
+      "id": "jato_invisivel",
+      "nome": "Jato Invisível",
+      "classe": "mobilidade",
+      "preset": "poder_de_hoje",
+      "ajustes": {
+        "poder": "invisible_jet"
+      },
+      "numeros": {
+        "custo": 5,
+        "recarga": 4,
+        "alcance": 24
+      }
     },
     {
-      "id": "sword_and_shield"
+      "id": "choque_dos_braceletes",
+      "nome": "Choque dos Braceletes",
+      "classe": "explosao",
+      "suprema": true,
+      "preset": "poder_de_hoje",
+      "ajustes": {
+        "poder": "bracelet_shockwave"
+      },
+      "numeros": {
+        "dano": 43,
+        "custo": 40,
+        "recarga": 90,
+        "raio": 9
+      },
+      "funcoes": [
+        {
+          "preset": "construir",
+          "quando": {
+            "aperto": "segurar"
+          }
+        }
+      ]
+    }
+  ],
+  "passivas": [
+    {
+      "tipo": "voo",
+      "ajustes": {
+        "velocidade_maxima": 2.3
+      }
     },
     {
-      "id": "shield_throw"
-    },
-    {
-      "id": "invisible_jet"
+      "tipo": "superforca"
     }
   ],
   "skins": [
@@ -110,5 +249,10 @@
       "id": "wonder_woman",
       "nome": "Traje de hoje"
     }
-  ]
+  ],
+  "cores": {
+    "principal": "#B81E2A",
+    "secundaria": "#F2B705",
+    "brilho": "#FFF0A0"
+  }
 }

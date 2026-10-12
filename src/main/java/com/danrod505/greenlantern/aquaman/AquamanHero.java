@@ -1,5 +1,11 @@
 package com.danrod505.greenlantern.aquaman;
 
+import java.util.Set;
+import com.danrod505.greenlantern.engine.LegacyWheel;
+import com.danrod505.greenlantern.engine.EngineServer;
+import com.danrod505.greenlantern.engine.EngineAbility;
+import com.danrod505.greenlantern.engine.CharacterData;
+import com.danrod505.greenlantern.engine.AbilityHero;
 import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
@@ -30,7 +36,7 @@ import net.minecraft.world.item.ItemStack;
  * stays on). While it is worn Aquaman breathes underwater, sees clearly in the deep, mines at full
  * speed underwater and hits harder.
  */
-public final class AquamanHero extends HeroDefinition {
+public final class AquamanHero extends HeroDefinition implements AbilityHero {
     /**
      * Power of the Seas stored in the Atlantean Emblem. It refills quickly while Aquaman is in water
      * (slowly on land) and pays for his powers: the trident, the shark and the call of the sea.
@@ -46,8 +52,11 @@ public final class AquamanHero extends HeroDefinition {
 
     public static final AquamanHero INSTANCE = new AquamanHero();
 
-    private final HeroPowers<AquaPower> powers = new HeroPowers<>(AquaPower.POWERS, SEA_FORCE, ChatFormatting.AQUA,
+    /** The powers of today: the abilities of the new wheel call them by name (preset poder_de_hoje). */
+    private final HeroPowers<AquaPower> legacy = new HeroPowers<>(AquaPower.POWERS, SEA_FORCE, ChatFormatting.AQUA,
             0.8F, 0.08F, AquamanServer::usePower, WHEEL);
+    /** The wheel in the new model (stage 3): the abilities of the catalog, with the powers of today inside them. */
+    private final LegacyWheel wheel = new LegacyWheel("aquaman", SEA_FORCE, WHEEL, ChatFormatting.AQUA, 0.8F, 0.08F, legacy);
 
     private AquamanHero() {
         super("aquaman", AquamanHelper::isEmblem, new SuitSet(null, ModItems.AQUAMAN_SUIT, ModItems.AQUAMAN_LEGGINGS, ModItems.AQUAMAN_BOOTS,
@@ -85,6 +94,7 @@ public final class AquamanHero extends HeroDefinition {
 
     @Override
     protected void onSuitRemoving(ServerPlayer player) {
+        EngineServer.legacySuitDown(player);
         AquamanServer.onSuitRemoved(player);
     }
 
@@ -101,13 +111,34 @@ public final class AquamanHero extends HeroDefinition {
     }
 
     @Override
-    public HeroPowers<AquaPower> powers() {
-        return powers;
+    public HeroPowers<EngineAbility> powers() {
+        return wheel.powers();
+    }
+
+    @Override
+    public HeroPowers<AquaPower> legacyPowers() {
+        return legacy;
+    }
+
+    @Override
+    public CharacterData data() {
+        return wheel.data();
+    }
+
+    @Override
+    public HeroEnergy energy() {
+        return SEA_FORCE;
+    }
+
+    @Override
+    public Set<String> ownTraits() {
+        return LegacyWheel.OWN_TRAITS;
     }
 
     @Override
     public void tick(ServerPlayer player) {
         AquamanServer.tick(player);
+        EngineServer.legacyTick(player, this);
     }
 
     @Override
@@ -131,6 +162,6 @@ public final class AquamanHero extends HeroDefinition {
     /** The emblem's HUD is taller: the Kraken's health goes under the powers. */
     @Override
     public int hudHeight() {
-        return 70;
+        return LegacyWheel.HUD_HEIGHT + 12;
     }
 }
