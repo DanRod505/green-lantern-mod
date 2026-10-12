@@ -46,6 +46,7 @@
   "message.greenlantern.engine_cooldown": "%s recharging: %s s",
   "message.greenlantern.engine_no_energy": "Not enough %s",
   "message.greenlantern.engine_no_item": "You need the character's item",
+  "message.greenlantern.engine_own_power": "%s did not go off now",
   "message.greenlantern.engine_not_built": "%s arrives in a later version",
   "message.greenlantern.engine_one_skin": "%s is the only unlocked skin",
   "message.greenlantern.engine_skin": "Skin: %s",

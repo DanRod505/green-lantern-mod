@@ -69,9 +69,9 @@ public final class DefaultScript {
         step(5, ClientScript::use);
         step(3, () -> shot("04_energy_blast"));
         // Minigun.
+        // The minigun is the hold of the Constructs of Will: it fires by itself until the key again.
         step(20, () -> select(ConstructRegistry.MINIGUN));
-        // Hold the real "use" key so the whole client -> server input path is exercised.
-        step(5, () -> mc().options.keyUse.setDown(true));
+        step(5, () -> useOwn(LanternHero.INSTANCE, "minigun"));
         step(20, () -> shot("05_minigun"));
         step(2, () -> camera(CameraType.THIRD_PERSON_FRONT));
         step(4, () -> shot("05b_minigun_front"));
@@ -79,7 +79,7 @@ public final class DefaultScript {
         step(4, () -> shot("05c_minigun_first_person"));
         step(1, () -> {
             camera(CameraType.THIRD_PERSON_BACK);
-            mc().options.keyUse.setDown(false);
+            useOwn(LanternHero.INSTANCE, "minigun");
         });
         // Bubble.
         step(15, () -> select(ConstructRegistry.BUBBLE));
@@ -92,14 +92,15 @@ public final class DefaultScript {
             use();
         });
         // Saw.
+        // The saw is the Emerald Drill aimed at wood.
         step(15, () -> select(ConstructRegistry.SAW));
-        step(5, ClientScript::use);
+        step(5, () -> useOwn(LanternHero.INSTANCE, "saw"));
         step(15, () -> shot("07_saw"));
         step(5, () -> camera(CameraType.THIRD_PERSON_FRONT));
         step(5, () -> shot("07b_saw_front"));
         step(5, () -> {
             camera(CameraType.THIRD_PERSON_BACK);
-            use();
+            useOwn(LanternHero.INSTANCE, "saw");
         });
         // Hammer.
         step(25, () -> {

@@ -1,5 +1,5 @@
 {
-  "_comentario": "Um dos 9 heróis que já existiam: os poderes e a energia continuam no código dele. O traje, os bônus e a ordem da roda vêm daqui, com os mesmos números de antes.",
+  "_comentario": "Um dos 9 heróis que já existiam, no modelo novo de habilidades (Etapa 3, lote 1): a roda e as passivas são as do catálogo. As funções com o preset poder_do_heroi usam o poder do código dele como antes (energia, recarga e números de hoje); as outras são presets da biblioteca. O traje e os bônus vêm daqui, com os mesmos números de antes.",
   "id": "aquaman",
   "nome": "Aquaman",
   "classe": "guerreiro",
@@ -53,19 +53,182 @@
   },
   "habilidades": [
     {
-      "id": "trident"
+      "id": "aquaman_tridente",
+      "nome": "Tridente",
+      "classe": "golpe",
+      "preset": "poder_do_heroi",
+      "numeros": {
+        "dano": 10,
+        "custo": 6,
+        "recarga": 3,
+        "alcance": 4
+      },
+      "ajustes": {
+        "poder": "trident"
+      },
+      "funcoes": [
+        {
+          "preset": "pescar",
+          "quando": {
+            "mira": "agua"
+          },
+          "numeros": {
+            "alcance": 8
+          }
+        }
+      ]
     },
     {
-      "id": "shark"
+      "id": "aquaman_pele_atlante",
+      "nome": "Pele Atlante",
+      "classe": "defesa",
+      "preset": "pele_dura",
+      "numeros": {
+        "custo": 5,
+        "recarga": 6,
+        "raio": 3,
+        "duracao": 10
+      },
+      "ajustes": {
+        "reducao": 0.5
+      }
     },
     {
-      "id": "sea_call"
+      "id": "aquaman_chamado_do_mar",
+      "nome": "Chamado do Mar",
+      "classe": "controle",
+      "preset": "poder_do_heroi",
+      "numeros": {
+        "dano": 2,
+        "custo": 8,
+        "recarga": 12,
+        "alcance": 24,
+        "duracao": 4
+      },
+      "ajustes": {
+        "poder": "sea_call"
+      },
+      "funcoes": [
+        {
+          "preset": "poder_do_heroi",
+          "quando": {
+            "aperto": "segurar"
+          },
+          "ajustes": {
+            "poder": "shark"
+          }
+        }
+      ]
     },
     {
-      "id": "atlantis_portal"
+      "id": "aquaman_furia_do_oceano",
+      "nome": "Fúria do Oceano",
+      "classe": "fortalecimento",
+      "preset": "aura",
+      "numeros": {
+        "custo": 15,
+        "recarga": 40,
+        "duracao": 15
+      },
+      "ajustes": {
+        "atributo": "dano",
+        "quanto": 0.5
+      },
+      "funcoes": [
+        {
+          "preset": "plantar_e_colher",
+          "quando": {
+            "mira": "planta"
+          },
+          "numeros": {
+            "alcance": 8
+          }
+        }
+      ]
     },
     {
-      "id": "kraken"
+      "id": "aquaman_corrente_marinha",
+      "nome": "Corrente Marinha",
+      "classe": "mobilidade",
+      "preset": "nado_rapido",
+      "numeros": {
+        "custo": 5,
+        "recarga": 4,
+        "alcance": 24
+      },
+      "ajustes": {
+        "velocidade": 2
+      },
+      "funcoes": [
+        {
+          "preset": "levar_junto",
+          "quando": {
+            "mira": "mob"
+          }
+        }
+      ]
+    },
+    {
+      "id": "aquaman_tesouros_do_mar",
+      "nome": "Tesouros do Mar",
+      "classe": "deteccao",
+      "preset": "procurar",
+      "numeros": {
+        "custo": 5,
+        "recarga": 15,
+        "raio": 24,
+        "duracao": 20
+      },
+      "ajustes": {
+        "mostra": "baus"
+      },
+      "funcoes": [
+        {
+          "preset": "rastro",
+          "quando": {
+            "aperto": "segurar"
+          },
+          "ajustes": {
+            "alvo": "estrutura",
+            "estrutura": "#minecraft:ocean_ruin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "aquaman_kraken",
+      "nome": "Kraken",
+      "classe": "invocacao",
+      "suprema": true,
+      "preset": "poder_do_heroi",
+      "numeros": {
+        "dano": 18,
+        "custo": 40,
+        "recarga": 135,
+        "duracao": 60
+      },
+      "ajustes": {
+        "poder": "kraken"
+      },
+      "funcoes": [
+        {
+          "preset": "poder_do_heroi",
+          "quando": {
+            "aperto": "segurar"
+          },
+          "ajustes": {
+            "poder": "atlantis_portal"
+          }
+        }
+      ]
+    }
+  ],
+  "passivas": [
+    {
+      "tipo": "aquatico"
+    },
+    {
+      "tipo": "superforca"
     }
   ],
   "skins": [

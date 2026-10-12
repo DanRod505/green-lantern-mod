@@ -7,7 +7,7 @@ import com.danrod505.greenlantern.client.cyborg.CyborgClient;
 import com.danrod505.greenlantern.engine.Characters;
 import com.danrod505.greenlantern.flight.FlightProfile;
 import com.danrod505.greenlantern.flight.FlightStyle;
-import com.danrod505.greenlantern.hero.HeroDefinition;
+import com.danrod505.greenlantern.engine.LegacyHero;
 import com.danrod505.greenlantern.hero.HeroEnergy;
 import com.danrod505.greenlantern.hero.HeroPowers;
 import com.danrod505.greenlantern.hero.SuitSet;
@@ -34,7 +34,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
  * eye and core, thrusters in the back and feet, the sonic cannon in the arm and a missile pod on the
  * shoulder. Made with the hero kit from {@code docs/heroes/cyborg.md}.
  */
-public final class CyborgHero extends HeroDefinition {
+public final class CyborgHero extends LegacyHero {
     /** The Cyborg Battery, kept in the Mother Box: it pays for the powers and comes back on its own. */
     public static final HeroEnergy ENERGY = new HeroEnergy(CyborgContent.ENERGY, () -> CyborgConfig.CAPACITY.get());
 
@@ -53,7 +53,7 @@ public final class CyborgHero extends HeroDefinition {
 
     public static final CyborgHero INSTANCE = new CyborgHero();
 
-    private final HeroPowers<CyborgPower> powers = new HeroPowers<>(CyborgPower.POWERS, ENERGY, ChatFormatting.GOLD,
+    private final HeroPowers<CyborgPower> ownPowers = new HeroPowers<>(CyborgPower.POWERS, ENERGY, ChatFormatting.GOLD,
             0.85F, 0.06F, CyborgServer::usePower, WHEEL);
 
     private CyborgHero() {
@@ -98,9 +98,15 @@ public final class CyborgHero extends HeroDefinition {
         level.sendParticles(ParticleTypes.END_ROD, player.getX(), player.getY() + 1.0, player.getZ(), 16, 0.45, 0.9, 0.45, 0.05);
     }
 
+    /** The powers of his own code, as they were on the old wheel (the new wheel of the catalog runs them by id). */
     @Override
-    public HeroPowers<CyborgPower> powers() {
-        return powers;
+    public HeroPowers<CyborgPower> ownPowers() {
+        return ownPowers;
+    }
+
+    @Override
+    public HeroEnergy energy() {
+        return ENERGY;
     }
 
     @Override

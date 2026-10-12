@@ -80,18 +80,8 @@ public final class BatHud {
         String text = charge.stored() + " / " + charge.capacity();
         graphics.drawString(mc.font, text, barX + 104, barY + 2, low ? 0xFFFF5555 : 0xFFF2D03A, true);
 
-        BatPower selected = BatPower.POWERS.selected(belt);
         int iconsY = y + 17;
-        for (int i = 0; i < BatPower.POWERS.count(); i++) {
-            BatPower power = BatPower.POWERS.byIndex(i);
-            int ix = x + 19 + i * 20;
-            boolean isSelected = power == selected;
-            if (isSelected) graphics.fill(ix - 1, iconsY - 1, ix + 17, iconsY + 17, 0xC0F2D03A);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, BatmanHero.WHEEL.icons(), ix, iconsY, power.iconIndex() * 16, 0, 16, 16,
-                    iconsW, WheelStyle.ICONS_HEIGHT, isSelected ? 0xFFFFFFFF : 0x90FFFFFF);
-        }
-        graphics.drawString(mc.font, Component.translatable("hud.greenlantern.power_key", selected.displayName(), KeyBindings.HERO_POWER.getTranslatedKeyMessage()),
-                x + 19, iconsY + 19, 0xFFE0E0E6, true);
+        LegacyRow.draw(graphics, BatmanHero.INSTANCE, player, belt, x + 19, iconsY, iconsY + 19, 0xC0F2D03A, 0xFFF2D03A, null, 0xFFE0E0E6);
         if (!suited) {
             graphics.drawString(mc.font, Component.translatable("hud.greenlantern.batman_suit_hint", KeyBindings.TOGGLE_UNIFORM.getTranslatedKeyMessage()),
                     x + 19, iconsY + 30, 0xFFA0A0A0, true);

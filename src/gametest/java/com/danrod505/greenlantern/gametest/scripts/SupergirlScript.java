@@ -42,8 +42,9 @@ public final class SupergirlScript {
     private static void power(SupergirlPower power) {
         server(sp -> {
             ItemStack item = SupergirlHero.INSTANCE.findItem(sp);
+            SupergirlHero.INSTANCE.selectOwn(item, power.id());
             sp.getCooldowns().removeCooldown(sp.getCooldowns().getCooldownGroup(item));
-            boolean used = SupergirlHero.INSTANCE.powers().use(sp, item, power.ordinal());
+            boolean used = SupergirlHero.INSTANCE.ownPowers().use(sp, item, power.ordinal());
             GreenLantern.LOGGER.info("CLIENTSCRIPT power {} used={}", power.id(), used);
         });
     }

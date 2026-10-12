@@ -1,7 +1,8 @@
 package com.danrod505.greenlantern.gametest;
 
 import com.danrod505.greenlantern.construct.Construct;
-import com.danrod505.greenlantern.construct.ConstructRegistry;
+import com.danrod505.greenlantern.engine.LegacyHero;
+import com.danrod505.greenlantern.ring.LanternHero;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.CameraType;
@@ -84,8 +85,14 @@ public final class ClientScript {
         mc().options.setCameraType(type);
     }
 
+    /** Chooses on the ring the ability of the wheel whose tap makes this construct. */
     public static void select(Construct construct) {
-        server(sp -> ConstructRegistry.select(sp.getMainHandItem(), construct));
+        server(sp -> LanternHero.INSTANCE.selectOwn(sp.getMainHandItem(), construct.id().getPath()));
+    }
+
+    /** Uses a power of the hero's own code that holding the key or aiming at something runs, as that function does. */
+    public static void useOwn(LegacyHero hero, String power) {
+        server(sp -> hero.ownPower(sp, sp.getMainHandItem(), power));
     }
 
     public static void use() {

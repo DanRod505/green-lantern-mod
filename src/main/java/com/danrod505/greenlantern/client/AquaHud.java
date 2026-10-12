@@ -76,18 +76,8 @@ public final class AquaHud {
         String text = force.stored() + " / " + force.capacity();
         graphics.drawString(mc.font, text, barX + 104, barY + 2, low ? 0xFFFF5555 : 0xFFF2C94A, true);
 
-        AquaPower selected = AquaPower.POWERS.selected(emblem);
         int iconsY = y + 17;
-        for (int i = 0; i < AquaPower.POWERS.count(); i++) {
-            AquaPower power = AquaPower.POWERS.byIndex(i);
-            int ix = x + 19 + i * 20;
-            boolean isSelected = power == selected;
-            if (isSelected) graphics.fill(ix - 1, iconsY - 1, ix + 17, iconsY + 17, 0xC03CE0D0);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, AquamanHero.WHEEL.icons(), ix, iconsY, power.iconIndex() * 16, 0, 16, 16,
-                    iconsW, WheelStyle.ICONS_HEIGHT, isSelected ? 0xFFFFFFFF : 0x90FFFFFF);
-        }
-        graphics.drawString(mc.font, Component.translatable("hud.greenlantern.power_key", selected.displayName(), KeyBindings.HERO_POWER.getTranslatedKeyMessage()),
-                x + 19, iconsY + 19, 0xFF8FF0E4, true);
+        LegacyRow.draw(graphics, AquamanHero.INSTANCE, player, emblem, x + 19, iconsY, iconsY + 19, 0xC03CE0D0, 0xFF3CE0D0, null, 0xFF8FF0E4);
         if (!suited) {
             graphics.drawString(mc.font, Component.translatable("hud.greenlantern.aquaman_suit_hint", KeyBindings.TOGGLE_UNIFORM.getTranslatedKeyMessage()),
                     x + 19, iconsY + 30, 0xFFA0A0A0, true);

@@ -64,7 +64,7 @@ public final class CyborgTests {
 
     private static boolean use(ServerPlayer player, CyborgPower power) {
         player.getCooldowns().removeCooldown(player.getCooldowns().getCooldownGroup(player.getMainHandItem()));
-        return CyborgHero.INSTANCE.powers().use(player, player.getMainHandItem(), power.ordinal());
+        return CyborgHero.INSTANCE.ownPowers().use(player, player.getMainHandItem(), power.ordinal());
     }
 
     private static int energy(ServerPlayer player) {

@@ -99,6 +99,15 @@ public final class PresetRuntime {
         return key(c.ability().data().id(), c.chosen().index());
     }
 
+    /**
+     * Starts a task under a name of its own (a power of one of the 9 heroes that goes on for a while):
+     * like a lasting preset, the same name stops the one before, and taking the suit off stops it.
+     */
+    public static void startNamed(ServerPlayer player, String key, Task task) {
+        stop(player, key);
+        RUNNING.add(new Running(player, task, key));
+    }
+
     /** The name function {@code index} of an ability runs under (0 is the default one, named after the ability). */
     public static String key(String ability, int index) {
         return index == 0 ? ability : ability + "#" + index;

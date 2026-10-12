@@ -96,26 +96,14 @@ public final class SupermanHud {
         String text = energy.stored() + " / " + energy.capacity();
         graphics.drawString(mc.font, text, barX + barW + 4, barY, low ? 0xFFFF5555 : 0xFFFFD84A, true);
 
-        SuperPower selected = SuperPower.POWERS.selected(crystal);
         int iconsY = y + 15;
         int flags = SupermanVisuals.flags(player.getId());
-        for (int i = 0; i < SuperPower.POWERS.count(); i++) {
-            SuperPower power = SuperPower.POWERS.byIndex(i);
-            int ix = x + 19 + i * 20;
-            boolean isSelected = power == selected;
-            boolean active = switch (power) {
-                case HEAT_VISION -> (flags & com.danrod505.greenlantern.superman.SuperFlags.HEAT_VISION) != 0;
-                case SUPER_BREATH -> (flags & com.danrod505.greenlantern.superman.SuperFlags.SUPER_BREATH) != 0;
-                case XRAY_VISION -> (flags & com.danrod505.greenlantern.superman.SuperFlags.XRAY) != 0;
-                case SUPER_PUNCH -> false;
-            };
-            if (isSelected) graphics.fill(ix - 1, iconsY - 1, ix + 17, iconsY + 17, 0xC02E6BFF);
-            if (active) graphics.fill(ix - 1, iconsY + 17, ix + 17, iconsY + 19, 0xFFE8303A);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, SupermanHero.WHEEL.icons(), ix, iconsY, power.iconIndex() * 16, 0, 16, 16,
-                    iconsW, WheelStyle.ICONS_HEIGHT, isSelected || active ? 0xFFFFFFFF : 0x90FFFFFF);
-        }
-        graphics.drawString(mc.font, Component.translatable("hud.greenlantern.power_key", selected.displayName(), KeyBindings.HERO_POWER.getTranslatedKeyMessage()),
-                x + 19, iconsY + 21, 0xFFE6ECFF, true);
+        LegacyRow.draw(graphics, SupermanHero.INSTANCE, player, crystal, x + 19, iconsY, iconsY + 21, 0xC02E6BFF, 0xFFE8303A, (p, power) -> power instanceof SuperPower superPower && switch (superPower) {
+            case HEAT_VISION -> (flags & com.danrod505.greenlantern.superman.SuperFlags.HEAT_VISION) != 0;
+            case SUPER_BREATH -> (flags & com.danrod505.greenlantern.superman.SuperFlags.SUPER_BREATH) != 0;
+            case XRAY_VISION -> (flags & com.danrod505.greenlantern.superman.SuperFlags.XRAY) != 0;
+            case SUPER_PUNCH -> false;
+        }, 0xFFE6ECFF);
         if (!suited) {
             graphics.drawString(mc.font, Component.translatable("hud.greenlantern.superman_suit_hint", KeyBindings.TOGGLE_UNIFORM.getTranslatedKeyMessage()),
                     x + 19, iconsY + 32, 0xFFA0A0A0, true);

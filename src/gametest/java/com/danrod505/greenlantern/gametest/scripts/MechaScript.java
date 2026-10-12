@@ -3,7 +3,6 @@ package com.danrod505.greenlantern.gametest.scripts;
 import static com.danrod505.greenlantern.gametest.ClientScript.*;
 
 import com.danrod505.greenlantern.gametest.ClientScript;
-import com.danrod505.greenlantern.construct.ConstructRegistry;
 import com.danrod505.greenlantern.item.PowerRingItem;
 import com.danrod505.greenlantern.registry.ModItems;
 import com.danrod505.greenlantern.ring.LanternHero;
@@ -57,7 +56,7 @@ public final class MechaScript {
                         level.setBlockAndUpdate(base.offset(x, y, 6), net.minecraft.world.level.block.Blocks.STONE_BRICKS.defaultBlockState());
                     }
                 }
-                ConstructRegistry.select(sp.getMainHandItem(), ConstructRegistry.MECHA);
+                LanternHero.INSTANCE.selectOwn(sp.getMainHandItem(), "mecha");
             });
             look(0, 10);
             camera(CameraType.THIRD_PERSON_BACK);

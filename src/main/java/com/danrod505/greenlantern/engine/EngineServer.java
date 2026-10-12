@@ -43,7 +43,8 @@ import net.minecraftforge.eventbus.api.listener.Priority;
  * (energy, cooldown, which function goes off), the skins, the class passive, the traits and the
  * weaknesses. Everything is decided here; the client only draws.
  * <p>
- * None of this touches the first 9 heroes: they are not {@link EngineHero}s.
+ * Of this, the 9 heroes that already existed ({@link LegacyHero}) use the abilities, their traits
+ * and the supreme's ready sound ({@link #legacyTick}); their energy and the rest stay their own code.
  */
 public final class EngineServer {
     /** Hearts of damage the ring bearer's light shield takes in each fight. */
@@ -74,7 +75,7 @@ public final class EngineServer {
         return state != null ? state : AbilityState.EMPTY;
     }
 
-    public static SkinState skin(EngineHero hero, ItemStack item) {
+    public static SkinState skin(CharacterHero hero, ItemStack item) {
         SkinState state = item.get(EngineContent.SKIN.get());
         return state != null ? state : new SkinState(hero.data().defaultSkin().id(), List.of());
     }
@@ -93,23 +94,27 @@ public final class EngineServer {
      * one that left something to take back (a carried block) takes it back. Returns whether it went off.
      */
     public static boolean useAbility(ServerPlayer player, ItemStack item, EngineAbility ability, AbilityFunctions.Press press) {
-        EngineHero hero = owner(item);
+        CharacterHero hero = owner(item);
         if (hero == null) return false;
+        int functions = ability.data().functions().size();
+        for (int i = 0; i <= functions; i++) {
+            String key = PresetRuntime.key(ability.data().id(), i);
+            if (hero.isSuited(player) && (PresetRuntime.stop(player, key) || PresetRuntime.undo(player, key))) return true;
+        }
+        AbilityFunctions.Chosen chosen = AbilityFunctions.choose(ability.data(), press, player);
+        if (chosen.function().preset().equals(CharacterHero.OWN_POWER)) {
+            // A power of the hero's own code (one of the 9 heroes): it keeps its own checks, energy and cooldown.
+            return hero.ownPower(player, item, ability.data().settings(chosen.function()).text("poder", ""));
+        }
         if (!hero.isSuited(player)) {
             player.displayClientMessage(Component.translatable("message.greenlantern.engine_need_suit"), true);
             return false;
         }
-        int functions = ability.data().functions().size();
-        for (int i = 0; i <= functions; i++) {
-            String key = PresetRuntime.key(ability.data().id(), i);
-            if (PresetRuntime.stop(player, key) || PresetRuntime.undo(player, key)) return true;
-        }
-        AbilityFunctions.Chosen chosen = AbilityFunctions.choose(ability.data(), press, player);
         if (!ready(player, hero, item, ability)) return false;
         return finish(player, hero, item, ability, Presets.use(player, hero, item, ability, chosen));
     }
 
-    private static boolean ready(ServerPlayer player, EngineHero hero, ItemStack item, EngineAbility ability) {
+    private static boolean ready(ServerPlayer player, CharacterHero hero, ItemStack item, EngineAbility ability) {
         AbilityState state = state(item);
         long now = player.level().getGameTime();
         long left = state.remaining(ability.ordinal(), now);
@@ -117,7 +122,7 @@ public final class EngineServer {
             refuse(player, Component.translatable("message.greenlantern.engine_cooldown", ability.displayName(), String.format("%.1f", left / 20.0)));
             return false;
         }
-        if (!player.isCreative() && !hero.energy().tryConsume(item, ability.cost())) {
+        if (!player.isCreative() && !hero.energy().tryConsume(item, ability.data().numbers().cost())) {
             refuse(player, Component.translatable("message.greenlantern.engine_no_energy", hero.data().characterClass().energyName()));
             return false;
         }
@@ -128,9 +133,9 @@ public final class EngineServer {
      * After the preset: the cooldown (the ability's, or the one the preset asked for). A use that
      * could not go off gives the energy back and says why.
      */
-    private static boolean finish(ServerPlayer player, EngineHero hero, ItemStack item, EngineAbility ability, Presets.Outcome outcome) {
+    private static boolean finish(ServerPlayer player, CharacterHero hero, ItemStack item, EngineAbility ability, Presets.Outcome outcome) {
         if (!outcome.went()) {
-            if (!player.isCreative()) hero.energy().add(item, ability.cost());
+            if (!player.isCreative()) hero.energy().add(item, ability.data().numbers().cost());
             refuse(player, outcome.reason());
             return false;
         }
@@ -141,7 +146,7 @@ public final class EngineServer {
     }
 
     /** Starts the ability's cooldown now: a lasting preset (a bubble, super speed) just ended. */
-    public static void startCooldown(ServerPlayer player, EngineHero hero, EngineAbility ability) {
+    public static void startCooldown(ServerPlayer player, CharacterHero hero, EngineAbility ability) {
         ItemStack item = hero.findItem(player);
         if (item.isEmpty()) return;
         long now = player.level().getGameTime();
@@ -154,8 +159,13 @@ public final class EngineServer {
         play(player, EngineContent.NO_ENERGY.get(), 0.6F, 0.8F);
     }
 
-    private static EngineHero owner(ItemStack item) {
-        return item.getItem() instanceof CharacterItem characterItem ? characterItem.hero() : null;
+    /** The hero of an item: the character of the engine it calls, or the one of the 9 heroes whose item it is. */
+    private static CharacterHero owner(ItemStack item) {
+        if (item.getItem() instanceof CharacterItem characterItem) return characterItem.hero();
+        for (var hero : HeroRegistry.all()) {
+            if (hero instanceof LegacyHero legacy && legacy.isActivator(item)) return legacy;
+        }
+        return null;
     }
 
     // ---- skins -------------------------------------------------------------------------------------
@@ -286,8 +296,35 @@ public final class EngineServer {
         return false;
     }
 
+    /**
+     * The new model for one of the 9 heroes, every tick: the traits their own code doesn't already
+     * give ({@link LegacyHero#OWN_TRAITS}) and the sound of the supreme ability when it is ready.
+     */
+    public static void legacyTick(ServerPlayer player, LegacyHero hero) {
+        if (!hero.isSuited(player)) return;
+        Traits.tick(player, hero, LegacyHero.OWN_TRAITS);
+        ItemStack item = hero.findItem(player);
+        if (!item.isEmpty()) supremeReady(player, hero, item);
+    }
+
+    /** The suit of one of the 9 heroes comes off: what the presets and the traits left goes away. */
+    static void legacySuitDown(ServerPlayer player) {
+        PresetRuntime.stopLasting(player);
+        Traits.suitDown(player);
+    }
+
+    /** Whether the traits of one of the 9 heroes take away this damage (invulneravel), with the suit on. */
+    public static boolean legacyImmune(ServerPlayer player, LegacyHero hero, DamageSource source) {
+        return hero.isSuited(player) && Traits.immune(hero.data(), source);
+    }
+
+    /** Whether the traits of one of the 9 heroes take away the fall damage. */
+    public static boolean legacyNoFall(LegacyHero hero) {
+        return Traits.noFall(hero.data());
+    }
+
     /** The supreme ability is ready again: a sound and a gold line, the tick its cooldown ends. */
-    private static void supremeReady(ServerPlayer player, EngineHero hero, ItemStack item) {
+    private static void supremeReady(ServerPlayer player, CharacterHero hero, ItemStack item) {
         AbilityState state = state(item);
         long now = player.level().getGameTime();
         for (int i = 0; i < hero.powers().set().count(); i++) {
@@ -452,7 +489,7 @@ public final class EngineServer {
     }
 
     /** A puff of the character's colours around the player (the provisional look of an ability without a preset). */
-    static void puff(ServerPlayer player, EngineHero hero) {
+    static void puff(ServerPlayer player, CharacterHero hero) {
         CharacterData.Colors colors = hero.data().colors();
         ServerLevel level = player.level();
         for (int color : new int[]{colors.main(), colors.second()}) {

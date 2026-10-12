@@ -46,6 +46,7 @@
   "message.greenlantern.engine_cooldown": "%s recarregando: %s s",
   "message.greenlantern.engine_no_energy": "Sem %s suficiente",
   "message.greenlantern.engine_no_item": "Você precisa do item do personagem",
+  "message.greenlantern.engine_own_power": "%s não saiu agora",
   "message.greenlantern.engine_not_built": "%s chega numa próxima versão",
   "message.greenlantern.engine_one_skin": "%s é a única skin liberada",
   "message.greenlantern.engine_skin": "Skin: %s",

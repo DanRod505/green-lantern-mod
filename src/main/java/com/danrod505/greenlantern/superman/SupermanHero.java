@@ -7,7 +7,7 @@ import com.danrod505.greenlantern.client.superman.SupermanClient;
 import com.danrod505.greenlantern.engine.Characters;
 import com.danrod505.greenlantern.flight.FlightProfile;
 import com.danrod505.greenlantern.flight.FlightStyle;
-import com.danrod505.greenlantern.hero.HeroDefinition;
+import com.danrod505.greenlantern.engine.LegacyHero;
 import com.danrod505.greenlantern.hero.HeroEnergy;
 import com.danrod505.greenlantern.hero.HeroPowers;
 import com.danrod505.greenlantern.hero.SuitSet;
@@ -37,7 +37,7 @@ import net.minecraft.world.item.ItemStack;
  * (and the curl of black hair). While it is worn the Man of Steel is far stronger, tougher, faster
  * and can't be pushed around.
  */
-public final class SupermanHero extends HeroDefinition {
+public final class SupermanHero extends LegacyHero {
     /**
      * Solar energy of Superman, kept in the Kryptonian Crystal. His cells soak up the light of the
      * (yellow) sun under the open sky, and it pays for flight and every power.
@@ -60,7 +60,7 @@ public final class SupermanHero extends HeroDefinition {
 
     public static final SupermanHero INSTANCE = new SupermanHero();
 
-    private final HeroPowers<SuperPower> powers = new HeroPowers<>(SuperPower.POWERS, SOLAR_ENERGY, ChatFormatting.AQUA,
+    private final HeroPowers<SuperPower> ownPowers = new HeroPowers<>(SuperPower.POWERS, SOLAR_ENERGY, ChatFormatting.AQUA,
             0.9F, 0.08F, SupermanServer::usePower, WHEEL);
 
     private SupermanHero() {
@@ -106,9 +106,15 @@ public final class SupermanHero extends HeroDefinition {
         level.sendParticles(ModParticles.SUPER_RING.get(), player.getX(), player.getY() + 1.0, player.getZ(), 0, 0.0, 1.0, 0.0, 1.0);
     }
 
+    /** The powers of his own code, as they were on the old wheel (the new wheel of the catalog runs them by id). */
     @Override
-    public HeroPowers<SuperPower> powers() {
-        return powers;
+    public HeroPowers<SuperPower> ownPowers() {
+        return ownPowers;
+    }
+
+    @Override
+    public HeroEnergy energy() {
+        return SOLAR_ENERGY;
     }
 
     /** Much faster and stronger than the Lantern's flight. */

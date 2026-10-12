@@ -5,7 +5,7 @@ import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
 import com.danrod505.greenlantern.client.speed.FlashClient;
 import com.danrod505.greenlantern.engine.Characters;
-import com.danrod505.greenlantern.hero.HeroDefinition;
+import com.danrod505.greenlantern.engine.LegacyHero;
 import com.danrod505.greenlantern.hero.HeroEnergy;
 import com.danrod505.greenlantern.hero.HeroPowers;
 import com.danrod505.greenlantern.hero.SuitSet;
@@ -28,7 +28,7 @@ import net.minecraft.world.item.CreativeModeTab;
  * running). The suit springs out of the ring (like Barry Allen's); while it is worn the player walks
  * faster and steps up whole blocks, so a run is never stopped by a single step.
  */
-public final class FlashHero extends HeroDefinition {
+public final class FlashHero extends LegacyHero {
     /** Speed Force stored in the Flash ring: pays for the speedster powers (tornado, phasing, lightning). */
     public static final HeroEnergy SPEED_FORCE = new HeroEnergy(ModDataComponents.SPEED_FORCE, () -> GLConfig.SPEED_FORCE_CAPACITY.get());
 
@@ -41,7 +41,7 @@ public final class FlashHero extends HeroDefinition {
 
     public static final FlashHero INSTANCE = new FlashHero();
 
-    private final HeroPowers<SpeedsterPower> powers = new HeroPowers<>(SpeedsterPower.POWERS, SPEED_FORCE, ChatFormatting.YELLOW,
+    private final HeroPowers<SpeedsterPower> ownPowers = new HeroPowers<>(SpeedsterPower.POWERS, SPEED_FORCE, ChatFormatting.YELLOW,
             1.0F, 0.08F, SpeedsterServer::usePower, WHEEL);
 
     private FlashHero() {
@@ -76,9 +76,15 @@ public final class FlashHero extends HeroDefinition {
         level.sendParticles(ModParticles.SPEED_SPARK.get(), player.getX(), player.getY() + 1.0, player.getZ(), 20, 0.4, 0.9, 0.4, 0.1);
     }
 
+    /** The powers of his own code, as they were on the old wheel (the new wheel of the catalog runs them by id). */
     @Override
-    public HeroPowers<SpeedsterPower> powers() {
-        return powers;
+    public HeroPowers<SpeedsterPower> ownPowers() {
+        return ownPowers;
+    }
+
+    @Override
+    public HeroEnergy energy() {
+        return SPEED_FORCE;
     }
 
     @Override

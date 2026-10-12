@@ -124,18 +124,17 @@ public final class LanternTests {
         ServerPlayer player = player(helper, 7.5, 1, 2.5, 0, 0);
         ItemStack ring = giveRing(player, 1000);
         LanternHero.INSTANCE.summonSuit(player);
-        select(player, ConstructRegistry.MINIGUN);
         Zombie zombie = dummy(helper, 7.5, 1, 9.5);
         float health = zombie.getHealth();
-        use(player);
-        helper.assertTrue(player.isUsingItem(), "minigun is used while holding the button");
+        // The minigun is the hold of the Constructs of Will: it fires by itself until the key again.
+        helper.assertTrue(useOwn(player, LanternHero.INSTANCE, ConstructRegistry.MINIGUN.id().getPath()), "the minigun should go off");
         helper.startSequence()
                 .thenExecuteFor(30, player::doTick)
                 .thenExecute(() -> {
                     helper.assertTrue(!around(player, GunConstructEntity.class, 4).isEmpty(), "gun construct should float next to the player");
                     helper.assertTrue(RingEnergy.get(ring).stored() < 1000, "shots should cost energy");
                     helper.assertTrue(zombie.getHealth() < health || zombie.isDeadOrDying(), "zombie should be shot");
-                    player.releaseUsingItem();
+                    useOwn(player, LanternHero.INSTANCE, ConstructRegistry.MINIGUN.id().getPath());
                 })
                 .thenExecuteFor(3, player::doTick)
                 .thenExecute(() -> {
@@ -181,8 +180,8 @@ public final class LanternTests {
         ServerPlayer player = player(helper, 7.5, 1, 3.5, 0, 0);
         ItemStack ring = giveRing(player, 1000);
         LanternHero.INSTANCE.summonSuit(player);
-        select(player, ConstructRegistry.SAW);
-        use(player);
+        // The saw is the Emerald Drill aimed at wood.
+        useOwn(player, LanternHero.INSTANCE, ConstructRegistry.SAW.id().getPath());
         helper.assertTrue(player.getVehicle() instanceof SawConstructEntity, "player should ride the saw");
         SawConstructEntity saw = (SawConstructEntity) player.getVehicle();
         Zombie zombie = dummy(helper, 7.5, 1, 3.5 + SawConstructEntity.BLADE_OFFSET);

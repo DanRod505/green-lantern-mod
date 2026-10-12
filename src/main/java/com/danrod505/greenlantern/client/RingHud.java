@@ -1,11 +1,9 @@
 package com.danrod505.greenlantern.client;
 
 import com.danrod505.greenlantern.GreenLantern;
-import com.danrod505.greenlantern.construct.Construct;
-import com.danrod505.greenlantern.construct.ConstructRegistry;
+import com.danrod505.greenlantern.ring.LanternHero;
 import com.danrod505.greenlantern.ring.RingEnergy;
 import com.danrod505.greenlantern.ring.RingHelper;
-import java.util.List;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -18,15 +16,12 @@ import net.minecraft.world.item.ItemStack;
 
 /**
  * HUD shown while the player carries a Power Ring: energy bar with the Corps emblem plus the
- * construct selector (current construct highlighted).
+ * row of abilities of the catalog (the chosen one framed).
  */
 public final class RingHud {
     private static final Identifier ENERGY_BAR = GreenLantern.id("textures/gui/energy_bar.png");
-    private static final Identifier CONSTRUCTS = GreenLantern.id("textures/gui/constructs.png");
     private static final int BAR_TEX_W = 128;
     private static final int BAR_TEX_H = 32;
-    private static final int ICON_TEX_W = 256;
-    private static final int ICON_TEX_H = 16;
 
     private static float displayedFraction = -1.0F;
 
@@ -67,22 +62,9 @@ public final class RingHud {
         String text = energy.stored() + " / " + energy.capacity();
         graphics.drawString(mc.font, text, barX + 104, barY + 2, low ? 0xFFFF5555 : 0xFF7CFF8A, true);
 
-        // Construct selector.
-        List<Construct> all = ConstructRegistry.all();
-        Construct selected = ConstructRegistry.selected(ring);
+        // The wheel of the catalog (the constructs are its powers now).
         int iconsY = y + 17;
-        for (int i = 0; i < all.size(); i++) {
-            Construct construct = all.get(i);
-            int ix = x + 19 + i * 20;
-            boolean isSelected = construct == selected;
-            int tint = isSelected ? 0xFFFFFFFF : 0x90FFFFFF;
-            graphics.blit(RenderPipelines.GUI_TEXTURED, CONSTRUCTS, ix, iconsY, construct.iconIndex() * 16, 0, 16, 16, ICON_TEX_W, ICON_TEX_H, tint);
-            if (isSelected) {
-                graphics.blit(RenderPipelines.GUI_TEXTURED, CONSTRUCTS, ix, iconsY, 80, 0, 16, 16, ICON_TEX_W, ICON_TEX_H);
-            }
-        }
-        Component name = selected.name();
-        graphics.drawString(mc.font, name, x + 19, iconsY + 19, 0xFFB8FFC4, true);
+        LegacyRow.draw(graphics, LanternHero.INSTANCE, player, ring, x + 19, iconsY, iconsY + 19, 0xC02CFF5A, 0xFF7CFF96, null, 0xFFB8FFC4);
         if (!suited) {
             graphics.drawString(mc.font, Component.translatable("hud.greenlantern.suit_hint", KeyBindings.TOGGLE_UNIFORM.getTranslatedKeyMessage()),
                     x + 19, iconsY + 30, 0xFFA0A0A0, true);

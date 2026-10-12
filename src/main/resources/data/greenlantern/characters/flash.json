@@ -1,5 +1,5 @@
 {
-  "_comentario": "Um dos 9 heróis que já existiam: os poderes e a energia continuam no código dele. O traje, os bônus e a ordem da roda vêm daqui, com os mesmos números de antes.",
+  "_comentario": "Um dos 9 heróis que já existiam, no modelo novo de habilidades (Etapa 3, lote 1): a roda e as passivas são as do catálogo. As funções com o preset poder_do_heroi usam o poder do código dele como antes (energia, recarga e números de hoje); as outras são presets da biblioteca. O traje e os bônus vêm daqui, com os mesmos números de antes.",
   "id": "flash",
   "nome": "Flash",
   "classe": "velocista",
@@ -44,13 +44,174 @@
   },
   "habilidades": [
     {
-      "id": "tornado"
+      "id": "flash_rajada_de_socos",
+      "nome": "Rajada de Socos",
+      "classe": "golpe",
+      "preset": "sequencia",
+      "numeros": {
+        "dano": 12,
+        "custo": 6,
+        "recarga": 3,
+        "alcance": 4
+      },
+      "ajustes": {
+        "golpes": 5,
+        "intervalo": 0.15
+      },
+      "funcoes": [
+        {
+          "preset": "minerar_area",
+          "quando": {
+            "mira": "pedra"
+          },
+          "numeros": {
+            "alcance": 5
+          },
+          "ajustes": {
+            "tamanho": 3,
+            "profundidade": 2
+          }
+        }
+      ]
     },
     {
-      "id": "phase"
+      "id": "flash_vibrar",
+      "nome": "Vibrar",
+      "classe": "evasao",
+      "preset": "poder_do_heroi",
+      "numeros": {
+        "custo": 4,
+        "recarga": 5,
+        "alcance": 8,
+        "duracao": 0.5
+      },
+      "ajustes": {
+        "poder": "phase"
+      }
     },
     {
-      "id": "lightning"
+      "id": "flash_tornado_de_bracos",
+      "nome": "Tornado de Braços",
+      "classe": "controle",
+      "preset": "poder_do_heroi",
+      "numeros": {
+        "dano": 2.5,
+        "custo": 8,
+        "recarga": 12,
+        "alcance": 24,
+        "duracao": 4
+      },
+      "ajustes": {
+        "poder": "tornado"
+      },
+      "funcoes": [
+        {
+          "preset": "ima_de_itens",
+          "quando": {
+            "aperto": "segurar"
+          }
+        }
+      ]
+    },
+    {
+      "id": "flash_forca_de_aceleracao",
+      "nome": "Força de Aceleração",
+      "classe": "fortalecimento",
+      "preset": "cura",
+      "numeros": {
+        "custo": 15,
+        "recarga": 40,
+        "duracao": 15
+      },
+      "ajustes": {
+        "quanto": 6,
+        "tempo": 3
+      },
+      "funcoes": [
+        {
+          "preset": "aura",
+          "quando": {
+            "aperto": "segurar"
+          },
+          "ajustes": {
+            "atributo": "velocidade",
+            "quanto": 0.5
+          }
+        },
+        {
+          "preset": "plantar_e_colher",
+          "quando": {
+            "mira": "planta"
+          },
+          "numeros": {
+            "alcance": 8
+          },
+          "ajustes": {
+            "colhe": false,
+            "cresce": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "flash_mapa_relampago",
+      "nome": "Mapa Relâmpago",
+      "classe": "mobilidade",
+      "preset": "teleporte",
+      "numeros": {
+        "custo": 5,
+        "recarga": 4,
+        "alcance": 24
+      },
+      "ajustes": {
+        "visual": "energia"
+      },
+      "funcoes": [
+        {
+          "preset": "rastro",
+          "quando": {
+            "aperto": "segurar"
+          },
+          "numeros": {
+            "duracao": 10
+          },
+          "ajustes": {
+            "alvo": "casa"
+          }
+        }
+      ]
+    },
+    {
+      "id": "flash_corrida_no_tempo",
+      "nome": "Corrida no Tempo",
+      "classe": "natureza",
+      "suprema": true,
+      "preset": "poder_do_heroi",
+      "numeros": {
+        "custo": 40,
+        "recarga": 90,
+        "raio": 9,
+        "duracao": 60
+      },
+      "ajustes": {
+        "poder": "lightning"
+      },
+      "funcoes": [
+        {
+          "preset": "clima",
+          "quando": {
+            "aperto": "segurar"
+          },
+          "ajustes": {
+            "tipo": "sol"
+          }
+        }
+      ]
+    }
+  ],
+  "passivas": [
+    {
+      "tipo": "supervelocidade"
     }
   ],
   "skins": [

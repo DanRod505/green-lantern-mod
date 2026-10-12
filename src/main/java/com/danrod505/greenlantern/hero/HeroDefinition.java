@@ -104,6 +104,7 @@ public abstract class HeroDefinition {
 
     /** Takes the suit off (giving back the armor worn before), with sound and particles if {@code effects}. */
     public final void dismissSuit(ServerPlayer player, boolean effects) {
+        onAbilitiesOff(player);
         onSuitRemoving(player);
         Uniform.removeSuit(player);
         updateSuitModifiers(player, false);
@@ -135,6 +136,10 @@ public abstract class HeroDefinition {
 
     /** Before the suit comes off: put away what the hero's powers left in the world. */
     protected void onSuitRemoving(ServerPlayer player) {
+    }
+
+    /** Before the suit comes off: the presets and traits of the new model of abilities stop (see {@code engine.LegacyHero}). */
+    protected void onAbilitiesOff(ServerPlayer player) {
     }
 
     /** Particles after the suit down sound (only when taken off with effects). */

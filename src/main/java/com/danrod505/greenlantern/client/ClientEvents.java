@@ -1,6 +1,6 @@
 package com.danrod505.greenlantern.client;
 
-import com.danrod505.greenlantern.engine.EngineHero;
+import com.danrod505.greenlantern.engine.CharacterHero;
 import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.HeroRegistry;
 import com.danrod505.greenlantern.network.CycleConstructPacket;
@@ -31,16 +31,20 @@ public final class ClientEvents {
             if (HeroRegistry.context(player).isPresent()) ModNetwork.sendToServer(new ToggleUniformPacket());
         }
         HeroDefinition context = HeroRegistry.context(player).orElse(null);
-        if (context instanceof EngineHero engine) com.danrod505.greenlantern.client.engine.EngineIcons.ensure(engine);
-        if (context instanceof EngineHero engine) {
-            // Engine characters: the function of the ability depends on how V is pressed (see EngineKeys).
-            com.danrod505.greenlantern.client.engine.EngineKeys.tick(mc, engine);
+        for (HeroDefinition hero : HeroRegistry.all()) {
+            // The 9 heroes' HUDs draw the icons of their new wheel even when another hero is in hand.
+            if (hero instanceof com.danrod505.greenlantern.engine.LegacyHero legacy) com.danrod505.greenlantern.client.engine.EngineIcons.ensure(legacy);
+        }
+        if (context instanceof CharacterHero character) com.danrod505.greenlantern.client.engine.EngineIcons.ensure(character);
+        if (context instanceof CharacterHero character) {
+            // Characters in the new model (the engine's and the 9 heroes): the function depends on how V is pressed (see EngineKeys).
+            com.danrod505.greenlantern.client.engine.EngineKeys.tick(mc, character);
         } else {
             while (KeyBindings.HERO_POWER.consumeClick()) {
                 if (mc.screen != null || context == null || !context.hasPowers()) continue;
                 ModNetwork.sendToServer(new UsePowerPacket(-1));
             }
-            // The skin and the direct keys only act for engine characters.
+            // The skin and the direct keys only act for characters in the new model.
             while (KeyBindings.SKIN.consumeClick()) {
             }
             for (var key : KeyBindings.ABILITIES) {

@@ -5,6 +5,17 @@
 Mod de heróis do **Universo DC** para **Minecraft Java 1.21.11** com **Forge 61.2.0** (compilado com **Java 25**).
 Começou como o mod do Lanterna Verde e agora traz também **o Flash** (v1.7.0) **o Aquaman** (v1.8.0), **Atlântida** (v1.9.0) **o Kraken do Aquaman** (v1.10.0), **o Batman** (v1.11.0), **as criaturas de Atlântida** (v1.12.0) **o Fosso**, os inimigos do Aquaman (v1.13.0), **o Superman** (v1.14.0), **a Mulher Maravilha** (v1.15.0) **o Ciborgue** (v1.16.0), o primeiro herói feito com o kit de herói, e **a Supergirl com o Krypto, o Supercão** (v1.17.0). O id do mod continua `greenlantern`, então mundos e configurações antigas continuam funcionando.
 
+## Os 9 heróis no modelo novo (novo na 2.8.0)
+
+Primeiro lote da Etapa 3: os 9 heróis passam para o modelo de habilidades da 2.6.0. **Os poderes de cada um continuam os mesmos, com a mesma energia, recarga e números**; o que muda é a roda e o que cada tecla faz.
+
+* **Roda do catálogo:** cada herói tem de 5 a 8 habilidades, as de luta primeiro, depois as de mundo e a suprema por último, com borda dourada. Teclas diretas de 1 a 8, como nos personagens da engine. O Lanterna deixa a roda de construtos e passa a ter a mesma roda dos outros.
+* **Funções por contexto:** a mesma habilidade faz coisas diferentes conforme o aperto e a mira. Exemplos: o Supersoco mirando pedra minera um buraco 3x3; a Broca Esmeralda mirando madeira vira a serra; segurar Construtos da Vontade solta a metralhadora (ela atira sozinha por 5 segundos, e a tecla de novo para); segurar o Chamado do Mar monta o tubarão; o Laço da Verdade laça no toque, puxa ao segurar e gira ao soltar.
+* **Poderes que viraram funções de segurar:** Muralha de Gelo e Superaudição (Supergirl), Tubarão e Portal de Atlântida (Aquaman), Lançar Escudo (Mulher-Maravilha), Pulso Eletromagnético e Autorreparo (Ciborgue), Arremesso Kryptoniano e Explosão Solar (Supergirl), Rugido de Aquiles (Shazam).
+* **Usos no mundo novos**, pagos com a energia de cada herói: minerar, cortar árvores, plantar e colher, pescar, abrir portas e alavancas, puxar itens, organizar baús, rastros até a casa e até ruínas no mar, e as grandes obras das supremas (Fortaleza da Solidão, Batcaverna, templo amazona).
+* **Passivas da ficha:** superforça, invulnerável e visão no escuro agora valem para os heróis que as têm; o voo, a supercorrida, o nado e a capa continuam com o código de cada um.
+* Balanceamento, receitas e as receitas repetidas ficam para os próximos lotes.
+
 ## Ferramentas de produção (novo na 2.7.0)
 
 Sétimo e último lote da Etapa 2: as ferramentas para produzir os personagens do catálogo em lotes. **Nada muda no jogo nem nos 9 heróis de hoje.** Detalhes em [`docs/ferramentas.md`](docs/ferramentas.md).
@@ -279,9 +290,9 @@ Uma dimensão própria com noite eterna sob um céu estrelado verde e uma músic
 | # | Construto | Uso | Efeito |
 | --- | --- | --- | --- |
 | 1 | **Disparo de Energia** | Clique direito | Esfera pesada de luz sólida que explode no impacto (dano em área, sem quebrar blocos). |
-| 2 | **Metralhadora** | Segure o clique direito | Metralhadora giratória de 6 canos flutua ao lado da mão e dispara uma rajada contínua. |
+| 2 | **Metralhadora** | Segure V em Construtos da Vontade (atira 5 s; V de novo para) | Metralhadora giratória de 6 canos flutua ao lado da mão e dispara uma rajada contínua. |
 | 3 | **Bolha de Proteção** | Clique para ligar/desligar | Esfera ao redor do jogador: absorve 85% do dano, empurra criaturas e reflete projéteis. Consome energia por segundo. |
-| 4 | **Serra Gigante** | Clique para invocar/dispensar | Veículo: você fica em pé numa prancha de luz com uma serra circular gigante na frente. **W/S** acelera/ré, **A/D** desliza para os lados, o **mouse** dá a direção, **pulo** salta e **agachar** sai. Retalha criaturas e corta folhas, troncos e plantas. |
+| 4 | **Serra Gigante** | Broca Esmeralda mirando madeira (de novo para dispensar) | Veículo: você fica em pé numa prancha de luz com uma serra circular gigante na frente. **W/S** acelera/ré, **A/D** desliza para os lados, o **mouse** dá a direção, **pulo** salta e **agachar** sai. Retalha criaturas e corta folhas, troncos e plantas. |
 | 5 | **Martelo Gigante** | Clique direito | Um martelo gigante surge no ponto para onde você olha, golpeia o chão e solta uma onda de choque que causa dano e arremessa tudo em volta (com tremor de câmera). |
 | 6 | **Broca Gigante** | Clique para invocar/dispensar | Veículo de escavação: você senta numa cabine sobre esteiras com uma broca gigante na frente que aponta para onde você olha. **W** perfura nessa direção (olhando para a frente cava túneis retos com o chão plano, para baixo cava poços, para cima perfura o teto), **S** ré, **A/D** desliza, **pulo** salta e **agachar** sai. Minera pedra, terra, areia, cascalho e todos os minérios (obsidiana demora mais, rocha-matriz nunca), manda os itens direto para o inventário e solta a experiência dos minérios. Encostada na rocha, se segura nas paredes. A ponta giratória fere criaturas. |
 | 7 | **Mecha Gigante** | Clique para invocar, **agachar** sai | Armadura de luz sólida com **10 blocos de altura**: você pilota sentado na cabine do peito e fica **protegido de todo dano** (o mecha absorve golpes, flechas e explosões gastando energia do anel; também não deixa você se afogar nem pegar fogo). **W/S** anda, **A/D** passo lateral, **Ctrl** corre; o tronco gira para a mira e as pernas acompanham devagar, com passos que tremem a câmera. **Segure pulo** para os propulsores esquentarem e o mecha decolar; no ar **W** voa para onde você olha, **Ctrl** liga o pós-combustor e soltar o pulo faz pairar. Aterrissagem forte solta onda de choque. **Segure o clique direito**: dois raios laser saem dos canhões dos punhos (ferem e incendeiam). **Clique esquerdo**: rajada de 6 mísseis teleguiados dos ombros. |
@@ -312,11 +323,11 @@ Por direitos autorais, o mod não pode incluir músicas de terceiros, como a tri
 
 | Tecla | Ação |
 | --- | --- |
-| **Clique direito** com o anel | Sem uniforme: veste o uniforme. Com uniforme: usa o construto selecionado. |
+| **Clique direito** com o anel | Sem uniforme: veste o uniforme. Com uniforme: usa a habilidade escolhida na roda. |
 | **G** | Vestir / remover o uniforme |
-| **R** (segurar) | Abre a **roda de construtos** (estilo *weapon wheel* do GTA V): aponte com o mouse e solte R (ou clique). Também aceita as teclas **1–6** e a rodinha do mouse |
-| **R** (toque rápido) | Próximo construto |
-| **Shift + roda do mouse** (anel na mão) | Troca de construto |
+| **R** (segurar) | Abre a **roda de habilidades** (estilo *weapon wheel* do GTA V): aponte com o mouse e solte R (ou clique). Também aceita as teclas **1–8** e a rodinha do mouse |
+| **R** (toque rápido) | Próxima habilidade |
+| **Shift + roda do mouse** (anel na mão) | Troca de habilidade |
 | **Dois toques no pulo** (com uniforme) | Decolar / parar de voar |
 | **W** voando (segure) / **Ctrl** | Acelerar até a barreira do som / acelerar mais rápido |
 | **A A** ou **D D** voando rápido | Barrel roll |

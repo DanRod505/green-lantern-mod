@@ -61,15 +61,14 @@ public final class Characters {
      * 2 for the world (by main class) within its class's arsenal, the fighting ones first, then the
      * world ones, and exactly 1 supreme, the last; each ability has up to 2 more functions, each with
      * a condition the game knows; up to 4 known traits; at least one skin; a known transformation.
+     * The 9 heroes (legado) follow the same rules, keep their suit in the file and are the only ones
+     * whose functions may run a power of their own code.
      */
     public static List<String> check(CharacterData data, String fileName) {
         List<String> problems = new ArrayList<>();
         if (!data.id().equals(fileName)) problems.add("id " + data.id() + " is not the file name " + fileName);
         if (!data.id().matches("[a-z0-9_]+")) problems.add("id must be lowercase letters, digits and _");
-        if (data.legacy()) {
-            if (data.suit().isEmpty()) problems.add("a legacy hero keeps its suit in the file (traje)");
-            return problems;
-        }
+        if (data.legacy() && data.suit().isEmpty()) problems.add("a legacy hero keeps its suit in the file (traje)");
         List<CharacterData.Ability> abilities = data.abilities();
         ClassRules.Arsenal arsenal = data.classRule().arsenal();
         int fight = 0;
@@ -96,6 +95,11 @@ public final class Characters {
                 if (!ability.supreme()) worldSeen = true;
             }
             if (ability.functions().size() > 2) problems.add(who + "has " + (ability.functions().size() + 1) + " functions, at most 3");
+            for (CharacterData.Function function : ability.allFunctions()) {
+                if (!function.preset().equals(CharacterHero.OWN_POWER)) continue;
+                if (!data.legacy()) problems.add(who + "only the 9 heroes (legado) have powers of their own code (" + CharacterHero.OWN_POWER + ")");
+                else if (ability.settings(function).text("poder", "").isEmpty()) problems.add(who + CharacterHero.OWN_POWER + " needs the poder it uses (ajustes)");
+            }
             for (CharacterData.Function function : ability.functions()) {
                 CharacterData.When when = function.when();
                 if (when.always()) problems.add(who + "function " + function.preset() + " needs a condition (quando)");

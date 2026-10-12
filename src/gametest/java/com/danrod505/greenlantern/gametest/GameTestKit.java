@@ -3,9 +3,11 @@ package com.danrod505.greenlantern.gametest;
 import com.danrod505.greenlantern.aquaman.AquamanHero;
 import com.danrod505.greenlantern.batman.BatmanHero;
 import com.danrod505.greenlantern.construct.Construct;
-import com.danrod505.greenlantern.construct.ConstructRegistry;
+import com.danrod505.greenlantern.engine.LegacyHero;
 import com.danrod505.greenlantern.flash.FlashHero;
+import com.danrod505.greenlantern.hero.HeroPower;
 import com.danrod505.greenlantern.registry.ModItems;
+import com.danrod505.greenlantern.ring.LanternHero;
 import com.danrod505.greenlantern.ring.RingEnergy;
 import com.danrod505.greenlantern.superman.SupermanHero;
 import com.danrod505.greenlantern.wonderwoman.WonderWomanHero;
@@ -59,8 +61,22 @@ public final class GameTestKit {
         return player.getMainHandItem();
     }
 
+    /** Chooses on the ring the ability of the wheel whose tap makes this construct. */
     public static void select(ServerPlayer player, Construct construct) {
-        ConstructRegistry.select(player.getMainHandItem(), construct);
+        LanternHero.INSTANCE.selectOwn(player.getMainHandItem(), construct.id().getPath());
+    }
+
+    /** Chooses on the hero's item the ability of the wheel whose tap runs this power of the hero's own code. */
+    public static void selectOwn(LegacyHero hero, ItemStack item, HeroPower power) {
+        hero.selectOwn(item, power.id());
+    }
+
+    /**
+     * Uses a power of the hero's own code that a function other than the tap runs (holding the key,
+     * aiming at something), as that function does: straight, with the hero's item in the main hand.
+     */
+    public static boolean useOwn(ServerPlayer player, LegacyHero hero, String power) {
+        return hero.ownPower(player, player.getMainHandItem(), power);
     }
 
     public static void use(ServerPlayer player) {

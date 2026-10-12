@@ -1,5 +1,5 @@
 {
-  "_comentario": "Um dos 9 heróis que já existiam: os poderes e a energia continuam no código dele. O traje, os bônus e a ordem da roda vêm daqui, com os mesmos números de antes.",
+  "_comentario": "Um dos 9 heróis que já existiam, no modelo novo de habilidades (Etapa 3, lote 1): a roda e as passivas são as do catálogo. As funções com o preset poder_do_heroi usam o poder do código dele como antes (energia, recarga e números de hoje); as outras são presets da biblioteca. O traje e os bônus vêm daqui, com os mesmos números de antes.",
   "id": "shazam",
   "nome": "Shazam",
   "classe": "colosso",
@@ -51,25 +51,169 @@
   },
   "habilidades": [
     {
-      "id": "zeus_lightning"
+      "id": "shazam_forca_de_hercules",
+      "nome": "Força de Hércules",
+      "classe": "golpe",
+      "preset": "poder_do_heroi",
+      "numeros": {
+        "dano": 12,
+        "custo": 6,
+        "recarga": 3,
+        "alcance": 4
+      },
+      "ajustes": {
+        "poder": "hercules_slam"
+      },
+      "funcoes": [
+        {
+          "preset": "minerar_area",
+          "quando": {
+            "mira": "pedra"
+          },
+          "numeros": {
+            "alcance": 5
+          },
+          "ajustes": {
+            "tamanho": 3
+          }
+        }
+      ]
     },
     {
-      "id": "thunder_call"
+      "id": "shazam_raio_de_zeus",
+      "nome": "Raio de Zeus",
+      "classe": "disparo",
+      "preset": "poder_do_heroi",
+      "numeros": {
+        "dano": 8.5,
+        "custo": 3,
+        "recarga": 1,
+        "alcance": 48
+      },
+      "ajustes": {
+        "poder": "zeus_lightning"
+      },
+      "funcoes": [
+        {
+          "preset": "ligar_maquina",
+          "quando": {
+            "mira": "maquina"
+          },
+          "numeros": {
+            "alcance": 24
+          }
+        }
+      ]
     },
     {
-      "id": "mercury_dash"
+      "id": "shazam_vigor_de_atlas",
+      "nome": "Vigor de Atlas",
+      "classe": "defesa",
+      "preset": "poder_do_heroi",
+      "numeros": {
+        "custo": 5,
+        "recarga": 6,
+        "raio": 3,
+        "duracao": 10
+      },
+      "ajustes": {
+        "poder": "atlas_stamina"
+      },
+      "funcoes": [
+        {
+          "preset": "poder_do_heroi",
+          "quando": {
+            "aperto": "segurar"
+          },
+          "ajustes": {
+            "poder": "achilles_roar"
+          }
+        }
+      ]
     },
     {
-      "id": "hercules_slam"
+      "id": "shazam_sabedoria_de_salomao",
+      "nome": "Sabedoria de Salomão",
+      "classe": "deteccao",
+      "preset": "poder_do_heroi",
+      "numeros": {
+        "custo": 5,
+        "recarga": 15,
+        "raio": 24,
+        "duracao": 20
+      },
+      "ajustes": {
+        "poder": "solomon_wisdom"
+      },
+      "funcoes": [
+        {
+          "preset": "onda_em_volta",
+          "quando": {
+            "aperto": "segurar"
+          },
+          "numeros": {
+            "dano": 8,
+            "raio": 5
+          }
+        }
+      ]
     },
     {
-      "id": "achilles_roar"
+      "id": "shazam_velocidade_de_mercurio",
+      "nome": "Velocidade de Mercúrio",
+      "classe": "mobilidade",
+      "preset": "poder_do_heroi",
+      "numeros": {
+        "custo": 5,
+        "recarga": 4,
+        "alcance": 24
+      },
+      "ajustes": {
+        "poder": "mercury_dash"
+      },
+      "funcoes": [
+        {
+          "preset": "levar_junto",
+          "quando": {
+            "aperto": "segurar"
+          }
+        }
+      ]
     },
     {
-      "id": "atlas_stamina"
+      "id": "shazam_shazam",
+      "nome": "SHAZAM!",
+      "classe": "explosao",
+      "suprema": true,
+      "preset": "poder_do_heroi",
+      "numeros": {
+        "dano": 43,
+        "custo": 40,
+        "recarga": 90,
+        "raio": 9
+      },
+      "ajustes": {
+        "poder": "thunder_call"
+      },
+      "funcoes": [
+        {
+          "preset": "clima",
+          "quando": {
+            "aperto": "segurar"
+          },
+          "ajustes": {
+            "tipo": "tempestade"
+          }
+        }
+      ]
+    }
+  ],
+  "passivas": [
+    {
+      "tipo": "voo"
     },
     {
-      "id": "solomon_wisdom"
+      "tipo": "superforca"
     }
   ],
   "skins": [

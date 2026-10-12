@@ -7,7 +7,7 @@ import com.danrod505.greenlantern.client.shazam.ShazamClient;
 import com.danrod505.greenlantern.engine.Characters;
 import com.danrod505.greenlantern.flight.FlightProfile;
 import com.danrod505.greenlantern.flight.FlightStyle;
-import com.danrod505.greenlantern.hero.HeroDefinition;
+import com.danrod505.greenlantern.engine.LegacyHero;
 import com.danrod505.greenlantern.hero.HeroEnergy;
 import com.danrod505.greenlantern.hero.HeroPowers;
 import com.danrod505.greenlantern.hero.SuitSet;
@@ -34,7 +34,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
  * powers, one for each elder of the name, built from the power blocks in {@code hero/power}, and
  * flight between the Lantern's and Supergirl's. Made with the hero kit from {@code docs/heroes/shazam.md}.
  */
-public final class ShazamHero extends HeroDefinition {
+public final class ShazamHero extends LegacyHero {
     /** The Shazam's Magic, kept in the Wizard's Bolt: it pays for the powers and comes back on its own. */
     public static final HeroEnergy ENERGY = new HeroEnergy(ShazamContent.ENERGY, () -> ShazamConfig.CAPACITY.get());
 
@@ -53,7 +53,7 @@ public final class ShazamHero extends HeroDefinition {
 
     public static final ShazamHero INSTANCE = new ShazamHero();
 
-    private final HeroPowers<ShazamPower> powers = new HeroPowers<>(ShazamPower.POWERS, ENERGY, ChatFormatting.GOLD,
+    private final HeroPowers<ShazamPower> ownPowers = new HeroPowers<>(ShazamPower.POWERS, ENERGY, ChatFormatting.GOLD,
             0.85F, 0.06F, ShazamServer::usePower, WHEEL);
 
     private ShazamHero() {
@@ -100,9 +100,15 @@ public final class ShazamHero extends HeroDefinition {
         ShazamServer.transform(player, false);
     }
 
+    /** The powers of his own code, as they were on the old wheel (the new wheel of the catalog runs them by id). */
     @Override
-    public HeroPowers<ShazamPower> powers() {
-        return powers;
+    public HeroPowers<ShazamPower> ownPowers() {
+        return ownPowers;
+    }
+
+    @Override
+    public HeroEnergy energy() {
+        return ENERGY;
     }
 
     @Override

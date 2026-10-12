@@ -51,5 +51,19 @@
   "message.greenlantern.cyborg_hack_nothing": "Nenhuma máquina para invadir na mira",
   "message.greenlantern.cyborg_boom_tube_open": "Tubo de Explosão abrindo: fique perto!",
   "message.greenlantern.cyborg_boom_tube_marked": "Destino do Tubo de Explosão marcado em %s, %s, %s",
-  "message.greenlantern.cyborg_lightning": "Um raio encheu a bateria!"
+  "message.greenlantern.cyborg_lightning": "Um raio encheu a bateria!",
+  "power.greenlantern.cyborg_canhao_sonico": "Canhão Sônico",
+  "power.greenlantern.cyborg_canhao_sonico.desc": "Toque: dispara o canhão sônico. Mirando pedra: minera um buraco.",
+  "power.greenlantern.cyborg_invasao_de_sistema": "Invasão de Sistema",
+  "power.greenlantern.cyborg_invasao_de_sistema.desc": "Toque: domina a máquina na mira. Segurar: um pulso eletromagnético.",
+  "power.greenlantern.cyborg_blindagem": "Blindagem",
+  "power.greenlantern.cyborg_blindagem.desc": "Toque: a blindagem fecha e você toma menos dano por um tempo. Segurar: se conserta.",
+  "power.greenlantern.cyborg_caixa_materna": "Caixa Materna",
+  "power.greenlantern.cyborg_caixa_materna.desc": "Toque: mísseis do ombro. Segurar: um ajudante que minera por você.",
+  "power.greenlantern.cyborg_scanner": "Scanner",
+  "power.greenlantern.cyborg_scanner.desc": "Toque: marca inimigos e minérios através das paredes.",
+  "power.greenlantern.cyborg_braco_guindaste": "Braço Guindaste",
+  "power.greenlantern.cyborg_braco_guindaste.desc": "Toque: pega o bloco na mira e leva.",
+  "power.greenlantern.cyborg_tubo_de_explosao": "Tubo de Explosão",
+  "power.greenlantern.cyborg_tubo_de_explosao.desc": "Suprema. Toque: abre um Tubo de Explosão."
 }

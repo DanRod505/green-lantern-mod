@@ -8,7 +8,7 @@ import com.danrod505.greenlantern.engine.Characters;
 import com.danrod505.greenlantern.flight.FlightAction;
 import com.danrod505.greenlantern.flight.FlightProfile;
 import com.danrod505.greenlantern.flight.FlightStyle;
-import com.danrod505.greenlantern.hero.HeroDefinition;
+import com.danrod505.greenlantern.engine.LegacyHero;
 import com.danrod505.greenlantern.hero.HeroEnergy;
 import com.danrod505.greenlantern.hero.HeroPowers;
 import com.danrod505.greenlantern.hero.SuitSet;
@@ -40,7 +40,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
  * same Kryptonian base as Superman, each power with its own twist, the most agile flight of all and
  * Krypto, the Super-Dog, at her side. Made with the hero kit from {@code docs/heroes/supergirl.md}.
  */
-public final class SupergirlHero extends HeroDefinition {
+public final class SupergirlHero extends LegacyHero {
     /** The Supergirl's Solar Energy, kept in the Argo Pendant: it pays for the powers and comes back on its own. */
     public static final HeroEnergy ENERGY = new HeroEnergy(SupergirlContent.ENERGY, () -> SupergirlConfig.CAPACITY.get());
 
@@ -59,7 +59,7 @@ public final class SupergirlHero extends HeroDefinition {
 
     public static final SupergirlHero INSTANCE = new SupergirlHero();
 
-    private final HeroPowers<SupergirlPower> powers = new HeroPowers<>(SupergirlPower.POWERS, ENERGY, ChatFormatting.GOLD,
+    private final HeroPowers<SupergirlPower> ownPowers = new HeroPowers<>(SupergirlPower.POWERS, ENERGY, ChatFormatting.GOLD,
             0.85F, 0.06F, SupergirlServer::usePower, WHEEL);
 
     private SupergirlHero() {
@@ -111,9 +111,33 @@ public final class SupergirlHero extends HeroDefinition {
         level.sendParticles(ModParticles.SOLAR_GLOW.get(), player.getX(), player.getY() + 1.0, player.getZ(), 20, 0.45, 0.9, 0.45, 0.05);
     }
 
+    /** The powers of his own code, as they were on the old wheel (the new wheel of the catalog runs them by id). */
     @Override
-    public HeroPowers<SupergirlPower> powers() {
-        return powers;
+    public HeroPowers<SupergirlPower> ownPowers() {
+        return ownPowers;
+    }
+
+    @Override
+    public HeroEnergy energy() {
+        return ENERGY;
+    }
+
+    /** Besides her powers, her own code calls Krypto ({@value #KRYPTO}, the whistle). */
+    public static final String KRYPTO = "krypto";
+
+    @Override
+    public boolean hasOwnPower(String power) {
+        return KRYPTO.equals(power) || super.hasOwnPower(power);
+    }
+
+    @Override
+    public boolean ownPower(ServerPlayer player, ItemStack item, String power) {
+        return KRYPTO.equals(power) ? SupergirlServer.whistleForKrypto(player, item) : super.ownPower(player, item, power);
+    }
+
+    @Override
+    protected java.util.function.IntSupplier ownCost(String power) {
+        return KRYPTO.equals(power) ? () -> 0 : super.ownCost(power);
     }
 
     @Override

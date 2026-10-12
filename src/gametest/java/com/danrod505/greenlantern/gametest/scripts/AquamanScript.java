@@ -48,7 +48,7 @@ public final class AquamanScript {
     public static void aquaPower(com.danrod505.greenlantern.aquaman.AquaPower power) {
         server(sp -> {
             ItemStack emblem = com.danrod505.greenlantern.aquaman.AquamanHelper.findEmblem(sp);
-            com.danrod505.greenlantern.aquaman.AquaPower.POWERS.select(emblem, power);
+            com.danrod505.greenlantern.aquaman.AquamanHero.INSTANCE.selectOwn(emblem, power.id());
             sp.getCooldowns().removeCooldown(sp.getCooldowns().getCooldownGroup(emblem));
             com.danrod505.greenlantern.aquaman.AquamanServer.usePower(sp, emblem, power);
         });
@@ -245,7 +245,7 @@ public final class AquamanScript {
             if (mc().screen != null) mc().screen.keyReleased(new net.minecraft.client.input.KeyEvent(org.lwjgl.glfw.GLFW.GLFW_KEY_R, 0, 0));
         });
         step(10, () -> com.danrod505.greenlantern.GreenLantern.LOGGER.info("CLIENTSCRIPT power selected={}",
-                com.danrod505.greenlantern.aquaman.AquaPower.POWERS.selected(com.danrod505.greenlantern.aquaman.AquamanHelper.findEmblem(mc().player)).id()));
+                com.danrod505.greenlantern.aquaman.AquamanHero.INSTANCE.powers().set().selected(com.danrod505.greenlantern.aquaman.AquamanHelper.findEmblem(mc().player)).id()));
         // The manual.
         step(5, () -> mc().setScreen(new com.danrod505.greenlantern.client.GuideScreen()));
         step(10, () -> shot("aq13_guide"));

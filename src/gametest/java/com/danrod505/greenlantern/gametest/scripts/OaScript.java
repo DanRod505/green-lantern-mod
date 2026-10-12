@@ -3,7 +3,6 @@ package com.danrod505.greenlantern.gametest.scripts;
 import static com.danrod505.greenlantern.gametest.ClientScript.*;
 
 import com.danrod505.greenlantern.gametest.ClientScript;
-import com.danrod505.greenlantern.construct.ConstructRegistry;
 import com.danrod505.greenlantern.item.PowerRingItem;
 import com.danrod505.greenlantern.registry.ModItems;
 import com.danrod505.greenlantern.ring.LanternHero;
@@ -38,7 +37,7 @@ public final class OaScript {
                 sp.setGameMode(GameType.SURVIVAL);
                 sp.setItemInHand(InteractionHand.MAIN_HAND, PowerRingItem.charged(new ItemStack(ModItems.POWER_RING.get())));
                 LanternHero.INSTANCE.summonSuit(sp);
-                ConstructRegistry.select(sp.getMainHandItem(), ConstructRegistry.PORTAL);
+                LanternHero.INSTANCE.selectOwn(sp.getMainHandItem(), "portal");
             });
             look(0, 8);
             camera(CameraType.THIRD_PERSON_BACK);

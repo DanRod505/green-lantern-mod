@@ -4,7 +4,6 @@ import static com.danrod505.greenlantern.gametest.ClientScript.*;
 
 import com.danrod505.greenlantern.gametest.ClientScript;
 import com.danrod505.greenlantern.construct.Construct;
-import com.danrod505.greenlantern.construct.ConstructRegistry;
 import com.danrod505.greenlantern.item.PowerRingItem;
 import com.danrod505.greenlantern.registry.ModItems;
 import com.danrod505.greenlantern.ring.LanternHero;
@@ -20,7 +19,7 @@ public final class WheelScript {
 
     private WheelScript() {}
 
-    /** Construct wheel: hold R, point at the saw, screenshot, release and check the selection. */
+    /** The ring's wheel of abilities: hold R, point at the Emerald Drill, screenshot, release and check the selection. */
     private static void build() {
         step(60, () -> {
             command("time set 6000");
@@ -35,31 +34,31 @@ public final class WheelScript {
         step(10, () -> key(mc().options.keyUp, false));
         step(1, () -> key(com.danrod505.greenlantern.client.KeyBindings.CONSTRUCT_WHEEL, true));
         step(8, () -> shot("w01_wheel_open"));
-        // Point at slice 4 (the saw): angle 3 * 72 degrees clockwise from the top.
+        // Point at slice 5 of 8 (the Emerald Drill): angle 4 * 45 degrees clockwise from the top.
         step(2, () -> {
             var screen = mc().screen;
-            double angle = Math.toRadians(-90 + 3 * 72);
+            double angle = Math.toRadians(-90 + 4 * 45);
             double gx = screen.width / 2.0 + Math.cos(angle) * 60;
             double gy = screen.height * 0.46 + Math.sin(angle) * 60;
             double scale = mc().getWindow().getGuiScale();
             org.lwjgl.glfw.GLFW.glfwSetCursorPos(mc().getWindow().handle(), gx * scale, gy * scale);
             screen.mouseMoved(gx, gy);
         });
-        step(6, () -> shot("w02_wheel_saw"));
+        step(6, () -> shot("w02_wheel_drill"));
         step(1, () -> {
             key(com.danrod505.greenlantern.client.KeyBindings.CONSTRUCT_WHEEL, false);
             if (mc().screen != null) mc().screen.keyReleased(new net.minecraft.client.input.KeyEvent(org.lwjgl.glfw.GLFW.GLFW_KEY_R, 0, 0));
         });
         step(10, () -> {
-            var selected = ConstructRegistry.selected(mc().player.getMainHandItem());
+            var selected = LanternHero.INSTANCE.powers().set().selected(mc().player.getMainHandItem());
             com.danrod505.greenlantern.GreenLantern.LOGGER.info("CLIENTSCRIPT wheel selected={} screenClosed={}", selected.id(), mc().screen == null);
             shot("w03_after_select");
         });
-        // Quick tap selects the next construct (hammer).
+        // Quick tap selects the next ability (the Bridge of Light).
         step(5, () -> key(com.danrod505.greenlantern.client.KeyBindings.CONSTRUCT_WHEEL, true));
         step(2, () -> key(com.danrod505.greenlantern.client.KeyBindings.CONSTRUCT_WHEEL, false));
         step(10, () -> com.danrod505.greenlantern.GreenLantern.LOGGER.info("CLIENTSCRIPT tap selected={} screen={}",
-                ConstructRegistry.selected(mc().player.getMainHandItem()).id(), mc().screen));
+                LanternHero.INSTANCE.powers().set().selected(mc().player.getMainHandItem()).id(), mc().screen));
         step(10, () -> mc().stop());
     }
 }
