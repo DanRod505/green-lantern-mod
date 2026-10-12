@@ -122,11 +122,12 @@ public final class Traits {
     }
 
     /** Every tick with the suit on. */
-    static void tick(ServerPlayer player, EngineHero hero) {
+    static void tick(ServerPlayer player, AbilityHero hero) {
         CharacterData data = hero.data();
         if (data.traits().isEmpty()) return;
         boolean second = player.tickCount % 20 == 0;
         for (CharacterData.Trait trait : data.traits()) {
+            if (hero.ownTraits().contains(trait.type())) continue;
             CharacterData.Settings s = trait.settings();
             switch (trait.type()) {
                 case "supervelocidade" -> superSpeed(player, hero, s);
@@ -182,7 +183,7 @@ public final class Traits {
     }
 
     /** Running speeds up by itself while the player sprints. */
-    private static void superSpeed(ServerPlayer player, EngineHero hero, CharacterData.Settings s) {
+    private static void superSpeed(ServerPlayer player, AbilityHero hero, CharacterData.Settings s) {
         UUID uuid = player.getUUID();
         if (!player.isSprinting() || player.getAbilities().flying) {
             if (SPRINT.remove(uuid) != null) {
@@ -289,7 +290,7 @@ public final class Traits {
     }
 
     /** Whether the traits take away this damage (invulneravel). */
-    static boolean immune(CharacterData data, DamageSource source) {
+    public static boolean immune(CharacterData data, DamageSource source) {
         var trait = data.trait("invulneravel");
         if (trait.isEmpty()) return false;
         List<String> damages = damages(trait.get());

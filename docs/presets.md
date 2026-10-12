@@ -237,3 +237,14 @@ Os sons das 6 classes de mundo novas e o da suprema são originais, gerados por 
 ## Lote 7 (2.7.0): Ferramentas de produção
 
 Sem presets novos: o gerador do catálogo, o teste automático de cada personagem, os prints por lote e o verificador estão em [`ferramentas.md`](ferramentas.md). O gerador escolhe o preset de cada função do catálogo nesta biblioteca, e o teste automático usa cada função de cada personagem.
+
+## Etapa 3, lote 1 (2.8.0): os 9 heróis no modelo novo
+
+A roda dos 9 heróis passa a ter as habilidades do catálogo (5 a 8, com as funções por contexto e a suprema por último), como a de qualquer personagem. O traje, os stats, a energia e o visual de cada um continuam os de hoje até os lotes 2 e 3. Os poderes de hoje entram como funções das habilidades novas por dois presets:
+
+| Preset | Classe | Números | Ajustes |
+|---|---|---|---|
+| `poder_de_hoje` | Luta | os do poder de hoje | `poder`: o id do poder de hoje do herói (`batmobile`, `kraken`, `heat_vision`...) |
+| `construto_de_hoje` | Luta | os do construto de hoje | `construto`: o construto do anel (`hammer`, `minigun`, `bubble`, `saw`, `drill`, `energy_blast`, `portal`, `mecha`); `segundos` (3) para a metralhadora, que agora atira sozinha |
+
+Um poder de hoje paga a própria energia e mantém a própria recarga, então a habilidade não cobra o custo dela nessa função e só espera meio segundo. Os números das habilidades seguem a regra no lote 3. A tabela de onde veio cada habilidade está em [`docs/heroes/adaptacao.md`](heroes/adaptacao.md).

@@ -166,6 +166,15 @@ public abstract class HeroDefinition {
     }
 
     /**
+     * The powers of today, that the hero's own controls use by number (the grapple fired again, the
+     * tornado of the run). The same as {@link #powers()}, except for the first heroes, whose wheel
+     * holds the abilities of the new model since stage 3: their powers of today stay here.
+     */
+    public HeroPowers<?> legacyPowers() {
+        return powers();
+    }
+
+    /**
      * The client half of the hero (HUD, visuals, renderers), or null. Only called on the physical
      * client: return a constructor reference ({@code FlashClient::new}) so the client classes are
      * never loaded on a dedicated server.

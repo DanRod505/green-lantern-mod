@@ -2,7 +2,7 @@ package com.danrod505.greenlantern.client.engine;
 
 import com.danrod505.greenlantern.engine.AbilityIcons;
 import com.danrod505.greenlantern.engine.EngineAbility;
-import com.danrod505.greenlantern.engine.EngineHero;
+import com.danrod505.greenlantern.engine.AbilityHero;
 import com.mojang.blaze3d.platform.NativeImage;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -18,7 +18,7 @@ public final class EngineIcons {
 
     private EngineIcons() {}
 
-    public static void ensure(EngineHero hero) {
+    public static void ensure(AbilityHero hero) {
         if (!DONE.add(hero.id())) return;
         List<com.danrod505.greenlantern.engine.AbilityKind> kinds = new ArrayList<>();
         for (int i = 0; i < hero.powers().set().count(); i++) kinds.add(((EngineAbility) hero.powers().power(i)).kind());

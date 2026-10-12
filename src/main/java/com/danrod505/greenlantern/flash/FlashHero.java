@@ -1,5 +1,11 @@
 package com.danrod505.greenlantern.flash;
 
+import java.util.Set;
+import com.danrod505.greenlantern.engine.LegacyWheel;
+import com.danrod505.greenlantern.engine.EngineServer;
+import com.danrod505.greenlantern.engine.EngineAbility;
+import com.danrod505.greenlantern.engine.CharacterData;
+import com.danrod505.greenlantern.engine.AbilityHero;
 import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
@@ -28,7 +34,7 @@ import net.minecraft.world.item.CreativeModeTab;
  * running). The suit springs out of the ring (like Barry Allen's); while it is worn the player walks
  * faster and steps up whole blocks, so a run is never stopped by a single step.
  */
-public final class FlashHero extends HeroDefinition {
+public final class FlashHero extends HeroDefinition implements AbilityHero {
     /** Speed Force stored in the Flash ring: pays for the speedster powers (tornado, phasing, lightning). */
     public static final HeroEnergy SPEED_FORCE = new HeroEnergy(ModDataComponents.SPEED_FORCE, () -> GLConfig.SPEED_FORCE_CAPACITY.get());
 
@@ -41,8 +47,11 @@ public final class FlashHero extends HeroDefinition {
 
     public static final FlashHero INSTANCE = new FlashHero();
 
-    private final HeroPowers<SpeedsterPower> powers = new HeroPowers<>(SpeedsterPower.POWERS, SPEED_FORCE, ChatFormatting.YELLOW,
+    /** The powers of today: the abilities of the new wheel call them by name (preset poder_de_hoje). */
+    private final HeroPowers<SpeedsterPower> legacy = new HeroPowers<>(SpeedsterPower.POWERS, SPEED_FORCE, ChatFormatting.YELLOW,
             1.0F, 0.08F, SpeedsterServer::usePower, WHEEL);
+    /** The wheel in the new model (stage 3): the abilities of the catalog, with the powers of today inside them. */
+    private final LegacyWheel wheel = new LegacyWheel("flash", SPEED_FORCE, WHEEL, ChatFormatting.YELLOW, 1.0F, 0.08F, legacy);
 
     private FlashHero() {
         super("flash", FlashHelper::isRing, new SuitSet(ModItems.FLASH_MASK, ModItems.FLASH_SUIT, ModItems.FLASH_LEGGINGS, ModItems.FLASH_BOOTS,
@@ -68,6 +77,7 @@ public final class FlashHero extends HeroDefinition {
 
     @Override
     protected void onSuitRemoving(ServerPlayer player) {
+        EngineServer.legacySuitDown(player);
         SpeedsterServer.endPhase(player, false);
     }
 
@@ -77,13 +87,39 @@ public final class FlashHero extends HeroDefinition {
     }
 
     @Override
-    public HeroPowers<SpeedsterPower> powers() {
-        return powers;
+    public HeroPowers<EngineAbility> powers() {
+        return wheel.powers();
+    }
+
+    @Override
+    public HeroPowers<SpeedsterPower> legacyPowers() {
+        return legacy;
+    }
+
+    @Override
+    public CharacterData data() {
+        return wheel.data();
+    }
+
+    @Override
+    public HeroEnergy energy() {
+        return SPEED_FORCE;
+    }
+
+    @Override
+    public Set<String> ownTraits() {
+        return LegacyWheel.OWN_TRAITS;
+    }
+
+    @Override
+    public int hudHeight() {
+        return LegacyWheel.HUD_HEIGHT;
     }
 
     @Override
     public void tick(ServerPlayer player) {
         SpeedsterServer.tick(player);
+        EngineServer.legacyTick(player, this);
     }
 
     @Override

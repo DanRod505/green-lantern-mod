@@ -1,5 +1,11 @@
 package com.danrod505.greenlantern.cyborg;
 
+import java.util.Set;
+import com.danrod505.greenlantern.engine.LegacyWheel;
+import com.danrod505.greenlantern.engine.EngineServer;
+import com.danrod505.greenlantern.engine.EngineAbility;
+import com.danrod505.greenlantern.engine.CharacterData;
+import com.danrod505.greenlantern.engine.AbilityHero;
 import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
@@ -34,7 +40,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
  * eye and core, thrusters in the back and feet, the sonic cannon in the arm and a missile pod on the
  * shoulder. Made with the hero kit from {@code docs/heroes/cyborg.md}.
  */
-public final class CyborgHero extends HeroDefinition {
+public final class CyborgHero extends HeroDefinition implements AbilityHero {
     /** The Cyborg Battery, kept in the Mother Box: it pays for the powers and comes back on its own. */
     public static final HeroEnergy ENERGY = new HeroEnergy(CyborgContent.ENERGY, () -> CyborgConfig.CAPACITY.get());
 
@@ -53,8 +59,11 @@ public final class CyborgHero extends HeroDefinition {
 
     public static final CyborgHero INSTANCE = new CyborgHero();
 
-    private final HeroPowers<CyborgPower> powers = new HeroPowers<>(CyborgPower.POWERS, ENERGY, ChatFormatting.GOLD,
+    /** The powers of today: the abilities of the new wheel call them by name (preset poder_de_hoje). */
+    private final HeroPowers<CyborgPower> legacy = new HeroPowers<>(CyborgPower.POWERS, ENERGY, ChatFormatting.GOLD,
             0.85F, 0.06F, CyborgServer::usePower, WHEEL);
+    /** The wheel in the new model (stage 3): the abilities of the catalog, with the powers of today inside them. */
+    private final LegacyWheel wheel = new LegacyWheel("cyborg", ENERGY, WHEEL, ChatFormatting.GOLD, 0.85F, 0.06F, legacy);
 
     private CyborgHero() {
         super("cyborg", stack -> stack.is(CyborgContent.ITEM.get()), new SuitSet(CyborgContent.MASK, CyborgContent.SUIT, CyborgContent.LEGGINGS,
@@ -90,6 +99,7 @@ public final class CyborgHero extends HeroDefinition {
 
     @Override
     protected void onSuitRemoving(ServerPlayer player) {
+        EngineServer.legacySuitDown(player);
         CyborgServer.remove(player);
     }
 
@@ -99,13 +109,39 @@ public final class CyborgHero extends HeroDefinition {
     }
 
     @Override
-    public HeroPowers<CyborgPower> powers() {
-        return powers;
+    public HeroPowers<EngineAbility> powers() {
+        return wheel.powers();
+    }
+
+    @Override
+    public HeroPowers<CyborgPower> legacyPowers() {
+        return legacy;
+    }
+
+    @Override
+    public CharacterData data() {
+        return wheel.data();
+    }
+
+    @Override
+    public HeroEnergy energy() {
+        return ENERGY;
+    }
+
+    @Override
+    public Set<String> ownTraits() {
+        return LegacyWheel.OWN_TRAITS;
+    }
+
+    @Override
+    public int hudHeight() {
+        return LegacyWheel.HUD_HEIGHT;
     }
 
     @Override
     public void tick(ServerPlayer player) {
         CyborgServer.tick(player);
+        EngineServer.legacyTick(player, this);
     }
 
     @Override

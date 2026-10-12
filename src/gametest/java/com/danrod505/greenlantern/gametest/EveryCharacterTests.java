@@ -1,5 +1,7 @@
 package com.danrod505.greenlantern.gametest;
 
+import com.danrod505.greenlantern.engine.Characters;
+import com.danrod505.greenlantern.engine.AbilityHero;
 import static com.danrod505.greenlantern.gametest.GameTestKit.*;
 
 import com.danrod505.greenlantern.GreenLantern;
@@ -55,16 +57,21 @@ public final class EveryCharacterTests {
         tests.register("engine_every_character", () -> EveryCharacterTests::everyCharacter);
     }
 
-    private static List<EngineHero> characters() {
-        return HeroRegistry.all().stream().filter(h -> h instanceof EngineHero).map(h -> (EngineHero) h).toList();
+    /** The characters of the engine and, since stage 3, the 9 heroes (their wheel is the engine's). */
+    private static List<HeroDefinition> characters() {
+        return HeroRegistry.all().stream().filter(EveryCharacterTests::covers).toList();
     }
 
     /** The basics of one character, before its abilities are used. */
-    private static void basics(GameTestHelper helper, EngineHero hero) {
+    private static void basics(GameTestHelper helper, AbilityHero hero) {
         CharacterData data = hero.data();
         String who = "character " + data.id() + ": ";
-        helper.assertTrue(BuiltInRegistries.ITEM.containsKey(GreenLantern.id(data.id())), who + "the item is not registered");
-        if (!TEST_CHARACTERS.contains(data.id())) {
+        // The 9 heroes keep their own items and recipes (stage 3, lot 3 gives them the catalog's).
+        boolean engine = hero instanceof EngineHero;
+        helper.assertTrue(!engine || BuiltInRegistries.ITEM.containsKey(GreenLantern.id(data.id())), who + "the item is not registered");
+        helper.assertTrue(engine || data.legacy(), who + "a hero with its own code must be marked legado");
+        helper.assertTrue(Characters.check(data, data.id()).isEmpty(), who + Characters.check(data, data.id()));
+        if (engine && !TEST_CHARACTERS.contains(data.id())) {
             var recipe = ResourceKey.create(Registries.RECIPE, GreenLantern.id(data.id()));
             helper.assertTrue(helper.getLevel().getServer().getRecipeManager().byKey(recipe).isPresent(), who + "no recipe for the item loads");
         }
@@ -89,12 +96,14 @@ public final class EveryCharacterTests {
     }
 
     /** Puts the suit on, then turns the skins round once in creative: each one comes up and the first comes back. */
-    private static ServerPlayer suitUp(GameTestHelper helper, EngineHero hero) {
-        String who = "character " + hero.data().id() + ": ";
+    private static ServerPlayer suitUp(GameTestHelper helper, HeroDefinition definition) {
+        String who = "character " + definition.id() + ": ";
         ServerPlayer player = player(helper, 7.5, 1, 4.5, 0, 0);
-        player.setItemInHand(InteractionHand.MAIN_HAND, HeroContractTests.chargedItem(hero));
-        helper.assertTrue(hero.summonSuit(player), who + "the suit should go on");
-        helper.assertTrue(hero.isSuited(player), who + "should be suited");
+        player.setItemInHand(InteractionHand.MAIN_HAND, HeroContractTests.chargedItem(definition));
+        helper.assertTrue(definition.summonSuit(player), who + "the suit should go on");
+        helper.assertTrue(definition.isSuited(player), who + "should be suited");
+        // The skins of the 9 heroes come in stage 3, lot 2.
+        if (!(definition instanceof EngineHero hero)) return player;
         ItemStack item = player.getMainHandItem();
         List<CharacterData.Skin> skins = hero.data().skins();
         helper.assertTrue(EngineServer.skin(hero, item).selected().equals(skins.getFirst().id()), who + "the first skin is the default");
@@ -120,11 +129,12 @@ public final class EveryCharacterTests {
         boolean raining = level.isRaining();
         boolean thundering = level.isThundering();
         GameTestSequence sequence = helper.startSequence();
-        for (EngineHero hero : characters()) {
+        for (HeroDefinition definition : characters()) {
+            AbilityHero hero = (AbilityHero) definition;
             ServerPlayer[] player = new ServerPlayer[1];
             sequence.thenExecute(() -> {
                 basics(helper, hero);
-                player[0] = suitUp(helper, hero);
+                player[0] = suitUp(helper, definition);
             });
             for (int a = 0; a < hero.powers().set().count(); a++) {
                 EngineAbility ability = hero.powers().set().byIndex(a);
@@ -165,7 +175,7 @@ public final class EveryCharacterTests {
             }
             sequence.thenExecute(() -> {
                 if (player[0] == null) return;
-                if (hero.isSuited(player[0])) hero.dismissSuit(player[0], false);
+                if (hero.isSuited(player[0])) definition.dismissSuit(player[0], false);
                 remove(player[0]);
                 sweep(helper);
             });
@@ -175,6 +185,6 @@ public final class EveryCharacterTests {
 
     /** Whether the hero is one this test covers (the contract of the powers leaves it to this test). */
     public static boolean covers(HeroDefinition hero) {
-        return hero instanceof EngineHero;
+        return hero instanceof AbilityHero;
     }
 }

@@ -1,5 +1,16 @@
 package com.danrod505.greenlantern.ring;
 
+import java.util.Set;
+import com.danrod505.greenlantern.registry.ModDataComponents;
+import com.danrod505.greenlantern.hero.WheelStyle;
+import com.danrod505.greenlantern.hero.HeroPowers;
+import com.danrod505.greenlantern.hero.HeroEnergy;
+import com.danrod505.greenlantern.engine.LegacyWheel;
+import com.danrod505.greenlantern.engine.EngineServer;
+import com.danrod505.greenlantern.engine.EngineAbility;
+import com.danrod505.greenlantern.engine.CharacterData;
+import com.danrod505.greenlantern.engine.AbilityHero;
+import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.client.HeroClient;
 import com.danrod505.greenlantern.client.LanternClient;
@@ -26,9 +37,10 @@ import net.minecraft.world.item.ItemStack;
 
 /**
  * The Green Lantern: the Power Ring calls the uniform of hard light (it needs energy in the ring), flies and
- * builds constructs (picked on the construct wheel).
+ * builds constructs. Since stage 3 the ring's wheel holds the abilities of the catalog, and the
+ * constructs of today go off inside them.
  */
-public final class LanternHero extends HeroDefinition {
+public final class LanternHero extends HeroDefinition implements AbilityHero {
     /** Colours of the construct wheel: green hard light. */
     public static final WheelTheme WHEEL_THEME = new WheelTheme("wheel", 0x07120A, 0x030604, 0x2A8A44, 0x2E6A3E, 0x060D08, 0x0F2216,
             0x0F4A20, 0x2FA84E, 0x7CFF96, 0xC8FFD2, 0x3CE064);
@@ -40,7 +52,21 @@ public final class LanternHero extends HeroDefinition {
             new FlightStyle.Hud(0xD8FFE0, 0x9BFFB0, 0x2CFF5A, 0x2CFF5A, 0xFF6CFF86, 0xFFB6FFC6, 1.6F, 0xFF2EE65A, 0xFFC8FFD2, 0xFFE0FFE6),
             ModSounds.FLIGHT_THEME_BASE, ModSounds.FLIGHT_THEME_PEAK, false);
 
+    /** The ring's charge, as the wheel of the new model sees it. */
+    public static final HeroEnergy RING_CHARGE = new HeroEnergy(ModDataComponents.RING_ENERGY, RingEnergy::configuredCapacity);
+
+    /** The wheel of today's colours: green hard light (the icons are the engine's, see LegacyWheel). */
+    public static final WheelStyle WHEEL = new WheelStyle(WHEEL_THEME, GreenLantern.id("textures/gui/constructs.png"), 256, "wheel.greenlantern.engine_cost",
+            "energy.greenlantern.anel.amount", 0x88030604, 0x7CFF96, 0xC8FFD2, 0xE0FFE6, 0x9BB8A0, 0x7CFF96, 0xA8C8B0);
+
     public static final LanternHero INSTANCE = new LanternHero();
+
+    /**
+     * The wheel in the new model (stage 3): the abilities of the catalog. The constructs of today
+     * (hammer, minigun, bubble, drill, saw, energy blast, portal, Mecha) are functions of them
+     * (preset construto_de_hoje); the ring no longer picks them on a wheel of its own.
+     */
+    private final LegacyWheel wheel = new LegacyWheel("lantern", RING_CHARGE, WHEEL, ChatFormatting.GREEN, 1.0F, 0.05F, null);
 
     private LanternHero() {
         super("lantern", RingHelper::isRing, new SuitSet(ModItems.LANTERN_MASK, ModItems.LANTERN_SUIT, ModItems.LANTERN_LEGGINGS, ModItems.LANTERN_BOOTS,
@@ -67,6 +93,41 @@ public final class LanternHero extends HeroDefinition {
         player.displayClientMessage(Component.translatable("message.greenlantern.no_energy"), true);
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.LOW_ENERGY.get(), SoundSource.PLAYERS, 0.8F, 1.0F);
         return false;
+    }
+
+    @Override
+    public HeroPowers<EngineAbility> powers() {
+        return wheel.powers();
+    }
+
+    @Override
+    public CharacterData data() {
+        return wheel.data();
+    }
+
+    @Override
+    public HeroEnergy energy() {
+        return RING_CHARGE;
+    }
+
+    @Override
+    public Set<String> ownTraits() {
+        return LegacyWheel.OWN_TRAITS;
+    }
+
+    @Override
+    public int hudHeight() {
+        return LegacyWheel.HUD_HEIGHT;
+    }
+
+    @Override
+    public void tick(ServerPlayer player) {
+        EngineServer.legacyTick(player, this);
+    }
+
+    @Override
+    protected void onSuitRemoving(ServerPlayer player) {
+        EngineServer.legacySuitDown(player);
     }
 
     @Override

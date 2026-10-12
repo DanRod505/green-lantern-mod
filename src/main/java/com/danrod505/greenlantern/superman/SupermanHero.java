@@ -1,5 +1,11 @@
 package com.danrod505.greenlantern.superman;
 
+import java.util.Set;
+import com.danrod505.greenlantern.engine.LegacyWheel;
+import com.danrod505.greenlantern.engine.EngineServer;
+import com.danrod505.greenlantern.engine.EngineAbility;
+import com.danrod505.greenlantern.engine.CharacterData;
+import com.danrod505.greenlantern.engine.AbilityHero;
 import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
@@ -37,7 +43,7 @@ import net.minecraft.world.item.ItemStack;
  * (and the curl of black hair). While it is worn the Man of Steel is far stronger, tougher, faster
  * and can't be pushed around.
  */
-public final class SupermanHero extends HeroDefinition {
+public final class SupermanHero extends HeroDefinition implements AbilityHero {
     /**
      * Solar energy of Superman, kept in the Kryptonian Crystal. His cells soak up the light of the
      * (yellow) sun under the open sky, and it pays for flight and every power.
@@ -60,8 +66,11 @@ public final class SupermanHero extends HeroDefinition {
 
     public static final SupermanHero INSTANCE = new SupermanHero();
 
-    private final HeroPowers<SuperPower> powers = new HeroPowers<>(SuperPower.POWERS, SOLAR_ENERGY, ChatFormatting.AQUA,
+    /** The powers of today: the abilities of the new wheel call them by name (preset poder_de_hoje). */
+    private final HeroPowers<SuperPower> legacy = new HeroPowers<>(SuperPower.POWERS, SOLAR_ENERGY, ChatFormatting.AQUA,
             0.9F, 0.08F, SupermanServer::usePower, WHEEL);
+    /** The wheel in the new model (stage 3): the abilities of the catalog, with the powers of today inside them. */
+    private final LegacyWheel wheel = new LegacyWheel("superman", SOLAR_ENERGY, WHEEL, ChatFormatting.AQUA, 0.9F, 0.08F, legacy);
 
     private SupermanHero() {
         super("superman", SupermanHelper::isCrystal, new SuitSet(ModItems.SUPERMAN_HAIR, ModItems.SUPERMAN_SUIT, ModItems.SUPERMAN_LEGGINGS, ModItems.SUPERMAN_BOOTS,
@@ -92,6 +101,7 @@ public final class SupermanHero extends HeroDefinition {
 
     @Override
     protected void onSuitRemoving(ServerPlayer player) {
+        EngineServer.legacySuitDown(player);
         SupermanServer.onSuitRemoved(player);
     }
 
@@ -107,8 +117,33 @@ public final class SupermanHero extends HeroDefinition {
     }
 
     @Override
-    public HeroPowers<SuperPower> powers() {
-        return powers;
+    public HeroPowers<EngineAbility> powers() {
+        return wheel.powers();
+    }
+
+    @Override
+    public HeroPowers<SuperPower> legacyPowers() {
+        return legacy;
+    }
+
+    @Override
+    public CharacterData data() {
+        return wheel.data();
+    }
+
+    @Override
+    public HeroEnergy energy() {
+        return SOLAR_ENERGY;
+    }
+
+    @Override
+    public Set<String> ownTraits() {
+        return LegacyWheel.OWN_TRAITS;
+    }
+
+    @Override
+    public int hudHeight() {
+        return LegacyWheel.HUD_HEIGHT;
     }
 
     /** Much faster and stronger than the Lantern's flight. */
@@ -141,6 +176,7 @@ public final class SupermanHero extends HeroDefinition {
     @Override
     public void tick(ServerPlayer player) {
         SupermanServer.tick(player);
+        EngineServer.legacyTick(player, this);
     }
 
     @Override

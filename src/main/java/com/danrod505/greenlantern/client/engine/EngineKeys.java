@@ -4,7 +4,7 @@ import com.danrod505.greenlantern.client.KeyBindings;
 import com.danrod505.greenlantern.engine.AbilityFunctions;
 import com.danrod505.greenlantern.engine.AbilityFunctions.Press;
 import com.danrod505.greenlantern.engine.EngineAbility;
-import com.danrod505.greenlantern.engine.EngineHero;
+import com.danrod505.greenlantern.engine.AbilityHero;
 import com.danrod505.greenlantern.network.EnginePacket;
 import com.danrod505.greenlantern.network.ModNetwork;
 import net.minecraft.client.Minecraft;
@@ -24,7 +24,7 @@ public final class EngineKeys {
 
     private EngineKeys() {}
 
-    public static void tick(Minecraft mc, EngineHero hero) {
+    public static void tick(Minecraft mc, AbilityHero hero) {
         boolean free = mc.screen == null;
         while (KeyBindings.HERO_POWER.consumeClick()) {
             if (!free || held >= 0) continue;
@@ -59,7 +59,7 @@ public final class EngineKeys {
             }
         }
         while (KeyBindings.SKIN.consumeClick()) {
-            if (free) ModNetwork.sendToServer(EnginePacket.skin());
+            if (free && hero instanceof com.danrod505.greenlantern.engine.EngineHero) ModNetwork.sendToServer(EnginePacket.skin());
         }
     }
 
@@ -74,7 +74,7 @@ public final class EngineKeys {
         return held;
     }
 
-    private static EngineAbility selected(Minecraft mc, EngineHero hero) {
+    private static EngineAbility selected(Minecraft mc, AbilityHero hero) {
         if (mc.player == null) return null;
         ItemStack item = hero.findItem(mc.player);
         if (item.isEmpty()) return null;

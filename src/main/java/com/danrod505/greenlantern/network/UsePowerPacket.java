@@ -20,6 +20,8 @@ public record UsePowerPacket(int power) {
         HeroDefinition hero = SelectPowerPacket.powerHero(player);
         ItemStack item = hero.findItem(player);
         if (item.isEmpty()) return;
-        hero.powers().use(player, item, packet.power);
+        // The hero's own controls name a power of today by its number; the power key goes through the wheel.
+        if (packet.power < 0) hero.powers().use(player, item, -1);
+        else hero.legacyPowers().use(player, item, packet.power);
     }
 }

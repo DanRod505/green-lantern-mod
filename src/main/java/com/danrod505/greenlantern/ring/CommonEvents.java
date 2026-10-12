@@ -153,6 +153,11 @@ public final class CommonEvents {
             // Tough heroes (Superman, Wonder Woman) shrug off part of every blow.
             float multiplier = hero.damageTakenMultiplier(player, event.getSource());
             if (multiplier != 1.0F) event.setAmount(event.getAmount() * multiplier);
+            // The trait invulneravel of the 9 heroes (stage 3); the characters of the engine see to theirs.
+            if (hero instanceof com.danrod505.greenlantern.engine.AbilityHero abilities && !(hero instanceof com.danrod505.greenlantern.engine.EngineHero)
+                    && hero.isSuited(player) && com.danrod505.greenlantern.engine.Traits.immune(abilities.data(), event.getSource())) {
+                event.setAmount(0.0F);
+            }
         }
         BubbleConstructEntity bubble = BubbleConstructEntity.find(player);
         if (bubble != null && !event.getSource().is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY)) {

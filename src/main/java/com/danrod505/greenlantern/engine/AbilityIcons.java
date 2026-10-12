@@ -249,7 +249,7 @@ public final class AbilityIcons {
             Map.entry("refletir", "espelho"),
             Map.entry("prender", "corrente"), Map.entry("puxar", "ima"), Map.entry("levitar", "espiral"), Map.entry("lentidao", "relogio"),
             Map.entry("medo_e_confusao", "olho"), Map.entry("dominar", "espiral"),
-            Map.entry("ajudante", "figura"), Map.entry("construto", "martelo"), Map.entry("copia", "figuras"), Map.entry("enxame", "enxame"),
+            Map.entry("ajudante", "figura"), Map.entry("construto", "martelo"), Map.entry("construto_de_hoje", "martelo"), Map.entry("poder_de_hoje", "estrela"), Map.entry("copia", "figuras"), Map.entry("enxame", "enxame"),
             Map.entry("torre", "torre"), Map.entry("veiculo", "veiculo"),
             Map.entry("esquiva", "vulto"), Map.entry("invisivel", "invisivel"), Map.entry("fumaca", "nuvem"), Map.entry("encolher", "encolher"),
             Map.entry("fuga_de_forma", "vulto"),

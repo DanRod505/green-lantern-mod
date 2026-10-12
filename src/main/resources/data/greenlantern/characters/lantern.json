@@ -1,5 +1,5 @@
 {
-  "_comentario": "Um dos 9 heróis que já existiam: os poderes e a energia continuam no código dele. O traje, os bônus e a ordem da roda vêm daqui, com os mesmos números de antes.",
+  "_comentario": "Um dos 9 heróis que já existiam. Desde a etapa 3 (lote 1) a roda tem as habilidades do catálogo no modelo novo: os poderes de hoje viraram funções delas (preset poder_de_hoje ou construto_de_hoje) e pagam a própria energia. O traje, os stats e a energia continuam os de hoje até os lotes 2 e 3.",
   "id": "lantern",
   "nome": "Lanterna Verde",
   "classe": "anel",
@@ -31,7 +31,206 @@
     "conserto": "minecraft:repairs_netherite_armor",
     "atributos": []
   },
-  "habilidades": [],
+  "habilidades": [
+    {
+      "id": "construtos_da_vontade",
+      "nome": "Construtos da Vontade",
+      "classe": "invocacao",
+      "preset": "construto_de_hoje",
+      "ajustes": {
+        "construto": "hammer"
+      },
+      "numeros": {
+        "dano": 7,
+        "custo": 20,
+        "recarga": 45,
+        "duracao": 60
+      },
+      "funcoes": [
+        {
+          "preset": "construto_de_hoje",
+          "ajustes": {
+            "construto": "minigun",
+            "segundos": 3
+          },
+          "quando": {
+            "aperto": "segurar"
+          }
+        }
+      ]
+    },
+    {
+      "id": "rajada_do_anel",
+      "nome": "Rajada do Anel",
+      "classe": "disparo",
+      "preset": "construto_de_hoje",
+      "ajustes": {
+        "construto": "energy_blast"
+      },
+      "numeros": {
+        "dano": 8.5,
+        "custo": 3,
+        "recarga": 1,
+        "alcance": 48
+      },
+      "funcoes": [
+        {
+          "preset": "gelo_e_calor",
+          "quando": {
+            "mira": "fornalha"
+          },
+          "ajustes": {
+            "efeito": "calor"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bolha_verde",
+      "nome": "Bolha Verde",
+      "classe": "defesa",
+      "preset": "construto_de_hoje",
+      "ajustes": {
+        "construto": "bubble"
+      },
+      "numeros": {
+        "custo": 5,
+        "recarga": 6,
+        "raio": 3,
+        "duracao": 10
+      },
+      "funcoes": [
+        {
+          "preset": "bolha",
+          "quando": {
+            "lugar": "agua"
+          }
+        }
+      ]
+    },
+    {
+      "id": "mao_verde",
+      "nome": "Mão Verde",
+      "classe": "controle",
+      "preset": "prender",
+      "numeros": {
+        "dano": 2.5,
+        "custo": 8,
+        "recarga": 12,
+        "alcance": 24,
+        "duracao": 4
+      },
+      "funcoes": [
+        {
+          "preset": "mover_blocos",
+          "quando": {
+            "mira": "bau"
+          }
+        }
+      ]
+    },
+    {
+      "id": "broca_esmeralda",
+      "nome": "Broca Esmeralda",
+      "classe": "coleta_e_terreno",
+      "preset": "construto_de_hoje",
+      "ajustes": {
+        "construto": "drill"
+      },
+      "numeros": {
+        "custo": 4,
+        "recarga": 2,
+        "alcance": 6,
+        "raio": 1
+      },
+      "funcoes": [
+        {
+          "preset": "construto_de_hoje",
+          "ajustes": {
+            "construto": "saw"
+          },
+          "quando": {
+            "mira": "madeira"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ponte_de_luz",
+      "nome": "Ponte de Luz",
+      "classe": "construcao",
+      "preset": "luz",
+      "numeros": {
+        "custo": 8,
+        "recarga": 6,
+        "alcance": 16,
+        "duracao": 30
+      },
+      "funcoes": [
+        {
+          "preset": "construir",
+          "quando": {
+            "aperto": "segurar"
+          }
+        }
+      ]
+    },
+    {
+      "id": "portal_para_oa",
+      "nome": "Portal para Oa",
+      "classe": "mobilidade",
+      "preset": "levar_junto",
+      "numeros": {
+        "custo": 5,
+        "recarga": 4,
+        "alcance": 24
+      },
+      "funcoes": [
+        {
+          "preset": "construto_de_hoje",
+          "ajustes": {
+            "construto": "portal"
+          },
+          "quando": {
+            "aperto": "segurar"
+          }
+        }
+      ]
+    },
+    {
+      "id": "mecha_gigante",
+      "nome": "Mecha Gigante",
+      "classe": "invocacao",
+      "suprema": true,
+      "preset": "construto_de_hoje",
+      "ajustes": {
+        "construto": "mecha"
+      },
+      "numeros": {
+        "dano": 21.5,
+        "custo": 40,
+        "recarga": 135,
+        "duracao": 60
+      },
+      "funcoes": [
+        {
+          "preset": "ima_de_itens",
+          "quando": {
+            "aperto": "segurar",
+            "mira": "bloco"
+          }
+        }
+      ]
+    }
+  ],
+  "passivas": [
+    {
+      "tipo": "voo",
+      "ajustes": {
+        "velocidade_maxima": 4.0
+      }
+    }
+  ],
   "skins": [
     {
       "id": "lantern",
@@ -43,5 +242,10 @@
       "tipo": "descricao",
       "descricao": "Medo (efeitos de Espantalho e Sinestro) drena a carga duas vezes mais rápido."
     }
-  ]
+  ],
+  "cores": {
+    "principal": "#2FA84E",
+    "secundaria": "#101410",
+    "brilho": "#7CFF96"
+  }
 }

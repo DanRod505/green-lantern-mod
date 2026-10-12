@@ -1,5 +1,11 @@
 package com.danrod505.greenlantern.wonderwoman;
 
+import java.util.Set;
+import com.danrod505.greenlantern.engine.LegacyWheel;
+import com.danrod505.greenlantern.engine.EngineServer;
+import com.danrod505.greenlantern.engine.EngineAbility;
+import com.danrod505.greenlantern.engine.CharacterData;
+import com.danrod505.greenlantern.engine.AbilityHero;
 import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
@@ -38,7 +44,7 @@ import net.minecraft.world.item.ItemStack;
  * princess is stronger, tougher, quicker and steadier than any mortal, though not as mighty as the
  * Man of Steel.
  */
-public final class WonderWomanHero extends HeroDefinition {
+public final class WonderWomanHero extends HeroDefinition implements AbilityHero {
     /**
      * The gift of the gods, kept in the Tiara of Themyscira: it pays for Wonder Woman's powers. It
      * comes back slowly on its own, and faster in battle (every blow of the Amazon sword feeds it).
@@ -61,8 +67,11 @@ public final class WonderWomanHero extends HeroDefinition {
 
     public static final WonderWomanHero INSTANCE = new WonderWomanHero();
 
-    private final HeroPowers<AmazonPower> powers = new HeroPowers<>(AmazonPower.POWERS, DIVINE_POWER, ChatFormatting.GOLD,
+    /** The powers of today: the abilities of the new wheel call them by name (preset poder_de_hoje). */
+    private final HeroPowers<AmazonPower> legacy = new HeroPowers<>(AmazonPower.POWERS, DIVINE_POWER, ChatFormatting.GOLD,
             0.85F, 0.06F, WonderWomanServer::usePower, WHEEL);
+    /** The wheel in the new model (stage 3): the abilities of the catalog, with the powers of today inside them. */
+    private final LegacyWheel wheel = new LegacyWheel("wonder_woman", DIVINE_POWER, WHEEL, ChatFormatting.GOLD, 0.85F, 0.06F, legacy);
 
     private WonderWomanHero() {
         super("wonder_woman", WonderWomanHelper::isTiara, new SuitSet(ModItems.WONDER_WOMAN_HAIR, ModItems.WONDER_WOMAN_SUIT, ModItems.WONDER_WOMAN_LEGGINGS,
@@ -93,6 +102,7 @@ public final class WonderWomanHero extends HeroDefinition {
 
     @Override
     protected void onSuitRemoving(ServerPlayer player) {
+        EngineServer.legacySuitDown(player);
         WonderWomanServer.onSuitRemoved(player);
     }
 
@@ -108,8 +118,33 @@ public final class WonderWomanHero extends HeroDefinition {
     }
 
     @Override
-    public HeroPowers<AmazonPower> powers() {
-        return powers;
+    public HeroPowers<EngineAbility> powers() {
+        return wheel.powers();
+    }
+
+    @Override
+    public HeroPowers<AmazonPower> legacyPowers() {
+        return legacy;
+    }
+
+    @Override
+    public CharacterData data() {
+        return wheel.data();
+    }
+
+    @Override
+    public HeroEnergy energy() {
+        return DIVINE_POWER;
+    }
+
+    @Override
+    public Set<String> ownTraits() {
+        return LegacyWheel.OWN_TRAITS;
+    }
+
+    @Override
+    public int hudHeight() {
+        return LegacyWheel.HUD_HEIGHT;
     }
 
     /** A strong, steady flight, but slower than the Lantern's (by default she never reaches the sound barrier). */
@@ -133,6 +168,7 @@ public final class WonderWomanHero extends HeroDefinition {
     @Override
     public void tick(ServerPlayer player) {
         WonderWomanServer.tick(player);
+        EngineServer.legacyTick(player, this);
     }
 
     @Override

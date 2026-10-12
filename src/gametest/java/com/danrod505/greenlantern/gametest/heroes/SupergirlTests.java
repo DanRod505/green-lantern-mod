@@ -80,7 +80,7 @@ public final class SupergirlTests {
 
     private static boolean use(ServerPlayer player, SupergirlPower power) {
         player.getCooldowns().removeCooldown(player.getCooldowns().getCooldownGroup(player.getMainHandItem()));
-        return SupergirlHero.INSTANCE.powers().use(player, player.getMainHandItem(), power.ordinal());
+        return SupergirlHero.INSTANCE.legacyPowers().use(player, player.getMainHandItem(), power.ordinal());
     }
 
     private static int energy(ServerPlayer player) {

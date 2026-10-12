@@ -1,5 +1,11 @@
 package com.danrod505.greenlantern.supergirl;
 
+import java.util.Set;
+import com.danrod505.greenlantern.engine.LegacyWheel;
+import com.danrod505.greenlantern.engine.EngineServer;
+import com.danrod505.greenlantern.engine.EngineAbility;
+import com.danrod505.greenlantern.engine.CharacterData;
+import com.danrod505.greenlantern.engine.AbilityHero;
 import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
@@ -40,7 +46,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
  * same Kryptonian base as Superman, each power with its own twist, the most agile flight of all and
  * Krypto, the Super-Dog, at her side. Made with the hero kit from {@code docs/heroes/supergirl.md}.
  */
-public final class SupergirlHero extends HeroDefinition {
+public final class SupergirlHero extends HeroDefinition implements AbilityHero {
     /** The Supergirl's Solar Energy, kept in the Argo Pendant: it pays for the powers and comes back on its own. */
     public static final HeroEnergy ENERGY = new HeroEnergy(SupergirlContent.ENERGY, () -> SupergirlConfig.CAPACITY.get());
 
@@ -59,8 +65,11 @@ public final class SupergirlHero extends HeroDefinition {
 
     public static final SupergirlHero INSTANCE = new SupergirlHero();
 
-    private final HeroPowers<SupergirlPower> powers = new HeroPowers<>(SupergirlPower.POWERS, ENERGY, ChatFormatting.GOLD,
+    /** The powers of today: the abilities of the new wheel call them by name (preset poder_de_hoje). */
+    private final HeroPowers<SupergirlPower> legacy = new HeroPowers<>(SupergirlPower.POWERS, ENERGY, ChatFormatting.GOLD,
             0.85F, 0.06F, SupergirlServer::usePower, WHEEL);
+    /** The wheel in the new model (stage 3): the abilities of the catalog, with the powers of today inside them. */
+    private final LegacyWheel wheel = new LegacyWheel("supergirl", ENERGY, WHEEL, ChatFormatting.GOLD, 0.85F, 0.06F, legacy);
 
     private SupergirlHero() {
         super("supergirl", stack -> stack.is(SupergirlContent.ITEM.get()), new SuitSet(SupergirlContent.MASK, SupergirlContent.SUIT, SupergirlContent.LEGGINGS,
@@ -103,6 +112,7 @@ public final class SupergirlHero extends HeroDefinition {
 
     @Override
     protected void onSuitRemoving(ServerPlayer player) {
+        EngineServer.legacySuitDown(player);
         SupergirlServer.remove(player);
     }
 
@@ -112,13 +122,39 @@ public final class SupergirlHero extends HeroDefinition {
     }
 
     @Override
-    public HeroPowers<SupergirlPower> powers() {
-        return powers;
+    public HeroPowers<EngineAbility> powers() {
+        return wheel.powers();
+    }
+
+    @Override
+    public HeroPowers<SupergirlPower> legacyPowers() {
+        return legacy;
+    }
+
+    @Override
+    public CharacterData data() {
+        return wheel.data();
+    }
+
+    @Override
+    public HeroEnergy energy() {
+        return ENERGY;
+    }
+
+    @Override
+    public Set<String> ownTraits() {
+        return LegacyWheel.OWN_TRAITS;
+    }
+
+    @Override
+    public int hudHeight() {
+        return LegacyWheel.HUD_HEIGHT;
     }
 
     @Override
     public void tick(ServerPlayer player) {
         SupergirlServer.tick(player);
+        EngineServer.legacyTick(player, this);
     }
 
     @Override
