@@ -85,5 +85,8 @@
   "message.greenlantern.engine_no_structure": "Essa estrutura não existe",
   "message.greenlantern.engine_dismantled": "A obra foi desmontada",
   "message.greenlantern.engine_full_health": "Sua vida já está cheia",
-  "message.greenlantern.engine_no_space": "Não há espaço para isso aqui"
+  "message.greenlantern.engine_no_space": "Não há espaço para isso aqui",
+  "message.greenlantern.engine_nothing_here": "Não há nada para fazer aqui",
+  "message.greenlantern.engine_no_blocks": "Você não tem blocos para construir",
+  "message.greenlantern.engine_no_put": "Não há onde pôr o bloco aí"
 }

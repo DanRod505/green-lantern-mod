@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -250,17 +251,25 @@ public final class EmpowerPresets {
 
     /** Brings the shown ores up to date: the nearest ones within {@code reach}, the mined ones gone. */
     private static void showOres(PresetContext c, double reach, Map<BlockPos, Display.BlockDisplay> shown) {
+        showBlocks(c, reach, shown, (level, pos) -> level.getBlockState(pos).is(Tags.Blocks.ORES));
+    }
+
+    /**
+     * Brings the outlined blocks up to date: the nearest {@link #MAX_ORES} within {@code reach} that
+     * pass {@code wanted}; the ones that no longer do lose their outline.
+     */
+    static void showBlocks(PresetContext c, double reach, Map<BlockPos, Display.BlockDisplay> shown, BiPredicate<ServerLevel, BlockPos> wanted) {
         ServerLevel level = c.level();
         BlockPos center = c.player().blockPosition();
         int r = (int) Math.ceil(reach);
         List<BlockPos> found = new ArrayList<>();
         for (BlockPos pos : BlockPos.betweenClosed(center.offset(-r, -r, -r), center.offset(r, r, r))) {
-            if (pos.distSqr(center) <= reach * reach && level.getBlockState(pos).is(Tags.Blocks.ORES)) found.add(pos.immutable());
+            if (pos.distSqr(center) <= reach * reach && wanted.test(level, pos)) found.add(pos.immutable());
         }
         found.sort(Comparator.comparingDouble(p -> p.distSqr(center)));
         Set<BlockPos> keep = new HashSet<>(found.subList(0, Math.min(MAX_ORES, found.size())));
         shown.entrySet().removeIf(e -> {
-            if (keep.contains(e.getKey()) && level.getBlockState(e.getKey()).is(Tags.Blocks.ORES)) return false;
+            if (keep.contains(e.getKey()) && wanted.test(level, e.getKey())) return false;
             Summons.dismiss(e.getValue());
             return true;
         });
@@ -285,7 +294,7 @@ public final class EmpowerPresets {
         return Summons.spawn(c, display);
     }
 
-    /** How many ores the player's senses show right now (for the tests). */
+    /** How many blocks the player's senses (or search) outline right now (for the tests). */
     public static int shownOres(ServerLevel level, ServerPlayer player) {
         return level.getEntitiesOfClass(Display.BlockDisplay.class, player.getBoundingBox().inflate(32.0),
                 d -> player.getUUID().equals(Summons.owner(d))).size();

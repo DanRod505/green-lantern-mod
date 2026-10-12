@@ -98,3 +98,20 @@ As criaturas chamadas ou dominadas lutam pelo dono: vão atrás dos monstros per
 | `grande_obra` | | `estrutura` (id de uma estrutura do jogo ou de um pacote de dados; minecraft:igloo/top), `tempo` de montagem (4), `distancia` (3). Só ocupa ar, água e plantas; apertar de novo desmonta |
 
 Os testes ficam em `src/gametest/.../heroes/PresetLot3Tests.java` e os prints no roteiro `presets_lote3`.
+
+## Lote 4 (2.4.0): Usos no mundo
+
+Os usos no mundo vão no campo `"uso_no_mundo"` da habilidade e saem agachado. Só mexem em blocos que o jogador pode mudar ali, nunca em blocos que guardam coisas (baús, fornalhas...), e um uso que não muda nada devolve a energia. Os números vêm da mesma habilidade.
+
+| Preset | Números | Ajustes |
+|---|---|---|
+| `minerar_area` | alcance (6) | `tamanho` do quadrado (3), `profundidade` (1), `ferramenta` que decide o que sai e o que dá para quebrar (minecraft:iron_pickaxe), `dureza` máxima (5; pedra é 1.5, obsidiana 50) |
+| `construir` | duracao (30, só energia) | `forma`: ponte (no chão à frente), escada (subindo) ou parede; `comprimento` (8), `largura` (1; a parede 5), `altura` (3); `material`: energia (vidro na cor do personagem), inventario (gasta os blocos do inventário) ou id de bloco; `fica` (a energia some, os outros ficam) |
+| `plantar_e_colher` | raio (5) | `colhe` (true: colhe o que está maduro e replanta), `cresce` (true: como farinha de osso, também mudas), `vezes` (2) |
+| `gelo_e_calor` | raio (5) | `efeito`: gelo (congela água, lava vira obsidiana, apaga fogo) ou calor (derrete gelo e neve, acende fogueiras e velas) |
+| `luz` | raio (8), duracao (60) | `de_vez` (false): luzes invisíveis a cada poucos blocos |
+| `mover_blocos` | alcance (8), duracao (30) | `peso` = dureza máxima (3). Pega o bloco mirado e o carrega flutuando; a tecla de novo o põe onde o jogador mira. No fim do tempo ele volta ao lugar |
+| `abrir_caminho` | duracao (20, só água) | `remove`: terreno (plantas, folhas, neve, terra, areia e cascalho da altura dos pés para cima), arvores (as árvores que o caminho toca, troncos e folhas) ou agua (a água se abre e volta depois); `comprimento` (10), `largura` (3), `altura` (3) |
+| `procurar` | raio (16, até 32), duracao (10) | `mostra`: baus (tudo que guarda itens), minerios ou mobs. Os blocos aparecem através das paredes (os 32 mais perto) |
+
+Os testes ficam em `src/gametest/.../heroes/PresetLot4Tests.java` e os prints no roteiro `presets_lote4`.
