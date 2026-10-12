@@ -1,5 +1,8 @@
 package com.danrod505.greenlantern.engine.preset;
 
+import com.danrod505.greenlantern.engine.EngineServer;
+import com.danrod505.greenlantern.engine.PresetContext;
+import com.danrod505.greenlantern.engine.Presets.Outcome;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -9,26 +12,50 @@ import net.minecraftforge.event.TickEvent;
 
 /**
  * The presets that go on for a while after the key (a shot in flight, a dash, a beam, a rain of
- * blows): each one is a task ticked every server tick until it says it is done, or until its player
- * leaves or dies. Tasks never outlive the server.
+ * blows, a bubble): each one is a task ticked every server tick until it says it is done, or until
+ * its player leaves or dies. Tasks never outlive the server.
+ * <p>
+ * A lasting preset (a bubble, super speed, invisibility...) runs under its ability's name: pressing
+ * the ability again turns it off, taking the suit off turns it off, and its cooldown starts when it
+ * ends (see {@link #lasting}).
  */
 public final class PresetRuntime {
     /** One tick of a running preset ({@code age} counts from 1); returns whether it goes on. */
     @FunctionalInterface
     public interface Task {
         boolean tick(int age);
+
+        /** Called once when the task ends, however it ends: puts back what it changed. */
+        default void stop() {}
+
+        /** A task with something to put back when it ends. */
+        static Task ending(Task task, Runnable end) {
+            return new Task() {
+                @Override
+                public boolean tick(int age) {
+                    return task.tick(age);
+                }
+
+                @Override
+                public void stop() {
+                    end.run();
+                }
+            };
+        }
     }
 
     private static final class Running {
         final ServerPlayer player;
         final UUID owner;
         final Task task;
+        final String key;
         int age;
 
-        Running(ServerPlayer player, Task task) {
+        Running(ServerPlayer player, Task task, String key) {
             this.player = player;
             this.owner = player.getUUID();
             this.task = task;
+            this.key = key;
         }
     }
 
@@ -38,11 +65,52 @@ public final class PresetRuntime {
 
     public static void register() {
         TickEvent.ServerTickEvent.Post.BUS.addListener(event -> tick(event.server()));
+        Guards.register();
     }
 
     /** Starts a task for {@code player}; it gets its first tick on the next server tick. */
     public static void start(ServerPlayer player, Task task) {
-        RUNNING.add(new Running(player, task));
+        RUNNING.add(new Running(player, task, null));
+    }
+
+    /**
+     * Starts a lasting preset under its ability's name. The ability's cooldown starts when it ends
+     * (its time is up, it is pressed again, the suit comes off), so the use itself only waits a tick.
+     */
+    public static Outcome lasting(PresetContext c, Task task) {
+        ServerPlayer player = c.player();
+        String key = key(c);
+        stop(player, key);
+        RUNNING.add(new Running(player, Task.ending(task, () -> {
+            task.stop();
+            EngineServer.startCooldown(player, c.hero(), c.ability());
+        }), key));
+        return Outcome.cooldown(1);
+    }
+
+    /** The name a lasting preset runs under: the ability's. */
+    public static String key(PresetContext c) {
+        return c.ability().data().id();
+    }
+
+    /** Whether a lasting preset of this ability is running for the player. */
+    public static boolean running(ServerPlayer player, String key) {
+        return RUNNING.stream().anyMatch(r -> key.equals(r.key) && r.owner.equals(player.getUUID()));
+    }
+
+    /** Ends the player's lasting preset of this ability; returns whether one was running. */
+    public static boolean stop(ServerPlayer player, String key) {
+        List<Running> ended = RUNNING.stream().filter(r -> key.equals(r.key) && r.owner.equals(player.getUUID())).toList();
+        RUNNING.removeAll(ended);
+        ended.forEach(r -> r.task.stop());
+        return !ended.isEmpty();
+    }
+
+    /** Ends all the player's lasting presets (the suit came off). */
+    public static void stopLasting(ServerPlayer player) {
+        List<Running> ended = RUNNING.stream().filter(r -> r.key != null && r.owner.equals(player.getUUID())).toList();
+        RUNNING.removeAll(ended);
+        ended.forEach(r -> r.task.stop());
     }
 
     /** How many tasks of this player are running (for the tests). */
@@ -55,6 +123,7 @@ public final class PresetRuntime {
         List<Running> now = List.copyOf(RUNNING);
         List<Running> done = new ArrayList<>();
         for (Running running : now) {
+            if (!RUNNING.contains(running)) continue;
             ServerPlayer player = running.player;
             if (player.isRemoved() || !player.isAlive() || server.getPlayerList().getPlayer(running.owner) != player) {
                 done.add(running);
@@ -64,5 +133,6 @@ public final class PresetRuntime {
             if (!running.task.tick(running.age)) done.add(running);
         }
         RUNNING.removeAll(done);
+        done.forEach(r -> r.task.stop());
     }
 }

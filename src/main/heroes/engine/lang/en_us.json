@@ -73,5 +73,10 @@
   "message.greenlantern.engine_nothing_to_grab": "Nothing in reach to grab",
   "message.greenlantern.engine_no_ammo": "Out of ammo: %s",
   "message.greenlantern.engine_no_aim": "Aim at a point in reach",
-  "message.greenlantern.engine_combo": "Blow %s of %s: press again in rhythm!"
+  "message.greenlantern.engine_combo": "Blow %s of %s: press again in rhythm!",
+  "message.greenlantern.engine_flight_empty": "No energy left to fly",
+  "message.greenlantern.engine_no_place": "There is nowhere to appear there",
+  "message.greenlantern.engine_no_wall": "There is no wall in front to pass through",
+  "message.greenlantern.engine_too_thick": "That wall is too thick",
+  "message.greenlantern.engine_no_room": "There is no room for the wall there"
 }

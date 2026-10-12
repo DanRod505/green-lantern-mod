@@ -43,3 +43,30 @@ Uma habilidade da ficha de um personagem (`data/greenlantern/characters/<id>.jso
 | `chuva` | dano de cada golpe, alcance (24), raio da área (4), duracao (3) | `golpes_por_segundo` (6) |
 
 Os testes ficam em `src/gametest/.../heroes/PresetTests.java` e os prints no roteiro `presets`.
+
+## Lote 2 (2.2.0): Movimento, Defesa e Evasão
+
+Os presets que duram (marcados com *) desligam ao apertar a tecla de novo ou ao tirar o traje, e a recarga só começa quando terminam.
+
+| Preset | Números | Ajustes |
+|---|---|---|
+| `voo` | | `velocidade_maxima` em blocos por tick (o stat `voo`, ou 2.5), `velocidade_inicial` (0.7), `aceleracao` em segundos até a barreira do som (5), `gasto_por_segundo` (2), `impulso` da decolagem (0.9), `pouso` (força do pouso de herói, 1). Um personagem com essa habilidade voa como os heróis (dois toques no pulo); a tecla decola ou pousa |
+| `supervelocidade`* | duracao (10) | `velocidade` extra (1.5 = +150%), `rastro` (elemento), `gasto_por_segundo` (0), `agua` (true), `paredes` (true) |
+| `planar`* | duracao (30) | `queda_por_segundo` em blocos (2), `controle` = velocidade para a frente (0.6). Termina ao pousar |
+| `salto_gigante` | dano no pouso, raio (3) | `altura` (8), `distancia` (10) |
+| `gancho` | alcance (24), dano (opcional, em quem estiver no caminho) | `velocidade` (1.2) |
+| `teleporte` | alcance (16) | `tempo` entre sumir e aparecer em segundos (0.25), `visual`: energia, tubo, sombra, magia |
+| `nado_rapido` | duracao (20) | `velocidade` (1), `folego` (true) |
+| `atravessar` | duracao da travessia (0.3) | `espessura` máxima (3), `visual`: vibrar, intangivel |
+| `bolha`* | raio (1.6), duracao (20) | `reducao` (0.6), `gasto_por_segundo` (2), `devolve` (false) |
+| `bloqueio` | duracao (2) | `reducao` (0.8), `angulo` da abertura inteira (120), `devolve` (false) |
+| `pele_dura` | duracao (8) | `reducao` (0.4) |
+| `parede` | duracao (8) | `material`: energia (vidro na cor do personagem), gelo, pedra, terra, areia, madeira ou id de bloco; `largura` (5), `altura` (3), `distancia` (2) |
+| `refletir` | duracao (1.5) | `chance` (1) |
+| `esquiva` | alcance = distância (4) | `janela` intocável em segundos (0.5), `lado`: auto, esquerda, direita, tras |
+| `invisivel`* | duracao (15) | `quebra_ao_atacar` (true) |
+| `fumaca` | raio (4), duracao (6) | |
+| `encolher`* | duracao (30) | `tamanho` (0.25) |
+| `fuga_de_forma` | duracao (5) | `forma`: sombra, animal, poca; `velocidade` extra (0.6). Atacar termina |
+
+Os testes ficam em `src/gametest/.../heroes/PresetLot2Tests.java` e os prints no roteiro `presets_lote2`.

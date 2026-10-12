@@ -73,5 +73,10 @@
   "message.greenlantern.engine_nothing_to_grab": "Nada ao alcance para agarrar",
   "message.greenlantern.engine_no_ammo": "Sem munição: %s",
   "message.greenlantern.engine_no_aim": "Mire num ponto ao alcance",
-  "message.greenlantern.engine_combo": "Golpe %s de %s: aperte de novo no ritmo!"
+  "message.greenlantern.engine_combo": "Golpe %s de %s: aperte de novo no ritmo!",
+  "message.greenlantern.engine_flight_empty": "Sem energia para voar",
+  "message.greenlantern.engine_no_place": "Não há onde aparecer aí",
+  "message.greenlantern.engine_no_wall": "Não há parede na frente para atravessar",
+  "message.greenlantern.engine_too_thick": "Essa parede é grossa demais",
+  "message.greenlantern.engine_no_room": "Não há espaço para a parede aí"
 }
