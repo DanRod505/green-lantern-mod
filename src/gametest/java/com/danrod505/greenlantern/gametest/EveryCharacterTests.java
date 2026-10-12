@@ -7,6 +7,7 @@ import static com.danrod505.greenlantern.gametest.GameTestKit.*;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.engine.CharacterData;
 import com.danrod505.greenlantern.engine.EngineAbility;
+import com.danrod505.greenlantern.engine.EngineContent;
 import com.danrod505.greenlantern.engine.EngineHero;
 import com.danrod505.greenlantern.engine.EngineServer;
 import com.danrod505.greenlantern.engine.Presets;
@@ -22,11 +23,13 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.gametest.framework.GameTestSequence;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
@@ -39,7 +42,8 @@ import net.minecraftforge.registries.DeferredRegister;
  *     <li>the item is registered and, for a character of the mod, has a recipe that loads;</li>
  *     <li>the energy bar has room, the traits are known, there are 5 to 8 abilities and, for a
  *     character of the mod, every function names a preset that exists;</li>
- *     <li>the suit goes on and the skins go round (in creative, all of them);</li>
+ *     <li>the suit goes on, the skin is on the chest piece, every skin has its texture and they go
+ *     round (in creative, all of them); one of the 9 heroes plays its transformation;</li>
  *     <li>every function of every ability goes off with nothing in the way (no cooldown, energy or
  *     condition), throws nothing and never adds energy (other than the class's energy per hit).</li>
  * </ul>
@@ -102,11 +106,20 @@ public final class EveryCharacterTests {
         player.setItemInHand(InteractionHand.MAIN_HAND, HeroContractTests.chargedItem(definition));
         helper.assertTrue(definition.summonSuit(player), who + "the suit should go on");
         helper.assertTrue(definition.isSuited(player), who + "should be suited");
-        // The skins of the 9 heroes come in stage 3, lot 2.
-        if (!(definition instanceof EngineHero hero)) return player;
+        AbilityHero hero = (AbilityHero) definition;
         ItemStack item = player.getMainHandItem();
         List<CharacterData.Skin> skins = hero.data().skins();
         helper.assertTrue(EngineServer.skin(hero, item).selected().equals(skins.getFirst().id()), who + "the first skin is the default");
+        // The choice goes on the chest piece, where every client sees it (the 9 heroes too, since stage 3, lot 2).
+        var shown = player.getItemBySlot(EquipmentSlot.CHEST).get(EngineContent.SKIN.get());
+        helper.assertTrue(shown != null && shown.selected().equals(skins.getFirst().id()), who + "the skin should be on the chest piece");
+        for (CharacterData.Skin skin : skins) {
+            helper.assertTrue(texture(skin.texture()), who + "no texture for skin " + skin.id());
+        }
+        // The transformation of the catalog plays (Shazam's own lightning already was one).
+        if (!(definition instanceof EngineHero) && !definition.id().equals("shazam")) {
+            helper.assertTrue(PresetRuntime.running(player) > 0, who + "the transformation " + hero.data().transformation() + " should play");
+        }
         player.setGameMode(GameType.CREATIVE);
         for (int i = 1; i <= skins.size(); i++) {
             EngineServer.cycleSkin(player, hero, item);
@@ -115,6 +128,11 @@ public final class EveryCharacterTests {
         }
         player.setGameMode(GameType.SURVIVAL);
         return player;
+    }
+
+    /** Whether a texture of the mod is in the jar (the client draws it; the test only sees the files). */
+    private static boolean texture(Identifier texture) {
+        return EveryCharacterTests.class.getResource("/assets/" + texture.getNamespace() + "/" + texture.getPath()) != null;
     }
 
     /** Removes what the abilities left in the arena (creatures, blocks thrown, projectiles), keeping the players. */

@@ -1,8 +1,8 @@
 package com.danrod505.greenlantern.client.engine;
 
+import com.danrod505.greenlantern.engine.AbilityHero;
 import com.danrod505.greenlantern.engine.CharacterData;
 import com.danrod505.greenlantern.engine.EngineContent;
-import com.danrod505.greenlantern.engine.EngineHero;
 import com.danrod505.greenlantern.engine.EngineServer;
 import com.danrod505.greenlantern.engine.Skeleton;
 import com.danrod505.greenlantern.engine.SkinState;
@@ -15,11 +15,11 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 
 /**
- * How a player wearing the full suit of a character of the engine looks: the skin chosen (kept on
- * the chest piece, which every client sees) on the character's skeleton. Null for everyone else,
- * the first 9 heroes included, and when the skin's texture is missing.
+ * How a player wearing the full suit of a character looks: the skin chosen (kept on the chest piece,
+ * which every client sees) on the character's skeleton. The first 9 heroes too, since stage 3, lot 2.
+ * Null for everyone else and when the skin's texture is missing.
  */
-public record SkinLook(EngineHero hero, CharacterData.Skin skin, Skeleton skeleton) {
+public record SkinLook(AbilityHero hero, CharacterData.Skin skin, Skeleton skeleton) {
     private static final Map<Identifier, Boolean> EXISTS = new HashMap<>();
 
     public static SkinLook of(int entityId) {
@@ -30,7 +30,7 @@ public record SkinLook(EngineHero hero, CharacterData.Skin skin, Skeleton skelet
     }
 
     public static SkinLook of(Player player) {
-        EngineHero hero = EngineServer.suited(player);
+        AbilityHero hero = EngineServer.abilitySuited(player);
         if (hero == null || !hero.fullSuit(player)) return null;
         CharacterData data = hero.data();
         SkinState state = player.getItemBySlot(EquipmentSlot.CHEST).get(EngineContent.SKIN.get());

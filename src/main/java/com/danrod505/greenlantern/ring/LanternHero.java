@@ -137,8 +137,8 @@ public final class LanternHero extends HeroDefinition implements AbilityHero {
 
     @Override
     protected void suitUpEffects(ServerLevel level, ServerPlayer player) {
-        level.sendParticles(ModParticles.GLOW.get(), player.getX(), player.getY() + 1.0, player.getZ(), 40, 0.4, 0.9, 0.4, 0.02);
-        level.sendParticles(ModParticles.SPARK.get(), player.getX(), player.getY() + 1.0, player.getZ(), 30, 0.5, 1.0, 0.5, 0.15);
+        // The transformation of the catalog (stage 3, lot 2).
+        EngineServer.legacySuitUp(player, this);
     }
 
     @Override

@@ -1,5 +1,5 @@
 {
-  "_comentario": "Um dos 9 heróis que já existiam. Desde a etapa 3 (lote 1) a roda tem as habilidades do catálogo no modelo novo: os poderes de hoje viraram funções delas (preset poder_de_hoje ou construto_de_hoje) e pagam a própria energia. O traje, os stats e a energia continuam os de hoje até os lotes 2 e 3.",
+  "_comentario": "Um dos 9 heróis que já existiam. Desde a etapa 3 (lote 1) a roda tem as habilidades do catálogo no modelo novo: os poderes de hoje viraram funções delas (preset poder_de_hoje ou construto_de_hoje) e pagam a própria energia. Desde o lote 2 o traje completo vira a skin do herói (com as skins alternativas do catálogo) e a transformação do catálogo toca ao vestir. Os stats e a energia continuam os de hoje até o lote 3.",
   "id": "lantern",
   "nome": "Lanterna Verde",
   "classe": "anel",
@@ -234,7 +234,17 @@
   "skins": [
     {
       "id": "lantern",
-      "nome": "Traje de hoje"
+      "nome": "Lanterna Verde"
+    },
+    {
+      "id": "lantern_lanterna_branco",
+      "nome": "Lanterna Branco",
+      "liberada_por": "arco"
+    },
+    {
+      "id": "lantern_parallax",
+      "nome": "Parallax",
+      "liberada_por": "chefe"
     }
   ],
   "fraquezas": [

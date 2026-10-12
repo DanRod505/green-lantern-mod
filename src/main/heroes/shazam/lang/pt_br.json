@@ -50,5 +50,8 @@
   "message.greenlantern.shazam_solomon_on": "Sabedoria de Salomão: os inimigos aparecem",
   "message.greenlantern.shazam_solomon_off": "Sabedoria de Salomão desligada",
   "message.greenlantern.shazam_lightning": "O raio enche a Magia de Shazam!",
-  "hud.greenlantern.shazam_solomon_target": "%s: %s / %s ❤"
+  "hud.greenlantern.shazam_solomon_target": "%s: %s / %s ❤",
+  "skin.greenlantern.shazam": "Shazam",
+  "skin.greenlantern.shazam_capitao_marvel_classico": "Capitão Marvel Clássico",
+  "skin.greenlantern.shazam_shazam_negro": "Shazam Negro"
 }

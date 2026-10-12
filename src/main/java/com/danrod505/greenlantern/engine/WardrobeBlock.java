@@ -48,7 +48,7 @@ public class WardrobeBlock extends HorizontalDirectionalBlock {
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         for (HeroDefinition hero : HeroRegistry.all()) {
-            if (hero instanceof EngineHero engine && engine.isActivator(stack)) {
+            if (hero instanceof AbilityHero engine && hero.isActivator(stack)) {
                 if (player instanceof ServerPlayer serverPlayer) EngineServer.cycleSkin(serverPlayer, engine, stack);
                 return InteractionResult.SUCCESS;
             }
@@ -58,7 +58,7 @@ public class WardrobeBlock extends HorizontalDirectionalBlock {
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
-        if (HeroRegistry.context(player).orElse(null) instanceof EngineHero engine) {
+        if (HeroRegistry.context(player).orElse(null) instanceof AbilityHero engine) {
             if (player instanceof ServerPlayer serverPlayer) EngineServer.cycleSkin(serverPlayer, engine, engine.findItem(player));
             return InteractionResult.SUCCESS;
         }

@@ -71,8 +71,8 @@ public final class FlashHero extends HeroDefinition implements AbilityHero {
 
     @Override
     protected void suitUpEffects(ServerLevel level, ServerPlayer player) {
-        level.sendParticles(ModParticles.SPEED_SPARK.get(), player.getX(), player.getY() + 1.0, player.getZ(), 40, 0.4, 0.9, 0.4, 0.2);
-        level.sendParticles(ModParticles.SPEED_STREAK.get(), player.getX(), player.getY() + 1.0, player.getZ(), 16, 0.5, 0.8, 0.5, 0.05);
+        // The transformation of the catalog (stage 3, lot 2).
+        EngineServer.legacySuitUp(player, this);
     }
 
     @Override

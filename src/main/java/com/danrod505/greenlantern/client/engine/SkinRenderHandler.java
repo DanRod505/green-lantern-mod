@@ -1,16 +1,21 @@
 package com.danrod505.greenlantern.client.engine;
 
+import com.danrod505.greenlantern.engine.Characters;
 import com.danrod505.greenlantern.engine.Skeleton;
 import com.mojang.blaze3d.vertex.PoseStack;
+import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.core.ClientAsset;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.PlayerModelType;
 import net.minecraft.world.entity.player.PlayerSkin;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.equipment.Equippable;
 import net.minecraftforge.client.event.RenderArmEvent;
 import net.minecraftforge.client.event.RenderAvatarEvent;
 import net.minecraftforge.eventbus.api.listener.Priority;
@@ -52,6 +57,13 @@ public final class SkinRenderHandler {
         state.showLeftPants = true;
         state.showRightPants = true;
         state.showCape = false;
+        // The first 9 heroes have suits drawn over the player: with the skin on they draw nothing
+        // (the same stacks, so the hero's own layers, capes and hair, still find their pieces).
+        // A suit without a helmet (Aquaman's) leaves the player's own helmet as it is.
+        if (look.hero().suit().head() != null) state.headEquipment = hidden(state.headEquipment);
+        state.chestEquipment = hidden(state.chestEquipment);
+        state.legsEquipment = hidden(state.legsEquipment);
+        state.feetEquipment = hidden(state.feetEquipment);
         AvatarRenderer<AbstractClientPlayer> wanted = Minecraft.getInstance().getEntityRenderDispatcher().getPlayerRenderers().get(model);
         if (wanted == null || wanted == event.getRenderer()) return false;
         REDIRECTING.set(true);
@@ -61,6 +73,17 @@ public final class SkinRenderHandler {
             REDIRECTING.set(false);
         }
         return true;
+    }
+
+    /** A copy of a suit piece that the armor layer draws as nothing (the empty look of the engine's suits). */
+    private static ItemStack hidden(ItemStack piece) {
+        Equippable equippable = piece.get(DataComponents.EQUIPPABLE);
+        if (equippable == null || equippable.assetId().filter(Characters.SKIN_SUIT::equals).isPresent()) return piece;
+        ItemStack copy = piece.copy();
+        copy.set(DataComponents.EQUIPPABLE, new Equippable(equippable.slot(), equippable.equipSound(), Optional.of(Characters.SKIN_SUIT),
+                equippable.cameraOverlay(), equippable.allowedEntities(), equippable.dispensable(), equippable.swappable(), equippable.damageOnHurt(),
+                equippable.equipOnInteract(), equippable.canBeSheared(), equippable.shearingSound()));
+        return copy;
     }
 
     private static void onPreSize(RenderAvatarEvent.Pre event) {

@@ -75,7 +75,8 @@ public final class BatmanHero extends HeroDefinition implements AbilityHero {
 
     @Override
     protected void suitUpEffects(ServerLevel level, ServerPlayer player) {
-        shadows(level, player, 40);
+        // The transformation of the catalog (stage 3, lot 2).
+        EngineServer.legacySuitUp(player, this);
     }
 
     @Override

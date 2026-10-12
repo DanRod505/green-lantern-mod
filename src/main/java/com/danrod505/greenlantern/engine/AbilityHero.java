@@ -4,7 +4,10 @@ import com.danrod505.greenlantern.hero.HeroEnergy;
 import com.danrod505.greenlantern.hero.HeroPowers;
 import com.danrod505.greenlantern.hero.SuitSet;
 import java.util.Set;
+import java.util.function.Supplier;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -32,6 +35,17 @@ public interface AbilityHero {
     boolean isSuited(Player player);
 
     SuitSet suit();
+
+    /** Whether every suit piece is on (Aquaman's suit has no helmet): only then the skin is the look. */
+    default boolean fullSuit(Player player) {
+        SuitSet suit = suit();
+        return isSuited(player) && wears(player, EquipmentSlot.HEAD, suit.head()) && wears(player, EquipmentSlot.LEGS, suit.legs())
+                && wears(player, EquipmentSlot.FEET, suit.feet());
+    }
+
+    private static boolean wears(Player player, EquipmentSlot slot, Supplier<? extends Item> piece) {
+        return piece == null || player.getItemBySlot(slot).is(piece.get());
+    }
 
     /** The traits the hero's own code already does (flight, gliding...): the engine leaves them alone. */
     default Set<String> ownTraits() {

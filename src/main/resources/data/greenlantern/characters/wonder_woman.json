@@ -1,5 +1,5 @@
 {
-  "_comentario": "Um dos 9 heróis que já existiam. Desde a etapa 3 (lote 1) a roda tem as habilidades do catálogo no modelo novo: os poderes de hoje viraram funções delas (preset poder_de_hoje ou construto_de_hoje) e pagam a própria energia. O traje, os stats e a energia continuam os de hoje até os lotes 2 e 3.",
+  "_comentario": "Um dos 9 heróis que já existiam. Desde a etapa 3 (lote 1) a roda tem as habilidades do catálogo no modelo novo: os poderes de hoje viraram funções delas (preset poder_de_hoje ou construto_de_hoje) e pagam a própria energia. Desde o lote 2 o traje completo vira a skin do herói (com as skins alternativas do catálogo) e a transformação do catálogo toca ao vestir. Os stats e a energia continuam os de hoje até o lote 3.",
   "id": "wonder_woman",
   "nome": "Mulher-Maravilha",
   "classe": "guerreiro",
@@ -247,7 +247,22 @@
   "skins": [
     {
       "id": "wonder_woman",
-      "nome": "Traje de hoje"
+      "nome": "Mulher-Maravilha"
+    },
+    {
+      "id": "wonder_woman_classica",
+      "nome": "Clássica",
+      "liberada_por": "receita"
+    },
+    {
+      "id": "wonder_woman_armadura_dourada",
+      "nome": "Armadura Dourada",
+      "liberada_por": "chefe"
+    },
+    {
+      "id": "wonder_woman_reino_do_amanha",
+      "nome": "Reino do Amanhã",
+      "liberada_por": "multiverso"
     }
   ],
   "cores": {

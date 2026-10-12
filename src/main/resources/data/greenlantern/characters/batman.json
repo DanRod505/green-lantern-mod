@@ -1,5 +1,5 @@
 {
-  "_comentario": "Um dos 9 heróis que já existiam. Desde a etapa 3 (lote 1) a roda tem as habilidades do catálogo no modelo novo: os poderes de hoje viraram funções delas (preset poder_de_hoje ou construto_de_hoje) e pagam a própria energia. O traje, os stats e a energia continuam os de hoje até os lotes 2 e 3.",
+  "_comentario": "Um dos 9 heróis que já existiam. Desde a etapa 3 (lote 1) a roda tem as habilidades do catálogo no modelo novo: os poderes de hoje viraram funções delas (preset poder_de_hoje ou construto_de_hoje) e pagam a própria energia. Desde o lote 2 o traje completo vira a skin do herói (com as skins alternativas do catálogo) e a transformação do catálogo toca ao vestir. Os stats e a energia continuam os de hoje até o lote 3.",
   "id": "batman",
   "nome": "Batman",
   "classe": "vigilante",
@@ -189,7 +189,27 @@
   "skins": [
     {
       "id": "batman",
-      "nome": "Traje de hoje"
+      "nome": "Batman"
+    },
+    {
+      "id": "batman_classico",
+      "nome": "Clássico",
+      "liberada_por": "receita"
+    },
+    {
+      "id": "batman_armadura_anti_superman",
+      "nome": "Armadura Anti-Superman",
+      "liberada_por": "missao"
+    },
+    {
+      "id": "batman_batman_do_futuro",
+      "nome": "Batman do Futuro",
+      "liberada_por": "multiverso"
+    },
+    {
+      "id": "batman_gotham_a_luz_de_lampiao",
+      "nome": "Gotham à Luz de Lampião",
+      "liberada_por": "multiverso"
     }
   ],
   "cores": {

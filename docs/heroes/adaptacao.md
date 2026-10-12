@@ -1,10 +1,12 @@
-# Adaptação dos 9 heróis, lote 1: as habilidades do catálogo
+# Adaptação dos 9 heróis
 
-Etapa 3 do guia mestre, lote 1 (versão 2.8.0). A roda de cada um dos 9 heróis tem agora as habilidades do catálogo no modelo novo: 5 a 8 habilidades, as de luta primeiro, as de mundo depois e a suprema por último (borda dourada), cada uma com até 3 funções escolhidas pelo jeito de apertar V, pela mira e pelo lugar. Os poderes de hoje continuam iguais e entram como funções (presets `poder_de_hoje` e `construto_de_hoje`, ver [presets.md](../presets.md)). O traje, os stats, a energia, o visual e a receita continuam os de hoje até os lotes 2 e 3.
+## Lote 1: as habilidades do catálogo
+
+Etapa 3 do guia mestre, lote 1 (versão 2.8.0). A roda de cada um dos 9 heróis tem agora as habilidades do catálogo no modelo novo: 5 a 8 habilidades, as de luta primeiro, as de mundo depois e a suprema por último (borda dourada), cada uma com até 3 funções escolhidas pelo jeito de apertar V, pela mira e pelo lugar. Os poderes de hoje continuam iguais e entram como funções (presets `poder_de_hoje` e `construto_de_hoje`, ver [presets.md](../presets.md)). O traje e o visual mudam no lote 2 (abaixo); os stats, a energia e a receita, no lote 3.
 
 As passivas das fichas que o código de cada herói já fazia (voo, planar, aquático, supervelocidade) continuam no código dele; as outras (superforça, invulnerável, visão no escuro) agora valem para eles também.
 
-## Lanterna Verde
+### Lanterna Verde
 
 Passivas: voo.
 
@@ -19,7 +21,7 @@ Passivas: voo.
 | Portal para Oa | mobilidade | `levar_junto` | segurar: construto de hoje `portal` |
 | Mecha Gigante (suprema) | invocacao | construto de hoje `mecha` | segurar, mirando bloco: `ima_de_itens` |
 
-## Flash
+### Flash
 
 Passivas: supervelocidade.
 
@@ -32,7 +34,7 @@ Passivas: supervelocidade.
 | Mapa Relâmpago | mobilidade | `teleporte` | segurar: `supervelocidade` |
 | Corrida no Tempo (suprema) | natureza | poder de hoje `lightning` | segurar: `plantar_e_colher` |
 
-## Aquaman
+### Aquaman
 
 Passivas: aquatico, superforca.
 
@@ -46,7 +48,7 @@ Passivas: aquatico, superforca.
 | Tesouros do Mar | deteccao | `procurar` | — |
 | Kraken (suprema) | invocacao | poder de hoje `kraken` | segurar: poder de hoje `atlantis_portal` |
 
-## Batman
+### Batman
 
 Passivas: visao_no_escuro, planar.
 
@@ -60,7 +62,7 @@ Passivas: visao_no_escuro, planar.
 | Modo Detetive | deteccao | `procurar` | — |
 | Batcaverna (suprema) | construcao | poder de hoje `batmobile` | segurar: `grande_obra` |
 
-## Superman
+### Superman
 
 Passivas: voo, superforca, invulneravel.
 
@@ -73,7 +75,7 @@ Passivas: voo, superforca, invulneravel.
 | Visão de Raio X | deteccao | poder de hoje `xray_vision` | — |
 | Fortaleza da Solidão (suprema) | construcao | `grande_obra` | no ar: `pulso` |
 
-## Mulher-Maravilha
+### Mulher-Maravilha
 
 Passivas: voo, superforca.
 
@@ -86,7 +88,7 @@ Passivas: voo, superforca.
 | Jato Invisível | mobilidade | poder de hoje `invisible_jet` | — |
 | Choque dos Braceletes (suprema) | explosao | poder de hoje `bracelet_shockwave` | segurar: `construir` |
 
-## Ciborgue
+### Ciborgue
 
 Passivas: voo, invulneravel.
 
@@ -100,7 +102,7 @@ Passivas: voo, invulneravel.
 | Braço Guindaste | logistica | `ima_de_itens` | — |
 | Tubo de Explosão (suprema) | mobilidade | poder de hoje `boom_tube` | segurar: `levar_junto` |
 
-## Supergirl
+### Supergirl
 
 Passivas: voo, superforca, invulneravel.
 
@@ -113,7 +115,7 @@ Passivas: voo, superforca, invulneravel.
 | Entrega Kryptoniana | logistica | `mover_blocos` | — |
 | Krypto ao Ataque (suprema) | invocacao | poder de hoje `solar_flare` | segurar: `procurar` |
 
-## Shazam
+### Shazam
 
 Passivas: voo, superforca.
 
@@ -126,8 +128,30 @@ Passivas: voo, superforca.
 | Velocidade de Mercúrio | mobilidade | poder de hoje `mercury_dash` | segurar: `levar_junto` |
 | SHAZAM! (suprema) | explosao | poder de hoje `thunder_call` | segurar: `clima` |
 
-## O que ficou de fora da roda
+### O que ficou de fora da roda
 
 - Aquaman: o Portal para Atlântida virou a função "segurar" do Kraken e continua no mundo no Portão de Atlântida.
 - Supergirl: a Superaudição sai da roda (no plano, vira o aviso de perigo da tela); a Muralha de Gelo ficou como a função "segurar" das Palmas Trovejantes.
 - Mulher-Maravilha: "mirando aldeão mostra a melhor troca" não coube no limite de 3 funções do Laço (puxar, prender e girar).
+
+## Lote 2: skins, transformações e skins alternativas (versão 2.9.0)
+
+Com o traje completo, o traje deixa de ser desenhado por cima da skin do jogador e vira a skin do herói, como nos personagens da engine: o molde do esqueleto (Masculino; Feminino, de braço fino, para a Mulher-Maravilha e a Supergirl), a camada de cima com o volume do traje (cabelo, cinto, ombreiras, botas) e a camada que brilha no escuro (`_brilho`: olhos, anel, símbolos, luzes). A capa, as orelhas do Batman, o cabelo da Supergirl e as outras peças animadas continuam desenhadas por cima, como antes. Com o traje incompleto, as peças aparecem como hoje.
+
+As skins saem de `python3 tools/generate_hero_skins.py` (com `--preview folha.png`, uma folha com a frente e as costas de todas), a partir das cores e do desenho dos trajes de hoje. Ficam em `assets/greenlantern/textures/entity/skin/<id>.png`.
+
+| Herói | Transformação ao vestir | Skins alternativas (como conseguir) |
+|---|---|---|
+| Lanterna Verde | Luz do Anel (`anel`) | Lanterna Branco (arco), Parallax (chefe) |
+| Flash | Vulto Veloz (`velocidade`) | Clássico (receita), Flash Negro (chefe), Ponto de Ignição (multiverso) |
+| Aquaman | Maré (`mare`) | Clássico (receita), Mão de Arpão (chefe) |
+| Batman | Das Sombras (`sombras`) | Clássico (receita), Armadura Anti-Superman (missão), Batman do Futuro (multiverso), Gotham à Luz de Lampião (multiverso) |
+| Superman | Sol de Krypton (`sol`) | Clássico (receita), Traje Negro (arco), Reino do Amanhã (multiverso), Foice e Martelo (multiverso) |
+| Mulher-Maravilha | Bênção Divina (`divino`) | Clássica (receita), Armadura Dourada (chefe), Reino do Amanhã (multiverso) |
+| Ciborgue | Armadura em Montagem (`armadura`) | Titãs Clássico (receita) |
+| Supergirl | Sol de Krypton (`sol`) | Anos 80 (receita), Lanterna Vermelha (multiverso) |
+| Shazam | O raio de hoje, que já era o Raio Mágico do catálogo | Capitão Marvel Clássico (receita), Shazam Negro (chefe) |
+
+A transformação toca no lugar das partículas de vestir de hoje; a do Shazam continua a dele (o raio que dá dano em volta e recarrega a energia). As skins alternativas trocam no Guarda-Roupa dos Heróis ou com agachar + K, como nos personagens da engine; por enquanto só vêm liberadas no criativo (os Moldes de Traje são de outra etapa). A trilha de cada um continua a mesma.
+
+O que fica para o lote 3: a capa e as peças animadas ainda usam a cor do traje de hoje em todas as skins, os stats, a energia, as receitas e os prints novos de referência.

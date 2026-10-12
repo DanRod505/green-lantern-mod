@@ -49,5 +49,9 @@
   "guide.greenlantern.recipe.flash_ring": "Redstone in the corners, gold ingots on the sides and a lightning rod in the center. The ring starts without Speed Force: put on the suit and run to charge it.",
   "guide.greenlantern.controls_flash": "§eSprint§r (suit on): start running.\n§eR§r (hold / tap): power wheel / next power.\n§eV§r: use the selected power.\n§eShift + mouse wheel§r (Flash ring in hand): switch power.",
   "guide.greenlantern.section.flash": "The Flash",
-  "guide.greenlantern.controls_flash.title": "Controls"
+  "guide.greenlantern.controls_flash.title": "Controls",
+  "skin.greenlantern.flash": "Flash",
+  "skin.greenlantern.flash_classico": "Classic",
+  "skin.greenlantern.flash_flash_negro": "Black Flash",
+  "skin.greenlantern.flash_ponto_de_ignicao": "Flashpoint"
 }

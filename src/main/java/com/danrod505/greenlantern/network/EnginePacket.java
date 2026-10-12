@@ -3,7 +3,6 @@ package com.danrod505.greenlantern.network;
 import com.danrod505.greenlantern.engine.AbilityFunctions;
 import com.danrod505.greenlantern.engine.AbilityHero;
 import com.danrod505.greenlantern.engine.EngineAbility;
-import com.danrod505.greenlantern.engine.EngineHero;
 import com.danrod505.greenlantern.engine.EngineServer;
 import com.danrod505.greenlantern.hero.HeroRegistry;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -55,8 +54,7 @@ public record EnginePacket(int action, int ability, int press) {
                 EngineServer.useAbility(player, item, ability, AbilityFunctions.Press.byIndex(packet.press));
             }
             case SKIN -> {
-                // The 9 heroes get their skins in stage 3, lot 2.
-                if (hero instanceof EngineHero engine) EngineServer.cycleSkin(player, engine, item);
+                EngineServer.cycleSkin(player, hero, item);
             }
             default -> {
             }

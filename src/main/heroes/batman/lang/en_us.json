@@ -52,5 +52,10 @@
   "guide.greenlantern.recipe.utility_belt": "Leather in the corners, gold ingots on top and bottom, iron ingots on the sides and a phantom membrane in the center. The belt starts empty: put on the suit and wait for the cells to charge.",
   "guide.greenlantern.controls_batman": "§eJump§r (hold, while falling): glide with the cape; look down to dive and up to climb.\n§eR§r (hold / tap): gadget menu / next gadget.\n§eV§r: uses the selected gadget. §eJump§r on the hook: let go of the cable.\n§eIn the Batmobile§r: §eW A S D§r drive, §eCtrl§r boost, §eLeft-click§r missiles, §eSneak§r get out.",
   "guide.greenlantern.section.batman": "Batman",
-  "guide.greenlantern.controls_batman.title": "Controls"
+  "guide.greenlantern.controls_batman.title": "Controls",
+  "skin.greenlantern.batman": "Batman",
+  "skin.greenlantern.batman_classico": "Classic",
+  "skin.greenlantern.batman_armadura_anti_superman": "Anti-Superman Armor",
+  "skin.greenlantern.batman_batman_do_futuro": "Batman Beyond",
+  "skin.greenlantern.batman_gotham_a_luz_de_lampiao": "Gotham by Gaslight"
 }

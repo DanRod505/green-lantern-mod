@@ -96,7 +96,8 @@ public final class WonderWomanHero extends HeroDefinition implements AbilityHero
 
     @Override
     protected void suitUpEffects(ServerLevel level, ServerPlayer player) {
-        burst(level, player, 50);
+        // The transformation of the catalog (stage 3, lot 2).
+        EngineServer.legacySuitUp(player, this);
         WonderWomanServer.sendEvent(player, AmazonFlags.EVENT_SUIT_UP);
     }
 

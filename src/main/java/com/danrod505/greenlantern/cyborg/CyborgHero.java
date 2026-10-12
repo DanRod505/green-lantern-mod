@@ -89,7 +89,8 @@ public final class CyborgHero extends HeroDefinition implements AbilityHero {
 
     @Override
     protected void suitUpEffects(ServerLevel level, ServerPlayer player) {
-        level.sendParticles(ParticleTypes.END_ROD, player.getX(), player.getY() + 1.0, player.getZ(), 40, 0.45, 0.9, 0.45, 0.05);
+        // The transformation of the catalog (stage 3, lot 2).
+        EngineServer.legacySuitUp(player, this);
     }
 
     @Override
