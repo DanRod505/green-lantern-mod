@@ -51,10 +51,13 @@
     },
     {
       "id": "teste_movimento",
-      "nome": "Salto de Teste",
+      "nome": "Voo de Teste",
       "classe": "movimento",
       "tipo": "secundaria",
-      "preset": "salto",
+      "preset": "voo",
+      "ajustes": {
+        "velocidade_maxima": 3.0
+      },
       "uso_no_mundo": "subir",
       "numeros": {
         "custo": 10,

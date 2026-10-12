@@ -5,6 +5,15 @@
 Mod de heróis do **Universo DC** para **Minecraft Java 1.21.11** com **Forge 61.2.0** (compilado com **Java 25**).
 Começou como o mod do Lanterna Verde e agora traz também **o Flash** (v1.7.0) **o Aquaman** (v1.8.0), **Atlântida** (v1.9.0) **o Kraken do Aquaman** (v1.10.0), **o Batman** (v1.11.0), **as criaturas de Atlântida** (v1.12.0) **o Fosso**, os inimigos do Aquaman (v1.13.0), **o Superman** (v1.14.0), **a Mulher Maravilha** (v1.15.0) **o Ciborgue** (v1.16.0), o primeiro herói feito com o kit de herói, e **a Supergirl com o Krypto, o Supercão** (v1.17.0). O id do mod continua `greenlantern`, então mundos e configurações antigas continuam funcionando.
 
+## Presets de movimento, defesa e evasão (novo na 2.2.0)
+
+Segundo lote da biblioteca de presets. **Nada muda nos 9 heróis de hoje.**
+
+* **Movimento:** Voo (o mesmo voo dos heróis, com barreira do som, pago com a energia da classe; a tecla decola e pousa), Supervelocidade (corre muito mais rápido, sobe blocos inteiros, corre na água e sobe paredes, deixando rastro), Planar (cai devagar e vai para onde olha, sem dano de queda), Salto gigante (pula alto e longe; o pouso fere quem está em volta), Gancho (puxa até o bloco mirado), Teleporte (aparece onde mira, com visual de energia, Tubo de Explosão, sombra ou magia), Nado rápido (nada rápido e respira embaixo d'água) e Atravessar (passa por paredes de até 3 blocos, nunca por rocha-mãe).
+* **Defesa:** Bolha (escudo em volta que corta parte de todo dano e gasta energia por segundo), Bloqueio (corta o dano só de frente e pode devolver projéteis), Pele dura (menos dano por um tempo), Parede (blocos temporários de energia na cor do personagem, gelo, pedra ou qualquer bloco, que somem e devolvem o que havia) e Refletir (projéteis voltam para quem atirou).
+* **Evasão:** Esquiva (passo rápido para o lado, intocável por um instante), Invisível (some e os mobs perdem o jogador; atacar quebra), Fumaça (cega e esconde quem está dentro), Encolher (fica minúsculo) e Fuga de forma (vira sombra, bicho pequeno ou poça para escapar).
+* Os presets que duram (supervelocidade, planar, bolha, invisível, encolher) desligam apertando a tecla de novo ou tirando o traje; a recarga começa quando terminam.
+
 ## Presets de golpe, disparo e explosão (novo na 2.1.0)
 
 Primeiro lote da biblioteca de presets: as peças prontas que as habilidades dos personagens novos vão usar. **Nada muda nos 9 heróis de hoje.** A ficha de um personagem escolhe o preset de cada habilidade (`"preset"`), os números (`"numeros"`) e os ajustes do preset (`"ajustes"`, como empurrão, quantidade de tiros ou elemento).

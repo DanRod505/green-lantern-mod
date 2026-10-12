@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:function",
+  "function": "greenlantern:preset_salto_gigante",
+  "environment": "minecraft:default",
+  "structure": "greenlantern:arena",
+  "max_ticks": 200,
+  "required": true
+}

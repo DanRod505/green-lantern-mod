@@ -2,6 +2,8 @@ package com.danrod505.greenlantern.engine;
 
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
+import com.danrod505.greenlantern.engine.preset.MovementPresets;
+import com.danrod505.greenlantern.flight.FlightProfile;
 import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.HeroEnergy;
 import com.danrod505.greenlantern.hero.HeroPowers;
@@ -10,6 +12,7 @@ import com.danrod505.greenlantern.hero.SuitSet;
 import com.danrod505.greenlantern.hero.WheelStyle;
 import com.danrod505.greenlantern.hero.WheelTheme;
 import com.danrod505.greenlantern.item.SuitArmorItem;
+import com.danrod505.greenlantern.ring.FlightHandler;
 import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
@@ -19,6 +22,7 @@ import net.minecraft.util.ARGB;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.equipment.ArmorMaterial;
 import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraftforge.registries.RegistryObject;
@@ -38,6 +42,8 @@ public final class EngineHero extends HeroDefinition {
     private final RegistryObject<CharacterItem> item;
     private final HeroEnergy energy;
     private final HeroPowers<EngineAbility> powers;
+    /** The settings of the character's "voo" ability, or null when it doesn't fly. */
+    private final CharacterData.Settings flight;
 
     private EngineHero(CharacterData data, RegistryObject<CharacterItem> item, SuitSet suit) {
         super(data.id(), stack -> stack.is(item.get()), suit);
@@ -48,6 +54,8 @@ public final class EngineHero extends HeroDefinition {
         EngineAbility[] abilities = new EngineAbility[list.size()];
         for (int i = 0; i < abilities.length; i++) abilities[i] = new EngineAbility(list.get(i), i, list.get(i).kind().orElseThrow());
         this.powers = new HeroPowers<>(new PowerSet<>(abilities), energy, ChatFormatting.AQUA, 0.8F, 0.08F, EngineServer::useAbility, wheel(data));
+        CharacterData.Ability fly = list.stream().filter(a -> a.preset().equals(MovementPresets.FLIGHT)).findFirst().orElse(null);
+        this.flight = fly == null ? null : fly.settings();
     }
 
     /** Builds the character of a data file and registers its item and suit pieces. */
@@ -129,6 +137,27 @@ public final class EngineHero extends HeroDefinition {
     @Override
     public void tick(ServerPlayer player) {
         EngineServer.tick(player, this);
+    }
+
+    /** A character with a "voo" ability power-flies like the heroes do (double tap jump, or the ability's key). */
+    @Override
+    public FlightProfile flightProfile() {
+        return flight == null ? null : MovementPresets.flightProfile(data, flight);
+    }
+
+    /** Flight runs on the class energy (free in creative). */
+    @Override
+    public boolean canFly(Player player, ItemStack item) {
+        return flight != null && !item.isEmpty() && (player.isCreative() || energy.get(item).stored() > 0);
+    }
+
+    @Override
+    public void payFlight(ServerPlayer player, ItemStack item, float multiplier) {
+        if (flight == null) return;
+        int cost = (int) Math.round(flight.number("gasto_por_segundo", 2.0) * multiplier);
+        if (cost <= 0) return;
+        energy.drain(item, cost);
+        if (energy.get(item).stored() <= 0) FlightHandler.outOfEnergy(player, "message.greenlantern.engine_flight_empty");
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.danrod505.greenlantern.engine;
 
+import com.danrod505.greenlantern.engine.preset.PresetRuntime;
 import com.danrod505.greenlantern.hero.HeroRegistry;
 import com.danrod505.greenlantern.ring.RingEnergy;
 import java.util.List;
@@ -59,7 +60,7 @@ public final class EngineServer {
         LivingHurtEvent.BUS.addListener(Priority.LOW, EngineServer::onHurt);
         ShieldBlockEvent.BUS.addListener(EngineServer::onShieldBlock);
         LivingEntityUseItemEvent.Finish.BUS.addListener(EngineServer::onAte);
-        com.danrod505.greenlantern.engine.preset.PresetRuntime.register();
+        PresetRuntime.register();
     }
 
     /** The character of the engine whose suit the player wears, or null. */
@@ -91,6 +92,7 @@ public final class EngineServer {
             player.displayClientMessage(Component.translatable("message.greenlantern.engine_need_suit"), true);
             return false;
         }
+        if (PresetRuntime.stop(player, ability.data().id())) return true;
         if (!ready(player, hero, item, ability)) return false;
         return finish(player, hero, item, ability, Presets.useInFight(player, hero, item, ability));
     }
@@ -149,6 +151,14 @@ public final class EngineServer {
         return true;
     }
 
+    /** Starts the ability's cooldown now: a lasting preset (a bubble, super speed) just ended. */
+    public static void startCooldown(ServerPlayer player, EngineHero hero, EngineAbility ability) {
+        ItemStack item = hero.findItem(player);
+        if (item.isEmpty()) return;
+        long now = player.level().getGameTime();
+        item.set(EngineContent.ABILITIES.get(), state(item).withCooldown(ability.ordinal(), now + ability.cooldownTicks(), now));
+    }
+
     /** Not enough energy, still cooling down, Supreme not full: a short sound and the reason. */
     private static void refuse(ServerPlayer player, Component reason) {
         player.displayClientMessage(reason.copy().withStyle(ChatFormatting.RED), true);
@@ -204,6 +214,7 @@ public final class EngineServer {
 
     static void onSuitDown(ServerPlayer player, EngineHero hero) {
         SHIELD.remove(player.getUUID());
+        PresetRuntime.stopLasting(player);
     }
 
     static void tick(ServerPlayer player, EngineHero hero) {
