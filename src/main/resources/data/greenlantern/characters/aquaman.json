@@ -1,5 +1,5 @@
 {
-  "_comentario": "Um dos 9 heróis que já existiam: os poderes e a energia continuam no código dele. O traje, os bônus e a ordem da roda vêm daqui, com os mesmos números de antes.",
+  "_comentario": "Um dos 9 heróis que já existiam: o traje, a energia e os poderes próprios continuam no código dele. Desde a etapa 3 (adaptação) a roda é a do novo modelo: as habilidades abaixo, cada função com um preset ou, com o preset \"poder\", um poder do próprio herói (\"ajustes\": {\"poder\": ...}), que paga a energia e a recarga dele. Passivas com \"legado\" ficam com o código do herói.",
   "id": "aquaman",
   "nome": "Aquaman",
   "classe": "guerreiro",
@@ -53,25 +53,169 @@
   },
   "habilidades": [
     {
-      "id": "trident"
+      "id": "aquaman_tridente",
+      "nome": "Tridente",
+      "classe": "golpe",
+      "preset": "poder",
+      "numeros": {
+        "dano": 10,
+        "custo": 6,
+        "recarga": 3,
+        "alcance": 4
+      },
+      "ajustes": {
+        "poder": "trident"
+      },
+      "funcoes": [
+        {
+          "preset": "pescar",
+          "quando": {
+            "mira": "agua"
+          },
+          "numeros": {
+            "alcance": 16
+          }
+        }
+      ]
     },
     {
-      "id": "shark"
+      "id": "aquaman_pele_atlante",
+      "nome": "Pele Atlante",
+      "classe": "defesa",
+      "preset": "pele_dura",
+      "numeros": {
+        "custo": 5,
+        "recarga": 6,
+        "raio": 3,
+        "duracao": 10
+      }
     },
     {
-      "id": "sea_call"
+      "id": "aquaman_chamado_do_mar",
+      "nome": "Chamado do Mar",
+      "classe": "controle",
+      "preset": "poder",
+      "numeros": {
+        "dano": 2,
+        "custo": 8,
+        "recarga": 12,
+        "alcance": 24,
+        "duracao": 4
+      },
+      "ajustes": {
+        "poder": "sea_call"
+      },
+      "funcoes": [
+        {
+          "preset": "poder",
+          "quando": {
+            "aperto": "segurar"
+          },
+          "ajustes": {
+            "poder": "shark"
+          }
+        }
+      ]
     },
     {
-      "id": "atlantis_portal"
+      "id": "aquaman_furia_do_oceano",
+      "nome": "Fúria do Oceano",
+      "classe": "fortalecimento",
+      "preset": "aura",
+      "numeros": {
+        "custo": 15,
+        "recarga": 40,
+        "duracao": 15
+      },
+      "ajustes": {
+        "atributo": "dano"
+      },
+      "funcoes": [
+        {
+          "preset": "plantar_e_colher",
+          "quando": {
+            "mira": "planta"
+          },
+          "numeros": {
+            "raio": 5
+          }
+        }
+      ]
     },
     {
-      "id": "kraken"
+      "id": "aquaman_corrente_marinha",
+      "nome": "Corrente Marinha",
+      "classe": "mobilidade",
+      "preset": "nado_rapido",
+      "numeros": {
+        "custo": 5,
+        "recarga": 4,
+        "alcance": 24
+      }
+    },
+    {
+      "id": "aquaman_tesouros_do_mar",
+      "nome": "Tesouros do Mar",
+      "classe": "deteccao",
+      "preset": "procurar",
+      "numeros": {
+        "custo": 5,
+        "recarga": 15,
+        "raio": 24,
+        "duracao": 20
+      },
+      "ajustes": {
+        "mostra": "baus"
+      }
+    },
+    {
+      "id": "aquaman_kraken",
+      "nome": "Kraken",
+      "classe": "invocacao",
+      "suprema": true,
+      "preset": "poder",
+      "numeros": {
+        "dano": 18,
+        "custo": 40,
+        "recarga": 135,
+        "duracao": 60
+      },
+      "ajustes": {
+        "poder": "kraken"
+      },
+      "funcoes": [
+        {
+          "preset": "poder",
+          "quando": {
+            "aperto": "segurar"
+          },
+          "ajustes": {
+            "poder": "atlantis_portal"
+          }
+        }
+      ]
     }
   ],
   "skins": [
     {
       "id": "aquaman",
       "nome": "Traje de hoje"
+    }
+  ],
+  "cores": {
+    "principal": "#E07818",
+    "secundaria": "#2E8A3E",
+    "brilho": "#9CF0D8"
+  },
+  "passivas": [
+    {
+      "tipo": "aquatico",
+      "ajustes": {
+        "legado": true
+      }
+    },
+    {
+      "tipo": "superforca"
     }
   ]
 }

@@ -4,7 +4,9 @@ import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
 import com.danrod505.greenlantern.client.cyborg.CyborgClient;
+import com.danrod505.greenlantern.engine.AbilityWheel;
 import com.danrod505.greenlantern.engine.Characters;
+import com.danrod505.greenlantern.engine.EngineAbility;
 import com.danrod505.greenlantern.flight.FlightProfile;
 import com.danrod505.greenlantern.flight.FlightStyle;
 import com.danrod505.greenlantern.hero.HeroDefinition;
@@ -16,9 +18,11 @@ import com.danrod505.greenlantern.hero.WheelTheme;
 import com.danrod505.greenlantern.registry.ModParticles;
 import com.danrod505.greenlantern.registry.ModSounds;
 import com.danrod505.greenlantern.ring.FlightHandler;
+import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
@@ -53,8 +57,8 @@ public final class CyborgHero extends HeroDefinition {
 
     public static final CyborgHero INSTANCE = new CyborgHero();
 
-    private final HeroPowers<CyborgPower> powers = new HeroPowers<>(CyborgPower.POWERS, ENERGY, ChatFormatting.GOLD,
-            0.85F, 0.06F, CyborgServer::usePower, WHEEL);
+    /** The wheel of the new model (stage 3): the abilities of the file, using the powers of {@link CyborgPower} and the presets. */
+    private final HeroPowers<EngineAbility> powers = AbilityWheel.build(this, data(), ENERGY, ChatFormatting.GOLD, 0.85F, 0.06F, AbilityWheel.style(WHEEL, data()));
 
     private CyborgHero() {
         super("cyborg", stack -> stack.is(CyborgContent.ITEM.get()), new SuitSet(CyborgContent.MASK, CyborgContent.SUIT, CyborgContent.LEGGINGS,
@@ -99,8 +103,32 @@ public final class CyborgHero extends HeroDefinition {
     }
 
     @Override
-    public HeroPowers<CyborgPower> powers() {
+    public HeroPowers<EngineAbility> powers() {
         return powers;
+    }
+
+    @Override
+    public List<CyborgPower> ownPowers() {
+        return List.of(CyborgPower.values());
+    }
+
+    /** Marking the Boom Tube's destination: a power of its own on the wheel, without an icon. */
+    public static final String BOOM_TUBE_MARK = "boom_tube_mark";
+
+    @Override
+    public boolean hasOwnPower(String id) {
+        return id.equals(BOOM_TUBE_MARK) || super.hasOwnPower(id);
+    }
+
+    @Override
+    public boolean useOwnPower(ServerPlayer player, ItemStack item, String id) {
+        if (id.equals(BOOM_TUBE_MARK)) return CyborgServer.markBoomTube(player, item);
+        return own(ownPowers(), id).map(power -> CyborgServer.usePower(player, item, power)).orElse(false);
+    }
+
+    @Override
+    public Identifier ownIcons() {
+        return WHEEL.icons();
     }
 
     @Override

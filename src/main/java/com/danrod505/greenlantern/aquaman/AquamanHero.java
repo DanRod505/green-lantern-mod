@@ -4,7 +4,9 @@ import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
 import com.danrod505.greenlantern.client.aqua.AquamanClient;
+import com.danrod505.greenlantern.engine.AbilityWheel;
 import com.danrod505.greenlantern.engine.Characters;
+import com.danrod505.greenlantern.engine.EngineAbility;
 import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.HeroEnergy;
 import com.danrod505.greenlantern.hero.HeroPowers;
@@ -15,9 +17,11 @@ import com.danrod505.greenlantern.item.AquamanEmblemItem;
 import com.danrod505.greenlantern.registry.ModDataComponents;
 import com.danrod505.greenlantern.registry.ModItems;
 import com.danrod505.greenlantern.registry.ModSounds;
+import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -46,8 +50,8 @@ public final class AquamanHero extends HeroDefinition {
 
     public static final AquamanHero INSTANCE = new AquamanHero();
 
-    private final HeroPowers<AquaPower> powers = new HeroPowers<>(AquaPower.POWERS, SEA_FORCE, ChatFormatting.AQUA,
-            0.8F, 0.08F, AquamanServer::usePower, WHEEL);
+    /** The wheel of the new model (stage 3): the abilities of the file, using the powers of {@link AquaPower} and the presets. */
+    private final HeroPowers<EngineAbility> powers = AbilityWheel.build(this, data(), SEA_FORCE, ChatFormatting.AQUA, 0.8F, 0.08F, AbilityWheel.style(WHEEL, data()));
 
     private AquamanHero() {
         super("aquaman", AquamanHelper::isEmblem, new SuitSet(null, ModItems.AQUAMAN_SUIT, ModItems.AQUAMAN_LEGGINGS, ModItems.AQUAMAN_BOOTS,
@@ -101,8 +105,23 @@ public final class AquamanHero extends HeroDefinition {
     }
 
     @Override
-    public HeroPowers<AquaPower> powers() {
+    public HeroPowers<EngineAbility> powers() {
         return powers;
+    }
+
+    @Override
+    public List<AquaPower> ownPowers() {
+        return List.of(AquaPower.values());
+    }
+
+    @Override
+    public boolean useOwnPower(ServerPlayer player, ItemStack item, String id) {
+        return own(ownPowers(), id).map(power -> AquamanServer.usePower(player, item, power)).orElse(false);
+    }
+
+    @Override
+    public Identifier ownIcons() {
+        return WHEEL.icons();
     }
 
     @Override
@@ -126,11 +145,5 @@ public final class AquamanHero extends HeroDefinition {
     @Override
     public boolean neverDropped(ItemStack stack) {
         return AquamanHelper.isTrident(stack);
-    }
-
-    /** The emblem's HUD is taller: the Kraken's health goes under the powers. */
-    @Override
-    public int hudHeight() {
-        return 70;
     }
 }

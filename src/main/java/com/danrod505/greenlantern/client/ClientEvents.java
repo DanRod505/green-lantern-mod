@@ -31,16 +31,16 @@ public final class ClientEvents {
             if (HeroRegistry.context(player).isPresent()) ModNetwork.sendToServer(new ToggleUniformPacket());
         }
         HeroDefinition context = HeroRegistry.context(player).orElse(null);
-        if (context instanceof EngineHero engine) com.danrod505.greenlantern.client.engine.EngineIcons.ensure(engine);
-        if (context instanceof EngineHero engine) {
-            // Engine characters: the function of the ability depends on how V is pressed (see EngineKeys).
-            com.danrod505.greenlantern.client.engine.EngineKeys.tick(mc, engine);
+        if (context != null && context.abilityWheel()) {
+            // The wheel of the new model (every hero): the function of the ability depends on how V is pressed (see EngineKeys).
+            com.danrod505.greenlantern.client.engine.EngineIcons.ensure(context);
+            com.danrod505.greenlantern.client.engine.EngineKeys.tick(mc, context);
         } else {
             while (KeyBindings.HERO_POWER.consumeClick()) {
                 if (mc.screen != null || context == null || !context.hasPowers()) continue;
                 ModNetwork.sendToServer(new UsePowerPacket(-1));
             }
-            // The skin and the direct keys only act for engine characters.
+            // The skin and the direct keys only act on the wheel of the new model.
             while (KeyBindings.SKIN.consumeClick()) {
             }
             for (var key : KeyBindings.ABILITIES) {

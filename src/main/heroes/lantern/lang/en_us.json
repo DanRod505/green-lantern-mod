@@ -128,5 +128,21 @@
   "guide.greenlantern.oa": "Oa is the home planet of the Green Lantern Corps, at the center of the universe. You get there with the Portal construct.\n\n§aOpening the portal§r\nSelect the Portal (construct 8) and right-click: an oval of hard light opens three blocks in front of you. Walk through it to travel to Oa. The portal stays open for 20 seconds, so your friends can follow.\n\n§aComing back§r\nOn Oa, use the Portal construct again: it opens the way back to exactly where you left.\n\n§aThe city§r\n• You arrive on a dais at the edge of the great plaza.\n• In the middle stands the §2Central Power Battery§r, a giant lantern that shines a green beam into the sky. Stand near it and your ring recharges by itself.\n• Around it, eight pillars hold the §bGuardians of the Universe§r. Fly up and right-click one to hear their wisdom: they also refill your ring.\n• Lanterns of many species walk around the plaza and patrol the sky. Right-click them to chat.\n• Spires of dark stone and quartz rise around the plaza, with rings of green light and crystals on the plains.\n\n§aGood to know§r\n• Oa has eternal night under a green starry sky and its own music.\n• No monsters spawn on Oa, and you can't sleep there.\n• The portal costs ring energy (portalCost in the config).",
   "guide.greenlantern.controls_lantern": "§eRight-click§r (ring): put on the uniform or use the construct.\n§eG§r: put on / remove the uniform.\n§eR§r (hold): construct wheel.\n§eR§r (tap): next construct.\n§eShift + mouse wheel§r (ring in hand): switch construct.\n§eDouble-tap jump§r: take off / stop flying.\n§eW§r while flying: accelerate. §eCtrl§r: accelerate faster.\n§eA A§r or §eD D§r flying fast: barrel roll.\n§eS§r flying fast: air brake.\n§eW A S D§r in vehicles: drive. §eJump§r: hop. §eSneak§r: get off.\n§eIn the mecha§r: §eW A S D§r walk, §eJump§r (hold) fly, §eCtrl§r run / afterburner, §eRight-click§r (hold) laser, §eLeft-click§r missiles, §eSneak§r get out.\n§eRight-click the Battery§r: charge the ring.",
   "guide.greenlantern.section.lantern": "Green Lantern",
-  "guide.greenlantern.controls_lantern.title": "Controls"
+  "guide.greenlantern.controls_lantern.title": "Controls",
+  "power.greenlantern.lantern_construtos_da_vontade": "Constructs of Will",
+  "power.greenlantern.lantern_construtos_da_vontade.desc": "Tap: a giant green hammer crushes the target. Hold: the green minigun fires by itself for a few seconds (press again to stop it).",
+  "power.greenlantern.lantern_rajada_do_anel": "Ring Blast",
+  "power.greenlantern.lantern_rajada_do_anel.desc": "A green energy beam. Aiming at a nearby block, it cuts the block from afar.",
+  "power.greenlantern.lantern_bolha_verde": "Green Bubble",
+  "power.greenlantern.lantern_bolha_verde.desc": "A shield of light that blocks attacks (press again to undo it). In water, a bubble of air to breathe.",
+  "power.greenlantern.lantern_mao_verde": "Green Hand",
+  "power.greenlantern.lantern_mao_verde.desc": "Locks the target in a cage of light. Aiming at a block, carries it without breaking it (press again to put it where you aim).",
+  "power.greenlantern.lantern_broca_esmeralda": "Emerald Drill",
+  "power.greenlantern.lantern_broca_esmeralda.desc": "The drill opens a 3x3 tunnel and keeps what it breaks. Aiming at a tree, the green saw fells the whole tree.",
+  "power.greenlantern.lantern_ponte_de_luz": "Bridge of Light",
+  "power.greenlantern.lantern_ponte_de_luz.desc": "A bridge of light ahead that fades in 30 s. Hold: builds the bridge for real with the blocks in your inventory.",
+  "power.greenlantern.lantern_portal_para_oa": "Portal to Oa",
+  "power.greenlantern.lantern_portal_para_oa.desc": "The nearest friends and animals come along, floating behind you. Hold: opens the portal to Oa.",
+  "power.greenlantern.lantern_mecha_gigante": "Giant Mecha",
+  "power.greenlantern.lantern_mecha_gigante.desc": "Supreme: pilot the giant green robot. Hold aiming at a block: lifts the block and moves it."
 }

@@ -1,5 +1,5 @@
 {
-  "_comentario": "Um dos 9 heróis que já existiam: os poderes e a energia continuam no código dele. O traje, os bônus e a ordem da roda vêm daqui, com os mesmos números de antes.",
+  "_comentario": "Um dos 9 heróis que já existiam: o traje, a energia e os poderes próprios continuam no código dele. Desde a etapa 3 (adaptação) a roda é a do novo modelo: as habilidades abaixo, cada função com um preset ou, com o preset \"poder\", um poder do próprio herói (\"ajustes\": {\"poder\": ...}), que paga a energia e a recarga dele. Passivas com \"legado\" ficam com o código do herói.",
   "id": "wonder_woman",
   "nome": "Mulher-Maravilha",
   "classe": "guerreiro",
@@ -81,34 +81,194 @@
   },
   "habilidades": [
     {
-      "id": "lasso_capture"
+      "id": "wonder_woman_espada_e_escudo",
+      "nome": "Espada e Escudo",
+      "classe": "golpe",
+      "preset": "poder",
+      "numeros": {
+        "dano": 12,
+        "custo": 6,
+        "recarga": 3,
+        "alcance": 4
+      },
+      "ajustes": {
+        "poder": "sword_and_shield"
+      },
+      "funcoes": [
+        {
+          "preset": "poder",
+          "quando": {
+            "aperto": "segurar"
+          },
+          "ajustes": {
+            "poder": "shield_throw"
+          }
+        },
+        {
+          "preset": "cortar_arvore",
+          "quando": {
+            "mira": "madeira"
+          },
+          "numeros": {
+            "alcance": 6
+          }
+        }
+      ]
     },
     {
-      "id": "lasso_pull"
+      "id": "wonder_woman_braceletes_da_vitoria",
+      "nome": "Braceletes da Vitória",
+      "classe": "defesa",
+      "preset": "poder",
+      "numeros": {
+        "custo": 5,
+        "recarga": 6,
+        "raio": 3,
+        "duracao": 10
+      },
+      "ajustes": {
+        "poder": "bracelet_guard"
+      },
+      "funcoes": [
+        {
+          "preset": "gelo_e_calor",
+          "quando": {
+            "mira": "#minecraft:campfires"
+          },
+          "numeros": {
+            "alcance": 6,
+            "raio": 3
+          },
+          "ajustes": {
+            "efeito": "calor"
+          }
+        }
+      ]
     },
     {
-      "id": "lasso_spin"
+      "id": "wonder_woman_laco_da_verdade",
+      "nome": "Laço da Verdade",
+      "classe": "controle",
+      "preset": "poder",
+      "numeros": {
+        "dano": 2.5,
+        "custo": 8,
+        "recarga": 12,
+        "alcance": 24,
+        "duracao": 4
+      },
+      "ajustes": {
+        "poder": "lasso_pull"
+      },
+      "funcoes": [
+        {
+          "preset": "poder",
+          "quando": {
+            "aperto": "segurar"
+          },
+          "ajustes": {
+            "poder": "lasso_capture"
+          }
+        },
+        {
+          "preset": "poder",
+          "quando": {
+            "aperto": "soltar"
+          },
+          "ajustes": {
+            "poder": "lasso_spin"
+          }
+        }
+      ]
     },
     {
-      "id": "bracelet_guard"
+      "id": "wonder_woman_bencao_dos_deuses",
+      "nome": "Bênção dos Deuses",
+      "classe": "natureza",
+      "preset": "aura",
+      "numeros": {
+        "custo": 8,
+        "recarga": 10,
+        "raio": 6,
+        "duracao": 60
+      },
+      "ajustes": {
+        "atributo": "todos"
+      },
+      "funcoes": [
+        {
+          "preset": "plantar_e_colher",
+          "quando": {
+            "aperto": "segurar"
+          },
+          "numeros": {
+            "raio": 6
+          }
+        }
+      ]
     },
     {
-      "id": "bracelet_shockwave"
+      "id": "wonder_woman_jato_invisivel",
+      "nome": "Jato Invisível",
+      "classe": "mobilidade",
+      "preset": "poder",
+      "numeros": {
+        "custo": 5,
+        "recarga": 4,
+        "alcance": 24
+      },
+      "ajustes": {
+        "poder": "invisible_jet"
+      }
     },
     {
-      "id": "sword_and_shield"
-    },
-    {
-      "id": "shield_throw"
-    },
-    {
-      "id": "invisible_jet"
+      "id": "wonder_woman_choque_dos_braceletes",
+      "nome": "Choque dos Braceletes",
+      "classe": "explosao",
+      "suprema": true,
+      "preset": "poder",
+      "numeros": {
+        "dano": 43,
+        "custo": 40,
+        "recarga": 90,
+        "raio": 9
+      },
+      "ajustes": {
+        "poder": "bracelet_shockwave"
+      },
+      "funcoes": [
+        {
+          "preset": "grande_obra",
+          "quando": {
+            "aperto": "segurar"
+          },
+          "ajustes": {
+            "estrutura": "minecraft:village/desert/houses/desert_temple_1"
+          }
+        }
+      ]
     }
   ],
   "skins": [
     {
       "id": "wonder_woman",
       "nome": "Traje de hoje"
+    }
+  ],
+  "cores": {
+    "principal": "#B4141E",
+    "secundaria": "#F2C030",
+    "brilho": "#FFE8A0"
+  },
+  "passivas": [
+    {
+      "tipo": "voo",
+      "ajustes": {
+        "legado": true
+      }
+    },
+    {
+      "tipo": "superforca"
     }
   ]
 }

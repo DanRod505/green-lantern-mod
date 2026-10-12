@@ -121,5 +121,6 @@
   "ability_class.greenlantern.deteccao": "Detecção",
   "subtitles.greenlantern.engine_class_deteccao": "Detecção",
   "ability_class.greenlantern.logistica": "Logística",
-  "subtitles.greenlantern.engine_class_logistica": "Logística"
+  "subtitles.greenlantern.engine_class_logistica": "Logística",
+  "message.greenlantern.engine_own_power_failed": "%s não saiu"
 }

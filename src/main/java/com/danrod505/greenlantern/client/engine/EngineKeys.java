@@ -1,17 +1,18 @@
 package com.danrod505.greenlantern.client.engine;
 
 import com.danrod505.greenlantern.client.KeyBindings;
-import com.danrod505.greenlantern.engine.AbilityFunctions;
 import com.danrod505.greenlantern.engine.AbilityFunctions.Press;
+import com.danrod505.greenlantern.engine.AbilityFunctions;
 import com.danrod505.greenlantern.engine.EngineAbility;
 import com.danrod505.greenlantern.engine.EngineHero;
+import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.network.EnginePacket;
 import com.danrod505.greenlantern.network.ModNetwork;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * The keys of a character of the engine: the power key (V) and the direct keys 1 to 8. An ability
+ * The keys of the wheel of the new model (every hero): the power key (V) and the direct keys 1 to 8. An ability
  * with functions only for a tap goes off as soon as V goes down, as before. One with a function for
  * holding the key or for letting it go waits: a short press is a tap, holding it past
  * {@link AbilityFunctions#HOLD_TICKS} sets off the "segurar" function, and letting go after that the
@@ -24,7 +25,7 @@ public final class EngineKeys {
 
     private EngineKeys() {}
 
-    public static void tick(Minecraft mc, EngineHero hero) {
+    public static void tick(Minecraft mc, HeroDefinition hero) {
         boolean free = mc.screen == null;
         while (KeyBindings.HERO_POWER.consumeClick()) {
             if (!free || held >= 0) continue;
@@ -59,7 +60,7 @@ public final class EngineKeys {
             }
         }
         while (KeyBindings.SKIN.consumeClick()) {
-            if (free) ModNetwork.sendToServer(EnginePacket.skin());
+            if (free && hero instanceof EngineHero) ModNetwork.sendToServer(EnginePacket.skin());
         }
     }
 
@@ -74,7 +75,7 @@ public final class EngineKeys {
         return held;
     }
 
-    private static EngineAbility selected(Minecraft mc, EngineHero hero) {
+    private static EngineAbility selected(Minecraft mc, HeroDefinition hero) {
         if (mc.player == null) return null;
         ItemStack item = hero.findItem(mc.player);
         if (item.isEmpty()) return null;

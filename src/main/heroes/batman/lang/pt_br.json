@@ -52,5 +52,19 @@
   "guide.greenlantern.recipe.utility_belt": "Couro nos cantos, barras de ouro em cima e embaixo, barras de ferro nas laterais e uma membrana de phantom no centro. O cinto começa vazio: vista o traje e espere as células carregarem.",
   "guide.greenlantern.controls_batman": "§ePulo§r (segurar, caindo): planar com a capa; olhe para baixo para mergulhar e para cima para subir.\n§eR§r (segurar / tocar): menu de equipamentos / próximo equipamento.\n§eV§r: usa o equipamento escolhido. §ePulo§r no gancho: soltar o cabo.\n§eNo Batmóvel§r: §eW A S D§r dirigir, §eCtrl§r boost, §eBotão esquerdo§r mísseis, §eAgachar§r sair.",
   "guide.greenlantern.section.batman": "Batman",
-  "guide.greenlantern.controls_batman.title": "Controles"
+  "guide.greenlantern.controls_batman.title": "Controles",
+  "power.greenlantern.batman_combate_de_gotham": "Combate de Gotham",
+  "power.greenlantern.batman_combate_de_gotham.desc": "Combo de golpes. Mirando uma alavanca, botão ou porta, aciona.",
+  "power.greenlantern.batman_batarangue": "Batarangue",
+  "power.greenlantern.batman_batarangue.desc": "Um batarangue que volta. Mirando uma alavanca ou botão, aperta de longe.",
+  "power.greenlantern.batman_enxame_de_morcegos": "Enxame de Morcegos",
+  "power.greenlantern.batman_enxame_de_morcegos.desc": "Morcegos cegam os inimigos. Segurar: uma trilha mostra o caminho de casa.",
+  "power.greenlantern.batman_bomba_de_fumaca": "Bomba de Fumaça",
+  "power.greenlantern.batman_bomba_de_fumaca.desc": "Some numa nuvem de fumaça.",
+  "power.greenlantern.batman_gancho": "Gancho",
+  "power.greenlantern.batman_gancho.desc": "O gancho puxa até onde você mira: sobe prédios e penhascos.",
+  "power.greenlantern.batman_modo_detetive": "Modo Detetive",
+  "power.greenlantern.batman_modo_detetive.desc": "Mostra minérios e criaturas através das paredes e enxerga no escuro.",
+  "power.greenlantern.batman_batcaverna": "Batcaverna",
+  "power.greenlantern.batman_batcaverna.desc": "Suprema: chama o Batmóvel. Segurar: ergue uma base escondida."
 }

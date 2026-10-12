@@ -14,8 +14,8 @@ import java.util.List;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -28,6 +28,19 @@ public class MinigunConstruct extends Construct {
     private static final int SPIN_UP_TICKS = 6;
     private static final int FIRE_INTERVAL = 2;
     private static final double RANGE = 64.0;
+    /** The players whose minigun fires by itself (the Lantern's wheel holds it for them, see {@code LanternHero}). */
+    private static final java.util.Set<java.util.UUID> AUTO = java.util.concurrent.ConcurrentHashMap.newKeySet();
+
+    /** Starts or ends the minigun firing by itself for this player. */
+    public static void autoFire(java.util.UUID player, boolean on) {
+        if (on) AUTO.add(player);
+        else AUTO.remove(player);
+    }
+
+    /** Whether the player's minigun fires by itself now. */
+    public static boolean autoFiring(java.util.UUID player) {
+        return AUTO.contains(player);
+    }
 
     public MinigunConstruct() {
         super(GreenLantern.id("minigun"), 1);
@@ -74,6 +87,7 @@ public class MinigunConstruct extends Construct {
         if (!player.isCreative() && !RingEnergy.tryConsume(ring, activationCost())) {
             PowerRingItem.notifyNoEnergy(player);
             player.stopUsingItem();
+            autoFire(player.getUUID(), false);
             return;
         }
         ServerLevel level = player.level();

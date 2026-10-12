@@ -16,6 +16,7 @@ import com.danrod505.greenlantern.engine.preset.StrikePresets;
 import com.danrod505.greenlantern.engine.preset.SummonPresets;
 import com.danrod505.greenlantern.engine.preset.SupremePresets;
 import com.danrod505.greenlantern.engine.preset.WorldPresets;
+import com.danrod505.greenlantern.hero.HeroDefinition;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -101,9 +102,9 @@ public final class Presets {
         return WORLD.containsKey(id);
     }
 
-    /** Whether there is a preset with this id, fighting or world. */
+    /** Whether there is a preset with this id, fighting or world (or {@code poder}: one of the hero's own powers). */
     public static boolean exists(String id) {
-        return FIGHT.containsKey(id) || WORLD.containsKey(id);
+        return FIGHT.containsKey(id) || WORLD.containsKey(id) || id.equals(AbilityWheel.OWN);
     }
 
     /** The ids of the fight presets there are, in order. */
@@ -117,8 +118,12 @@ public final class Presets {
     }
 
     /** Runs the function {@code chosen} of the ability. */
-    static Outcome use(ServerPlayer player, EngineHero hero, ItemStack item, EngineAbility ability, AbilityFunctions.Chosen chosen) {
+    static Outcome use(ServerPlayer player, HeroDefinition hero, ItemStack item, EngineAbility ability, AbilityFunctions.Chosen chosen) {
         String id = chosen.function().preset();
+        if (id.equals(AbilityWheel.OWN)) {
+            boolean went = hero.useOwnPower(player, item, AbilityWheel.ownPower(ability.data(), chosen.function()));
+            return went ? Outcome.DONE : Outcome.fail(Component.translatable("message.greenlantern.engine_own_power_failed", ability.displayName()));
+        }
         Preset preset = FIGHT.containsKey(id) ? FIGHT.get(id) : WORLD.get(id);
         if (preset == null) return notBuilt(player, hero, ability, "message.greenlantern.engine_not_built");
         return afterUse(preset, new PresetContext(player, hero, item, ability, chosen));
@@ -128,7 +133,7 @@ public final class Presets {
      * Runs function {@code index} of the ability (0 is the default one) with nothing in the way: no
      * cooldown, energy or condition. For the automatic test of every character (lot 7).
      */
-    public static Outcome tryFunction(ServerPlayer player, EngineHero hero, ItemStack item, EngineAbility ability, int index) {
+    public static Outcome tryFunction(ServerPlayer player, HeroDefinition hero, ItemStack item, EngineAbility ability, int index) {
         CharacterData.Ability data = ability.data();
         CharacterData.Function function = index == 0 ? data.defaultFunction() : data.functions().get(index - 1);
         return use(player, hero, item, ability, new AbilityFunctions.Chosen(index, function));
@@ -144,7 +149,7 @@ public final class Presets {
         return outcome;
     }
 
-    private static Outcome notBuilt(ServerPlayer player, EngineHero hero, EngineAbility ability, String key) {
+    private static Outcome notBuilt(ServerPlayer player, HeroDefinition hero, EngineAbility ability, String key) {
         EngineServer.puff(player, hero);
         EngineServer.play(player, SoundEvents.AMETHYST_BLOCK_CHIME, 1.0F, 0.8F + 0.1F * ability.ordinal());
         player.displayClientMessage(Component.translatable(key, ability.displayName()), true);

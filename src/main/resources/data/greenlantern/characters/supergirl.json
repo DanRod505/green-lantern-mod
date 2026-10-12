@@ -1,5 +1,5 @@
 {
-  "_comentario": "Um dos 9 heróis que já existiam: os poderes e a energia continuam no código dele. O traje, os bônus e a ordem da roda vêm daqui, com os mesmos números de antes.",
+  "_comentario": "Um dos 9 heróis que já existiam: o traje, a energia e os poderes próprios continuam no código dele. Desde a etapa 3 (adaptação) a roda é a do novo modelo: as habilidades abaixo, cada função com um preset ou, com o preset \"poder\", um poder do próprio herói (\"ajustes\": {\"poder\": ...}), que paga a energia e a recarga dele. Passivas com \"legado\" ficam com o código do herói.",
   "id": "supergirl",
   "nome": "Supergirl",
   "classe": "colosso",
@@ -51,25 +51,171 @@
   },
   "habilidades": [
     {
-      "id": "heat_bolts"
+      "id": "supergirl_soco_em_velocidade",
+      "nome": "Soco em Velocidade",
+      "classe": "golpe",
+      "preset": "poder",
+      "numeros": {
+        "dano": 12,
+        "custo": 6,
+        "recarga": 3,
+        "alcance": 4
+      },
+      "ajustes": {
+        "poder": "meteor_dash"
+      },
+      "funcoes": [
+        {
+          "preset": "poder",
+          "quando": {
+            "aperto": "segurar"
+          },
+          "ajustes": {
+            "poder": "kryptonian_throw"
+          }
+        },
+        {
+          "preset": "minerar_area",
+          "quando": {
+            "mira": "pedra"
+          },
+          "numeros": {
+            "alcance": 5
+          }
+        }
+      ]
     },
     {
-      "id": "meteor_dash"
+      "id": "supergirl_visao_de_calor",
+      "nome": "Visão de Calor",
+      "classe": "disparo",
+      "preset": "poder",
+      "numeros": {
+        "dano": 8.5,
+        "custo": 3,
+        "recarga": 1,
+        "alcance": 48
+      },
+      "ajustes": {
+        "poder": "heat_bolts"
+      },
+      "funcoes": [
+        {
+          "preset": "trocar_bloco",
+          "quando": {
+            "mira": "minerio"
+          },
+          "numeros": {
+            "alcance": 8
+          },
+          "ajustes": {
+            "modo": "fornalha"
+          }
+        }
+      ]
     },
     {
-      "id": "thunder_clap"
+      "id": "supergirl_palmas_trovejantes",
+      "nome": "Palmas Trovejantes",
+      "classe": "explosao",
+      "preset": "poder",
+      "numeros": {
+        "dano": 14.5,
+        "custo": 12,
+        "recarga": 10,
+        "raio": 6
+      },
+      "ajustes": {
+        "poder": "thunder_clap"
+      },
+      "funcoes": [
+        {
+          "preset": "poder",
+          "quando": {
+            "aperto": "segurar"
+          },
+          "ajustes": {
+            "poder": "frost_wall"
+          }
+        },
+        {
+          "preset": "abrir_caminho",
+          "quando": {
+            "mira": "folhas"
+          },
+          "numeros": {
+            "alcance": 6
+          },
+          "ajustes": {
+            "remove": "terreno"
+          }
+        }
+      ]
     },
     {
-      "id": "frost_wall"
+      "id": "supergirl_visao_de_raio_x",
+      "nome": "Visão de Raio X",
+      "classe": "deteccao",
+      "preset": "procurar",
+      "numeros": {
+        "custo": 5,
+        "recarga": 15,
+        "raio": 24,
+        "duracao": 20
+      },
+      "ajustes": {
+        "mostra": "minerios"
+      },
+      "funcoes": [
+        {
+          "preset": "poder",
+          "quando": {
+            "aperto": "segurar"
+          },
+          "ajustes": {
+            "poder": "super_hearing"
+          }
+        }
+      ]
     },
     {
-      "id": "super_hearing"
+      "id": "supergirl_entrega_kryptoniana",
+      "nome": "Entrega Kryptoniana",
+      "classe": "logistica",
+      "preset": "ima_de_itens",
+      "numeros": {
+        "custo": 5,
+        "recarga": 5,
+        "alcance": 16,
+        "duracao": 300
+      }
     },
     {
-      "id": "kryptonian_throw"
-    },
-    {
-      "id": "solar_flare"
+      "id": "supergirl_krypto_ao_ataque",
+      "nome": "Krypto ao Ataque",
+      "classe": "invocacao",
+      "suprema": true,
+      "preset": "poder",
+      "numeros": {
+        "dano": 21.5,
+        "custo": 40,
+        "recarga": 135,
+        "duracao": 60
+      },
+      "ajustes": {
+        "poder": "krypto"
+      },
+      "funcoes": [
+        {
+          "preset": "poder",
+          "quando": {
+            "aperto": "segurar"
+          },
+          "ajustes": {
+            "poder": "solar_flare"
+          }
+        }
+      ]
     }
   ],
   "skins": [
@@ -82,6 +228,30 @@
     {
       "tipo": "descricao",
       "descricao": "Kryptonita verde por perto tira força e vida."
+    }
+  ],
+  "cores": {
+    "principal": "#2050C8",
+    "secundaria": "#D02030",
+    "brilho": "#F2D03A"
+  },
+  "passivas": [
+    {
+      "tipo": "voo",
+      "ajustes": {
+        "legado": true
+      }
+    },
+    {
+      "tipo": "superforca"
+    },
+    {
+      "tipo": "invulneravel",
+      "ajustes": {
+        "danos": [
+          "afogamento"
+        ]
+      }
     }
   ]
 }

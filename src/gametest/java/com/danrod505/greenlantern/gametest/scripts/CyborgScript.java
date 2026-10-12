@@ -42,7 +42,7 @@ public final class CyborgScript {
             ItemStack item = CyborgHero.INSTANCE.findItem(sp);
             CyborgPower.POWERS.select(item, power);
             sp.getCooldowns().removeCooldown(sp.getCooldowns().getCooldownGroup(item));
-            boolean used = CyborgHero.INSTANCE.powers().use(sp, item, power.ordinal());
+            boolean used = CyborgHero.INSTANCE.useOwnPower(sp, item, power.id());
             GreenLantern.LOGGER.info("CLIENTSCRIPT power {} used={}", power.id(), used);
         });
     }
@@ -259,7 +259,7 @@ public final class CyborgScript {
         step(2, () -> server(sp -> {
             sp.setShiftKeyDown(true);
             ItemStack item = CyborgHero.INSTANCE.findItem(sp);
-            CyborgHero.INSTANCE.powers().use(sp, item, CyborgPower.BOOM_TUBE.ordinal());
+            CyborgHero.INSTANCE.useOwnPower(sp, item, CyborgPower.BOOM_TUBE.id());
             sp.setShiftKeyDown(false);
         }));
         step(10, () -> shot("cyb13a_boom_tube_marked"));

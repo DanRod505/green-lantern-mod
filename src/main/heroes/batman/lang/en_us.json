@@ -52,5 +52,19 @@
   "guide.greenlantern.recipe.utility_belt": "Leather in the corners, gold ingots on top and bottom, iron ingots on the sides and a phantom membrane in the center. The belt starts empty: put on the suit and wait for the cells to charge.",
   "guide.greenlantern.controls_batman": "§eJump§r (hold, while falling): glide with the cape; look down to dive and up to climb.\n§eR§r (hold / tap): gadget menu / next gadget.\n§eV§r: uses the selected gadget. §eJump§r on the hook: let go of the cable.\n§eIn the Batmobile§r: §eW A S D§r drive, §eCtrl§r boost, §eLeft-click§r missiles, §eSneak§r get out.",
   "guide.greenlantern.section.batman": "Batman",
-  "guide.greenlantern.controls_batman.title": "Controls"
+  "guide.greenlantern.controls_batman.title": "Controls",
+  "power.greenlantern.batman_combate_de_gotham": "Gotham Combat",
+  "power.greenlantern.batman_combate_de_gotham.desc": "A combo of blows. Aiming at a lever, button or door, works it.",
+  "power.greenlantern.batman_batarangue": "Batarang",
+  "power.greenlantern.batman_batarangue.desc": "A batarang that comes back. Aiming at a lever or button, presses it from afar.",
+  "power.greenlantern.batman_enxame_de_morcegos": "Bat Swarm",
+  "power.greenlantern.batman_enxame_de_morcegos.desc": "Bats blind the enemies. Hold: a trail shows the way home.",
+  "power.greenlantern.batman_bomba_de_fumaca": "Smoke Bomb",
+  "power.greenlantern.batman_bomba_de_fumaca.desc": "Vanish in a cloud of smoke.",
+  "power.greenlantern.batman_gancho": "Grapple",
+  "power.greenlantern.batman_gancho.desc": "The grapple pulls you to where you aim: up buildings and cliffs.",
+  "power.greenlantern.batman_modo_detetive": "Detective Mode",
+  "power.greenlantern.batman_modo_detetive.desc": "Shows ores and creatures through the walls and sees in the dark.",
+  "power.greenlantern.batman_batcaverna": "Batcave",
+  "power.greenlantern.batman_batcaverna.desc": "Supreme: calls the Batmobile. Hold: builds a hidden base."
 }

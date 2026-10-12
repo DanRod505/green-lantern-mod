@@ -2,6 +2,7 @@ package com.danrod505.greenlantern.engine;
 
 import com.danrod505.greenlantern.engine.preset.PresetRuntime;
 import com.danrod505.greenlantern.engine.preset.Visuals;
+import com.danrod505.greenlantern.hero.HeroDefinition;
 import com.danrod505.greenlantern.hero.HeroRegistry;
 import com.danrod505.greenlantern.ring.RingEnergy;
 import java.util.List;
@@ -25,8 +26,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -43,7 +44,8 @@ import net.minecraftforge.eventbus.api.listener.Priority;
  * (energy, cooldown, which function goes off), the skins, the class passive, the traits and the
  * weaknesses. Everything is decided here; the client only draws.
  * <p>
- * None of this touches the first 9 heroes: they are not {@link EngineHero}s.
+ * The first 9 heroes are not {@link EngineHero}s: only the abilities of their wheel (and its
+ * traits, see {@link AbilityWheel}) go through here.
  */
 public final class EngineServer {
     /** Hearts of damage the ring bearer's light shield takes in each fight. */
@@ -90,10 +92,12 @@ public final class EngineServer {
      * Uses an ability: the function that goes off is chosen by how the key was pressed, where the
      * player aims and where they are ({@link AbilityFunctions}). It needs the suit, a finished
      * cooldown and enough energy. Pressing it again while one of its functions lasts stops it, and
-     * one that left something to take back (a carried block) takes it back. Returns whether it went off.
+     * one that left something to take back (a carried block) takes it back. A function that uses one
+     * of the hero's own powers ({@link AbilityWheel#OWN}, the first 9 heroes) leaves the energy and the
+     * cooldown to that power. Returns whether it went off.
      */
     public static boolean useAbility(ServerPlayer player, ItemStack item, EngineAbility ability, AbilityFunctions.Press press) {
-        EngineHero hero = owner(item);
+        HeroDefinition hero = owner(item);
         if (hero == null) return false;
         if (!hero.isSuited(player)) {
             player.displayClientMessage(Component.translatable("message.greenlantern.engine_need_suit"), true);
@@ -105,11 +109,14 @@ public final class EngineServer {
             if (PresetRuntime.stop(player, key) || PresetRuntime.undo(player, key)) return true;
         }
         AbilityFunctions.Chosen chosen = AbilityFunctions.choose(ability.data(), press, player);
+        if (chosen.function().preset().equals(AbilityWheel.OWN)) {
+            return hero.useOwnPower(player, item, AbilityWheel.ownPower(ability.data(), chosen.function()));
+        }
         if (!ready(player, hero, item, ability)) return false;
         return finish(player, hero, item, ability, Presets.use(player, hero, item, ability, chosen));
     }
 
-    private static boolean ready(ServerPlayer player, EngineHero hero, ItemStack item, EngineAbility ability) {
+    private static boolean ready(ServerPlayer player, HeroDefinition hero, ItemStack item, EngineAbility ability) {
         AbilityState state = state(item);
         long now = player.level().getGameTime();
         long left = state.remaining(ability.ordinal(), now);
@@ -117,8 +124,8 @@ public final class EngineServer {
             refuse(player, Component.translatable("message.greenlantern.engine_cooldown", ability.displayName(), String.format("%.1f", left / 20.0)));
             return false;
         }
-        if (!player.isCreative() && !hero.energy().tryConsume(item, ability.cost())) {
-            refuse(player, Component.translatable("message.greenlantern.engine_no_energy", hero.data().characterClass().energyName()));
+        if (!player.isCreative() && !hero.powers().energy().tryConsume(item, ability.presetCost())) {
+            refuse(player, Component.translatable("message.greenlantern.engine_no_energy", hero.energyName()));
             return false;
         }
         return true;
@@ -128,9 +135,9 @@ public final class EngineServer {
      * After the preset: the cooldown (the ability's, or the one the preset asked for). A use that
      * could not go off gives the energy back and says why.
      */
-    private static boolean finish(ServerPlayer player, EngineHero hero, ItemStack item, EngineAbility ability, Presets.Outcome outcome) {
+    private static boolean finish(ServerPlayer player, HeroDefinition hero, ItemStack item, EngineAbility ability, Presets.Outcome outcome) {
         if (!outcome.went()) {
-            if (!player.isCreative()) hero.energy().add(item, ability.cost());
+            if (!player.isCreative()) hero.powers().energy().add(item, ability.presetCost());
             refuse(player, outcome.reason());
             return false;
         }
@@ -141,7 +148,7 @@ public final class EngineServer {
     }
 
     /** Starts the ability's cooldown now: a lasting preset (a bubble, super speed) just ended. */
-    public static void startCooldown(ServerPlayer player, EngineHero hero, EngineAbility ability) {
+    public static void startCooldown(ServerPlayer player, HeroDefinition hero, EngineAbility ability) {
         ItemStack item = hero.findItem(player);
         if (item.isEmpty()) return;
         long now = player.level().getGameTime();
@@ -154,8 +161,13 @@ public final class EngineServer {
         play(player, EngineContent.NO_ENERGY.get(), 0.6F, 0.8F);
     }
 
-    private static EngineHero owner(ItemStack item) {
-        return item.getItem() instanceof CharacterItem characterItem ? characterItem.hero() : null;
+    /** The hero whose item this is (a character of the engine, or one of the first 9 heroes). */
+    private static HeroDefinition owner(ItemStack item) {
+        if (item.getItem() instanceof CharacterItem characterItem) return characterItem.hero();
+        for (HeroDefinition hero : HeroRegistry.all()) {
+            if (hero.isActivator(item)) return hero;
+        }
+        return null;
     }
 
     // ---- skins -------------------------------------------------------------------------------------
@@ -452,7 +464,7 @@ public final class EngineServer {
     }
 
     /** A puff of the character's colours around the player (the provisional look of an ability without a preset). */
-    static void puff(ServerPlayer player, EngineHero hero) {
+    static void puff(ServerPlayer player, HeroDefinition hero) {
         CharacterData.Colors colors = hero.data().colors();
         ServerLevel level = player.level();
         for (int color : new int[]{colors.main(), colors.second()}) {

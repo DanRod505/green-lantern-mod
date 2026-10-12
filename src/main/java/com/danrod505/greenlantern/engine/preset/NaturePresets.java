@@ -2,8 +2,8 @@ package com.danrod505.greenlantern.engine.preset;
 
 import com.danrod505.greenlantern.engine.CharacterData;
 import com.danrod505.greenlantern.engine.PresetContext;
-import com.danrod505.greenlantern.engine.Presets;
 import com.danrod505.greenlantern.engine.Presets.Outcome;
+import com.danrod505.greenlantern.engine.Presets;
 import com.danrod505.greenlantern.hero.power.Fx;
 import com.danrod505.greenlantern.hero.power.Targets;
 import java.util.ArrayList;
@@ -94,7 +94,7 @@ public final class NaturePresets {
     // ---- clima -------------------------------------------------------------------------------------
 
     /**
-     * Clima: calls {@code tipo} (chuva, sol or tempestade) over the world for {@code duracao}
+     * Clima: calls {@code tipo} (chuva, sol, tempestade or dia: the night goes by at once) over the world for {@code duracao}
      * seconds (120); then the weather goes on as it would.
      */
     static Outcome weather(PresetContext c) {
@@ -105,6 +105,13 @@ public final class NaturePresets {
         switch (c.settings().text("tipo", "chuva")) {
             case "sol" -> {
                 if (!level.isRaining()) return WorldPresets.nothing();
+                level.setWeatherParameters(ticks, 0, false, false);
+            }
+            case "dia" -> {
+                // The night goes by at once: the next morning, and the rain stops.
+                if (level.isBrightOutside()) return WorldPresets.nothing();
+                long day = 24000L;
+                level.setDayTime((level.getDayTime() / day + 1) * day);
                 level.setWeatherParameters(ticks, 0, false, false);
             }
             case "tempestade" -> {

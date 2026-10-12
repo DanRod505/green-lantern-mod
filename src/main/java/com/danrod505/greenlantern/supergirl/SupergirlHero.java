@@ -4,7 +4,9 @@ import com.danrod505.greenlantern.GLConfig;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.client.HeroClient;
 import com.danrod505.greenlantern.client.supergirl.SupergirlClient;
+import com.danrod505.greenlantern.engine.AbilityWheel;
 import com.danrod505.greenlantern.engine.Characters;
+import com.danrod505.greenlantern.engine.EngineAbility;
 import com.danrod505.greenlantern.flight.FlightAction;
 import com.danrod505.greenlantern.flight.FlightProfile;
 import com.danrod505.greenlantern.flight.FlightStyle;
@@ -18,9 +20,11 @@ import com.danrod505.greenlantern.registry.ModDamageTypes;
 import com.danrod505.greenlantern.registry.ModParticles;
 import com.danrod505.greenlantern.registry.ModSounds;
 import com.danrod505.greenlantern.ring.FlightHandler;
+import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -59,8 +63,8 @@ public final class SupergirlHero extends HeroDefinition {
 
     public static final SupergirlHero INSTANCE = new SupergirlHero();
 
-    private final HeroPowers<SupergirlPower> powers = new HeroPowers<>(SupergirlPower.POWERS, ENERGY, ChatFormatting.GOLD,
-            0.85F, 0.06F, SupergirlServer::usePower, WHEEL);
+    /** The wheel of the new model (stage 3): the abilities of the file, using the powers of {@link SupergirlPower} and the presets. */
+    private final HeroPowers<EngineAbility> powers = AbilityWheel.build(this, data(), ENERGY, ChatFormatting.GOLD, 0.85F, 0.06F, AbilityWheel.style(WHEEL, data()));
 
     private SupergirlHero() {
         super("supergirl", stack -> stack.is(SupergirlContent.ITEM.get()), new SuitSet(SupergirlContent.MASK, SupergirlContent.SUIT, SupergirlContent.LEGGINGS,
@@ -112,8 +116,32 @@ public final class SupergirlHero extends HeroDefinition {
     }
 
     @Override
-    public HeroPowers<SupergirlPower> powers() {
+    public HeroPowers<EngineAbility> powers() {
         return powers;
+    }
+
+    @Override
+    public List<SupergirlPower> ownPowers() {
+        return List.of(SupergirlPower.values());
+    }
+
+    /** Whistling for Krypto: a power of its own on the wheel, without an icon. */
+    public static final String KRYPTO = "krypto";
+
+    @Override
+    public boolean hasOwnPower(String id) {
+        return id.equals(KRYPTO) || super.hasOwnPower(id);
+    }
+
+    @Override
+    public boolean useOwnPower(ServerPlayer player, ItemStack item, String id) {
+        if (id.equals(KRYPTO)) return SupergirlServer.whistle(player, item);
+        return own(ownPowers(), id).map(power -> SupergirlServer.usePower(player, item, power)).orElse(false);
+    }
+
+    @Override
+    public Identifier ownIcons() {
+        return WHEEL.icons();
     }
 
     @Override

@@ -4,6 +4,7 @@ import static com.danrod505.greenlantern.gametest.GameTestKit.*;
 
 import com.danrod505.greenlantern.block.PowerBatteryBlockEntity;
 import com.danrod505.greenlantern.construct.ConstructRegistry;
+import com.danrod505.greenlantern.construct.impl.MinigunConstruct;
 import com.danrod505.greenlantern.entity.BubbleConstructEntity;
 import com.danrod505.greenlantern.entity.DrillConstructEntity;
 import com.danrod505.greenlantern.entity.EnergyBoltEntity;
@@ -128,18 +129,19 @@ public final class LanternTests {
         Zombie zombie = dummy(helper, 7.5, 1, 9.5);
         float health = zombie.getHealth();
         use(player);
-        helper.assertTrue(player.isUsingItem(), "minigun is used while holding the button");
+        helper.assertTrue(MinigunConstruct.autoFiring(player.getUUID()), "the minigun fires by itself");
         helper.startSequence()
                 .thenExecuteFor(30, player::doTick)
                 .thenExecute(() -> {
                     helper.assertTrue(!around(player, GunConstructEntity.class, 4).isEmpty(), "gun construct should float next to the player");
                     helper.assertTrue(RingEnergy.get(ring).stored() < 1000, "shots should cost energy");
                     helper.assertTrue(zombie.getHealth() < health || zombie.isDeadOrDying(), "zombie should be shot");
-                    player.releaseUsingItem();
+                    use(player); // again: it stops
                 })
                 .thenExecuteFor(3, player::doTick)
                 .thenExecute(() -> {
-                    helper.assertTrue(around(player, GunConstructEntity.class, 4).isEmpty(), "gun should vanish on release");
+                    helper.assertTrue(!MinigunConstruct.autoFiring(player.getUUID()), "the minigun stopped");
+                    helper.assertTrue(around(player, GunConstructEntity.class, 4).isEmpty(), "gun should vanish when it stops");
                     remove(player);
                 })
                 .thenSucceed();

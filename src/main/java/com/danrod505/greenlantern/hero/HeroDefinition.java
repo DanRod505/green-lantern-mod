@@ -105,6 +105,7 @@ public abstract class HeroDefinition {
     /** Takes the suit off (giving back the armor worn before), with sound and particles if {@code effects}. */
     public final void dismissSuit(ServerPlayer player, boolean effects) {
         onSuitRemoving(player);
+        if (abilityWheel()) com.danrod505.greenlantern.engine.AbilityWheel.suitDown(player);
         Uniform.removeSuit(player);
         updateSuitModifiers(player, false);
         FlightHandler.refreshAbilities(player);
@@ -163,6 +164,64 @@ public abstract class HeroDefinition {
 
     public final boolean hasPowers() {
         return powers() != null;
+    }
+
+    /**
+     * Whether the wheel is the one of the new model (stage 21): 5 to 8 abilities of the file, each
+     * choosing its function by the press, the aim and the place (see {@code engine.AbilityWheel}).
+     */
+    public final boolean abilityWheel() {
+        HeroPowers<?> powers = powers();
+        return powers != null && powers.power(0) instanceof com.danrod505.greenlantern.engine.EngineAbility;
+    }
+
+    /** The hero's file in {@code data/greenlantern/characters} (the first 9 heroes have one too). */
+    public com.danrod505.greenlantern.engine.CharacterData data() {
+        return com.danrod505.greenlantern.engine.Characters.get(id());
+    }
+
+    /** The name of the energy that pays for the abilities, for the messages: that of the hero's class ("Energia solar"). */
+    public Component energyName() {
+        return data().characterClass().energyName();
+    }
+
+    // ---- The hero's own powers (the first 9 heroes) -----------------------------------------------
+
+    /**
+     * The powers of the hero's own code, in the order of its icon sheet ({@link #ownIcons}). The
+     * functions of the wheel with the preset {@code poder} name one of them by id; the characters of
+     * the engine have none.
+     */
+    public java.util.List<? extends HeroPower> ownPowers() {
+        return java.util.List.of();
+    }
+
+    /** Whether {@code id} is a power of the hero's own code (the ones of {@link #ownPowers}, and a few without an icon of their own). */
+    public boolean hasOwnPower(String id) {
+        return ownPowers().stream().anyMatch(p -> p.id().equals(id));
+    }
+
+    /**
+     * Uses a power of the hero's own code, which pays its own energy and cooldown; returns whether it
+     * went off. The functions with the preset {@code poder} call it.
+     */
+    public boolean useOwnPower(ServerPlayer player, ItemStack item, String id) {
+        return false;
+    }
+
+    /** The icon sheet of the hero's own powers (16x16, each at its {@link HeroPower#iconIndex}), or null. */
+    public net.minecraft.resources.Identifier ownIcons() {
+        return null;
+    }
+
+    /** The cell of the emblem on {@link #ownIcons} (the one after the powers), or -1 when it has none. */
+    public int ownEmblemIcon() {
+        return ownPowers().size();
+    }
+
+    /** The power of {@code powers} with this id. */
+    protected static <P extends HeroPower> java.util.Optional<P> own(java.util.List<P> powers, String id) {
+        return powers.stream().filter(p -> p.id().equals(id)).findFirst();
     }
 
     /**
@@ -230,9 +289,13 @@ public abstract class HeroDefinition {
         return 1.0F;
     }
 
-    /** Height of the hero's HUD on screen; the HUDs of the heroes listed after it start below it (see {@code client.HeroHud}). */
+    /**
+     * Height of the hero's HUD on screen; the HUDs of the heroes listed after it start below it (see
+     * {@code client.HeroHud}). With the wheel of the new model it has the traits, the key, a hint and
+     * one more line (the Kraken, the Batmobile, the jet).
+     */
     public int hudHeight() {
-        return 58;
+        return abilityWheel() ? 81 : 58;
     }
 
     /** Items that belong to the suit or a power and must never lie around as dropped items. */

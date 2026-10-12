@@ -50,5 +50,17 @@
   "message.greenlantern.shazam_solomon_on": "Wisdom of Solomon: the enemies show",
   "message.greenlantern.shazam_solomon_off": "Wisdom of Solomon off",
   "message.greenlantern.shazam_lightning": "The lightning fills Shazam's Magic!",
-  "hud.greenlantern.shazam_solomon_target": "%s: %s / %s ❤"
+  "hud.greenlantern.shazam_solomon_target": "%s: %s / %s ❤",
+  "power.greenlantern.shazam_forca_de_hercules": "Strength of Hercules",
+  "power.greenlantern.shazam_forca_de_hercules.desc": "A demigod blow. Aiming at stone, mines an area.",
+  "power.greenlantern.shazam_raio_de_zeus": "Lightning of Zeus",
+  "power.greenlantern.shazam_raio_de_zeus.desc": "Lightning on the target. Aiming at redstone, powers it like real lightning.",
+  "power.greenlantern.shazam_vigor_de_atlas": "Stamina of Atlas",
+  "power.greenlantern.shazam_vigor_de_atlas.desc": "Takes a lot of damage. Hold: the courage of Achilles.",
+  "power.greenlantern.shazam_sabedoria_de_salomao": "Wisdom of Solomon",
+  "power.greenlantern.shazam_sabedoria_de_salomao.desc": "The wisdom of Solomon. Aiming at a mob, an impact wave.",
+  "power.greenlantern.shazam_velocidade_de_mercurio": "Speed of Mercury",
+  "power.greenlantern.shazam_velocidade_de_mercurio.desc": "A dash on the ground or in the air. Hold: takes your friends along.",
+  "power.greenlantern.shazam_shazam": "SHAZAM!",
+  "power.greenlantern.shazam_shazam.desc": "Supreme: the lightning with the six powers all around. Hold: calls a storm."
 }

@@ -2,6 +2,7 @@ package com.danrod505.greenlantern.gametest;
 
 import com.danrod505.greenlantern.construct.Construct;
 import com.danrod505.greenlantern.construct.ConstructRegistry;
+import com.danrod505.greenlantern.gametest.scripts.ClientScripts;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.CameraType;
@@ -11,7 +12,6 @@ import net.minecraft.client.gui.screens.AccessibilityOnboardingScreen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.LevelSettings;
 import net.minecraft.world.level.WorldDataConfiguration;
@@ -19,7 +19,6 @@ import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.levelgen.WorldOptions;
 import net.minecraft.world.level.levelgen.presets.WorldPresets;
 import net.minecraftforge.event.TickEvent;
-import com.danrod505.greenlantern.gametest.scripts.ClientScripts;
 
 /**
  * Development-only visual smoke test. Launch with {@code GL_CLIENT_SCRIPT=<script> ./gradlew runClient -Pgametests}:
@@ -88,8 +87,9 @@ public final class ClientScript {
         server(sp -> ConstructRegistry.select(sp.getMainHandItem(), construct));
     }
 
+    /** Right click; with the ring and the uniform on, the construct chosen with {@link #select} (see GameTestKit#use). */
     public static void use() {
-        server(sp -> sp.getMainHandItem().getItem().use(sp.level(), sp, InteractionHand.MAIN_HAND));
+        server(GameTestKit::use);
     }
 
     public static void step(int delay, Runnable action) {

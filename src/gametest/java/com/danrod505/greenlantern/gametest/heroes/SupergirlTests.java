@@ -4,7 +4,6 @@ import static com.danrod505.greenlantern.gametest.GameTestKit.*;
 
 import com.danrod505.greenlantern.flight.FlightAction;
 import com.danrod505.greenlantern.gametest.HeroContractTests;
-import com.danrod505.greenlantern.superman.SupermanHero;
 import com.danrod505.greenlantern.supergirl.KryptoData;
 import com.danrod505.greenlantern.supergirl.KryptoEntity;
 import com.danrod505.greenlantern.supergirl.SupergirlConfig;
@@ -12,6 +11,7 @@ import com.danrod505.greenlantern.supergirl.SupergirlContent;
 import com.danrod505.greenlantern.supergirl.SupergirlHero;
 import com.danrod505.greenlantern.supergirl.SupergirlPower;
 import com.danrod505.greenlantern.supergirl.SupergirlServer;
+import com.danrod505.greenlantern.superman.SupermanHero;
 import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -80,7 +80,7 @@ public final class SupergirlTests {
 
     private static boolean use(ServerPlayer player, SupergirlPower power) {
         player.getCooldowns().removeCooldown(player.getCooldowns().getCooldownGroup(player.getMainHandItem()));
-        return SupergirlHero.INSTANCE.powers().use(player, player.getMainHandItem(), power.ordinal());
+        return SupergirlHero.INSTANCE.useOwnPower(player, player.getMainHandItem(), power.id());
     }
 
     private static int energy(ServerPlayer player) {

@@ -32,7 +32,9 @@ import net.minecraftforge.registries.DeferredRegister;
 
 /**
  * The automatic test of every character of the engine (stage 2, lot 7): whatever character file is
- * in the mod, generated from the catalog or written by hand, is checked the same way.
+ * in the mod, generated from the catalog or written by hand, is checked the same way. Since stage 3
+ * the first 9 heroes go through it too, with the wheel of the new model (their recipes and skins
+ * stay with their own tests).
  * <ul>
  *     <li>the item is registered and, for a character of the mod, has a recipe that loads;</li>
  *     <li>the energy bar has room, the traits are known, there are 5 to 8 abilities and, for a
@@ -55,20 +57,21 @@ public final class EveryCharacterTests {
         tests.register("engine_every_character", () -> EveryCharacterTests::everyCharacter);
     }
 
-    private static List<EngineHero> characters() {
-        return HeroRegistry.all().stream().filter(h -> h instanceof EngineHero).map(h -> (EngineHero) h).toList();
+    private static List<HeroDefinition> characters() {
+        return HeroRegistry.all().stream().filter(HeroDefinition::abilityWheel).toList();
     }
 
     /** The basics of one character, before its abilities are used. */
-    private static void basics(GameTestHelper helper, EngineHero hero) {
+    private static void basics(GameTestHelper helper, HeroDefinition hero) {
         CharacterData data = hero.data();
         String who = "character " + data.id() + ": ";
-        helper.assertTrue(BuiltInRegistries.ITEM.containsKey(GreenLantern.id(data.id())), who + "the item is not registered");
-        if (!TEST_CHARACTERS.contains(data.id())) {
+        boolean engine = hero instanceof EngineHero;
+        if (engine) helper.assertTrue(BuiltInRegistries.ITEM.containsKey(GreenLantern.id(data.id())), who + "the item is not registered");
+        if (engine && !TEST_CHARACTERS.contains(data.id())) {
             var recipe = ResourceKey.create(Registries.RECIPE, GreenLantern.id(data.id()));
             helper.assertTrue(helper.getLevel().getServer().getRecipeManager().byKey(recipe).isPresent(), who + "no recipe for the item loads");
         }
-        helper.assertTrue(hero.energy().capacity() > 0, who + "the energy bar is empty");
+        helper.assertTrue(hero.powers().energy().capacity() > 0, who + "the energy bar is empty");
         int count = data.abilities().size();
         helper.assertTrue(count >= 5 && count <= 8, who + "has " + count + " abilities, needs 5 to 8");
         helper.assertTrue(hero.powers().set().count() == count, who + "the wheel has " + hero.powers().set().count() + " abilities, the file " + count);
@@ -89,20 +92,21 @@ public final class EveryCharacterTests {
     }
 
     /** Puts the suit on, then turns the skins round once in creative: each one comes up and the first comes back. */
-    private static ServerPlayer suitUp(GameTestHelper helper, EngineHero hero) {
+    private static ServerPlayer suitUp(GameTestHelper helper, HeroDefinition hero) {
         String who = "character " + hero.data().id() + ": ";
         ServerPlayer player = player(helper, 7.5, 1, 4.5, 0, 0);
         player.setItemInHand(InteractionHand.MAIN_HAND, HeroContractTests.chargedItem(hero));
         helper.assertTrue(hero.summonSuit(player), who + "the suit should go on");
         helper.assertTrue(hero.isSuited(player), who + "should be suited");
+        if (!(hero instanceof EngineHero engine)) return player;
         ItemStack item = player.getMainHandItem();
         List<CharacterData.Skin> skins = hero.data().skins();
-        helper.assertTrue(EngineServer.skin(hero, item).selected().equals(skins.getFirst().id()), who + "the first skin is the default");
+        helper.assertTrue(EngineServer.skin(engine, item).selected().equals(skins.getFirst().id()), who + "the first skin is the default");
         player.setGameMode(GameType.CREATIVE);
         for (int i = 1; i <= skins.size(); i++) {
-            EngineServer.cycleSkin(player, hero, item);
+            EngineServer.cycleSkin(player, engine, item);
             String expected = skins.get(i % skins.size()).id();
-            helper.assertTrue(EngineServer.skin(hero, item).selected().equals(expected), who + "skin " + expected + " should come up");
+            helper.assertTrue(EngineServer.skin(engine, item).selected().equals(expected), who + "skin " + expected + " should come up");
         }
         player.setGameMode(GameType.SURVIVAL);
         return player;
@@ -120,14 +124,14 @@ public final class EveryCharacterTests {
         boolean raining = level.isRaining();
         boolean thundering = level.isThundering();
         GameTestSequence sequence = helper.startSequence();
-        for (EngineHero hero : characters()) {
+        for (HeroDefinition hero : characters()) {
             ServerPlayer[] player = new ServerPlayer[1];
             sequence.thenExecute(() -> {
                 basics(helper, hero);
                 player[0] = suitUp(helper, hero);
             });
             for (int a = 0; a < hero.powers().set().count(); a++) {
-                EngineAbility ability = hero.powers().set().byIndex(a);
+                EngineAbility ability = (EngineAbility) hero.powers().power(a);
                 for (int f = 0; f <= ability.data().functions().size(); f++) {
                     int index = f;
                     String preset = index == 0 ? ability.data().preset() : ability.data().functions().get(index - 1).preset();
@@ -136,15 +140,15 @@ public final class EveryCharacterTests {
                         if (player[0] == null) return; // the basics already failed the test
                         dummy(helper, 7.5, 1, 9.5);
                         ItemStack item = player[0].getMainHandItem();
-                        hero.energy().set(item, hero.energy().capacity() / 2);
-                        int before = hero.energy().get(item).stored();
+                        hero.powers().energy().set(item, hero.powers().energy().capacity() / 2);
+                        int before = hero.powers().energy().get(item).stored();
                         try {
                             Presets.tryFunction(player[0], hero, item, ability, index);
                         } catch (RuntimeException e) {
                             GreenLantern.LOGGER.error("{}failed", who, e);
                             helper.fail(who + "threw " + e);
                         }
-                        int after = hero.energy().get(player[0].getMainHandItem()).stored();
+                        int after = hero.powers().energy().get(player[0].getMainHandItem()).stored();
                         // Only the class's energy per hit may come back (a warrior's blow on the target).
                         int perHit = hero.data().classRule().energy().perHit();
                         boolean hits = perHit > 0 && (after - before) % perHit == 0;

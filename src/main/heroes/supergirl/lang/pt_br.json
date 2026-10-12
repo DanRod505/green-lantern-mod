@@ -65,5 +65,17 @@
   "subtitles.greenlantern.krypto_fly": "Krypto voa",
   "subtitles.greenlantern.krypto_whistle": "Supergirl assobia",
   "guide.greenlantern.krypto.title": "Krypto, o Supercão",
-  "guide.greenlantern.krypto": "Na primeira vez que ela veste o traje, o §6Krypto§r desce do céu com a capinha vermelha e fica com ela.\n\n§6Companheiro§r\nEle segue a Supergirl a pé ou voando ao lado dela, morde quem a ataca ou quem ela ataca, solta visão de calor de vez em quando e traz para os pés dela os itens soltos que encontra. Nunca ataca jogadores, aldeões nem animais domados.\n\n§6Comandos§r\nClique nele com a mão vazia para ele sentar ou voltar a seguir. Dê um nome com uma etiqueta. Ossos curam. Agachada, use o pingente para §6assobiar§r: ele vem de onde estiver.\n\n§6Ferido§r\nSe a vida dele acaba, ele não morre: voa para descansar e volta depois de um minuto. O pingente guarda o nome e a vida dele."
+  "guide.greenlantern.krypto": "Na primeira vez que ela veste o traje, o §6Krypto§r desce do céu com a capinha vermelha e fica com ela.\n\n§6Companheiro§r\nEle segue a Supergirl a pé ou voando ao lado dela, morde quem a ataca ou quem ela ataca, solta visão de calor de vez em quando e traz para os pés dela os itens soltos que encontra. Nunca ataca jogadores, aldeões nem animais domados.\n\n§6Comandos§r\nClique nele com a mão vazia para ele sentar ou voltar a seguir. Dê um nome com uma etiqueta. Ossos curam. Agachada, use o pingente para §6assobiar§r: ele vem de onde estiver.\n\n§6Ferido§r\nSe a vida dele acaba, ele não morre: voa para descansar e volta depois de um minuto. O pingente guarda o nome e a vida dele.",
+  "power.greenlantern.supergirl_soco_em_velocidade": "Soco em Velocidade",
+  "power.greenlantern.supergirl_soco_em_velocidade.desc": "Investida em velocidade. Segurar: arremessa o que estiver segurando. Mirando pedra, minera rápido.",
+  "power.greenlantern.supergirl_visao_de_calor": "Visão de Calor",
+  "power.greenlantern.supergirl_visao_de_calor.desc": "Disparos rápidos de calor. Mirando um minério, funde em barra.",
+  "power.greenlantern.supergirl_palmas_trovejantes": "Palmas Trovejantes",
+  "power.greenlantern.supergirl_palmas_trovejantes.desc": "Uma onda que empurra tudo. Segurar: uma parede de gelo. Mirando mato e folhas, limpa em volta.",
+  "power.greenlantern.supergirl_visao_de_raio_x": "Visão de Raio X",
+  "power.greenlantern.supergirl_visao_de_raio_x.desc": "Mostra os minérios através das paredes. Segurar: superaudição.",
+  "power.greenlantern.supergirl_entrega_kryptoniana": "Entrega Kryptoniana",
+  "power.greenlantern.supergirl_entrega_kryptoniana.desc": "Mirando um baú, traz o que cabe para o inventário; senão, puxa os itens em volta.",
+  "power.greenlantern.supergirl_krypto_ao_ataque": "Krypto ao Ataque",
+  "power.greenlantern.supergirl_krypto_ao_ataque.desc": "Suprema: assobia e Krypto vem. Segurar: uma explosão solar."
 }

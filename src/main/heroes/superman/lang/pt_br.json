@@ -45,5 +45,17 @@
   "guide.greenlantern.superman_powers": "Com o traje, segure §eR§r para o menu de poderes (toque R para o próximo) e aperte §eV§r (ou clique com o botão direito com o cristal) para usar.\n\n§6Visão de Calor§r\nDois raios vermelhos saem dos olhos e queimam o que você olha: incendeiam criaturas, derretem gelo e neve, acendem TNT e põem fogo. Duram alguns segundos; use de novo para parar.\n\n§6Super Soco§r\nUm trovão: todas as criaturas em volta do impacto se ferem e são arremessadas longe, e as flechas caem no ar. Dê o soco voando rápido e ele bate muito mais forte.\n\n§6Super Sopro§r\nUma ventania congelante à sua frente: empurra e fere, deixa as criaturas lentas e congeladas, transforma água em gelo e lava em pedra, e apaga incêndios.\n\n§6Visão de Raio-X§r\nVeja através de tudo: as criaturas por perto brilham através das paredes, e minérios, baús e geradores aparecem coloridos através da pedra. Gasta muito pouco; use de novo para desligar.",
   "guide.greenlantern.controls_superman.title": "Controles",
   "guide.greenlantern.controls_superman": "§eBotão direito§r (cristal): vestir o traje ou usar o poder.\n§eG§r: vestir / tirar o traje.\n§eDois toques no pulo§r: decolar / parar de voar.\n§eW§r voando: acelerar. §eCtrl§r: acelerar mais rápido.\n§eA A§r ou §eD D§r voando rápido: giro. §eS§r: freio aéreo.\n§eR§r (segurar / tocar): menu de poderes / próximo poder.\n§eV§r: usa o poder selecionado.\n§eShift + roda do mouse§r (cristal na mão): trocar de poder.",
-  "guide.greenlantern.recipe.kryptonian_crystal": "Fragmentos de ametista nos cantos, diamantes em cima e embaixo, barras de ouro nas laterais e um girassol no centro. Vista o traje e fique na luz do sol para carregar."
+  "guide.greenlantern.recipe.kryptonian_crystal": "Fragmentos de ametista nos cantos, diamantes em cima e embaixo, barras de ouro nas laterais e um girassol no centro. Vista o traje e fique na luz do sol para carregar.",
+  "power.greenlantern.superman_supersoco": "Supersoco",
+  "power.greenlantern.superman_supersoco.desc": "Um soco que arremessa. Mirando um bloco, quebra até obsidiana.",
+  "power.greenlantern.superman_visao_de_calor": "Visão de Calor",
+  "power.greenlantern.superman_visao_de_calor.desc": "Feixes que queimam. Mirando um bloco perto, derrete gelo e neve e acende fogueiras.",
+  "power.greenlantern.superman_sopro_congelante": "Sopro Congelante",
+  "power.greenlantern.superman_sopro_congelante.desc": "Um sopro de gelo. Mirando a água, congela em ponte.",
+  "power.greenlantern.superman_pele_de_aco": "Pele de Aço",
+  "power.greenlantern.superman_pele_de_aco.desc": "Reduz muito o dano por alguns segundos.",
+  "power.greenlantern.superman_visao_de_raio_x": "Visão de Raio X",
+  "power.greenlantern.superman_visao_de_raio_x.desc": "Mostra minérios e baús através das paredes.",
+  "power.greenlantern.superman_fortaleza_da_solidao": "Fortaleza da Solidão",
+  "power.greenlantern.superman_fortaleza_da_solidao.desc": "Suprema: ergue uma fortaleza de gelo à sua frente (de novo desmonta). No ar: um pouso devastador com onda de choque."
 }

@@ -1,5 +1,5 @@
 {
-  "_comentario": "Um dos 9 heróis que já existiam: os poderes e a energia continuam no código dele. O traje, os bônus e a ordem da roda vêm daqui, com os mesmos números de antes.",
+  "_comentario": "Um dos 9 heróis que já existiam: o traje, a energia e os poderes próprios continuam no código dele. Desde a etapa 3 (adaptação) a roda é a do novo modelo: as habilidades abaixo, cada função com um preset ou, com o preset \"poder\", um poder do próprio herói (\"ajustes\": {\"poder\": ...}), que paga a energia e a recarga dele. Passivas com \"legado\" ficam com o código do herói.",
   "id": "flash",
   "nome": "Flash",
   "classe": "velocista",
@@ -44,19 +44,177 @@
   },
   "habilidades": [
     {
-      "id": "tornado"
+      "id": "flash_rajada_de_socos",
+      "nome": "Rajada de Socos",
+      "classe": "golpe",
+      "preset": "sequencia",
+      "numeros": {
+        "dano": 12,
+        "custo": 6,
+        "recarga": 3,
+        "alcance": 4
+      },
+      "ajustes": {
+        "golpes": 6,
+        "intervalo": 0.15
+      },
+      "funcoes": [
+        {
+          "preset": "minerar_area",
+          "quando": {
+            "mira": "pedra"
+          },
+          "numeros": {
+            "alcance": 6
+          }
+        }
+      ]
     },
     {
-      "id": "phase"
+      "id": "flash_vibrar",
+      "nome": "Vibrar",
+      "classe": "evasao",
+      "preset": "poder",
+      "numeros": {
+        "custo": 4,
+        "recarga": 5,
+        "alcance": 8,
+        "duracao": 0.5
+      },
+      "ajustes": {
+        "poder": "phase"
+      },
+      "funcoes": [
+        {
+          "preset": "atravessar",
+          "quando": {
+            "mira": "bloco"
+          },
+          "numeros": {
+            "alcance": 3
+          },
+          "ajustes": {
+            "espessura": 3
+          }
+        }
+      ]
     },
     {
-      "id": "lightning"
+      "id": "flash_tornado_de_bracos",
+      "nome": "Tornado de Braços",
+      "classe": "controle",
+      "preset": "poder",
+      "numeros": {
+        "dano": 2.5,
+        "custo": 8,
+        "recarga": 12,
+        "alcance": 24,
+        "duracao": 4
+      },
+      "ajustes": {
+        "poder": "tornado"
+      },
+      "funcoes": [
+        {
+          "preset": "ima_de_itens",
+          "quando": {
+            "aperto": "segurar"
+          }
+        }
+      ]
+    },
+    {
+      "id": "flash_forca_de_aceleracao",
+      "nome": "Força de Aceleração",
+      "classe": "fortalecimento",
+      "preset": "aura",
+      "numeros": {
+        "custo": 15,
+        "recarga": 40,
+        "duracao": 15
+      },
+      "ajustes": {
+        "atributo": "velocidade"
+      },
+      "funcoes": [
+        {
+          "preset": "plantar_e_colher",
+          "quando": {
+            "mira": "planta"
+          },
+          "numeros": {
+            "raio": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "flash_mapa_relampago",
+      "nome": "Mapa Relâmpago",
+      "classe": "mobilidade",
+      "preset": "teleporte",
+      "numeros": {
+        "custo": 5,
+        "recarga": 4,
+        "alcance": 24
+      },
+      "funcoes": [
+        {
+          "preset": "supervelocidade",
+          "quando": {
+            "aperto": "segurar"
+          },
+          "numeros": {
+            "duracao": 10
+          }
+        }
+      ]
+    },
+    {
+      "id": "flash_corrida_no_tempo",
+      "nome": "Corrida no Tempo",
+      "classe": "natureza",
+      "suprema": true,
+      "preset": "poder",
+      "numeros": {
+        "custo": 40,
+        "recarga": 90,
+        "raio": 9,
+        "duracao": 60
+      },
+      "ajustes": {
+        "poder": "lightning"
+      },
+      "funcoes": [
+        {
+          "preset": "clima",
+          "quando": {
+            "aperto": "segurar"
+          },
+          "ajustes": {
+            "tipo": "dia"
+          }
+        }
+      ]
     }
   ],
   "skins": [
     {
       "id": "flash",
       "nome": "Traje de hoje"
+    }
+  ],
+  "cores": {
+    "principal": "#C8141E",
+    "secundaria": "#F2C80F",
+    "brilho": "#FFE680"
+  },
+  "passivas": [
+    {
+      "tipo": "supervelocidade",
+      "ajustes": {
+        "legado": true
+      }
     }
   ]
 }

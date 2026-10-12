@@ -59,7 +59,7 @@ public final class ShazamTests {
 
     private static boolean use(ServerPlayer player, ShazamPower power) {
         player.getCooldowns().removeCooldown(player.getCooldowns().getCooldownGroup(player.getMainHandItem()));
-        return ShazamHero.INSTANCE.powers().use(player, player.getMainHandItem(), power.ordinal());
+        return ShazamHero.INSTANCE.useOwnPower(player, player.getMainHandItem(), power.id());
     }
 
     private static int energy(ServerPlayer player) {
@@ -286,7 +286,7 @@ public final class ShazamTests {
             ServerPlayer player = player(helper, 7.5, 1, 7.5, 0, 0);
             ItemStack item = giveItem(player, ShazamHero.ENERGY.capacity());
             ShazamHero.INSTANCE.summonSuit(player);
-            helper.assertTrue(ShazamHero.INSTANCE.powers().use(player, player.getMainHandItem(), power.ordinal()), power.id() + " should go off");
+            helper.assertTrue(ShazamHero.INSTANCE.useOwnPower(player, player.getMainHandItem(), power.id()), power.id() + " should go off");
             int stored = ShazamHero.ENERGY.get(player.getMainHandItem()).stored();
             helper.assertTrue(stored == ShazamHero.ENERGY.capacity() - power.cost(), power.id() + " should cost " + power.cost() + ", left " + stored);
             remove(player);

@@ -2,6 +2,7 @@ package com.danrod505.greenlantern.client;
 
 import com.danrod505.greenlantern.aquaman.AquamanHelper;
 import com.danrod505.greenlantern.batman.BatmanHelper;
+import com.danrod505.greenlantern.client.engine.AbilityRow;
 import com.danrod505.greenlantern.client.superman.SupermanVisuals;
 import com.danrod505.greenlantern.flash.FlashHelper;
 import com.danrod505.greenlantern.hero.WheelStyle;
@@ -57,11 +58,7 @@ public final class SupermanHud {
 
         int x = 8;
         // Below the other heroes' HUDs when those are showing too.
-        int y = 8;
-        if (!RingHelper.findRing(player).isEmpty() && (!RingHelper.heldRing(player).isEmpty() || RingHelper.isSuited(player))) y += 58;
-        if (!FlashHelper.findRing(player).isEmpty() && (!FlashHelper.heldRing(player).isEmpty() || FlashHelper.isSuited(player))) y += 58;
-        if (!AquamanHelper.findEmblem(player).isEmpty() && (!AquamanHelper.heldEmblem(player).isEmpty() || AquamanHelper.isSuited(player))) y += 70;
-        if (!BatmanHelper.findBelt(player).isEmpty() && (!BatmanHelper.heldBelt(player).isEmpty() || BatmanHelper.isSuited(player))) y += 58;
+        int y = HeroHud.top(player, SupermanHero.INSTANCE);
 
         // The S shield (last icon of the strip).
         int iconsW = SupermanHero.WHEEL.iconsWidth();
@@ -96,31 +93,21 @@ public final class SupermanHud {
         String text = energy.stored() + " / " + energy.capacity();
         graphics.drawString(mc.font, text, barX + barW + 4, barY, low ? 0xFFFF5555 : 0xFFFFD84A, true);
 
-        SuperPower selected = SuperPower.POWERS.selected(crystal);
         int iconsY = y + 15;
         int flags = SupermanVisuals.flags(player.getId());
-        for (int i = 0; i < SuperPower.POWERS.count(); i++) {
-            SuperPower power = SuperPower.POWERS.byIndex(i);
-            int ix = x + 19 + i * 20;
-            boolean isSelected = power == selected;
-            boolean active = switch (power) {
-                case HEAT_VISION -> (flags & com.danrod505.greenlantern.superman.SuperFlags.HEAT_VISION) != 0;
-                case SUPER_BREATH -> (flags & com.danrod505.greenlantern.superman.SuperFlags.SUPER_BREATH) != 0;
-                case XRAY_VISION -> (flags & com.danrod505.greenlantern.superman.SuperFlags.XRAY) != 0;
-                case SUPER_PUNCH -> false;
-            };
-            if (isSelected) graphics.fill(ix - 1, iconsY - 1, ix + 17, iconsY + 17, 0xC02E6BFF);
-            if (active) graphics.fill(ix - 1, iconsY + 17, ix + 17, iconsY + 19, 0xFFE8303A);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, SupermanHero.WHEEL.icons(), ix, iconsY, power.iconIndex() * 16, 0, 16, 16,
-                    iconsW, WheelStyle.ICONS_HEIGHT, isSelected || active ? 0xFFFFFFFF : 0x90FFFFFF);
-        }
-        graphics.drawString(mc.font, Component.translatable("hud.greenlantern.power_key", selected.displayName(), KeyBindings.HERO_POWER.getTranslatedKeyMessage()),
-                x + 19, iconsY + 21, 0xFFE6ECFF, true);
+        AbilityRow.render(graphics, mc, SupermanHero.INSTANCE, crystal, x + 19, iconsY, 0xFFE6ECFF, 0xC02E6BFF, suited, AbilityRow.ownActive(SupermanHero.INSTANCE,
+                power -> switch ((SuperPower) power) {
+                    case HEAT_VISION -> (flags & com.danrod505.greenlantern.superman.SuperFlags.HEAT_VISION) != 0;
+                    case SUPER_BREATH -> (flags & com.danrod505.greenlantern.superman.SuperFlags.SUPER_BREATH) != 0;
+                    case XRAY_VISION -> (flags & com.danrod505.greenlantern.superman.SuperFlags.XRAY) != 0;
+                    case SUPER_PUNCH -> false;
+                }));
+        int hintY = AbilityRow.keysY(SupermanHero.INSTANCE, iconsY) + 11;
         if (!suited) {
             graphics.drawString(mc.font, Component.translatable("hud.greenlantern.superman_suit_hint", KeyBindings.TOGGLE_UNIFORM.getTranslatedKeyMessage()),
-                    x + 19, iconsY + 32, 0xFFA0A0A0, true);
+                    x + 19, hintY, 0xFFA0A0A0, true);
         } else if (chargingTicks > 0 && !energy.isFull()) {
-            graphics.drawString(mc.font, Component.translatable("hud.greenlantern.solar_charging"), x + 19, iconsY + 32, 0xFFFFD84A, true);
+            graphics.drawString(mc.font, Component.translatable("hud.greenlantern.solar_charging"), x + 19, hintY + 11, 0xFFFFD84A, true);
         }
     }
 

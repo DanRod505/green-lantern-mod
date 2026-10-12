@@ -17,9 +17,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * The standard hero HUD, for heroes made with the hero kit: the hero's emblem (the icon after the
- * last power in the wheel icon sheet), the energy bar with its numbers, the powers (selected and
- * active ones lit), the power key and, while not suited, how to suit up. It shows while the hero's
+ * The standard hero HUD, for heroes made with the hero kit: the hero's emblem (the last icon of the
+ * wheel icon sheet), the energy bar with its numbers, the powers (selected and active ones lit; on
+ * the wheel of the new model, the row of {@code AbilityRow}), the power key and, while not suited,
+ * how to suit up. It shows while the hero's
  * item is in hand or the suit is worn, below the HUDs of the heroes listed before it.
  *
  * @param barEmpty colour (RGB) of the bar's start
@@ -55,7 +56,9 @@ public record HeroHud(HeroDefinition hero, int barEmpty, int barFull, int border
 
         int x = 8;
         int y = top(player, hero);
-        graphics.blit(RenderPipelines.GUI_TEXTURED, wheel.icons(), x, y - 2, count * 16, 0, 16, 16, wheel.iconsWidth(), WheelStyle.ICONS_HEIGHT);
+        // The emblem: the last icon of the sheet (after the powers on a wheel of before).
+        int emblem = hero.abilityWheel() ? wheel.iconsWidth() / 16 - 1 : count;
+        graphics.blit(RenderPipelines.GUI_TEXTURED, wheel.icons(), x, y - 2, emblem * 16, 0, 16, 16, wheel.iconsWidth(), WheelStyle.ICONS_HEIGHT);
         int barX = x + 19;
         int barY = y + 2;
         int barW = 100;
@@ -74,8 +77,18 @@ public record HeroHud(HeroDefinition hero, int barEmpty, int barFull, int border
         graphics.fill(barX, barY, barX + fill, barY + 1, 0x90FFFFFF);
         graphics.drawString(mc.font, energy.stored() + " / " + energy.capacity(), barX + barW + 4, barY, low ? 0xFFFF5555 : text, true);
 
-        int selected = powers.selectedIndex(item);
         int iconsY = y + 15;
+        if (hero.abilityWheel()) {
+            // The wheel of the new model: the abilities, the function that goes off and the traits.
+            com.danrod505.greenlantern.client.engine.AbilityRow.render(graphics, mc, hero, item, x + 19, iconsY, text, border, suited,
+                    com.danrod505.greenlantern.client.engine.AbilityRow.ownActive(hero, power -> active != null && active.test(player, power)));
+            if (!suited) {
+                graphics.drawString(mc.font, Component.translatable("hud.greenlantern." + hero.id() + "_suit_hint", KeyBindings.TOGGLE_UNIFORM.getTranslatedKeyMessage()),
+                        x + 19, com.danrod505.greenlantern.client.engine.AbilityRow.keysY(hero, iconsY) + 11, 0xFFA0A0A0, true);
+            }
+            return;
+        }
+        int selected = powers.selectedIndex(item);
         for (int i = 0; i < count; i++) {
             HeroPower power = powers.power(i);
             int ix = x + 19 + i * 20;

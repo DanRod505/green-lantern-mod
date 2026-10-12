@@ -49,5 +49,17 @@
   "guide.greenlantern.recipe.flash_ring": "Redstone in the corners, gold ingots on the sides and a lightning rod in the center. The ring starts without Speed Force: put on the suit and run to charge it.",
   "guide.greenlantern.controls_flash": "§eSprint§r (suit on): start running.\n§eR§r (hold / tap): power wheel / next power.\n§eV§r: use the selected power.\n§eShift + mouse wheel§r (Flash ring in hand): switch power.",
   "guide.greenlantern.section.flash": "The Flash",
-  "guide.greenlantern.controls_flash.title": "Controls"
+  "guide.greenlantern.controls_flash.title": "Controls",
+  "power.greenlantern.flash_rajada_de_socos": "Punch Barrage",
+  "power.greenlantern.flash_rajada_de_socos.desc": "Dozens of punches in a row. Aiming at stone, mines it in seconds.",
+  "power.greenlantern.flash_vibrar": "Vibrate",
+  "power.greenlantern.flash_vibrar.desc": "Turns intangible and lets attacks pass through. Aiming at a nearby wall, passes through up to 3 blocks.",
+  "power.greenlantern.flash_tornado_de_bracos": "Arm Tornado",
+  "power.greenlantern.flash_tornado_de_bracos.desc": "A tornado that lifts enemies. Hold: gathers the loose items around you.",
+  "power.greenlantern.flash_forca_de_aceleracao": "Speed Force",
+  "power.greenlantern.flash_forca_de_aceleracao.desc": "More speed for a few seconds. Aiming at crops, they grow at once.",
+  "power.greenlantern.flash_mapa_relampago": "Lightning Map",
+  "power.greenlantern.flash_mapa_relampago.desc": "A lightning jump to where you aim. Hold: runs much faster for a few seconds.",
+  "power.greenlantern.flash_corrida_no_tempo": "Time Run",
+  "power.greenlantern.flash_corrida_no_tempo.desc": "Supreme: throws a bolt of the Speed Force. Hold: runs so fast that the night goes by and morning comes at once."
 }

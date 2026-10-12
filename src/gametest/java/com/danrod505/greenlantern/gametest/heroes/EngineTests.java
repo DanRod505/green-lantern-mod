@@ -171,6 +171,10 @@ public final class EngineTests {
             }
             List<String> file = data.abilities().stream().map(CharacterData.Ability::id).toList();
             helper.assertTrue(wheel.equals(file), id + ": the file lists " + file + ", the wheel has " + wheel);
+            // Since stage 3 their wheel is the one of the new model, under the same rules as the engine's.
+            List<String> problems = Characters.check(data, id);
+            helper.assertTrue(problems.isEmpty(), id + ": " + problems);
+            helper.assertTrue(HeroRegistry.byId(id).orElseThrow().abilityWheel(), id + ": the wheel should be the one of the new model");
         }
         for (String id : List.of("prototipo", "prototipo_colosso", "prototipo_alado")) {
             EngineHero hero = engineHero(id);

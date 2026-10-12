@@ -121,12 +121,26 @@ public final class Traits {
         GLIDING.remove(player.getUUID());
     }
 
+    /**
+     * Whether the hero's own code does this trait (a hero of before: {@code "ajustes": {"legado": true}}),
+     * so the engine leaves it alone.
+     */
+    public static boolean legacy(CharacterData.Trait trait) {
+        return trait.settings().flag("legado", false);
+    }
+
+    /** The trait of this type the engine runs for the character (not one its own code does). */
+    private static java.util.Optional<CharacterData.Trait> find(CharacterData data, String type) {
+        return data.traits().stream().filter(t -> t.type().equals(type) && !legacy(t)).findFirst();
+    }
+
     /** Every tick with the suit on. */
-    static void tick(ServerPlayer player, EngineHero hero) {
+    static void tick(ServerPlayer player, com.danrod505.greenlantern.hero.HeroDefinition hero) {
         CharacterData data = hero.data();
         if (data.traits().isEmpty()) return;
         boolean second = player.tickCount % 20 == 0;
         for (CharacterData.Trait trait : data.traits()) {
+            if (legacy(trait)) continue;
             CharacterData.Settings s = trait.settings();
             switch (trait.type()) {
                 case "supervelocidade" -> superSpeed(player, hero, s);
@@ -178,11 +192,11 @@ public final class Traits {
 
     /** Whether an effect may not take the player (poison and the like, with imune_a_veneno). */
     static boolean blocks(EngineHero hero, Holder<MobEffect> effect) {
-        return hero.data().trait("imune_a_veneno").isPresent() && POISONS.contains(effect);
+        return find(hero.data(), "imune_a_veneno").isPresent() && POISONS.contains(effect);
     }
 
     /** Running speeds up by itself while the player sprints. */
-    private static void superSpeed(ServerPlayer player, EngineHero hero, CharacterData.Settings s) {
+    private static void superSpeed(ServerPlayer player, com.danrod505.greenlantern.hero.HeroDefinition hero, CharacterData.Settings s) {
         UUID uuid = player.getUUID();
         if (!player.isSprinting() || player.getAbilities().flying) {
             if (SPRINT.remove(uuid) != null) {
@@ -201,7 +215,7 @@ public final class Traits {
         double drain = s.number("gasto_por_segundo", 0.0);
         if (drain > 0 && ticks % 20 == 0 && !player.isCreative()) {
             var item = hero.findItem(player);
-            if (item.isEmpty() || !hero.energy().tryConsume(item, (int) Math.ceil(drain))) {
+            if (item.isEmpty() || !hero.powers().energy().tryConsume(item, (int) Math.ceil(drain))) {
                 player.setSprinting(false);
                 return;
             }
@@ -284,13 +298,13 @@ public final class Traits {
 
     /** Whether the traits take away the fall damage (invulnerable to falls, the high jump, elastic). */
     static boolean noFall(CharacterData data) {
-        return data.trait("pulo_alto").isPresent() || data.trait("elastico").isPresent()
-                || data.trait("invulneravel").map(t -> damages(t).contains("queda")).orElse(false);
+        return find(data, "pulo_alto").isPresent() || find(data, "elastico").isPresent()
+                || find(data, "invulneravel").map(t -> damages(t).contains("queda")).orElse(false);
     }
 
     /** Whether the traits take away this damage (invulneravel). */
     static boolean immune(CharacterData data, DamageSource source) {
-        var trait = data.trait("invulneravel");
+        var trait = find(data, "invulneravel");
         if (trait.isEmpty()) return false;
         List<String> damages = damages(trait.get());
         return damages.contains("queda") && source.is(DamageTypeTags.IS_FALL)

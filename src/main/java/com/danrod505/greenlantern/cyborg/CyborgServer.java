@@ -637,13 +637,16 @@ public final class CyborgServer {
 
     // ---- boom tube ---------------------------------------------------------------------------------------
 
-    private static void markBoomTube(ServerPlayer player, ItemStack item) {
+    /** Marks where the Boom Tube opens (free): the wheel holds it on the supreme ability, crouching does it too. */
+    public static boolean markBoomTube(ServerPlayer player, ItemStack item) {
+        if (!CyborgHero.INSTANCE.isSuited(player) || player.isSpectator()) return false;
         BlockPos pos = player.blockPosition();
         item.set(CyborgContent.BOOM_MARK.get(), GlobalPos.of(player.level().dimension(), pos));
         player.displayClientMessage(Component.translatable("message.greenlantern.cyborg_boom_tube_marked", pos.getX(), pos.getY(), pos.getZ())
                 .withStyle(ChatFormatting.AQUA), true);
         play(player.level(), player, CyborgContent.SCAN_ON.get(), 0.8F, 1.4F);
         player.level().sendParticles(ParticleTypes.END_ROD, player.getX(), player.getY() + 0.1, player.getZ(), 20, 0.4, 0.05, 0.4, 0.02);
+        return true;
     }
 
     private static void tickBoomTube(ServerPlayer player, ServerLevel level, ItemStack item, State state) {
