@@ -68,6 +68,7 @@ public final class ClientSetup {
         TickEvent.PlayerTickEvent.Pre.BUS.addListener(ClientSetup::onPlayerTickPre);
         TickEvent.PlayerTickEvent.Post.BUS.addListener(ClientSetup::onPlayerTickPost);
         ComputeFovModifierEvent.BUS.addListener(FlightCamera::onFov);
+        ComputeFovModifierEvent.BUS.addListener(com.danrod505.greenlantern.client.engine.EngineCamera::onFov);
         ViewportEvent.ComputeCameraAngles.BUS.addListener(FlightCamera::onAngles);
         FlightRenderHandler.register();
         SkinRenderHandler.register();
@@ -86,6 +87,7 @@ public final class ClientSetup {
             return mc.player != null && mc.player.input.keyPresses.sprint();
         };
         SidedHooks.cameraShake = CameraShake::start;
+        SidedHooks.cameraZoom = com.danrod505.greenlantern.client.engine.EngineCamera::zoom;
         SidedHooks.openGuide = () -> Minecraft.getInstance().setScreen(new GuideScreen());
         SidedHooks.flightSync = FlightVisuals::onSync;
         for (HeroClient hero : heroes()) hero.onClientSetup();

@@ -153,7 +153,7 @@ public final class WorldPresets {
         }
         if (broken == 0) return nothing();
         Fx.play(level, player, SoundEvents.STONE_BREAK, 1.0F, 0.8F);
-        PresetFx.burst(level, hit.getLocation(), c.element(), c.color(), 16, size * 0.3);
+        PresetFx.burst(c, hit.getLocation(), 16, size * 0.3);
         return Outcome.DONE;
     }
 

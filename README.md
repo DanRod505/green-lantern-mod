@@ -5,6 +5,14 @@
 Mod de heróis do **Universo DC** para **Minecraft Java 1.21.11** com **Forge 61.2.0** (compilado com **Java 25**).
 Começou como o mod do Lanterna Verde e agora traz também **o Flash** (v1.7.0) **o Aquaman** (v1.8.0), **Atlântida** (v1.9.0) **o Kraken do Aquaman** (v1.10.0), **o Batman** (v1.11.0), **as criaturas de Atlântida** (v1.12.0) **o Fosso**, os inimigos do Aquaman (v1.13.0), **o Superman** (v1.14.0), **a Mulher Maravilha** (v1.15.0) **o Ciborgue** (v1.16.0), o primeiro herói feito com o kit de herói, e **a Supergirl com o Krypto, o Supercão** (v1.17.0). O id do mod continua `greenlantern`, então mundos e configurações antigas continuam funcionando.
 
+## Visuais, sons e transformações (novo na 2.5.0)
+
+Quinto lote da biblioteca de presets. **Nada muda nos 9 heróis de hoje.**
+
+* **15 transformações** ao vestir o traje: Raio Mágico, Luz do Anel, Sol de Krypton, Vulto Veloz, Das Sombras, Armadura em Montagem, Círculo Místico, Bênção Divina, Maré, Elemento, Fera, Tubo de Explosão, Arsenal, Espetáculo e Asas de Metal Nth, com cor, som e duração ajustáveis.
+* **Partículas por elemento** (energia, raio, fogo, gelo, água, sombra, magia, luz, fumaça, terra, plantas, vento...) com cor, tamanho e quantidade; **rastro e aura** do personagem; **feixes** retos, em espiral ou de raio; **construtos** de energia translúcidos.
+* **Câmera:** tremor, zoom e câmera lenta curta. **Sons:** um conjunto original para cada uma das 10 classes de habilidade. **Ícones da roda** desenhados a partir do preset e da cor de cada habilidade.
+
 ## Presets de uso no mundo (novo na 2.4.0)
 
 Quarto lote da biblioteca de presets: os usos no mundo, que saem agachado. **Nada muda nos 9 heróis de hoje.**

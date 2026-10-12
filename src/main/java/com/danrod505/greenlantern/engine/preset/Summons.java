@@ -51,15 +51,20 @@ public final class Summons {
 
     /** Puts a summoned entity in the world as the character's. */
     static <T extends Entity> T spawn(PresetContext c, T entity) {
+        return spawn(c.player(), entity);
+    }
+
+    /** Puts an entity in the world as the player's (a summon, or a piece of a transformation). */
+    public static <T extends Entity> T spawn(ServerPlayer owner, T entity) {
         entity.addTag(TAG);
-        OWNERS.put(entity.getUUID(), c.player().getUUID());
+        OWNERS.put(entity.getUUID(), owner.getUUID());
         if (entity instanceof Mob mob) mob.setPersistenceRequired();
-        c.level().addFreshEntity(entity);
+        owner.level().addFreshEntity(entity);
         return entity;
     }
 
     /** Ends a summon: a puff and it is gone. */
-    static void dismiss(Entity entity) {
+    public static void dismiss(Entity entity) {
         OWNERS.remove(entity.getUUID());
         if (entity.isRemoved()) return;
         if (entity.level() instanceof ServerLevel level) {

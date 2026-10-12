@@ -6,8 +6,8 @@ import net.minecraft.network.chat.Component;
 /**
  * An ability of a character of the engine on the power wheel, built from its data file. The name
  * and description come from {@code power.greenlantern.<id>} in the lang files, or the name in the
- * file when there is none yet. The icon is the one of its kind on the shared sheet
- * ({@code textures/gui/engine/abilities.png}) until the character has icons of its own.
+ * file when there is none yet. Its icon is drawn from its preset and colour ({@link AbilityIcons}),
+ * on the character's own sheet in wheel order.
  */
 public record EngineAbility(CharacterData.Ability data, int ordinal, AbilityKind kind) implements HeroPower {
     @Override
@@ -22,7 +22,7 @@ public record EngineAbility(CharacterData.Ability data, int ordinal, AbilityKind
 
     @Override
     public int iconIndex() {
-        return kind.ordinal();
+        return ordinal;
     }
 
     /** Cooldown in ticks (every ability has one, even a short one). */

@@ -115,3 +115,66 @@ Os usos no mundo vão no campo `"uso_no_mundo"` da habilidade e saem agachado. S
 | `procurar` | raio (16, até 32), duracao (10) | `mostra`: baus (tudo que guarda itens), minerios ou mobs. Os blocos aparecem através das paredes (os 32 mais perto) |
 
 Os testes ficam em `src/gametest/.../heroes/PresetLot4Tests.java` e os prints no roteiro `presets_lote4`.
+
+## Lote 5 (2.5.0): Visuais, sons e as 15 transformações
+
+### Ajustes de visual e som de qualquer habilidade
+
+Valem para todos os presets, de luta e de uso no mundo, no `"ajustes"` da habilidade:
+
+| Ajuste | O que faz |
+|---|---|
+| `cor` | Cor das partículas e do feixe (`"#FF3020"`); sem ela, a cor principal do personagem |
+| `particula_tamanho` (1) e `particula_quantidade` (1) | Tamanho das partículas de pó e quantas saem (0 desliga) |
+| `elemento` | A família de partículas: energia, raio, fogo, gelo, agua, sombra, magia, luz, fumaca, terra, gas, som, plantas ou vento. Cada uma tem uma partícula principal e uma de detalhe |
+| `som` (true), `som_altura` (1), `som_volume` (0.7), `som_timbre` | O som da classe da habilidade (10 conjuntos com 3 variações). `som_timbre`: padrao, grave, agudo, metal, magia, energia ou natural |
+| `zoom`, `zoom_duracao` (0.8 s) | A câmera fecha (0.6) ou abre (1.3) por um instante |
+| `camera_lenta` (segundos), `camera_lenta_velocidade` (0.4) | Câmera lenta curta: sozinho num mundo de um jogador o jogo fica mais lento; com outros jogadores, só as criaturas perto ficam lentas |
+| `icone`, `icone_cor` | O desenho e a cor do ícone na roda e no HUD (sem eles, o desenho do preset na cor da habilidade) |
+
+`tremor` continua nos presets que já o tinham.
+
+### Feixes e construtos
+
+| Preset | Ajustes novos |
+|---|---|
+| `feixe_continuo` | `forma`: reto, espiral ou raio; `espessura` (1) |
+| `construto` | `visual`: solido (objeto de energia translúcido, o padrão) ou particulas; `escala` (1) |
+
+### Rastro e aura do personagem
+
+No arquivo do personagem, em `"visual"`:
+
+```json
+"visual": {
+  "transformacao": {"cor": "#FFD700", "duracao": 2, "tipo": "morcegos"},
+  "rastro": {"cor": "#40FF60", "largura": 0.3, "brilho": 0.5},
+  "aura": {"cor": "#40FF60", "largura": 0.6, "brilho": 0.5, "quando": "sempre"}
+}
+```
+
+O rastro aparece quando o personagem voa, corre ou cai rápido. A aura `quando`: sempre, parado ou voando.
+
+### As 15 transformações
+
+Tocam ao vestir o traje (tecla G). O campo `"transformacao"` do personagem escolhe uma; `padrao` não toca nenhuma. Ajustes em `"visual": {"transformacao": {...}}`: `cor` e `cor2` (as cores do personagem), `som` (id de um som, ou `nenhum`), `duracao` (2 segundos), `tipo` e `elemento`.
+
+| Id | Transformação | O que acontece | `tipo` |
+|---|---|---|---|
+| `raio` | Raio Mágico | Faíscas se juntam no céu, o raio cai e vem o clarão | |
+| `anel` | Luz do Anel | A cor sobe pelo corpo e o juramento aparece na tela | |
+| `sol` | Sol de Krypton | Feixe de sol, o símbolo brilha no peito e a capa abre no vento | |
+| `velocidade` | Vulto Veloz | Um vulto girando com raios da cor do personagem | |
+| `sombras` | Das Sombras | Fumaça e morcegos cobrem o jogador | morcegos, gatos, passaros |
+| `armadura` | Armadura em Montagem | As peças do traje voam e encaixam uma a uma; o visor acende por último | |
+| `mistico` | Círculo Místico | Runas girando no chão e fumaça subindo | |
+| `divino` | Bênção Divina | Luz dourada e folhas de oliveira caindo, brilho da armadura | |
+| `mare` | Maré | Uma coluna de água sobe e cai em espuma | |
+| `elemento` | Elemento | O elemento gira em volta e assenta no corpo | (`elemento`: fogo, gelo, plantas, vento, raio, luz...) |
+| `fera` | Fera | O corpo treme, cresce por um instante e ruge | pelos, escamas, barro |
+| `tubo` | Tubo de Explosão | Um portal abre atrás, o jogador some nele e volta | |
+| `arsenal` | Arsenal | As armas giram em volta e caem no lugar; a máscara por último | |
+| `espetaculo` | Espetáculo | Confete e gargalhada | confete, cartas, fumaca, gas |
+| `asas` | Asas de Metal Nth | As asas abrem nas costas e o jogador sobe um pouco | |
+
+Os sons (10 classes e 15 transformações) são originais, gerados por `tools/generate_engine_audio.py`. Os ícones da roda são desenhados no jogo a partir do preset e da cor (`engine/AbilityIcons.java`). Os testes ficam em `src/gametest/.../heroes/PresetLot5Tests.java` e os prints no roteiro `presets_lote5`.

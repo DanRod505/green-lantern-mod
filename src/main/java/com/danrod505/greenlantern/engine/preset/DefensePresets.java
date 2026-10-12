@@ -69,7 +69,7 @@ public final class DefensePresets {
         Guards.Guard guard = new Guards.Guard(reduction(c, 0.6), 180.0, s.flag("devolve", false), 1.0);
         Guards.add(player, guard);
         ParticleOptions particle = PresetFx.particle(c.element(), c.lightColor());
-        ParticleOptions edge = PresetFx.particle(c.element(), c.color());
+        ParticleOptions edge = PresetFx.particle(c);
         Fx.play(level, player, SoundEvents.BEACON_ACTIVATE, 0.8F, 1.6F);
         Set<Integer> seen = new HashSet<>();
         return PresetRuntime.lasting(c, PresetRuntime.Task.ending(age -> {
@@ -145,7 +145,7 @@ public final class DefensePresets {
         Guards.add(player, guard);
         Vec3 mid = player.position().add(0, 1.0, 0);
         level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.IRON_BLOCK.defaultBlockState()), mid.x, mid.y, mid.z, 30, 0.3, 0.6, 0.3, 0.1);
-        PresetFx.burst(level, mid, c.element(), c.color(), 12, 0.4);
+        PresetFx.burst(c, mid, 12, 0.4);
         Fx.play(level, player, SoundEvents.ANVIL_PLACE, 0.6F, 1.4F);
         PresetRuntime.start(player, PresetRuntime.Task.ending(age -> {
             if (age % 15 == 0) {
@@ -226,7 +226,7 @@ public final class DefensePresets {
         };
     }
 
-    private static BlockState glass(int color) {
+    static BlockState glass(int color) {
         DyeColor best = DyeColor.WHITE;
         double nearest = Double.MAX_VALUE;
         for (DyeColor dye : DyeColor.values()) {

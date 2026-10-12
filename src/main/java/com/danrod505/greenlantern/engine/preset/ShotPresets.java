@@ -58,7 +58,7 @@ public final class ShotPresets {
         PresetRuntime.start(c.player(), age -> {
             bolts.tick(c.player(), level, (from, to) -> Fx.line(level, from, to, trail, 3.0), impact -> {
                 if (impact.entity() != null) c.hit(impact.entity(), c.damage());
-                PresetFx.burst(level, impact.at(), c.element(), c.color(), 8, 0.2);
+                PresetFx.burst(c, impact.at(), 8, 0.2);
                 level.playSound(null, impact.at().x, impact.at().y, impact.at().z, PresetFx.impactSound(c.element()),
                         net.minecraft.sounds.SoundSource.PLAYERS, 0.6F, 1.2F);
                 if (extra != null) extra.accept(impact);
@@ -81,7 +81,7 @@ public final class ShotPresets {
         LivingEntity target = homing > 0 ? c.aimedTarget(reach, 30.0) : null;
         bolts.fire(c.muzzle(), c.player().getLookAngle().scale(speed), target);
         Fx.play(c.level(), c.player(), PresetFx.shotSound(c.element()), 1.0F, 1.0F);
-        fly(c, bolts, PresetFx.particle(c.element(), c.color()), null);
+        fly(c, bolts, PresetFx.particle(c), null);
         return Outcome.DONE;
     }
 
@@ -103,14 +103,15 @@ public final class ShotPresets {
         }
         Fx.play(c.level(), c.player(), PresetFx.shotSound(c.element()), 1.0F, 0.8F);
         Fx.play(c.level(), c.player(), SoundEvents.CROSSBOW_SHOOT, 0.6F, 1.2F);
-        fly(c, bolts, PresetFx.particle(c.element(), c.color()), null);
+        fly(c, bolts, PresetFx.particle(c), null);
         return Outcome.DONE;
     }
 
     /**
      * Feixe contínuo: a ray that stays on for {@code duracao} seconds (2) and follows where the
      * player looks, hurting {@code dano} per second. {@code alcance} is its length (24). Settings:
-     * {@code cor} (a colour like {@code "#FF3020"} instead of the character's).
+     * {@code cor} (a colour like {@code "#FF3020"} instead of the character's), {@code forma} (reto,
+     * espiral or raio) and {@code espessura} (1).
      */
     static Outcome beam(PresetContext c) {
         ServerPlayer player = c.player();
@@ -118,7 +119,6 @@ public final class ShotPresets {
         double reach = c.reach(24.0);
         int ticks = c.durationTicks(2.0);
         int color = colour(c.settings().text("cor", ""), c.color());
-        ParticleOptions core = new DustParticleOptions(color, 1.4F);
         ParticleOptions glow = c.element().equals(PresetFx.ENERGY) ? new DustParticleOptions(c.lightColor(), 0.7F) : PresetFx.particle(c.element(), color);
         float perHit = c.damage() / 4.0F;
         Fx.play(level, player, SoundEvents.BEACON_ACTIVATE, 1.0F, 1.6F);
@@ -127,8 +127,7 @@ public final class ShotPresets {
             Vec3 from = c.muzzle();
             HitResult hit = Targets.aim(level, player, reach);
             Vec3 end = hit.getType() == HitResult.Type.MISS ? player.getEyePosition().add(player.getLookAngle().scale(reach)) : PresetContext.point(hit);
-            Fx.line(level, from, end, core, 3.0);
-            Fx.line(level, from, end, glow, 1.0);
+            Visuals.beam(c, from, end, color, glow, age);
             level.sendParticles(glow, end.x, end.y, end.z, 4, 0.15, 0.15, 0.15, 0.02);
             if (age % 5 == 0) {
                 for (LivingEntity target : alongBeam(c, from, end)) c.hit(target, perHit);
@@ -168,8 +167,8 @@ public final class ShotPresets {
         double speed = Math.max(0.3, s.number("velocidade", 1.2));
         int[] bounces = {Math.max(0, s.whole("quicadas", 0))};
         Item shown = StrikePresets.item(s.text("item", ""), null);
-        ParticleOptions look = shown != null ? new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(shown)) : PresetFx.particle(c.element(), c.color());
-        ParticleOptions rim = PresetFx.particle(c.element(), c.color());
+        ParticleOptions look = shown != null ? new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(shown)) : PresetFx.particle(c);
+        ParticleOptions rim = PresetFx.particle(c);
         Vec3[] pos = {c.muzzle()};
         Vec3 goal = pos[0].add(player.getLookAngle().scale(reach));
         Leg[] leg = {Leg.OUT};

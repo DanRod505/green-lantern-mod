@@ -6,6 +6,7 @@ import com.danrod505.greenlantern.engine.preset.DefensePresets;
 import com.danrod505.greenlantern.engine.preset.EmpowerPresets;
 import com.danrod505.greenlantern.engine.preset.EvasionPresets;
 import com.danrod505.greenlantern.engine.preset.MovementPresets;
+import com.danrod505.greenlantern.engine.preset.PresetFx;
 import com.danrod505.greenlantern.engine.preset.ShotPresets;
 import com.danrod505.greenlantern.engine.preset.StrikePresets;
 import com.danrod505.greenlantern.engine.preset.SummonPresets;
@@ -99,13 +100,23 @@ public final class Presets {
     static Outcome useInFight(ServerPlayer player, EngineHero hero, ItemStack item, EngineAbility ability) {
         Preset preset = FIGHT.get(ability.data().preset());
         if (preset == null) return notBuilt(player, hero, ability, "message.greenlantern.engine_not_built");
-        return preset.use(new PresetContext(player, hero, item, ability));
+        return afterUse(preset, new PresetContext(player, hero, item, ability));
     }
 
     static Outcome useInWorld(ServerPlayer player, EngineHero hero, ItemStack item, EngineAbility ability) {
         Preset preset = ability.data().worldPreset().map(WORLD::get).orElse(null);
         if (preset == null) return notBuilt(player, hero, ability, "message.greenlantern.engine_world_not_built");
-        return preset.use(new PresetContext(player, hero, item, ability, true));
+        return afterUse(preset, new PresetContext(player, hero, item, ability, true));
+    }
+
+    /** Runs a preset; when it went off, the sound of its class and the camera of its settings follow. */
+    private static Outcome afterUse(Preset preset, PresetContext context) {
+        Outcome outcome = preset.use(context);
+        if (outcome.went()) {
+            PresetFx.classSound(context);
+            PresetFx.camera(context);
+        }
+        return outcome;
     }
 
     private static Outcome notBuilt(ServerPlayer player, EngineHero hero, EngineAbility ability, String key) {

@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       script:
-        description: 'Client script to run (default, wheel, flight, mecha, oa, flash, aquaman, atlantis, kraken, batman, mounts, trench, superman, wonderwoman, fundacao, presets, presets_lote2, presets_lote3, presets_lote4, or a new hero)'
+        description: 'Client script to run (default, wheel, flight, mecha, oa, flash, aquaman, atlantis, kraken, batman, mounts, trench, superman, wonderwoman, fundacao, presets, presets_lote2, presets_lote3, presets_lote4, presets_lote5, or a new hero)'
         default: 'oa'
   push:
     branches: ['claude/**']

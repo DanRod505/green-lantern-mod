@@ -101,5 +101,16 @@
     "principal": "#D8D8E8",
     "secundaria": "#3C6EB4",
     "brilho": "#FFF4A0"
+  },
+  "visual": {
+    "rastro": {
+      "largura": 0.4,
+      "brilho": 0.8
+    },
+    "aura": {
+      "largura": 0.7,
+      "brilho": 0.6,
+      "quando": "sempre"
+    }
   }
 }

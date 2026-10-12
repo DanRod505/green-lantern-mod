@@ -88,5 +88,17 @@
   "message.greenlantern.engine_no_space": "Não há espaço para isso aqui",
   "message.greenlantern.engine_nothing_here": "Não há nada para fazer aqui",
   "message.greenlantern.engine_no_blocks": "Você não tem blocos para construir",
-  "message.greenlantern.engine_no_put": "Não há onde pôr o bloco aí"
+  "message.greenlantern.engine_no_put": "Não há onde pôr o bloco aí",
+  "subtitles.greenlantern.engine_class_golpe": "Golpe",
+  "subtitles.greenlantern.engine_class_disparo": "Disparo",
+  "subtitles.greenlantern.engine_class_explosao": "Explosão",
+  "subtitles.greenlantern.engine_class_movimento": "Movimento",
+  "subtitles.greenlantern.engine_class_defesa": "Defesa",
+  "subtitles.greenlantern.engine_class_controle": "Controle",
+  "subtitles.greenlantern.engine_class_invocacao": "Invocação",
+  "subtitles.greenlantern.engine_class_evasao": "Evasão",
+  "subtitles.greenlantern.engine_class_fortalecimento": "Fortalecimento",
+  "subtitles.greenlantern.engine_class_suprema": "Suprema",
+  "subtitles.greenlantern.engine_transform": "Transformação",
+  "transformation.greenlantern.oath": "Pela luz do anel, eu me ergo!"
 }

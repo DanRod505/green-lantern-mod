@@ -199,7 +199,7 @@ public final class EmpowerPresets {
         Identifier damage = PresetBody.times(c, Attributes.ATTACK_DAMAGE, "fury_damage", trade);
         Guards.Guard weak = new Guards.Guard(-trade, 180.0, false, 1.0);
         Guards.add(player, weak);
-        ParticleOptions particle = c.element().equals(PresetFx.ENERGY) ? new DustParticleOptions(0xD01010, 1.1F) : PresetFx.particle(c.element(), c.color());
+        ParticleOptions particle = c.element().equals(PresetFx.ENERGY) ? new DustParticleOptions(0xD01010, 1.1F) : PresetFx.particle(c);
         Fx.play(level, player, SoundEvents.RAVAGER_ROAR, 1.0F, 1.2F);
         level.sendParticles(ParticleTypes.ANGRY_VILLAGER, player.getX(), player.getY() + 2.1, player.getZ(), 3, 0.3, 0.1, 0.3, 0);
         return PresetRuntime.lasting(c, PresetRuntime.Task.ending(age -> {

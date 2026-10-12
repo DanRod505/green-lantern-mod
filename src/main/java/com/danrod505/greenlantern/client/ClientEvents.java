@@ -24,6 +24,7 @@ public final class ClientEvents {
     public static void onClientTick(TickEvent.ClientTickEvent.Post event) {
         Minecraft mc = Minecraft.getInstance();
         CameraShake.tick();
+        com.danrod505.greenlantern.client.engine.EngineCamera.tick();
         LocalPlayer player = mc.player;
         if (player == null || mc.level == null) return;
 
@@ -31,6 +32,7 @@ public final class ClientEvents {
             if (HeroRegistry.context(player).isPresent()) ModNetwork.sendToServer(new ToggleUniformPacket());
         }
         HeroDefinition context = HeroRegistry.context(player).orElse(null);
+        if (context instanceof EngineHero engine) com.danrod505.greenlantern.client.engine.EngineIcons.ensure(engine);
         while (KeyBindings.HERO_POWER.consumeClick()) {
             if (mc.screen != null || context == null || !context.hasPowers()) continue;
             // Engine characters: crouch + V is the ability's use in the world.

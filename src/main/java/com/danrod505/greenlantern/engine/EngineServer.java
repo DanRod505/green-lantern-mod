@@ -1,6 +1,7 @@
 package com.danrod505.greenlantern.engine;
 
 import com.danrod505.greenlantern.engine.preset.PresetRuntime;
+import com.danrod505.greenlantern.engine.preset.Visuals;
 import com.danrod505.greenlantern.hero.HeroRegistry;
 import com.danrod505.greenlantern.ring.RingEnergy;
 import java.util.List;
@@ -223,9 +224,11 @@ public final class EngineServer {
     static void onSuitDown(ServerPlayer player, EngineHero hero) {
         SHIELD.remove(player.getUUID());
         PresetRuntime.stopLasting(player);
+        Visuals.forget(player);
     }
 
     static void tick(ServerPlayer player, EngineHero hero) {
+        if (hero.isSuited(player)) Visuals.tick(player, hero);
         if (player.tickCount % 20 != 0) return;
         ItemStack item = hero.findItem(player);
         if (item.isEmpty()) return;

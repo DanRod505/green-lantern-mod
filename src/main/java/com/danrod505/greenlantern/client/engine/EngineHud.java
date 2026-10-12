@@ -43,6 +43,7 @@ public final class EngineHud {
 
     public void render(GuiGraphics graphics, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
+        EngineIcons.ensure(hero);
         Player player = mc.player;
         if (player == null || mc.level == null || player.isSpectator() || mc.options.hideGui || mc.getDebugOverlay().showDebugScreen()) return;
         ItemStack item = hero.findItem(player);
@@ -65,7 +66,7 @@ public final class EngineHud {
         int x = 8;
         int y = HeroHud.top(player, hero);
         // Emblem and the energy bar, named after the class energy.
-        graphics.blit(RenderPipelines.GUI_TEXTURED, wheel.icons(), x, y - 2, EngineHero.ICONS_WIDTH - 16, 0, 16, 16, wheel.iconsWidth(),
+        graphics.blit(RenderPipelines.GUI_TEXTURED, wheel.icons(), x, y - 2, wheel.iconsWidth() - 16, 0, 16, 16, wheel.iconsWidth(),
                 WheelStyle.ICONS_HEIGHT, light);
         int barX = x + 19;
         int barY = y + 2;

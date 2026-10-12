@@ -35,10 +35,11 @@ import net.minecraft.util.ExtraCodecs;
  * @param skins          the skins, the first one is the default
  * @param weaknesses     what hurts the character (kryptonite, magic, fire...)
  * @param colors         colours of the HUD and the wheel
+ * @param visual         the settings of the transformation, the trail and the aura
  */
 public record CharacterData(String id, String name, CharacterClass characterClass, int level, Skeleton skeleton, String transformation,
                             String theme, boolean legacy, Optional<String> source, Stats stats, Optional<Suit> suit, List<Ability> abilities,
-                            List<Skin> skins, List<Weakness> weaknesses, Colors colors) {
+                            List<Skin> skins, List<Weakness> weaknesses, Colors colors, Visual visual) {
 
     /** Stats of the catalog (stage 12); empty ones come from the class rule. */
     public record Stats(Optional<Double> hearts, Optional<Double> damage, Optional<Integer> defense, Optional<Integer> speed,
@@ -162,6 +163,21 @@ public record CharacterData(String id, String name, CharacterClass characterClas
             return value != null && value.isJsonPrimitive() && value.getAsJsonPrimitive().isBoolean() ? value.getAsBoolean() : fallback;
         }
 
+        /** A colour ({@code "#FFAA00"}), or {@code fallback} when it is missing or not a colour. */
+        public int color(String key, int fallback) {
+            String text = text(key, "");
+            if (text.isEmpty()) return fallback;
+            try {
+                return Integer.parseInt(text.startsWith("#") ? text.substring(1) : text, 16) & 0xFFFFFF;
+            } catch (NumberFormatException e) {
+                return fallback;
+            }
+        }
+
+        public boolean has(String key) {
+            return values.containsKey(key);
+        }
+
         /** A list of numbers ({@code [4, 4, 7]}), or empty when the setting is missing. */
         public List<Double> numbers(String key) {
             JsonElement value = values.get(key);
@@ -233,6 +249,21 @@ public record CharacterData(String id, String name, CharacterClass characterClas
         ).apply(i, Colors::new));
     }
 
+    /**
+     * How the character looks beyond its skin ({@code "visual"} in the file): the settings of its
+     * transformation (colour, sound, duration, kind...), of the trail it leaves when it flies or runs
+     * and of the aura around its body (colour, width, glow). Each is empty when left out: the
+     * transformation then uses the character's colours, and there is no trail or aura.
+     */
+    public record Visual(Settings transformation, Settings trail, Settings aura) {
+        public static final Visual NONE = new Visual(Settings.NONE, Settings.NONE, Settings.NONE);
+        static final Codec<Visual> CODEC = RecordCodecBuilder.create(i -> i.group(
+                Settings.CODEC.optionalFieldOf("transformacao", Settings.NONE).forGetter(Visual::transformation),
+                Settings.CODEC.optionalFieldOf("rastro", Settings.NONE).forGetter(Visual::trail),
+                Settings.CODEC.optionalFieldOf("aura", Settings.NONE).forGetter(Visual::aura)
+        ).apply(i, Visual::new));
+    }
+
     public static final Codec<CharacterData> CODEC = RecordCodecBuilder.create(i -> i.group(
             Codec.STRING.fieldOf("id").forGetter(CharacterData::id),
             Codec.STRING.fieldOf("nome").forGetter(CharacterData::name),
@@ -248,7 +279,8 @@ public record CharacterData(String id, String name, CharacterClass characterClas
             Ability.CODEC.listOf().optionalFieldOf("habilidades", List.of()).forGetter(CharacterData::abilities),
             Skin.CODEC.listOf().optionalFieldOf("skins", List.of()).forGetter(CharacterData::skins),
             Weakness.CODEC.listOf().optionalFieldOf("fraquezas", List.of()).forGetter(CharacterData::weaknesses),
-            Colors.CODEC.optionalFieldOf("cores", Colors.DEFAULT).forGetter(CharacterData::colors)
+            Colors.CODEC.optionalFieldOf("cores", Colors.DEFAULT).forGetter(CharacterData::colors),
+            Visual.CODEC.optionalFieldOf("visual", Visual.NONE).forGetter(CharacterData::visual)
     ).apply(i, CharacterData::new));
 
     // ---- stats worked out from the class rule ------------------------------------------------------

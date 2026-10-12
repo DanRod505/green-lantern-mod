@@ -25,5 +25,280 @@
         "type": "event"
       }
     ]
+  },
+  "engine_class_golpe": {
+    "subtitle": "subtitles.greenlantern.engine_class_golpe",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/golpe_1"
+      },
+      {
+        "name": "greenlantern:engine/golpe_2"
+      },
+      {
+        "name": "greenlantern:engine/golpe_3"
+      }
+    ]
+  },
+  "engine_class_disparo": {
+    "subtitle": "subtitles.greenlantern.engine_class_disparo",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/disparo_1"
+      },
+      {
+        "name": "greenlantern:engine/disparo_2"
+      },
+      {
+        "name": "greenlantern:engine/disparo_3"
+      }
+    ]
+  },
+  "engine_class_explosao": {
+    "subtitle": "subtitles.greenlantern.engine_class_explosao",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/explosao_1"
+      },
+      {
+        "name": "greenlantern:engine/explosao_2"
+      },
+      {
+        "name": "greenlantern:engine/explosao_3"
+      }
+    ]
+  },
+  "engine_class_movimento": {
+    "subtitle": "subtitles.greenlantern.engine_class_movimento",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/movimento_1"
+      },
+      {
+        "name": "greenlantern:engine/movimento_2"
+      },
+      {
+        "name": "greenlantern:engine/movimento_3"
+      }
+    ]
+  },
+  "engine_class_defesa": {
+    "subtitle": "subtitles.greenlantern.engine_class_defesa",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/defesa_1"
+      },
+      {
+        "name": "greenlantern:engine/defesa_2"
+      },
+      {
+        "name": "greenlantern:engine/defesa_3"
+      }
+    ]
+  },
+  "engine_class_controle": {
+    "subtitle": "subtitles.greenlantern.engine_class_controle",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/controle_1"
+      },
+      {
+        "name": "greenlantern:engine/controle_2"
+      },
+      {
+        "name": "greenlantern:engine/controle_3"
+      }
+    ]
+  },
+  "engine_class_invocacao": {
+    "subtitle": "subtitles.greenlantern.engine_class_invocacao",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/invocacao_1"
+      },
+      {
+        "name": "greenlantern:engine/invocacao_2"
+      },
+      {
+        "name": "greenlantern:engine/invocacao_3"
+      }
+    ]
+  },
+  "engine_class_evasao": {
+    "subtitle": "subtitles.greenlantern.engine_class_evasao",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/evasao_1"
+      },
+      {
+        "name": "greenlantern:engine/evasao_2"
+      },
+      {
+        "name": "greenlantern:engine/evasao_3"
+      }
+    ]
+  },
+  "engine_class_fortalecimento": {
+    "subtitle": "subtitles.greenlantern.engine_class_fortalecimento",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/fortalecimento_1"
+      },
+      {
+        "name": "greenlantern:engine/fortalecimento_2"
+      },
+      {
+        "name": "greenlantern:engine/fortalecimento_3"
+      }
+    ]
+  },
+  "engine_class_suprema": {
+    "subtitle": "subtitles.greenlantern.engine_class_suprema",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/suprema_1"
+      },
+      {
+        "name": "greenlantern:engine/suprema_2"
+      },
+      {
+        "name": "greenlantern:engine/suprema_3"
+      }
+    ]
+  },
+  "engine_transform_raio": {
+    "subtitle": "subtitles.greenlantern.engine_transform",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/transform_raio",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "engine_transform_anel": {
+    "subtitle": "subtitles.greenlantern.engine_transform",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/transform_anel",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "engine_transform_sol": {
+    "subtitle": "subtitles.greenlantern.engine_transform",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/transform_sol",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "engine_transform_velocidade": {
+    "subtitle": "subtitles.greenlantern.engine_transform",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/transform_velocidade",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "engine_transform_sombras": {
+    "subtitle": "subtitles.greenlantern.engine_transform",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/transform_sombras",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "engine_transform_armadura": {
+    "subtitle": "subtitles.greenlantern.engine_transform",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/transform_armadura",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "engine_transform_mistico": {
+    "subtitle": "subtitles.greenlantern.engine_transform",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/transform_mistico",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "engine_transform_divino": {
+    "subtitle": "subtitles.greenlantern.engine_transform",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/transform_divino",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "engine_transform_mare": {
+    "subtitle": "subtitles.greenlantern.engine_transform",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/transform_mare",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "engine_transform_elemento": {
+    "subtitle": "subtitles.greenlantern.engine_transform",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/transform_elemento",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "engine_transform_fera": {
+    "subtitle": "subtitles.greenlantern.engine_transform",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/transform_fera",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "engine_transform_tubo": {
+    "subtitle": "subtitles.greenlantern.engine_transform",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/transform_tubo",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "engine_transform_arsenal": {
+    "subtitle": "subtitles.greenlantern.engine_transform",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/transform_arsenal",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "engine_transform_espetaculo": {
+    "subtitle": "subtitles.greenlantern.engine_transform",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/transform_espetaculo",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "engine_transform_asas": {
+    "subtitle": "subtitles.greenlantern.engine_transform",
+    "sounds": [
+      {
+        "name": "greenlantern:engine/transform_asas",
+        "attenuation_distance": 32
+      }
+    ]
   }
 }

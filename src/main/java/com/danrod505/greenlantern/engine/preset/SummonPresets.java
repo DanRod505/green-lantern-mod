@@ -121,7 +121,8 @@ public final class SummonPresets {
      * seconds (8) against the monsters within {@code alcance} (10): {@code forma} martelo (falls on
      * one every so often and shakes the ground around it), serra (spins around the character cutting
      * whoever comes close) or broca (a spike that goes for one and drills it). {@code dano} each blow.
-     * Settings: {@code intervalo} (seconds between blows, 1.5 for the hammer).
+     * Settings: {@code intervalo} (seconds between blows, 1.5 for the hammer), {@code visual} (solido:
+     * a translucent object of energy, the default; particulas: only particles) and {@code escala} (1).
      */
     static Outcome construct(PresetContext c) {
         ServerPlayer player = c.player();
@@ -130,12 +131,13 @@ public final class SummonPresets {
         double reach = c.reach(10.0);
         int ticks = c.durationTicks(8.0);
         int every = Math.max(5, (int) Math.round(c.settings().number("intervalo", 1.5) * 20));
-        ParticleOptions main = PresetFx.particle(c.element(), c.color());
+        ParticleOptions main = PresetFx.particle(c);
         ParticleOptions light = PresetFx.particle(c.element(), c.lightColor());
         Vec3[] at = {player.position().add(0, 2.5, 0)};
         LivingEntity[] target = {null};
         Fx.play(level, player, SoundEvents.BEACON_ACTIVATE, 0.8F, 1.8F);
-        PresetRuntime.start(player, age -> {
+        Visuals.Construct solid = c.settings().text("visual", "solido").equals("solido") ? Visuals.construct(c, shape, at[0]) : null;
+        PresetRuntime.start(player, PresetRuntime.Task.ending(age -> {
             if (target[0] == null || !target[0].isAlive() || target[0].distanceTo(player) > reach + 4) {
                 target[0] = Summons.foe(player, player, reach);
             }
@@ -180,8 +182,11 @@ public final class SummonPresets {
                     }
                 }
             }
+            if (solid != null) solid.moveTo(at[0]);
             return age < ticks;
-        });
+        }, () -> {
+            if (solid != null) solid.remove();
+        }));
         return Outcome.DONE;
     }
 
@@ -260,9 +265,9 @@ public final class SummonPresets {
                         Fx.play(level, ride, SoundEvents.CROSSBOW_SHOOT, 0.8F, 1.2F);
                     }
                 }
-                bolts.tick(player, level, (a, b) -> Fx.line(level, a, b, PresetFx.particle(c.element(), c.color()), 3.0), impact -> {
+                bolts.tick(player, level, (a, b) -> Fx.line(level, a, b, PresetFx.particle(c), 3.0), impact -> {
                     if (impact.entity() != null) c.hit(impact.entity(), c.damage());
-                    PresetFx.burst(level, impact.at(), c.element(), c.color(), 6, 0.2);
+                    PresetFx.burst(c, impact.at(), 6, 0.2);
                 });
             }
             return age < ticks;
@@ -418,7 +423,7 @@ public final class SummonPresets {
         arrive(level, stand, c);
         Fx.play(level, stand, SoundEvents.IRON_GOLEM_REPAIR, 1.0F, 1.2F);
         Bolts bolts = new Bolts(Math.max(2, (int) Math.ceil(reach / speed)) + 4, 0.15);
-        ParticleOptions trail = PresetFx.particle(c.element(), c.color());
+        ParticleOptions trail = PresetFx.particle(c);
         PresetRuntime.start(player, PresetRuntime.Task.ending(age -> {
             Vec3 head = stand.position().add(0, 1.75, 0);
             if (age % 8 == 0) Fx.ring(level, stand.position().add(0, 0.05, 0), 0.7, trail, 10);
@@ -435,7 +440,7 @@ public final class SummonPresets {
             }
             bolts.tick(player, level, (a, b) -> Fx.line(level, a, b, trail, 3.0), impact -> {
                 if (impact.entity() != null) c.hit(impact.entity(), c.damage());
-                PresetFx.burst(level, impact.at(), c.element(), c.color(), 6, 0.2);
+                PresetFx.burst(c, impact.at(), 6, 0.2);
             });
             return age < ticks;
         }, () -> Summons.dismiss(stand)));
