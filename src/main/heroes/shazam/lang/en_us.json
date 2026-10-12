@@ -50,5 +50,8 @@
   "message.greenlantern.shazam_solomon_on": "Wisdom of Solomon: the enemies show",
   "message.greenlantern.shazam_solomon_off": "Wisdom of Solomon off",
   "message.greenlantern.shazam_lightning": "The lightning fills Shazam's Magic!",
-  "hud.greenlantern.shazam_solomon_target": "%s: %s / %s ❤"
+  "hud.greenlantern.shazam_solomon_target": "%s: %s / %s ❤",
+  "skin.greenlantern.shazam": "Shazam",
+  "skin.greenlantern.shazam_capitao_marvel_classico": "Classic Captain Marvel",
+  "skin.greenlantern.shazam_shazam_negro": "Black Shazam"
 }

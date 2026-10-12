@@ -52,5 +52,10 @@
   "guide.greenlantern.recipe.utility_belt": "Couro nos cantos, barras de ouro em cima e embaixo, barras de ferro nas laterais e uma membrana de phantom no centro. O cinto começa vazio: vista o traje e espere as células carregarem.",
   "guide.greenlantern.controls_batman": "§ePulo§r (segurar, caindo): planar com a capa; olhe para baixo para mergulhar e para cima para subir.\n§eR§r (segurar / tocar): menu de equipamentos / próximo equipamento.\n§eV§r: usa o equipamento escolhido. §ePulo§r no gancho: soltar o cabo.\n§eNo Batmóvel§r: §eW A S D§r dirigir, §eCtrl§r boost, §eBotão esquerdo§r mísseis, §eAgachar§r sair.",
   "guide.greenlantern.section.batman": "Batman",
-  "guide.greenlantern.controls_batman.title": "Controles"
+  "guide.greenlantern.controls_batman.title": "Controles",
+  "skin.greenlantern.batman": "Batman",
+  "skin.greenlantern.batman_classico": "Clássico",
+  "skin.greenlantern.batman_armadura_anti_superman": "Armadura Anti-Superman",
+  "skin.greenlantern.batman_batman_do_futuro": "Batman do Futuro",
+  "skin.greenlantern.batman_gotham_a_luz_de_lampiao": "Gotham à Luz de Lampião"
 }

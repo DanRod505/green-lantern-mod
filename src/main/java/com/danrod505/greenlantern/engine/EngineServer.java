@@ -1,6 +1,7 @@
 package com.danrod505.greenlantern.engine;
 
 import com.danrod505.greenlantern.engine.preset.PresetRuntime;
+import com.danrod505.greenlantern.engine.preset.Transformations;
 import com.danrod505.greenlantern.engine.preset.Visuals;
 import com.danrod505.greenlantern.hero.HeroRegistry;
 import com.danrod505.greenlantern.ring.RingEnergy;
@@ -76,7 +77,12 @@ public final class EngineServer {
         return state != null ? state : AbilityState.EMPTY;
     }
 
-    public static SkinState skin(EngineHero hero, ItemStack item) {
+    /** The hero with abilities (a character of the engine or one of the first 9) whose suit the player wears, or null. */
+    public static AbilityHero abilitySuited(Player player) {
+        return HeroRegistry.suited(player).orElse(null) instanceof AbilityHero hero ? hero : null;
+    }
+
+    public static SkinState skin(AbilityHero hero, ItemStack item) {
         SkinState state = item.get(EngineContent.SKIN.get());
         return state != null ? state : new SkinState(hero.data().defaultSkin().id(), List.of());
     }
@@ -174,7 +180,7 @@ public final class EngineServer {
     // ---- skins -------------------------------------------------------------------------------------
 
     /** Changes to the next skin the item has unlocked (every skin in creative). */
-    public static void cycleSkin(ServerPlayer player, EngineHero hero, ItemStack item) {
+    public static void cycleSkin(ServerPlayer player, AbilityHero hero, ItemStack item) {
         if (item.isEmpty()) return;
         List<CharacterData.Skin> skins = hero.data().skins();
         SkinState state = skin(hero, item);
@@ -198,7 +204,7 @@ public final class EngineServer {
 
     // ---- suit and tick -----------------------------------------------------------------------------
 
-    static void onSuitUp(ServerPlayer player, EngineHero hero) {
+    static void onSuitUp(ServerPlayer player, AbilityHero hero) {
         ItemStack item = hero.findItem(player);
         if (!item.isEmpty() && item.get(EngineContent.SKIN.get()) == null) {
             item.set(EngineContent.SKIN.get(), new SkinState(hero.data().defaultSkin().id(), List.of()));
@@ -246,6 +252,20 @@ public final class EngineServer {
         Traits.tick(player, hero);
         ItemStack item = hero.findItem(player);
         if (!item.isEmpty()) supremeReady(player, hero, item);
+    }
+
+    /**
+     * One of the 9 heroes puts the suit on (stage 3, lot 2): its skin goes on the chest piece, so the
+     * player is drawn as the hero, and its transformation of the catalog plays.
+     */
+    public static void legacySuitUp(ServerPlayer player, AbilityHero hero) {
+        legacySkin(player, hero);
+        Transformations.play(player, hero);
+    }
+
+    /** Only the skin, for a hero whose suit up was already its transformation (Shazam's lightning). */
+    public static void legacySkin(ServerPlayer player, AbilityHero hero) {
+        onSuitUp(player, hero);
     }
 
     /** One of the 9 heroes takes the suit off: what its abilities and traits left goes away. */

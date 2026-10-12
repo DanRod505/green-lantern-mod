@@ -3,7 +3,7 @@ package com.danrod505.greenlantern.engine.preset;
 import com.danrod505.greenlantern.GreenLantern;
 import com.danrod505.greenlantern.engine.CharacterData;
 import com.danrod505.greenlantern.engine.EngineContent;
-import com.danrod505.greenlantern.engine.EngineHero;
+import com.danrod505.greenlantern.engine.AbilityHero;
 import com.danrod505.greenlantern.hero.power.Fx;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +70,7 @@ public final class Transformations {
     private static final Identifier GROW = GreenLantern.id("transformation_grow");
 
     /** What a transformation draws: everything it needs about the player and its settings. */
-    record Look(ServerPlayer player, EngineHero hero, String id, int color, int second, int light, int ticks, String kind, String element) {
+    record Look(ServerPlayer player, AbilityHero hero, String id, int color, int second, int light, int ticks, String kind, String element) {
         ServerLevel level() {
             return player.level();
         }
@@ -125,12 +125,12 @@ public final class Transformations {
     }
 
     /** Plays the character's transformation on {@code player}. */
-    public static void play(ServerPlayer player, EngineHero hero) {
+    public static void play(ServerPlayer player, AbilityHero hero) {
         play(player, hero, hero.data().transformation());
     }
 
     /** Plays transformation {@code id} on {@code player} with the character's settings; false when it is none or unknown. */
-    public static boolean play(ServerPlayer player, EngineHero hero, String id) {
+    public static boolean play(ServerPlayer player, AbilityHero hero, String id) {
         Supplier<Animation> make = ANIMATIONS.get(id);
         if (make == null) return false;
         CharacterData data = hero.data();

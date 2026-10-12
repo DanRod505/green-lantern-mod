@@ -99,10 +99,8 @@ public final class SupergirlHero extends HeroDefinition implements AbilityHero {
 
     @Override
     protected void suitUpEffects(ServerLevel level, ServerPlayer player) {
-        // The suit forms in golden light.
-        level.sendParticles(ModParticles.SOLAR_GLOW.get(), player.getX(), player.getY() + 1.0, player.getZ(), 50, 0.45, 0.9, 0.45, 0.06);
-        level.sendParticles(ParticleTypes.END_ROD, player.getX(), player.getY() + 1.0, player.getZ(), 20, 0.4, 0.9, 0.4, 0.04);
-        level.sendParticles(ModParticles.SUPER_RING.get(), player.getX(), player.getY() + 1.0, player.getZ(), 0, 0.0, 1.0, 0.0, 1.0);
+        // The transformation of the catalog (stage 3, lot 2).
+        EngineServer.legacySuitUp(player, this);
     }
 
     @Override

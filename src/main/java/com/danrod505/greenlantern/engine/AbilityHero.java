@@ -4,6 +4,7 @@ import com.danrod505.greenlantern.hero.HeroEnergy;
 import com.danrod505.greenlantern.hero.HeroPowers;
 import com.danrod505.greenlantern.hero.SuitSet;
 import java.util.Set;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -32,6 +33,14 @@ public interface AbilityHero {
     boolean isSuited(Player player);
 
     SuitSet suit();
+
+    /** Whether all four suit pieces are on: only then the skin is the look. */
+    default boolean fullSuit(Player player) {
+        SuitSet suit = suit();
+        return isSuited(player) && player.getItemBySlot(EquipmentSlot.HEAD).is(suit.head().get())
+                && player.getItemBySlot(EquipmentSlot.LEGS).is(suit.legs().get())
+                && player.getItemBySlot(EquipmentSlot.FEET).is(suit.feet().get());
+    }
 
     /** The traits the hero's own code already does (flight, gliding...): the engine leaves them alone. */
     default Set<String> ownTraits() {

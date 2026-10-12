@@ -100,7 +100,8 @@ public final class ShazamHero extends HeroDefinition implements AbilityHero {
 
     @Override
     protected void suitUpEffects(ServerLevel level, ServerPlayer player) {
-        // "Shazam!": the lightning forms the suit.
+        // "Shazam!": the lightning forms the suit (it was the Raio Mágico of the catalog already).
+        EngineServer.legacySkin(player, this);
         ShazamServer.transform(player, true);
     }
 

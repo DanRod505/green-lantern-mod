@@ -59,7 +59,7 @@ public final class EngineKeys {
             }
         }
         while (KeyBindings.SKIN.consumeClick()) {
-            if (free && hero instanceof com.danrod505.greenlantern.engine.EngineHero) ModNetwork.sendToServer(EnginePacket.skin());
+            if (free) ModNetwork.sendToServer(EnginePacket.skin());
         }
     }
 

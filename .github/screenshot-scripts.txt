@@ -2,6 +2,7 @@
 # One "<branch prefix> <script> [lot]" per line (the lot, for personagens, is generated from the catalog first); the first prefix that matches wins, so list longer prefixes first.
 # A branch that matches no line gets no screenshots on push (run the workflow by hand with any script).
 # tools/new_hero.py adds a line for each new hero.
+claude/project-thread-2ev3x7 adaptacao_lote2
 claude/fundacao- fundacao
 claude/presets-personagem- personagens 1
 claude/mecha- mecha

@@ -104,14 +104,6 @@ public final class EngineHero extends HeroDefinition implements AbilityHero {
         return powers;
     }
 
-    /** Whether all four suit pieces are on: only then the skin is the look. */
-    public boolean fullSuit(Player player) {
-        SuitSet suit = suit();
-        return isSuited(player) && player.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.HEAD).is(suit.head().get())
-                && player.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.LEGS).is(suit.legs().get())
-                && player.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.FEET).is(suit.feet().get());
-    }
-
     @Override
     public void creativeTabItems(CreativeModeTab.Output output) {
         output.accept(item.get().charged(item.get().getDefaultInstance()));

@@ -51,5 +51,7 @@
   "message.greenlantern.cyborg_hack_nothing": "Nenhuma máquina para invadir na mira",
   "message.greenlantern.cyborg_boom_tube_open": "Tubo de Explosão abrindo: fique perto!",
   "message.greenlantern.cyborg_boom_tube_marked": "Destino do Tubo de Explosão marcado em %s, %s, %s",
-  "message.greenlantern.cyborg_lightning": "Um raio encheu a bateria!"
+  "message.greenlantern.cyborg_lightning": "Um raio encheu a bateria!",
+  "skin.greenlantern.cyborg": "Ciborgue",
+  "skin.greenlantern.cyborg_titas_classico": "Titãs Clássico"
 }

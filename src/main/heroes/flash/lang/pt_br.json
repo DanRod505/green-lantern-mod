@@ -49,5 +49,9 @@
   "guide.greenlantern.recipe.flash_ring": "Redstone nos cantos, barras de ouro nos lados e um para-raios no centro. O anel vem sem Força de Aceleração: vista o traje e corra para carregá-lo.",
   "guide.greenlantern.controls_flash": "§eCorrer (sprint)§r com o traje: começa a supercorrida.\n§eR§r (segurar / tocar): menu de poderes / próximo poder.\n§eV§r: usa o poder escolhido.\n§eShift + rodinha§r (anel do Flash na mão): troca o poder.",
   "guide.greenlantern.section.flash": "Flash",
-  "guide.greenlantern.controls_flash.title": "Controles"
+  "guide.greenlantern.controls_flash.title": "Controles",
+  "skin.greenlantern.flash": "Flash",
+  "skin.greenlantern.flash_classico": "Clássico",
+  "skin.greenlantern.flash_flash_negro": "Flash Negro",
+  "skin.greenlantern.flash_ponto_de_ignicao": "Ponto de Ignição"
 }

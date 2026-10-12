@@ -51,5 +51,7 @@
   "message.greenlantern.cyborg_hack_nothing": "No machine to hack in sight",
   "message.greenlantern.cyborg_boom_tube_open": "Boom Tube opening: stay close!",
   "message.greenlantern.cyborg_boom_tube_marked": "Boom Tube destination marked at %s, %s, %s",
-  "message.greenlantern.cyborg_lightning": "A lightning bolt filled the battery!"
+  "message.greenlantern.cyborg_lightning": "A lightning bolt filled the battery!",
+  "skin.greenlantern.cyborg": "Cyborg",
+  "skin.greenlantern.cyborg_titas_classico": "Classic Titans"
 }

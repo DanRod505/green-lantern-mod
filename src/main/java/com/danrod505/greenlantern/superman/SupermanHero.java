@@ -95,7 +95,8 @@ public final class SupermanHero extends HeroDefinition implements AbilityHero {
 
     @Override
     protected void suitUpEffects(ServerLevel level, ServerPlayer player) {
-        sunburst(level, player, 50);
+        // The transformation of the catalog (stage 3, lot 2).
+        EngineServer.legacySuitUp(player, this);
         SupermanServer.sendEvent(player, SuperFlags.EVENT_SUIT_UP);
     }
 
