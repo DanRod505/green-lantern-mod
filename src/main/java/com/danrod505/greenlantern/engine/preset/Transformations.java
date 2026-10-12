@@ -358,7 +358,7 @@ public final class Transformations {
         void tick(Look l, int age, float p) {
             Vec3 feet = l.feet();
             for (int i = 0; i < 4; i++) {
-                Vec3 from = feet.add((l.level().random.nextDouble() - 0.5) * 2.4, 3 + l.level().random.nextDouble() * 4, (l.level().random.nextDouble() - 0.5) * 2.4);
+                Vec3 from = feet.add((l.level().random.nextDouble() - 0.5) * 2.0, 0.5 + l.level().random.nextDouble() * 4, (l.level().random.nextDouble() - 0.5) * 2.0);
                 l.level().sendParticles(PresetFx.dust(0xFFD86B, 1.3F), from.x, from.y, from.z, 0, 0, -1, 0, 0.3);
                 if (i == 0) l.level().sendParticles(ParticleTypes.END_ROD, from.x, from.y, from.z, 0, 0, -1, 0, 0.15);
             }
@@ -425,7 +425,8 @@ public final class Transformations {
                 default -> 0x6B4A2B;
             };
             if (age == 1) PresetFx.shake(l.player(), 0.45F, l.ticks());
-            l.particle(PresetFx.dust(skin, 1.3F), feet.add(0, 1, 0), (int) (2 + p * 8), 0.4, 0.0);
+            l.particle(PresetFx.dust(skin, 1.6F), feet.add(0, 1, 0), (int) (4 + p * 14), 0.45, 0.0);
+            if (age % 3 == 0) l.particle(ParticleTypes.CRIT, feet.add(0, 1.2, 0), 4, 0.4, 0.1);
             if (age % 6 == 0) l.play(SoundEvents.SKELETON_HURT, 0.5F, 0.6F);
             AttributeInstance scale = l.player().getAttribute(Attributes.SCALE);
             if (scale != null) {
@@ -531,23 +532,27 @@ public final class Transformations {
 
         @Override
         void tick(Look l, int age, float p) {
-            if (age % 3 != 0) return;
+            if (age % 2 != 0) return;
+            for (int burst = 0; burst < 2; burst++) show(l, age, burst);
+            if (age == 2 * (l.ticks() / 2)) l.particle(ParticleTypes.FIREWORK, l.feet().add(0, 1.2, 0), 40, 0.6, 0.2);
+        }
+
+        private void show(Look l, int age, int burst) {
             Vec3 at = l.feet().add((l.level().random.nextDouble() - 0.5) * 3, 0.6 + l.level().random.nextDouble() * 1.8, (l.level().random.nextDouble() - 0.5) * 3);
             switch (l.kind()) {
                 case "cartas" -> {
                     l.particle(PresetFx.dust(0xF4F4F4, 1.2F), at, 8, 0.4, 0.0);
                     l.particle(PresetFx.dust(0xC81E1E, 0.8F), at, 4, 0.4, 0.0);
                 }
-                case "fumaca" -> l.particle(PresetFx.dust(CONFETTI[age / 3 % CONFETTI.length], 3.0F), at, 6, 0.5, 0.0);
+                case "fumaca" -> l.particle(PresetFx.dust(CONFETTI[(age / 2 + burst) % CONFETTI.length], 3.0F), at, 6, 0.5, 0.0);
                 case "gas" -> {
                     l.particle(PresetFx.dust(0x8FCB3A, 2.5F), at, 8, 0.6, 0.0);
                     l.particle(ParticleTypes.SMOKE, at, 4, 0.5, 0.02);
                 }
                 default -> {
-                    for (int c : CONFETTI) l.particle(PresetFx.dust(c, 0.7F), at, 3, 0.5, 0.0);
+                    for (int c : CONFETTI) l.particle(PresetFx.dust(c, 0.8F), at, 5, 0.6, 0.0);
                 }
             }
-            if (age == 3 * (l.ticks() / 3)) l.particle(ParticleTypes.FIREWORK, l.feet().add(0, 1.2, 0), 40, 0.6, 0.2);
         }
     }
 

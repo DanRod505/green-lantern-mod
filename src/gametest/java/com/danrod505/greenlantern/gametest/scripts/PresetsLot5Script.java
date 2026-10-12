@@ -92,10 +92,11 @@ public final class PresetsLot5Script {
         });
     }
 
+    /** Uses a fight ability turned 25 degrees to the side, so the camera behind sees the beam. */
     private static void fight(EngineAbility ability) {
         server(sp -> {
-            sp.setYRot(0);
-            sp.setYHeadRot(0);
+            sp.setYRot(-25);
+            sp.setYHeadRot(-25);
             sp.setXRot(0);
             boolean went = EngineServer.useAbility(sp, sp.getMainHandItem(), ability);
             GreenLantern.LOGGER.info("CLIENTSCRIPT fight {} went={}", ability.data().preset(), went);
@@ -111,8 +112,8 @@ public final class PresetsLot5Script {
             boolean played = Transformations.play(sp, hero("prototipo"), id);
             GreenLantern.LOGGER.info("CLIENTSCRIPT transformation {} played={}", id, played);
         }));
-        step(14, () -> clean(label + "_a"));
-        step(12, () -> clean(label + "_b"));
+        step(18, () -> clean(label + "_a"));
+        step(14, () -> clean(label + "_b"));
         step(30, () -> {});
     }
 
@@ -139,8 +140,8 @@ public final class PresetsLot5Script {
         // Beams: straight and thick, spiral, lightning.
         for (String form : List.of("reto", "espiral", "raio")) {
             String label = label("feixe_" + form);
-            reset(CameraType.THIRD_PERSON_BACK, 10);
-            step(6, () -> husk(0, 8));
+            reset(CameraType.THIRD_PERSON_BACK, 25);
+            step(6, () -> husk(3.4, 7.3));
             step(10, () -> fight(PresetTests.ability("feixe_continuo", AbilityKind.SHOT, 1, 1, 16, 0, 3,
                     PresetTests.settings("forma", form, "espessura", form.equals("reto") ? 2.5 : 1.2))));
             step(25, () -> clean(label));
@@ -149,8 +150,8 @@ public final class PresetsLot5Script {
 
         // A translucent hammer of energy over a husk.
         String hammer = label("construto_martelo");
-        reset(CameraType.THIRD_PERSON_BACK, 10);
-        step(6, () -> husk(0, 5));
+        reset(CameraType.THIRD_PERSON_BACK, 25);
+        step(6, () -> husk(2.1, 4.5));
         step(10, () -> fight(PresetTests.ability("construto", AbilityKind.SUMMON, 1, 1, 10, 0, 4,
                 PresetTests.settings("forma", "martelo", "intervalo", 3, "escala", 1.4))));
         step(25, () -> clean(hammer));
@@ -171,7 +172,7 @@ public final class PresetsLot5Script {
         step(20, () -> clean(families));
 
         // The trail and aura of the Protótipo Alado, running past.
-        suit("prototipo_alado");
+        step(4, () -> suit("prototipo_alado"));
         String aura = label("aura");
         reset(CameraType.THIRD_PERSON_FRONT, 10);
         step(40, () -> clean(aura));
@@ -184,7 +185,7 @@ public final class PresetsLot5Script {
         step(4, () -> clean(trail));
 
         // The wheel and the HUD with the icons drawn from the presets.
-        suit("prototipo");
+        step(4, () -> suit("prototipo"));
         reset(CameraType.THIRD_PERSON_BACK, 10);
         String wheel = label("roda_de_icones");
         step(20, () -> {
