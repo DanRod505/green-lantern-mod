@@ -233,3 +233,7 @@ Como os do Lote 4, só mexem no que o jogador pode mudar ali, e um uso que não 
 | `levar_junto` | Mobilidade | raio (4), duracao (30) | os `quantos` (3) animais, aldeões ou criaturas do personagem mais perto vão junto, flutuando atrás dele |
 
 Os sons das 6 classes de mundo novas e o da suprema são originais, gerados por `tools/generate_engine_audio.py`. Os testes ficam em `src/gametest/.../heroes/PresetLot6Tests.java` e os prints no roteiro `presets_lote6`.
+
+## Lote 7 (2.7.0): Ferramentas de produção
+
+Sem presets novos: o gerador do catálogo, o teste automático de cada personagem, os prints por lote e o verificador estão em [`ferramentas.md`](ferramentas.md). O gerador escolhe o preset de cada função do catálogo nesta biblioteca, e o teste automático usa cada função de cada personagem.

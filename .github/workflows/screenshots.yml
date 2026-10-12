@@ -8,15 +8,18 @@ on:
   workflow_dispatch:
     inputs:
       script:
-        description: 'Client script to run (default, wheel, flight, mecha, oa, flash, aquaman, atlantis, kraken, batman, mounts, trench, superman, wonderwoman, fundacao, presets, presets_lote2, presets_lote3, presets_lote4, presets_lote5, or a new hero)'
+        description: 'Client script to run (default, wheel, flight, mecha, oa, flash, aquaman, atlantis, kraken, batman, mounts, trench, superman, wonderwoman, fundacao, presets, presets_lote2, presets_lote3, presets_lote4, presets_lote5, presets_lote6, personagens, or a new hero)'
         default: 'oa'
+      lote:
+        description: 'For personagens: the lot of characters of the catalog to generate first (tools/catalogo/lotes.json), empty for none'
+        default: ''
   push:
     branches: ['claude/**']
 
 jobs:
   screenshots:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
 
@@ -24,16 +27,19 @@ jobs:
         id: pick
         env:
           INPUT: ${{ github.event.inputs.script }}
+          INPUT_LOT: ${{ github.event.inputs.lote }}
           BRANCH: ${{ github.ref_name }}
         run: |
           script="$INPUT"
+          lot="$INPUT_LOT"
           if [ -z "$script" ]; then
-            while read -r prefix name; do
+            while read -r prefix name branch_lot; do
               case "$prefix" in ''|'#'*) continue ;; esac
-              case "$BRANCH" in "$prefix"*) script="$name"; break ;; esac
+              case "$BRANCH" in "$prefix"*) script="$name"; lot="$branch_lot"; break ;; esac
             done < .github/screenshot-scripts.txt
           fi
           echo "script=$script" >> "$GITHUB_OUTPUT"
+          echo "lot=$lot" >> "$GITHUB_OUTPUT"
           if [ -z "$script" ]; then echo "No screenshot script for $BRANCH (see .github/screenshot-scripts.txt)"; else echo "Script: $script"; fi
 
       - name: Set up JDK 25
@@ -51,9 +57,18 @@ jobs:
         if: steps.pick.outputs.script != ''
         run: sudo apt-get update && sudo apt-get install -y xvfb libgl1-mesa-dri mesa-utils
 
+      # The prints of a lot: its characters are generated from the catalog in this checkout (never committed).
+      - name: Generate the lot
+        if: steps.pick.outputs.script != '' && steps.pick.outputs.lot != ''
+        env:
+          LOT: ${{ steps.pick.outputs.lot }}
+        run: |
+          pip install --quiet pillow
+          python3 tools/catalogo.py --lote "$LOT"
+
       - name: Run the scripted client
         if: steps.pick.outputs.script != ''
-        timeout-minutes: 25
+        timeout-minutes: 45
         env:
           GL_CLIENT_SCRIPT: ${{ steps.pick.outputs.script }}
           LIBGL_ALWAYS_SOFTWARE: '1'

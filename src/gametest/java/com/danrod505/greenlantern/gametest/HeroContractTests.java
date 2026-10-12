@@ -48,7 +48,8 @@ import net.minecraftforge.registries.DeferredRegister;
  *     <li>{@code hero_suits_contract}: the suit goes on with the hero's item (taking off the
  *     previous hero's), the shared keys talk to this hero, and taking it off gives the old armor back.</li>
  *     <li>{@code hero_powers_contract}: every power can be selected and used without errors, and
- *     using it never adds energy.</li>
+ *     using it never adds energy. The characters of the engine are left to
+ *     {@link EveryCharacterTests}, which uses every function of every ability.</li>
  * </ul>
  */
 public final class HeroContractTests {
@@ -225,7 +226,7 @@ public final class HeroContractTests {
         GameTestSequence sequence = helper.startSequence();
         for (HeroDefinition hero : HeroRegistry.all()) {
             HeroPowers<?> powers = hero.powers();
-            if (powers == null) continue;
+            if (powers == null || EveryCharacterTests.covers(hero)) continue;
             for (int i = 0; i < powers.set().count(); i++) {
                 int index = i;
                 String who = "hero " + hero.id() + ", power " + powers.power(index).id() + ": ";

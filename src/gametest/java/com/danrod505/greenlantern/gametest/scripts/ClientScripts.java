@@ -32,7 +32,8 @@ public final class ClientScripts {
             PresetsLot3Script.SCRIPT,
             PresetsLot4Script.SCRIPT,
             PresetsLot5Script.SCRIPT,
-            PresetsLot6Script.SCRIPT
+            PresetsLot6Script.SCRIPT,
+            PersonagensScript.SCRIPT
             // tools/new_hero.py adds new heroes above this line
     );
 

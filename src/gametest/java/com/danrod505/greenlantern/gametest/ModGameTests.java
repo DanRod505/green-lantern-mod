@@ -38,6 +38,7 @@ public final class ModGameTests {
     static {
         SharedTests.register(TESTS);
         HeroContractTests.register(TESTS);
+        EveryCharacterTests.register(TESTS);
         PowerKitTests.register(TESTS);
         LanternTests.register(TESTS);
         FlashTests.register(TESTS);

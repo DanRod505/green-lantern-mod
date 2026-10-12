@@ -326,7 +326,7 @@ def arms(slim):
     return {"right_arm": (40, 16, w, 12, 4), "left_arm": (32, 48, w, 12, 4)}
 
 
-def test_skin(skin_id, main, accent, glow, slim):
+def test_skin(skin_id, main, accent, glow, slim, assets=TEST_ASSETS):
     pal = Palette(main=main, accent=accent, glow=glow, seed=len(skin_id))
     img = blank(64, 64)
     lit = blank(64, 64)
@@ -362,7 +362,7 @@ def test_skin(skin_id, main, accent, glow, slim):
             fill_rect(img, x, y + fh - 5, fw, 5, "A", pal)  # boots
         x, y, fw, fh = faces["bottom"]
         fill_rect(img, x, y, fw, fh, "a", pal)
-    for folder, image, suffix in ((TEST_ASSETS, img, ""), (TEST_ASSETS, lit, "_brilho")):
+    for folder, image, suffix in ((assets, img, ""), (assets, lit, "_brilho")):
         path = os.path.join(folder, "textures", "entity", "skin", f"{skin_id}{suffix}.png")
         os.makedirs(os.path.dirname(path), exist_ok=True)
         image.save(path)
@@ -377,8 +377,9 @@ def write_json(path, data):
     print("wrote", os.path.relpath(path, ROOT))
 
 
-def test_character(char_id, main, accent, glow, slim):
-    test_skin(char_id, main, accent, glow, slim)
+def test_character(char_id, main, accent, glow, slim, assets=TEST_ASSETS):
+    """A character's skin, item icon and item files (the test characters; tools/catalogo.py writes the drafts with it)."""
+    test_skin(char_id, main, accent, glow, slim, assets)
     pal = Palette(main=main, accent=accent, glow=glow, seed=5)
     icon = from_map([
         ".......OO.......",
@@ -398,15 +399,15 @@ def test_character(char_id, main, accent, glow, slim):
         "......OmmO......",
         ".......OO.......",
     ], pal, 3)
-    path = os.path.join(TEST_ASSETS, "textures", "item", f"{char_id}.png")
+    path = os.path.join(assets, "textures", "item", f"{char_id}.png")
     os.makedirs(os.path.dirname(path), exist_ok=True)
     icon.save(path)
-    write_json(os.path.join(TEST_ASSETS, "models", "item", f"{char_id}.json"),
+    write_json(os.path.join(assets, "models", "item", f"{char_id}.json"),
                {"parent": "minecraft:item/generated", "textures": {"layer0": f"greenlantern:item/{char_id}"}})
-    write_json(os.path.join(TEST_ASSETS, "items", f"{char_id}.json"),
+    write_json(os.path.join(assets, "items", f"{char_id}.json"),
                {"model": {"type": "minecraft:model", "model": f"greenlantern:item/{char_id}"}})
     for slot in SUIT_ICONS:
-        write_json(os.path.join(TEST_ASSETS, "items", f"{char_id}_{slot}.json"),
+        write_json(os.path.join(assets, "items", f"{char_id}_{slot}.json"),
                    {"model": {"type": "minecraft:model", "model": f"greenlantern:item/skin_suit_{slot}"}})
 
 

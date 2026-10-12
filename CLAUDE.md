@@ -4,6 +4,7 @@ Forge 1.21.11, Java 25 compilando para 21. O dono fala português: responda em p
 
 - Compile antes de cada push: `./gradlew compileJava -Pgametests` (testes: `./gradlew runGameTestServer -Pgametests --no-configuration-cache`).
 - Herói novo: siga [`docs/heroes/README.md`](docs/heroes/README.md). Ficha aprovada em `docs/heroes/<id>.md`, depois `python3 tools/new_hero.py docs/heroes/<id>.md`. Cada herói é um pacote próprio mais uma linha em `hero/HeroRegistry.java`.
+- Personagens do catálogo (engine): `python3 tools/catalogo.py --lote N` gera os rascunhos; antes do PR, `python3 tools/verificar.py`. Ver [`docs/ferramentas.md`](docs/ferramentas.md).
 - Textos e sons ficam por herói em `src/main/heroes/<parte>/` (juntados no build pela tarefa `mergeHeroResources`), não em `assets/greenlantern/lang`.
 - Gametests por herói em `src/gametest/.../gametest/heroes/`, cada um com um `test_instance/<nome>.json`. Roteiros de prints em `.../gametest/scripts/`, listados em `ClientScripts`; a branch escolhe o roteiro por `.github/screenshot-scripts.txt`.
 - Versões: cada mudança no mod sobe `mod_version` (`python3 tools/release.py bump minor|patch`; o gerador já faz isso para herói novo). Ao mesclar na `main`, o workflow Release publica a versão; entregue o link https://github.com/DanRod505/green-lantern-mod/releases/latest.
