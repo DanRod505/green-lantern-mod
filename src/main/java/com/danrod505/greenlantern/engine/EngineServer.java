@@ -59,6 +59,7 @@ public final class EngineServer {
         LivingHurtEvent.BUS.addListener(Priority.LOW, EngineServer::onHurt);
         ShieldBlockEvent.BUS.addListener(EngineServer::onShieldBlock);
         LivingEntityUseItemEvent.Finish.BUS.addListener(EngineServer::onAte);
+        com.danrod505.greenlantern.engine.preset.PresetRuntime.register();
     }
 
     /** The character of the engine whose suit the player wears, or null. */
@@ -91,9 +92,7 @@ public final class EngineServer {
             return false;
         }
         if (!ready(player, hero, item, ability)) return false;
-        Presets.useInFight(player, hero, item, ability);
-        finish(player, item, ability);
-        return true;
+        return finish(player, hero, item, ability, Presets.useInFight(player, hero, item, ability));
     }
 
     /** Uses the chosen ability in the world (crouch with the power key, or crouch and right click). */
@@ -101,9 +100,7 @@ public final class EngineServer {
         if (item.isEmpty() || !hero.isSuited(player)) return false;
         EngineAbility ability = hero.powers().set().selected(item);
         if (!ready(player, hero, item, ability)) return false;
-        Presets.useInWorld(player, hero, item, ability);
-        finish(player, item, ability);
-        return true;
+        return finish(player, hero, item, ability, Presets.useInWorld(player, hero, item, ability));
     }
 
     /** The Supreme key: with the Supreme bar full, uses the Supreme (always the last ability). */
@@ -134,11 +131,22 @@ public final class EngineServer {
         return true;
     }
 
-    private static void finish(ServerPlayer player, ItemStack item, EngineAbility ability) {
+    /**
+     * After the preset: the cooldown (the ability's, or the one the preset asked for) and, for the
+     * Supreme, an empty bar. A use that could not go off gives the energy back and says why.
+     */
+    private static boolean finish(ServerPlayer player, EngineHero hero, ItemStack item, EngineAbility ability, Presets.Outcome outcome) {
+        if (!outcome.went()) {
+            if (!player.isCreative()) hero.energy().add(item, ability.cost());
+            refuse(player, outcome.reason());
+            return false;
+        }
         long now = player.level().getGameTime();
-        AbilityState state = state(item).withCooldown(ability.ordinal(), now + ability.cooldownTicks(), now);
+        int cooldown = outcome.cooldownTicks() > 0 ? outcome.cooldownTicks() : ability.cooldownTicks();
+        AbilityState state = state(item).withCooldown(ability.ordinal(), now + cooldown, now);
         if (ability.supreme()) state = state.withSupreme(0);
         item.set(EngineContent.ABILITIES.get(), state);
+        return true;
     }
 
     /** Not enough energy, still cooling down, Supreme not full: a short sound and the reason. */

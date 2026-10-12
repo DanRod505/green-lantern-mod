@@ -68,5 +68,10 @@
   "item.greenlantern.engine_suit_cabeca": "Traje de %s: cabeça",
   "item.greenlantern.engine_suit_peito": "Traje de %s: peito",
   "item.greenlantern.engine_suit_pernas": "Traje de %s: pernas",
-  "item.greenlantern.engine_suit_pes": "Traje de %s: pés"
+  "item.greenlantern.engine_suit_pes": "Traje de %s: pés",
+  "message.greenlantern.engine_too_heavy": "%s é pesado demais para levantar",
+  "message.greenlantern.engine_nothing_to_grab": "Nada ao alcance para agarrar",
+  "message.greenlantern.engine_no_ammo": "Sem munição: %s",
+  "message.greenlantern.engine_no_aim": "Mire num ponto ao alcance",
+  "message.greenlantern.engine_combo": "Golpe %s de %s: aperte de novo no ritmo!"
 }

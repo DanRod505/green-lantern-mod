@@ -10,7 +10,7 @@ import net.minecraftforge.network.SimpleChannel;
 
 /** Network channel of the mod. Bump {@link #PROTOCOL} whenever a packet format changes. */
 public final class ModNetwork {
-    public static final int PROTOCOL = 10;
+    public static final int PROTOCOL = 11;
 
     public static final SimpleChannel CHANNEL = ChannelBuilder.named(GreenLantern.id("main"))
             .networkProtocolVersion(PROTOCOL)
@@ -101,6 +101,10 @@ public final class ModNetwork {
         CHANNEL.messageBuilder(EnginePacket.class, NetworkDirection.PLAY_TO_SERVER)
                 .codec(EnginePacket.STREAM_CODEC)
                 .consumerMainThread(EnginePacket::handle)
+                .add();
+        CHANNEL.messageBuilder(EngineFxPacket.class, NetworkDirection.PLAY_TO_CLIENT)
+                .codec(EngineFxPacket.STREAM_CODEC)
+                .consumerMainThread(EngineFxPacket::handle)
                 .add();
     }
 

@@ -44,14 +44,21 @@ public final class Bolts {
     private final List<Bolt> bolts = new ArrayList<>();
     private final int life;
     private final double homing;
+    private final double gravity;
 
     /**
      * @param life   ticks a bolt flies before it ends on its own
      * @param homing how hard a bolt with a target turns towards it each tick (0 flies straight, 0.25 is a rocket)
      */
     public Bolts(int life, double homing) {
+        this(life, homing, 0.0);
+    }
+
+    /** Bolts that also fall {@code gravity} blocks per tick faster each tick (an arrow, a bullet over a long way). */
+    public Bolts(int life, double homing, double gravity) {
         this.life = life;
         this.homing = homing;
+        this.gravity = gravity;
     }
 
     /** A bolt from {@code from} with {@code velocity} blocks per tick, homing on {@code target} when it is not null. */
@@ -98,6 +105,7 @@ public final class Bolts {
                 it.remove();
             } else {
                 bolt.pos = next;
+                if (gravity != 0.0) bolt.velocity = bolt.velocity.add(0, -gravity, 0);
             }
         }
     }

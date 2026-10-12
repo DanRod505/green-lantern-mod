@@ -5,6 +5,16 @@
 Mod de heróis do **Universo DC** para **Minecraft Java 1.21.11** com **Forge 61.2.0** (compilado com **Java 25**).
 Começou como o mod do Lanterna Verde e agora traz também **o Flash** (v1.7.0) **o Aquaman** (v1.8.0), **Atlântida** (v1.9.0) **o Kraken do Aquaman** (v1.10.0), **o Batman** (v1.11.0), **as criaturas de Atlântida** (v1.12.0) **o Fosso**, os inimigos do Aquaman (v1.13.0), **o Superman** (v1.14.0), **a Mulher Maravilha** (v1.15.0) **o Ciborgue** (v1.16.0), o primeiro herói feito com o kit de herói, e **a Supergirl com o Krypto, o Supercão** (v1.17.0). O id do mod continua `greenlantern`, então mundos e configurações antigas continuam funcionando.
 
+## Presets de golpe, disparo e explosão (novo na 2.1.0)
+
+Primeiro lote da biblioteca de presets: as peças prontas que as habilidades dos personagens novos vão usar. **Nada muda nos 9 heróis de hoje.** A ficha de um personagem escolhe o preset de cada habilidade (`"preset"`), os números (`"numeros"`) e os ajustes do preset (`"ajustes"`, como empurrão, quantidade de tiros ou elemento).
+
+* **Golpe:** Soco forte (empurra e treme a câmera), Investida (avança atropelando quem estiver no caminho), Golpe de arma (arco na frente com espada, machado, tridente ou maça), Pisão (no ar, mergulha e lança todos em volta para cima), Agarrar e arremessar (levanta o mob ou um bloco solto acima da cabeça e joga longe) e Sequência (combo de 3 golpes apertando no ritmo; só o último dispara a recarga).
+* **Disparo:** Projétil (pode perseguir o alvo), Feixe contínuo (fica ligado alguns segundos seguindo a mira), Leque (vários tiros abertos), Arremesso que volta (vai, quica de um inimigo para outro e volta para a mão), Balístico (cai com a distância, gasta munição e tem pontas explosiva, rede, gelo, fogo e elétrica) e Raio do céu (aviso no chão e depois um relâmpago ou um feixe de luz).
+* **Explosão:** Onda em volta, Explosão no ponto (quebra blocos só quando o ajuste pede; nunca fere quem a fez), Cone (sopro de gelo, fogo, gás, som ou água), Pulso (atordoa as criaturas em volta) e Chuva (golpes caindo numa área por alguns segundos).
+* **Elementos:** energia (na cor do personagem), raio, fogo, gelo, água, sombra, magia, luz, fumaça, terra, gás e som, cada um com partícula e efeito (fogo queima, gelo deixa lento, gás envenena, som e raio atordoam).
+* Uma habilidade que não pode sair (nada para agarrar, sem munição, mira no vazio) devolve a energia e diz o motivo. Os presets nunca ferem jogadores, suportes de armadura nem animais domados.
+
 ## A engine de personagens (novo na 2.0.0)
 
 A base para os próximos heróis do Universo DC. **Nada muda nos 9 heróis de hoje**: os mesmos poderes, números, trajes, receitas e teclas. Mundos salvos, itens antigos e configurações continuam funcionando.

@@ -3,6 +3,7 @@
 # A branch that matches no line gets no screenshots on push (run the workflow by hand with any script).
 # tools/new_hero.py adds a line for each new hero.
 claude/fundacao- fundacao
+claude/presets-personagem- presets
 claude/mecha- mecha
 claude/oa- oa
 claude/flash- flash
