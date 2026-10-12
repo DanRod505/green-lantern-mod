@@ -10,6 +10,7 @@ import com.danrod505.greenlantern.engine.preset.ShotPresets;
 import com.danrod505.greenlantern.engine.preset.StrikePresets;
 import com.danrod505.greenlantern.engine.preset.SummonPresets;
 import com.danrod505.greenlantern.engine.preset.SupremePresets;
+import com.danrod505.greenlantern.engine.preset.WorldPresets;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -67,6 +68,7 @@ public final class Presets {
         SummonPresets.register();
         EmpowerPresets.register();
         SupremePresets.register();
+        WorldPresets.register();
     }
 
     private Presets() {}
@@ -103,7 +105,7 @@ public final class Presets {
     static Outcome useInWorld(ServerPlayer player, EngineHero hero, ItemStack item, EngineAbility ability) {
         Preset preset = ability.data().worldPreset().map(WORLD::get).orElse(null);
         if (preset == null) return notBuilt(player, hero, ability, "message.greenlantern.engine_world_not_built");
-        return preset.use(new PresetContext(player, hero, item, ability));
+        return preset.use(new PresetContext(player, hero, item, ability, true));
     }
 
     private static Outcome notBuilt(ServerPlayer player, EngineHero hero, EngineAbility ability, String key) {

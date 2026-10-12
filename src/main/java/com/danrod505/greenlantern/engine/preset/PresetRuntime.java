@@ -94,9 +94,14 @@ public final class PresetRuntime {
         return Outcome.cooldown(1);
     }
 
-    /** The name a lasting preset runs under: the ability's. */
+    /** The name a lasting preset runs under: the ability's (its world use has a name of its own). */
     public static String key(PresetContext c) {
-        return c.ability().data().id();
+        return c.world() ? worldKey(c.ability().data().id()) : c.ability().data().id();
+    }
+
+    /** The name the world use of an ability runs under. */
+    public static String worldKey(String ability) {
+        return ability + "#mundo";
     }
 
     /** Whether a lasting preset of this ability is running for the player. */
@@ -140,6 +145,11 @@ public final class PresetRuntime {
         if (undo == null) return false;
         undo.run();
         return true;
+    }
+
+    /** Drops what this ability of the player left to take back, without taking it back. */
+    public static void forget(ServerPlayer player, String key) {
+        UNDO.remove(player.getUUID() + "/" + key);
     }
 
     /** Whether this ability of the player left something to take back. */

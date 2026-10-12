@@ -29,7 +29,8 @@ public final class ClientScripts {
             FundacaoScript.SCRIPT,
             PresetsScript.SCRIPT,
             PresetsLot2Script.SCRIPT,
-            PresetsLot3Script.SCRIPT
+            PresetsLot3Script.SCRIPT,
+            PresetsLot4Script.SCRIPT
             // tools/new_hero.py adds new heroes above this line
     );
 

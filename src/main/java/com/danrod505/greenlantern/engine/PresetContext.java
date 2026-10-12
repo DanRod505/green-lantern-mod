@@ -17,9 +17,15 @@ import net.minecraft.world.phys.Vec3;
 /**
  * One use of an ability by a preset: who uses it, the character, its item and the ability with its
  * numbers (stage 15) and settings. The numbers left at 0 in the file fall back to the preset's own
- * default, so {@code reach(4)} is the ability's {@code alcance} or 4 blocks.
+ * default, so {@code reach(4)} is the ability's {@code alcance} or 4 blocks. {@code world} is a use
+ * in the world (crouching), not in a fight.
  */
-public record PresetContext(ServerPlayer player, EngineHero hero, ItemStack item, EngineAbility ability) {
+public record PresetContext(ServerPlayer player, EngineHero hero, ItemStack item, EngineAbility ability, boolean world) {
+    /** A use in a fight. */
+    public PresetContext(ServerPlayer player, EngineHero hero, ItemStack item, EngineAbility ability) {
+        this(player, hero, item, ability, false);
+    }
+
     public ServerLevel level() {
         return player.level();
     }

@@ -101,7 +101,14 @@ public final class EngineServer {
     /** Uses the chosen ability in the world (crouch with the power key, or crouch and right click). */
     public static boolean useInWorld(ServerPlayer player, EngineHero hero, ItemStack item) {
         if (item.isEmpty() || !hero.isSuited(player)) return false;
-        EngineAbility ability = hero.powers().set().selected(item);
+        return useInWorld(player, hero, item, hero.powers().set().selected(item));
+    }
+
+    /** Uses this ability in the world. */
+    public static boolean useInWorld(ServerPlayer player, EngineHero hero, ItemStack item, EngineAbility ability) {
+        if (item.isEmpty() || !hero.isSuited(player)) return false;
+        String key = PresetRuntime.worldKey(ability.data().id());
+        if (PresetRuntime.stop(player, key) || PresetRuntime.undo(player, key)) return true;
         if (!ready(player, hero, item, ability)) return false;
         return finish(player, hero, item, ability, Presets.useInWorld(player, hero, item, ability));
     }

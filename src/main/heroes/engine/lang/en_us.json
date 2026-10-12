@@ -85,5 +85,8 @@
   "message.greenlantern.engine_no_structure": "That structure does not exist",
   "message.greenlantern.engine_dismantled": "The work was taken down",
   "message.greenlantern.engine_full_health": "Your health is already full",
-  "message.greenlantern.engine_no_space": "There is no room for that here"
+  "message.greenlantern.engine_no_space": "There is no room for that here",
+  "message.greenlantern.engine_nothing_here": "There is nothing to do here",
+  "message.greenlantern.engine_no_blocks": "You have no blocks to build with",
+  "message.greenlantern.engine_no_put": "There is no room to put the block there"
 }
